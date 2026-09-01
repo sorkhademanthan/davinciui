@@ -1,10 +1,9 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
-  "name": "componentry",
+  "name": "davinciui",
   "homepage": "https://componentry.fun",
   "aliases": [
-    "componentry",
-    "componentryui",
+    "davinciui",
     "ui",
     "cmp"
   ],

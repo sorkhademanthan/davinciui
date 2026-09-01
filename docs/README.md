@@ -1,6 +1,6 @@
-# Componentry Internal Documentation
+# DavinciUI Internal Documentation
 
-This directory contains internal documentation for maintaining and extending the Componentry UI library.
+This directory contains internal documentation for maintaining and extending the DavinciUI library.
 
 ## 📄 Available Guides
 
@@ -11,7 +11,7 @@ This directory contains internal documentation for maintaining and extending the
 ## 🏗️ Architecture Overview
 
 ```
-componentry/
+davinciui/
 ├── packages/ui/          # Core component library (publishable)
 ├── apps/web/             # Documentation website (Next.js)
 └── docs/                 # Internal documentation (this folder)
@@ -49,4 +49,4 @@ See [CREATING_COMPONENTS.md](./CREATING_COMPONENTS.md) for detailed instructions
 
 - **Live Site:** https://componentry.dev
 - **Registry URL:** https://componentry.fun/r/{component}.json
-- **Install Example:** `pnpm dlx shadcn@latest add @componentry/showcase-card`
+- **Install Example:** `pnpm dlx shadcn@latest add @davinciui/showcase-card`
