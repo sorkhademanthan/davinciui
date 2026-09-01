@@ -84,7 +84,7 @@ export function SiteHeader({ sidebarToggle, landingGutter }: SiteHeaderProps) {
                     }
                 }
 
-                const response = await fetch("https://api.github.com/repos/harshjdhv/componentry")
+                const response = await fetch("https://api.github.com/repos/sorkhademanthan/davinciui")
                 if (!response.ok) return
 
                 const data = (await response.json()) as { stargazers_count?: number }
@@ -165,7 +165,7 @@ export function SiteHeader({ sidebarToggle, landingGutter }: SiteHeaderProps) {
                         className="group inline-flex h-8 items-center gap-1.5 rounded-md px-1 transition-colors duration-200 hover:bg-muted/60 dark:hover:bg-muted/40"
                     >
                         <ComponentryLogomark className="size-5 text-zinc-900 dark:text-white transition-opacity group-hover:opacity-80" />
-                        <span className="text-[16px] font-bold font-display tracking-tight text-zinc-900 dark:text-white">COMPONENTRY</span>
+                        <span className="text-[16px] font-bold font-display tracking-tight text-zinc-900 dark:text-white">DAVINCIUI</span>
                     </Link>
                     <nav className="hidden items-center gap-0.5 text-sm font-normal sm:flex">
                         {navItems.map((item) => (
@@ -187,7 +187,7 @@ export function SiteHeader({ sidebarToggle, landingGutter }: SiteHeaderProps) {
                 </div>
                 <div className="ml-auto flex items-center gap-1">
                     <Link
-                        href="https://shadcnblocks.com/?utm_source=componentry&utm_medium=sponsor&utm_campaign=header_badge"
+                        href="https://shadcnblocks.com/?utm_source=davinciui&utm_medium=sponsor&utm_campaign=header_badge"
                         target="_blank"
                         data-umami-event="click-sponsor-shadcnblocks"
                         className="hidden h-8 items-center gap-1.5 rounded-md border border-input/50 bg-muted/30 pl-2 pr-2.5 text-sm font-normal transition-colors hover:border-input hover:bg-accent/50 md:inline-flex"
@@ -206,7 +206,7 @@ export function SiteHeader({ sidebarToggle, landingGutter }: SiteHeaderProps) {
                     <div className="hidden h-4 w-px bg-foreground/15 dark:bg-foreground/20 sm:block" />
                     <div className="flex items-center gap-1">
                         <Link
-                            href="https://github.com/harshjdhv/componentry"
+                            href="https://github.com/sorkhademanthan/davinciui"
                             target="_blank"
                             rel="noreferrer"
                             title={fullStars}

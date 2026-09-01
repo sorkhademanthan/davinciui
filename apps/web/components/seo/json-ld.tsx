@@ -26,7 +26,7 @@ export function JsonLd() {
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: siteConfig.name,
-    alternateName: ["Componentry UI", "Componentry Components"],
+    alternateName: ["DavinciUI UI", "DavinciUI Components"],
     url: siteConfig.url,
     description: siteConfig.description,
     publisher: {
@@ -69,7 +69,7 @@ export function JsonLd() {
     "@context": "https://schema.org",
     "@type": "Person",
     name: siteConfig.author.name,
-    alternateName: ["harshjdhv", "Harsh"],
+    alternateName: ["sorkhademanthan", "Manthan"],
     url: siteConfig.author.twitter,
     jobTitle: "Frontend Developer",
     knowsAbout: [

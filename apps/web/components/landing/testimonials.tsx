@@ -51,7 +51,7 @@ const testimonials: Testimonial[] = [
   },
   {
     quote:
-      "what is going on @shadcn? In just a few hours I've discovered a bunch of new shadcn libraries I had never seen before... componentry fun by @harshjdhv... I thought I'd caught them all!",
+      "what is going on @shadcn? In just a few hours I've discovered a bunch of new shadcn libraries I had never seen before... davinciui fun by @harshjdhv... I thought I'd caught them all!",
     name: "Ali Bey",
     handle: "@alibey_10",
     initials: "AB",
@@ -80,7 +80,7 @@ const testimonials: Testimonial[] = [
   },
   {
     quote:
-      "particle typography — npx shadcn add @componentry/cursor-driven-particle-typography",
+      "particle typography — npx shadcn add @davinciui/cursor-driven-particle-typography",
     name: "Ali Bey",
     handle: "@alibey_10",
     initials: "AB",
@@ -88,7 +88,7 @@ const testimonials: Testimonial[] = [
     avatar: "https://unavatar.io/x/alibey_10",
   },
   {
-    quote: "image ripple effect — another Componentry gem worth saving.",
+    quote: "image ripple effect — another DavinciUI gem worth saving.",
     name: "Ali Bey",
     handle: "@alibey_10",
     initials: "AB",

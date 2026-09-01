@@ -94,7 +94,7 @@ export function PageContextMenu({ content, className }: PageContextMenuProps) {
   }
 
   const getPrompt = (url: string) => {
-    return `I'm looking at this Componentry documentation: ${url}. The full docs are copied to my clipboard as markdown. Help me install, use, and customize this component.`
+    return `I'm looking at this DavinciUI documentation: ${url}. The full docs are copied to my clipboard as markdown. Help me install, use, and customize this component.`
   }
 
   const openLink = async (assistant: (typeof AI_ASSISTANTS)[number]) => {

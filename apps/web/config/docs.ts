@@ -62,14 +62,14 @@ const getComponentNav = (): NavGroup[] => {
 
 const getLlmsText = () => {
   const baseUrl = "https://componentry.dev";
-  let text = `# Componentry
+  let text = `# DavinciUI
 
-> Componentry is a collection of beautifully-designed, accessible components and visual effects. It is built with TypeScript, Tailwind CSS, and Framer Motion. Open Source. Copy and paste into your apps.
+> DavinciUI is a collection of beautifully-designed, accessible components and visual effects. It is built with TypeScript, Tailwind CSS, and Framer Motion. Open Source. Copy and paste into your apps.
 
 ## Overview`;
 
   gettingStarted.items.forEach((item) => {
-    text += `\n- [${item.title}](${baseUrl}${item.href}): Getting started with Componentry.`;
+    text += `\n- [${item.title}](${baseUrl}${item.href}): Getting started with DavinciUI.`;
   });
 
   text += `\n\n## Components`;
