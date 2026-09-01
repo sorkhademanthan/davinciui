@@ -28,7 +28,7 @@ interface FlippingWordSwapConfig {
 }
 
 const DEFAULT_CONFIG: FlippingWordSwapConfig = {
-  word1: "Componentry",
+  word1: "DavinciUI",
   word2: "Consistency",
   word1LightColor: "#18181b",
   word1DarkColor: "#f5f5f5",

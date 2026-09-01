@@ -56,7 +56,7 @@ export function DocsFooterSection() {
           </p>
         </div>
         <Link
-          href="https://x.com/harshjdhv"
+          href="https://x.com/ManthanSorkhade"
           target="_blank"
           rel="noopener noreferrer"
           className="mt-3 inline-flex w-fit items-center gap-2 rounded-lg border border-border bg-white px-3 py-1.5 text-[13px] font-medium text-zinc-900 transition-colors hover:bg-zinc-50 active:scale-[0.98] sm:mt-0 sm:shrink-0 dark:bg-zinc-950 dark:text-zinc-100 dark:hover:bg-zinc-900"

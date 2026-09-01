@@ -3,7 +3,7 @@
 import gsap from "gsap";
 import { useEffect, useRef } from "react";
 
-const FIRST_WORD = "COMPONENTRY";
+const FIRST_WORD = "DAVINCIUI";
 const SECOND_WORD = "CONSISTENCY";
 
 export function FlippingWordSwapCardPreview() {

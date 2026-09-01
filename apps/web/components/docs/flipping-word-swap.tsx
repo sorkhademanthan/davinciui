@@ -10,7 +10,7 @@ const defaultCode = `import { FlippingWordSwap } from "@/components/ui/flipping-
 
 <div className="flex min-h-[400px] items-center justify-center">
   <FlippingWordSwap
-    word1="Componentry"
+    word1="DavinciUI"
     word2="Consistency"
     duration={400}
     stagger={44}
