@@ -1,0 +1,127 @@
+"use client"
+
+import { useState, useMemo } from "react"
+import Link from "next/link"
+import { Search, ArrowUpRight } from "lucide-react"
+import { Breadcrumbs } from "@/components/breadcrumbs"
+import { components } from "@/registry"
+import { cn } from "@/lib/utils"
+
+const CATEGORIES = ["All", "Actions", "Forms", "Feedback", "Navigation", "Overlays", "Data Display", "Layout"] as const
+
+function getComponentCategory(slug: string) {
+  const c = components[slug]
+  if (!c) return "Other"
+  // Map registry category to nav group — fallback to c.category
+  return c.category || "Other"
+}
+
+export default function ComponentsGalleryPage() {
+  const [q, setQ] = useState("")
+  const [activeCat, setActiveCat] = useState<(typeof CATEGORIES)[number]>("All")
+
+  const all = useMemo(() => Object.values(components).sort((a, b) => a.title.localeCompare(b.title)), [])
+
+  const filtered = useMemo(() => {
+    return all.filter((c) => {
+      const matchesSearch = !q.trim() || c.title.toLowerCase().includes(q.toLowerCase()) || c.description.toLowerCase().includes(q.toLowerCase())
+      if (!matchesSearch) return false
+      if (activeCat === "All") return true
+      if (activeCat === "Actions") return ["button", "button-group", "toggle", "link"].includes(c.slug)
+      if (activeCat === "Forms") return ["input", "textarea", "select", "checkbox", "radio", "switch", "form"].includes(c.slug)
+      if (activeCat === "Feedback") return ["alert", "toast", "progress", "spinner", "skeleton"].includes(c.slug)
+      if (activeCat === "Navigation") return ["tabs", "breadcrumb", "pagination", "sidebar", "navigation-menu"].includes(c.slug)
+      if (activeCat === "Overlays") return ["dialog", "drawer", "popover", "tooltip", "dropdown"].includes(c.slug)
+      if (activeCat === "Data Display") return ["card", "badge", "avatar", "table", "data-table"].includes(c.slug)
+      if (activeCat === "Layout") return ["accordion", "carousel", "collapsible", "scroll-area"].includes(c.slug)
+      return false
+    })
+  }, [q, activeCat, all])
+
+  return (
+    <div className="w-full max-w-[1280px] px-6 lg:px-8 py-6">
+      <Breadcrumbs className="mb-4" />
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight">Components</h1>
+          <p className="text-sm text-muted-foreground mt-1">Production-ready components — click a card to open docs with live preview on the right.</p>
+        </div>
+        <div className="relative w-full sm:w-64">
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+          <input
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Search components…"
+            className="w-full h-9 pl-8 pr-3 rounded-lg border border-border bg-white dark:bg-zinc-900 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+          />
+        </div>
+      </div>
+
+      <div className="mt-4 flex flex-wrap gap-1.5">
+        {CATEGORIES.map((cat) => (
+          <button
+            key={cat}
+            onClick={() => setActiveCat(cat)}
+            className={cn(
+              "px-3 py-1 text-xs font-medium rounded-full border transition-colors",
+              activeCat === cat ? "bg-zinc-900 text-white border-zinc-900 dark:bg-white dark:text-zinc-900 dark:border-white" : "bg-white hover:bg-zinc-50 border-border text-muted-foreground hover:text-foreground dark:bg-zinc-900 dark:hover:bg-zinc-800"
+            )}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+
+      <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {filtered.map((c) => (
+          <Link
+            key={c.slug}
+            href={`/experience/components/${c.slug}`}
+            className="group relative flex flex-col rounded-2xl border border-border bg-white dark:bg-zinc-900/50 overflow-hidden hover:border-input hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-300"
+          >
+            <div className="p-1.5">
+              <div className="relative h-48 rounded-xl border border-border bg-zinc-100 dark:bg-zinc-900 overflow-hidden">
+                {c.previewVideo ? (
+                  <video
+                    src={c.previewVideo}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata"
+                    className="absolute inset-0 h-full w-full object-cover"
+                  />
+                ) : c.previewImage ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={c.previewImage} alt={c.title} className="absolute inset-0 h-full w-full object-cover" />
+                ) : (
+                  <div className="absolute inset-0 bg-gradient-to-br from-zinc-900/[0.04] via-transparent to-transparent dark:from-white/[0.04] flex items-center justify-center">
+                    <div className="size-10 rounded-xl bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 flex items-center justify-center text-xs font-mono shadow-sm">
+                      {c.title.slice(0, 2).toUpperCase()}
+                    </div>
+                  </div>
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <span className="absolute bottom-2 right-2 text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/90 dark:bg-black/50 border border-border backdrop-blur">
+                  {c.category || "component"}
+                </span>
+              </div>
+            </div>
+            <div className="px-4 pb-4 pt-1">
+              <h3 className="text-sm font-medium flex items-center gap-1.5">
+                {c.title} <ArrowUpRight className="size-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
+              </h3>
+              <p className="text-xs text-muted-foreground line-clamp-2 mt-1">{c.description}</p>
+            </div>
+          </Link>
+        ))}
+      </div>
+
+      {filtered.length === 0 && <p className="mt-12 text-center text-sm text-muted-foreground">No components match “{q}” in {activeCat}.</p>}
+
+      <p className="mt-8 text-xs text-muted-foreground">
+        Preview on the right, variants at bottom, toolbar with <span className="font-mono">Search · Source · Replay · Fullscreen · Theme</span> — same as Letter Cascade detail view. Click any card.
+      </p>
+    </div>
+  )
+}
