@@ -1,0 +1,30 @@
+{
+  "name": "componentry",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "registry:blocks": "node scripts/build-blocks-registry.js",
+    "validate:registry": "node scripts/validate-registry.js",
+    "generate:og": "node scripts/generate-og-image.mjs",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "screenshot": "node scripts/screenshot.js",
+    "optimize:previews": "./scripts/optimize-preview-videos.sh",
+    "recompress:previews": "scripts/venv/bin/python scripts/recompress-and-reupload-previews.py"
+  },
+  "devDependencies": {
+    "@workspace/eslint-config": "workspace:*",
+    "@workspace/typescript-config": "workspace:*",
+    "playwright": "^1.57.0",
+    "prettier": "^3.7.4",
+    "turbo": "^2.6.3",
+    "typescript": "5.7.3"
+  },
+  "packageManager": "pnpm@10.4.1",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {}
+}
