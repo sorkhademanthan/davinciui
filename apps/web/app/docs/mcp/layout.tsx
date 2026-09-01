@@ -2,16 +2,16 @@ import type { Metadata } from "next"
 import { absoluteUrl } from "@/lib/site"
 
 export const metadata: Metadata = {
-  title: "Componentry MCP",
+  title: "DavinciUI MCP",
   description:
-    "Set up Componentry's registry with MCP so AI coding tools can discover and install animated React UI components.",
+    "Set up DavinciUI's registry with MCP so AI coding tools can discover and install animated React UI components.",
   alternates: {
     canonical: absoluteUrl("/docs/mcp"),
   },
   openGraph: {
-    title: "Componentry MCP",
+    title: "DavinciUI MCP",
     description:
-      "Set up Componentry's registry with MCP so AI coding tools can discover and install animated React UI components.",
+      "Set up DavinciUI's registry with MCP so AI coding tools can discover and install animated React UI components.",
     url: absoluteUrl("/docs/mcp"),
   },
 }

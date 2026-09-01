@@ -50,7 +50,7 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
             `${component.title} React component`,
             `${component.title} Tailwind component`,
             component.category,
-            "Componentry",
+            "DavinciUI",
             "React UI component",
             "animated UI component",
             "copy paste component",
@@ -59,7 +59,7 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
             canonical: componentUrl,
         },
         openGraph: {
-            title: `${component.title} React Component | Componentry`,
+            title: `${component.title} React Component | DavinciUI`,
             description: component.description,
             url: componentUrl,
             type: "article",
@@ -68,7 +68,7 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
         },
         twitter: {
             card: 'summary_large_image',
-            title: `${component.title} React Component | Componentry`,
+            title: `${component.title} React Component | DavinciUI`,
             description: component.description,
             images: [ogImageUrl],
         },
@@ -191,7 +191,7 @@ export default async function ComponentPage(props: PageProps) {
                 "React component",
                 "Tailwind CSS",
                 "Framer Motion",
-                "Componentry",
+                "DavinciUI",
             ].join(", "),
         };
 

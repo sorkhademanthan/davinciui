@@ -126,7 +126,7 @@ export default async function Image({ params }: Props) {
         >
           <Mark size={46} />
         </span>
-        Componentry
+        DavinciUI
       </div>
 
       <div
