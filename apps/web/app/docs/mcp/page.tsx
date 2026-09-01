@@ -1,6 +1,5 @@
 "use client"
 
-import { SiteHeader } from "@/components/site-header"
 import { DocsScrollEdgeFade } from "@/components/docs-scroll-edge-fade"
 import { LandingGuideLines } from "@/components/landing/landing-frame"
 import { CodeInline, Section } from "@/components/component-layout"
@@ -46,11 +45,9 @@ export default function McpDocsPage() {
       <LandingGuideLines />
       <DocsScrollEdgeFade position="bottom" />
 
-      <SiteHeader />
-
-      <main className="max-w-3xl mx-auto pt-32 pb-32 px-6 sm:px-8 relative z-10">
-        {/* ── Hero (match /docs) ── */}
-        <div className="mb-12">
+      <main className="w-full max-w-[840px] px-6 lg:px-8 py-6 relative z-10">
+        {/* ── Hero */}
+        <div className="mb-8">
           <h1 className="inline-block text-3xl font-semibold leading-[1.05] tracking-[-0.04em] text-zinc-900 dark:text-white sm:text-4xl">
             MCP
           </h1>
@@ -59,7 +56,7 @@ export default function McpDocsPage() {
           </p>
         </div>
 
-        <div className="space-y-16">
+        <div className="space-y-10">
           <Section title="Installation" id="installation" className="pt-2">
             <p className="text-zinc-500 dark:text-zinc-400 leading-relaxed">
               Enable MCP in your project environment. (Supports Claude Code, Cursor, etc.)

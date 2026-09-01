@@ -1,428 +1,280 @@
 "use client"
 
-import type React from "react"
-import { useState, useEffect, useMemo, useRef } from "react"
+import { useState, useMemo } from "react"
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { components, isNewComponent, type ComponentCategory, type ComponentMetadata } from "@/registry"
-
-import { SiteHeader } from "@/components/site-header"
-import { DocsScrollEdgeFade } from "@/components/docs-scroll-edge-fade"
-import {
-  LandingGuideLines,
-  landingGutterClass,
-} from "@/components/landing/landing-frame"
+import { Search, ArrowUpRight, Sparkles, Layers, Zap, Box, Palette } from "lucide-react"
+import { components } from "@/registry"
 import { cn } from "@/lib/utils"
-import { AsciiCatalogPreview } from "@/components/docs/previews/ascii-effect-preview"
-import { TextMorphCardPreview } from "@/components/docs/previews/text-morph-card-preview"
-import { FlippingWordSwapCardPreview } from "@/components/docs/previews/flipping-word-swap-card-preview"
-import { AuroraFlowCardPreview } from "@/components/docs/previews/aurora-flow-card-preview"
 
-type PreviewSources = {
-  mp4: string
-  webm: string
-}
-
-let preferredPreviewFormat: "webm" | "mp4" | null = null
-
-function getPreferredPreviewSrc(sources: PreviewSources) {
-  if (typeof window === "undefined") return sources.mp4
-  if (!preferredPreviewFormat) {
-    const probe = document.createElement("video")
-    const supportsWebm = Boolean(probe.canPlayType('video/webm; codecs="vp9,opus"'))
-    preferredPreviewFormat = supportsWebm ? "webm" : "mp4"
-  }
-  return preferredPreviewFormat === "webm" ? sources.webm : sources.mp4
-}
-
-function getPreviewSources(previewVideo?: string) {
-  if (!previewVideo) return null
-
-  const match = previewVideo.match(/^(.*)\.(mov|mp4|webm)(\?.*)?$/i)
-  if (!match) return null
-
-  const [, base, , query = ""] = match
-  return {
-    mp4: `${base}.mp4${query}`,
-    webm: `${base}.webm${query}`,
-  }
-}
-
-function getPreviewPosterSrc(previewVideo?: string) {
-  if (!previewVideo) return null
-
-  const match = previewVideo.match(/^(.*)\.(mov|mp4|webm)(\?.*)?$/i)
-  if (!match) return null
-
-  const [, base, , query = ""] = match
-  return `${base}.webp${query}`
-}
-
-// ─── Component Card ────────────────────────────────────────────────────────
-function ComponentCard({
-  component,
-  index,
-}: {
-  component: ComponentMetadata
-  index: number
-}) {
-  const videoRef = useRef<HTMLVideoElement | null>(null)
-  const [isHovered, setIsHovered] = useState(false)
-  const [shouldLoadVideo, setShouldLoadVideo] = useState(false)
-  const [isVideoReady, setIsVideoReady] = useState(false)
-  const previewSources = useMemo(
-    () => getPreviewSources(component.previewVideo),
-    [component.previewVideo]
-  ) as PreviewSources | null
-  const previewVideoSrc = useMemo(
-    () =>
-      previewSources
-        ? component.previewVideo?.startsWith("/")
-          ? previewSources.mp4
-          : getPreferredPreviewSrc(previewSources)
-        : "",
-    [component.previewVideo, previewSources]
-  )
-  const previewPosterSrc = useMemo(
-    () => component.previewImage ?? getPreviewPosterSrc(component.previewVideo),
-    [component.previewImage, component.previewVideo]
-  )
-
-  useEffect(() => {
-    setIsVideoReady(false)
-    setShouldLoadVideo(false)
-  }, [component.slug, previewVideoSrc])
-
-  useEffect(() => {
-    const video = videoRef.current
-    if (!video) return
-
-    if (!shouldLoadVideo) return
-
-    if (isHovered) {
-      const playPromise = video.play()
-      if (playPromise) {
-        playPromise.catch(() => { })
-      }
-      return
-    }
-
-    video.pause()
-    video.currentTime = 0.01
-  }, [isHovered, shouldLoadVideo])
-
-  const shouldRenderVideo = Boolean(previewSources && shouldLoadVideo)
-  const startPreview = () => {
-    setIsHovered(true)
-    setShouldLoadVideo(true)
-    const video = videoRef.current
-    if (!video) return
-    video.preload = "auto"
-    const playPromise = video.play()
-    if (playPromise) {
-      playPromise.catch(() => { })
-    }
-  }
-
-  const stopPreview = () => {
-    setIsHovered(false)
-    const video = videoRef.current
-    if (!video) return
-    video.pause()
-    video.currentTime = 0.01
-  }
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{
-        duration: 0.3,
-        delay: 0.02 * index,
-        ease: "easeOut",
-      }}
-    >
-      <Link
-        href={`/docs/components/${component.slug}`}
-        onMouseEnter={startPreview}
-        onMouseLeave={stopPreview}
-        onFocus={startPreview}
-        onBlur={stopPreview}
-        className="group relative flex flex-col rounded-2xl border border-border bg-white dark:bg-zinc-900/50 overflow-hidden transition-all duration-300 shadow-card hover:-translate-y-0.5 hover:border-input hover:shadow-card-hover"
-      >
-        {/* ── Expandable hover info (upper side) ── */}
-        <motion.div
-          initial={false}
-          animate={{
-            height: isHovered ? 32 : 0,
-            opacity: isHovered ? 1 : 0,
-          }}
-          transition={{
-            duration: 0.5,
-            ease: [0.22, 1, 0.36, 1],
-          }}
-          className="overflow-hidden"
-        >
-          <div className="px-4 pb-1 pt-3">
-            <div className="flex items-center justify-between">
-              <span className="text-xs text-zinc-400">{component.category}</span>
-              <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400 flex items-center gap-1">
-                View component
-                <svg
-                  width="12"
-                  height="12"
-                  viewBox="0 0 12 12"
-                  fill="none"
-                  className="transition-transform duration-200 group-hover:translate-x-0.5"
-                >
-                  <path
-                    d="M5 2L9 6L5 10"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </span>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* ── Preview area (Floating) ── */}
-        <div className="p-1.5">
-          <motion.div 
-            initial={false}
-            animate={{ height: isHovered ? 228 : 260 }}
-            transition={{
-              duration: 0.5,
-              ease: [0.22, 1, 0.36, 1],
-            }}
-            className={cn(
-              "relative w-full rounded-xl transition-colors border border-dashed border-border shadow-surface-inset overflow-hidden",
-              component.slug === "text-morph" ||
-                component.slug === "flipping-word-swap"
-                ? "bg-background"
-                : "bg-zinc-50 dark:bg-zinc-900/80 group-hover:bg-zinc-100/50 dark:group-hover:bg-zinc-800/80",
-            )}
-          >
-            {component.category === "ASCII Effects" && (
-              <AsciiCatalogPreview />
-            )}
-            {component.slug === "text-morph" && <TextMorphCardPreview />}
-            {component.slug === "flipping-word-swap" && (
-              <FlippingWordSwapCardPreview />
-            )}
-            {component.slug === "aurora-flow" && <AuroraFlowCardPreview />}
-            {previewPosterSrc && (
-              <img
-                src={previewPosterSrc}
-                alt=""
-                aria-hidden="true"
-                loading={component.category === "Text Animations" ? "eager" : "lazy"}
-                decoding="async"
-                className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-200 ${isVideoReady && isHovered ? "opacity-0" : "opacity-100"}`}
-              />
-            )}
-            {shouldRenderVideo && previewSources && (
-              <video
-                ref={videoRef}
-                src={previewVideoSrc}
-                autoPlay={isHovered}
-                loop
-                muted
-                playsInline
-                preload="metadata"
-                poster={previewPosterSrc ?? undefined}
-                onLoadedData={(e) => {
-                  setIsVideoReady(true)
-                  if (!isHovered) {
-                    const video = e.currentTarget
-                    if (video.currentTime < 0.01) {
-                      video.currentTime = 0.01
-                    }
-                  }
-                }}
-                onCanPlay={() => {
-                  if (isHovered) {
-                    const video = videoRef.current
-                    if (!video) return
-                    const playPromise = video.play()
-                    if (playPromise) {
-                      playPromise.catch(() => { })
-                    }
-                  }
-                }}
-                className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-200 ${isVideoReady && isHovered ? "opacity-100" : "opacity-0"}`}
-              />
-            )}
-          </motion.div>
-        </div>
-
-        {/* ── Info area ── */}
-        <div className="flex flex-col gap-1.5 px-4 pb-4 pt-2">
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-medium text-zinc-900 dark:text-zinc-100 group-hover:text-zinc-700 dark:group-hover:text-zinc-300 transition-colors">
-              {component.title}
-            </h3>
-            {isNewComponent(component) && (
-              <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400 border border-border shadow-panel">
-                New
-              </span>
-            )}
-          </div>
-          <p className="text-[13px] text-zinc-500 dark:text-zinc-400 line-clamp-1">
-            {component.description}
-          </p>
-        </div>
-      </Link>
-    </motion.div>
-  )
-}
-
-const categoryOrder: ComponentCategory[] = [
-  "Text Animations",
-  "Components",
-  "Hero Backgrounds",
-  "Visual Effects",
-  "ASCII Effects",
+// ── Showcase tiers ───────────────────────────────────────────────────────
+const CORE_COMPONENTS = ["button", "input", "dialog", "card", "tabs", "tooltip"] as const
+const PREMIUM_PREVIEW = [
+  { slug: "orbit-card-stack", title: "Orbit Card Stack", desc: "Fanned deck, lift on hover" },
+  { slug: "wheel-carousel", title: "Wheel Carousel", desc: "Cinematic wheel picker" },
+  { slug: "newsletter-bookshelf", title: "Newsletter Bookshelf", desc: "3D tactile archive" },
+]
+const SCROLL_EXPERIENCES = [
+  { slug: "sticky-scroll-cards", title: "Sticky Scroll Cards", desc: "Pinned cards, depth on scroll" },
+  { slug: "scroll-choreography", title: "Scroll Choreography", desc: "Framer-driven image flow" },
+  { slug: "scroll-tilted-grid", title: "Scroll Tilted Grid", desc: "Tilt → focus on viewport" },
+]
+const MOTION_SHOWCASE = [
+  { slug: "hover-transition", title: "Hover Transition", desc: "8 hover effects, directions" },
+  { slug: "kinetic-text-reveal", title: "Kinetic Text Reveal", desc: "Blur + stagger entrance" },
+  { slug: "magnetic-dock", title: "Magnetic Dock", desc: "Proximity scaling" },
+]
+const BLOCKS = [
+  { href: "/blocks/hero-section", title: "Hero", desc: "Cinematic hero sections" },
+  { href: "/blocks/pricing/pricing-01", title: "Pricing", desc: "Conversion-ready pricing" },
+  { href: "/blocks", title: "Features", desc: "Complete compositions" },
 ]
 
-// ─── Main Docs Page ─────────────────────────────────────────────────────────
+function ShowcaseCard({ title, desc, href, kicker }: { title: string; desc: string; href: string; kicker?: string }) {
+  return (
+    <Link
+      href={href}
+      className="group relative flex flex-col rounded-2xl border border-border bg-white dark:bg-zinc-900/50 overflow-hidden transition-all duration-300 hover:-translate-y-0.5 hover:border-input hover:shadow-card-hover"
+    >
+      <div className="p-1.5">
+        <div className="relative h-36 sm:h-40 rounded-xl border border-dashed border-border bg-zinc-50 dark:bg-zinc-900/80 group-hover:bg-zinc-100/60 dark:group-hover:bg-zinc-800/80 transition-colors overflow-hidden flex items-center justify-center">
+          <div className="absolute inset-0 bg-gradient-to-br from-zinc-900/[0.03] via-transparent to-transparent dark:from-white/[0.03]" />
+          <div className="relative size-12 rounded-xl bg-foreground text-background flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform duration-300">
+            <Box className="size-5" />
+          </div>
+          <span className="absolute bottom-2 right-2 text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/80 dark:bg-black/40 border border-border backdrop-blur">
+            preview
+          </span>
+        </div>
+      </div>
+      <div className="px-4 pb-4 pt-2">
+        {kicker && <p className="text-[11px] font-mono tracking-widest uppercase text-muted-foreground">{kicker}</p>}
+        <h3 className="text-sm font-medium text-foreground group-hover:text-foreground/80 transition-colors flex items-center gap-1.5">
+          {title} <ArrowUpRight className="size-3.5 opacity-0 group-hover:opacity-100 translate-x-0 group-hover:translate-x-0.5 transition-all" />
+        </h3>
+        <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">{desc}</p>
+      </div>
+    </Link>
+  )
+}
+
+function PremiumHeroCard() {
+  return (
+    <Link href="/docs/components/orbit-card-stack" className="group relative block overflow-hidden rounded-2xl border border-border bg-zinc-950 dark:bg-black">
+      <div className="absolute inset-0 bg-gradient-to-br from-violet-600/20 via-fuchsia-500/10 to-cyan-500/20" />
+      <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: "radial-gradient(circle, white 1px, transparent 1px)", backgroundSize: "14px 14px" }} />
+      <div className="relative p-6 sm:p-10 flex flex-col lg:flex-row lg:items-center gap-8 min-h-[280px]">
+        <div className="flex-1">
+          <p className="inline-flex items-center gap-2 text-[11px] font-mono tracking-widest uppercase text-white/60 border border-white/10 rounded-full px-2.5 py-1 bg-white/5 backdrop-blur">
+            <Sparkles className="size-3" /> Premium Experience
+          </p>
+          <h3 className="mt-4 text-2xl sm:text-3xl font-semibold tracking-tight text-white">Interactions that feel alive.</h3>
+          <p className="mt-2 text-sm leading-6 text-white/60 max-w-md">Large previews, real interaction, controls for duration, stagger and easing — built with Framer Motion & WebGL.</p>
+          <span className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-white group-hover:gap-2 transition-all">
+            Explore Premium <ArrowUpRight className="size-4" />
+          </span>
+        </div>
+        <div className="flex-1 grid grid-cols-3 gap-3 max-w-md w-full">
+          {PREMIUM_PREVIEW.map((p) => (
+            <div key={p.slug} className="rounded-xl bg-white/[0.06] border border-white/10 backdrop-blur p-3 flex flex-col gap-2">
+              <div className="h-16 rounded-lg bg-white/10 border border-white/10" />
+              <p className="text-xs font-medium text-white truncate">{p.title}</p>
+              <p className="text-[11px] text-white/50 truncate">{p.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </Link>
+  )
+}
+
 export default function DocsPage() {
-  const allComponents = Object.values(components)
-  const [activeSection, setActiveSection] = useState<string>("")
+  const [q, setQ] = useState("")
+  const all = useMemo(() => Object.values(components), [])
+  const filtered = useMemo(() => {
+    if (!q.trim()) return null
+    const needle = q.toLowerCase()
+    return all.filter((c) => c.title.toLowerCase().includes(needle) || c.description.toLowerCase().includes(needle)).slice(0, 8)
+  }, [q, all])
 
-  useEffect(() => {
-    const observers = categoryOrder.map((cat) => {
-      const id = cat.toLowerCase().replace(/\s+/g, "-")
-      const element = document.getElementById(id)
-      if (!element) return null
-
-      const observer = new IntersectionObserver(
-        (entries) => {
-          if (entries[0]?.isIntersecting) {
-            setActiveSection(cat)
-          }
-        },
-        { rootMargin: "-20% 0px -50% 0px" } // Trigger when section is near center/top
-      )
-      observer.observe(element)
-      return observer
-    })
-
-    return () => {
-      observers.forEach((observer) => observer?.disconnect())
-    }
-  }, [])
-
-  // Scroll active nav item into view
-  useEffect(() => {
-    if (activeSection) {
-      const id = `nav-item-${activeSection}`
-      const element = document.getElementById(id)
-      if (element) {
-        element.scrollIntoView({
-          behavior: "smooth",
-          block: "nearest",
-          inline: "center",
-        })
-      }
-    }
-  }, [activeSection])
-
-  const grouped = categoryOrder
-    .map(cat => ({
-      category: cat,
-      items: allComponents.filter(c => c.category === cat),
-    }))
-    .filter(g => g.items.length > 0)
+  const core = useMemo(() => CORE_COMPONENTS.map((s) => components[s]).filter(Boolean), [])
 
   return (
-    <div className="min-h-screen bg-white dark:bg-background text-zinc-900 dark:text-zinc-100 font-sans overflow-x-hidden">
-      <LandingGuideLines />
-      <DocsScrollEdgeFade position="bottom" />
+    <div className="min-h-screen bg-white dark:bg-background text-foreground overflow-x-hidden">
+      {/* ── Hero ── */}
+      <div className="relative border-b border-border/50 bg-gradient-to-b from-zinc-50 to-white dark:from-zinc-950 dark:to-background">
+        <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.05]" style={{ backgroundImage: "radial-gradient(circle, currentColor 1px, transparent 1px)", backgroundSize: "16px 16px" }} />
+        <div className="relative mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8 pt-12 pb-10 sm:pt-16 sm:pb-12">
+          <div className="max-w-2xl">
+            <p className="text-[11px] font-mono tracking-widest uppercase text-muted-foreground border border-border rounded-full inline-flex px-2.5 py-1 bg-white dark:bg-zinc-900">DavinciUI · Visual Library</p>
+            <h1 className="mt-4 text-3xl sm:text-4xl lg:text-[42px] font-semibold tracking-tight leading-[1.05]">
+              Build interfaces
+              <br />
+              <span className="text-muted-foreground">that feel alive.</span>
+            </h1>
+            <p className="mt-3 text-sm sm:text-base leading-6 text-muted-foreground max-w-xl">
+              Beautiful components, motion, scroll experiences and premium UI — ready to ship. Copy, paste, customize.
+            </p>
+          </div>
 
-      {/* ── Top Floating Header ── */}
-      <SiteHeader />
-
-      {/* ── Floating Dock Nav ── */}
-      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 w-full max-w-[calc(100vw-2rem)] sm:max-w-fit pointer-events-none">
-        <nav className="flex items-center gap-1 p-1.5 rounded-2xl border border-border bg-white/80 dark:bg-[#121212] backdrop-blur-xl shadow-card pointer-events-auto overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-          {categoryOrder.map((cat) => {
-            const isActive = activeSection === cat
-            return (
-              <a
-                key={cat}
-                id={`nav-item-${cat}`}
-                href={`#${cat.toLowerCase().replace(/\s+/g, '-')}`}
-                onClick={(e) => {
-                  e.preventDefault()
-                  document.getElementById(cat.toLowerCase().replace(/\s+/g, '-'))?.scrollIntoView({ behavior: 'smooth' })
-                  setActiveSection(cat)
-                }}
-                className={`relative px-4 py-2 text-[13px] font-medium transition-all duration-300 rounded-lg whitespace-nowrap flex-shrink-0 ${isActive
-                  ? "text-zinc-900 dark:text-zinc-100"
-                  : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100/50 dark:hover:bg-zinc-800/50"
-                  }`}
-              >
-                {isActive && (
-                  <motion.div
-                    layoutId="activeSection"
-                    className="absolute inset-0 rounded-lg bg-secondary shadow-panel"
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                  />
+          {/* Search */}
+          <div className="mt-8 max-w-xl relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+            <input
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              placeholder="Search components, motion, blocks..."
+              className="w-full h-11 pl-10 pr-4 rounded-xl border border-border bg-white dark:bg-zinc-900 shadow-sm text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring"
+            />
+            {filtered && (
+              <div className="absolute top-full mt-2 w-full rounded-xl border border-border bg-white dark:bg-zinc-900 shadow-card z-20 overflow-hidden">
+                {filtered!.length === 0 ? (
+                  <p className="px-4 py-3 text-sm text-muted-foreground">No results for “{q}”</p>
+                ) : (
+                  filtered!.map((c) => (
+                    <Link key={c!.slug} href={`/docs/components/${c!.slug}`} className="flex items-center justify-between px-4 py-2.5 hover:bg-muted/50 text-sm">
+                      <span className="font-medium">{c!.title}</span>
+                      <span className="text-xs text-muted-foreground">{c!.category}</span>
+                    </Link>
+                  ))
                 )}
-                <span className="relative z-10">{cat}</span>
-              </a>
-            )
-          })}
-        </nav>
+              </div>
+            )}
+          </div>
+
+          <div className="mt-4 flex flex-wrap gap-2 text-xs">
+            <span className="text-muted-foreground">Try:</span>
+            {["Button", "Magnetic", "Scroll", "Text Reveal"].map((t) => (
+              <button key={t} onClick={() => setQ(t)} className="px-2.5 py-1 rounded-full border border-border bg-white dark:bg-zinc-900 hover:bg-muted transition-colors">
+                {t}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
-      <main className={cn("relative z-10 pt-32 pb-32", landingGutterClass)}>
-        <div className="mx-auto w-full max-w-[1360px]">
+      <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8 py-10 sm:py-12 space-y-16">
+        {/* ── COMPONENTS ── */}
+        <section>
+          <div className="flex items-baseline justify-between gap-4 mb-6">
+            <div>
+              <h2 className="text-lg font-semibold tracking-tight flex items-center gap-2">
+                <Layers className="size-4 text-muted-foreground" /> COMPONENTS
+              </h2>
+              <p className="text-sm text-muted-foreground">Core credibility — what developers expect.</p>
+            </div>
+            <Link href="/docs/components" className="hidden sm:inline-flex text-xs font-medium px-3 py-1.5 rounded-full border border-border bg-white dark:bg-zinc-900 hover:bg-muted transition-colors">
+              View all →
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {core.map((c) => (
+              <ShowcaseCard key={c!.slug} title={c!.title} desc={c!.description} href={`/docs/components/${c!.slug}`} kicker="Core" />
+            ))}
+          </div>
+        </section>
 
-        {/* ── Hero ── */}
-        <div className="mb-12 max-w-3xl">
-          <h1 className="inline-block text-3xl font-semibold leading-[1.05] tracking-[-0.04em] text-foreground sm:text-4xl">
-            Crafted Components.
-          </h1>
-          <p className="mt-1.5 max-w-2xl text-pretty text-sm font-medium tracking-tight text-muted-foreground sm:text-base">
-            A growing collection of animated primitives for React.
-          </p>
-        </div>
+        {/* ── PREMIUM ── */}
+        <section>
+          <div className="flex items-baseline justify-between gap-4 mb-6">
+            <div>
+              <h2 className="text-lg font-semibold tracking-tight flex items-center gap-2">
+                <Sparkles className="size-4 text-violet-500" /> PREMIUM
+              </h2>
+              <p className="text-sm text-muted-foreground">What makes DavinciUI special — large, interactive previews.</p>
+            </div>
+            <Link href="/docs/premium/components" className="hidden sm:inline-flex text-xs font-medium px-3 py-1.5 rounded-full bg-foreground text-background hover:opacity-90 transition-opacity">
+              Explore Premium
+            </Link>
+          </div>
+          <PremiumHeroCard />
+        </section>
 
+        {/* ── SCROLL EXPERIENCES ── */}
+        <section>
+          <div className="flex items-baseline justify-between gap-4 mb-6">
+            <div>
+              <h2 className="text-lg font-semibold tracking-tight flex items-center gap-2">
+                <span className="size-4 rounded bg-gradient-to-br from-cyan-500 to-blue-500 inline-block" /> SCROLL EXPERIENCES
+              </h2>
+              <p className="text-sm text-muted-foreground">Not components — experiences. Scroll-driven storytelling.</p>
+            </div>
+            <Link href="/docs/scroll/animations" className="hidden sm:inline-flex text-xs font-medium px-3 py-1.5 rounded-full border border-border bg-white dark:bg-zinc-900 hover:bg-muted transition-colors">
+              View scroll →
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {SCROLL_EXPERIENCES.map((s) => (
+              <ShowcaseCard key={s.slug} title={s.title} desc={s.desc} href={`/docs/components/${s.slug}`} kicker="Scroll" />
+            ))}
+          </div>
+        </section>
 
+        {/* ── MOTION ── */}
+        <section>
+          <div className="flex items-baseline justify-between gap-4 mb-6">
+            <div>
+              <h2 className="text-lg font-semibold tracking-tight flex items-center gap-2">
+                <Zap className="size-4 text-amber-500" /> MOTION
+              </h2>
+              <p className="text-sm text-muted-foreground">Hover, cursor, magnetic, text — what makes it memorable.</p>
+            </div>
+            <Link href="/docs/motion/components" className="hidden sm:inline-flex text-xs font-medium px-3 py-1.5 rounded-full border border-border bg-white dark:bg-zinc-900 hover:bg-muted transition-colors">
+              View motion →
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {MOTION_SHOWCASE.map((m) => (
+              <ShowcaseCard key={m.slug} title={m.title} desc={m.desc} href={`/docs/components/${m.slug}`} kicker="Motion" />
+            ))}
+          </div>
+        </section>
 
+        {/* ── BLOCKS ── */}
+        <section>
+          <div className="flex items-baseline justify-between gap-4 mb-6">
+            <div>
+              <h2 className="text-lg font-semibold tracking-tight flex items-center gap-2">
+                <Box className="size-4 text-muted-foreground" /> BLOCKS
+              </h2>
+              <p className="text-sm text-muted-foreground">Full sections and compositions — immediately useful.</p>
+            </div>
+            <Link href="/blocks" className="hidden sm:inline-flex text-xs font-medium px-3 py-1.5 rounded-full border border-border bg-white dark:bg-zinc-900 hover:bg-muted transition-colors">
+              View blocks →
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {BLOCKS.map((b) => (
+              <ShowcaseCard key={b.title} title={b.title} desc={b.desc} href={b.href} kicker="Block" />
+            ))}
+          </div>
+        </section>
 
-
-        {/* ── Categories ── */}
-        <div className="space-y-24">
-          {grouped.map(({ category, items }) => {
-            return (
-              <section key={category} id={category.toLowerCase().replace(/\s+/g, '-')} className="scroll-mt-32">
-                <div className="mb-8 flex items-center justify-between gap-4">
-                  <h2 className="text-xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
-                    {category}
-                  </h2>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {items.map((component, i) => (
-                    <ComponentCard
-                      key={component.slug}
-                      component={component}
-                      index={i}
-                    />
-                  ))}
-                </div>
-              </section>
-            )
-          })}
-        </div>
-
-
-        </div>
-      </main >
-    </div >
+        {/* ── FOUNDATIONS subtle ── */}
+        <section className="border-t border-border pt-8">
+          <div className="flex items-center gap-2 mb-4">
+            <Palette className="size-4 text-muted-foreground" />
+            <h2 className="text-sm font-semibold tracking-widest uppercase">Foundations</h2>
+            <span className="text-xs text-muted-foreground">— how it’s built, not what you ship</span>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {(
+              [
+                ["Colors", "/docs/foundations/colors"],
+                ["Typography", "/docs/foundations/typography"],
+                ["Spacing", "/docs/foundations/spacing"],
+                ["Motion", "/docs/foundations/motion"],
+                ["Breakpoints", "/docs/foundations/breakpoints"],
+              ] as const
+            ).map(([label, href]) => (
+              <Link key={label} href={href} className="px-3 py-1.5 rounded-full border border-border bg-muted/30 hover:bg-muted text-xs font-medium transition-colors">
+                {label}
+              </Link>
+            ))}
+            <span className="px-3 py-1.5 text-xs text-muted-foreground">Tokens · Theming · Primitives → below the fold</span>
+          </div>
+        </section>
+      </div>
+    </div>
   )
 }
