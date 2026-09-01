@@ -17,7 +17,7 @@ export default function PrivacyPolicyPage() {
           <section>
             <h2 className="text-xl font-medium text-zinc-900 dark:text-zinc-100 mb-4">1. Introduction</h2>
             <p>
-              Welcome to Componentry. We respect your privacy and are committed to protecting it. This Privacy Policy explains how we collect, use, and safeguard your information when you visit our website (componentry.com).
+              Welcome to DavinciUI. We respect your privacy and are committed to protecting it. This Privacy Policy explains how we collect, use, and safeguard your information when you visit our website (componentry.com).
             </p>
           </section>
 
@@ -54,7 +54,7 @@ export default function PrivacyPolicyPage() {
           <section>
             <h2 className="text-xl font-medium text-zinc-900 dark:text-zinc-100 mb-4">5. Cookies</h2>
             <p>
-              Componentry uses minimal cookies essential for the functionality of the site (such as saving your theme preferences). We do not use tracking cookies for advertising purposes.
+              DavinciUI uses minimal cookies essential for the functionality of the site (such as saving your theme preferences). We do not use tracking cookies for advertising purposes.
             </p>
           </section>
 

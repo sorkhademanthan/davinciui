@@ -46,7 +46,7 @@ function copyText(text: string) {
 }
 
 function getRegistryItemNamespace(item: string) {
-  return `@componentry/${item}`;
+  return `@davinciui/${item}`;
 }
 
 function getFileName(path: string) {

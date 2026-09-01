@@ -103,7 +103,7 @@ const commandGroups: CommandMenuGroup[] = [
       }),
       createItem("Get started", {
         title: "Visit Founder",
-        href: "https://harshjdhv.com",
+        href: "https://www.manthansorkhade.in/",
         icon: <CircleArrowOutUpRight />,
       }),
     ],
@@ -113,12 +113,12 @@ const commandGroups: CommandMenuGroup[] = [
     items: [
       createItem("Socials", {
         title: "GitHub",
-        href: "https://github.com/harshjdhv/componentry",
+        href: "https://github.com/sorkhademanthan/davinciui",
         icon: <Github />,
       }),
       createItem("Socials", {
         title: "X",
-        href: "https://x.com/harshjdhv",
+        href: "https://x.com/ManthanSorkhade",
         icon: <span className="text-[13px] leading-none">𝕏</span>,
       }),
     ],

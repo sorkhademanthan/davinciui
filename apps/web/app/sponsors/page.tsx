@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils"
 import posthog from "posthog-js"
 
 const sponsorHref =
-  "https://github.com/sponsors/harshjdhv?utm_source=componentry&utm_medium=sponsor&utm_campaign=sponsors_page"
+  "https://github.com/sponsors/sorkhademanthan?utm_source=davinciui&utm_medium=sponsor&utm_campaign=sponsors_page"
 
 const sponsorStats = [
   { value: "15k+", label: "Monthly visitors" },
@@ -27,7 +27,7 @@ const sponsorWall = [
   {
     name: "Shadcnblocks.com",
     logo: "/images/sponsors/shadcnblocks.svg",
-    href: "https://shadcnblocks.com/?utm_source=componentry&utm_medium=sponsor&utm_campaign=sponsors_page",
+    href: "https://shadcnblocks.com/?utm_source=davinciui&utm_medium=sponsor&utm_campaign=sponsors_page",
     boardClassName: "md:col-span-3",
   },
   { name: "Main", boardClassName: "md:col-span-3" },
@@ -43,7 +43,7 @@ const pricingTiers = [
     name: "Main",
     price: "$150",
     cadence: "/mo",
-    description: "The highest-visibility spot for a product that should be seen by Componentry's most engaged visitors.",
+    description: "The highest-visibility spot for a product that should be seen by DavinciUI's most engaged visitors.",
     features: [
       "Prominent sponsor-board placement",
       "Header sponsor placement",
@@ -122,7 +122,7 @@ export default function SponsorsPage() {
                   </p>
                   <h1 className="w-full max-w-3xl text-[clamp(1.55rem,7.5vw,3rem)] font-medium leading-[0.98] tracking-[-0.035em] text-zinc-950 dark:text-white sm:text-5xl md:text-6xl">
                     <span className="block whitespace-nowrap sm:inline">
-                      Keep Componentry free,
+                      Keep DavinciUI free,
                     </span>{" "}
                     <span className="block whitespace-nowrap sm:inline">
                       fast, and weirdly polished.
@@ -132,7 +132,7 @@ export default function SponsorsPage() {
 
                 <div className="md:col-span-4 md:col-start-9 md:pt-10">
                   <p className="max-w-sm text-[0.9rem] leading-6 text-zinc-500 text-pretty dark:text-zinc-400 sm:text-base">
-                    Componentry is maintained in public and shipped for free. Sponsorship helps cover hosting, design time, component maintenance, and the next batch of experiments.
+                    DavinciUI is maintained in public and shipped for free. Sponsorship helps cover hosting, design time, component maintenance, and the next batch of experiments.
                   </p>
                   <div className="mt-6">
                     <SponsorCta />
