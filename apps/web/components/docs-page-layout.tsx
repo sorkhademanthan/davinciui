@@ -129,10 +129,10 @@ export async function DocsPageLayout({
   return (
     <div
       data-docs-layout
-      className="flex flex-col lg:flex-row w-full h-full min-h-screen lg:h-screen bg-white dark:bg-background text-foreground"
+      className="flex flex-col lg:flex-row w-full h-full min-h-screen lg:h-screen bg-white dark:bg-background text-foreground max-w-none m-0"
     >
-      {/* Minimal Navigation Cluster */}
-      <div className="fixed left-1 top-3 z-50 flex items-center gap-2.5 pointer-events-none sm:left-3 lg:absolute lg:left-6 lg:top-6">
+      {/* Minimal Navigation Cluster - hidden on desktop where persistent sidebar is visible */}
+      <div className="fixed left-1 top-3 z-50 flex items-center gap-2.5 pointer-events-none sm:left-3 lg:absolute lg:left-6 lg:top-6 md:hidden">
         <div className="pointer-events-auto shrink-0">
           <FloatingDocsSidebarLazy />
         </div>
@@ -156,14 +156,14 @@ export async function DocsPageLayout({
       {/* Left Column: Scrollable Content */}
       <div
         data-docs-left-column
-        className="w-full lg:basis-1/2 lg:max-w-1/2 h-full flex flex-col relative z-10 bg-white dark:bg-background"
+        className="w-full lg:basis-1/2 lg:max-w-[50%] min-w-0 h-full flex flex-col relative z-10 bg-white dark:bg-background"
       >
         {/* Scroll edge fades — subtly blend content into page background */}
         <div className="absolute top-0 left-0 right-0 z-30 h-24 bg-gradient-to-b from-white to-transparent dark:from-background pointer-events-none hidden lg:block" />
         <div className="absolute bottom-0 left-0 right-0 z-30 h-24 bg-gradient-to-t from-white to-transparent dark:from-background pointer-events-none" />
 
         <div className="flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-          <div className="px-6 lg:px-16 pt-12 lg:pt-48 pb-40 space-y-14 lg:space-y-16 max-w-3xl mx-auto">
+          <div className="pl-3 pr-4 lg:pl-4 lg:pr-6 pt-6 lg:pt-8 pb-40 space-y-8 lg:space-y-10 w-full max-w-none m-0">
 
             {/* Header Section */}
             <header>
@@ -254,15 +254,14 @@ export async function DocsPageLayout({
         </div>
       </div>
 
-      {/* Right Column: Sticky Preview */}
+      {/* Right Column: Sticky Preview — full bleed, 50% */}
       <div
         data-docs-right-column
-        className="flex-1 lg:basis-1/2 lg:max-w-1/2 lg:h-full lg:sticky lg:top-0 order-first lg:order-last bg-white dark:bg-[#121212] flex flex-col z-20"
+        className="flex-1 lg:basis-1/2 lg:max-w-[50%] min-w-0 lg:h-full lg:sticky lg:top-0 order-first lg:order-last bg-white dark:bg-[#121212] flex flex-col z-20 lg:border-l border-border/40"
       >
-        {/* We use a large padding to offset the card from the left side, mimicking the image */}
         <div
           data-docs-preview-shell
-          className="relative w-full h-[55vh] lg:h-full p-4 lg:pt-3 lg:pb-3 lg:pr-3 lg:pl-1.5 overflow-hidden bg-white dark:bg-[#121212]"
+          className="relative w-full h-[55vh] lg:h-full overflow-hidden bg-white dark:bg-[#121212] p-0"
         >
 
           {/* Floating Card Container */}

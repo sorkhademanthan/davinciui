@@ -282,7 +282,8 @@ export function DocsPreviewWrapper({
 
   return (
     <div className={cn(
-      "relative w-full h-full rounded-xl lg:rounded-2xl border border-border/50 overflow-hidden bg-[#f7f7f7] dark:border-[#121212] dark:bg-[#171717] flex flex-col"
+      "relative w-full h-full overflow-hidden bg-[#f7f7f7] dark:bg-[#171717] flex flex-col",
+      fullWidthPreview ? "rounded-none border-0" : "rounded-xl lg:rounded-2xl border border-border/50 dark:border-[#121212]"
     )} ref={previewRef}>
       {/* Toolbar — glass dock, fixed top-right */}
       <section
