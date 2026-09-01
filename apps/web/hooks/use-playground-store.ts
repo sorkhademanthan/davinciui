@@ -21,7 +21,7 @@ export interface SignatureConfig {
 }
 
 export const SIGNATURE_DEFAULT_CONFIG: SignatureConfig = {
-  text: "Componentry",
+  text: "DavinciUI",
   color: "",
   fontSize: 48,
   duration: 1.5,
@@ -38,7 +38,7 @@ export interface SplitFlapDisplayConfig {
 }
 
 export const SPLIT_FLAP_DISPLAY_DEFAULT_CONFIG: SplitFlapDisplayConfig = {
-  text: "COMPONENTRY",
+  text: "DAVINCIUI",
   columns: 11,
   size: "md",
   accentColor: "#22c55e",

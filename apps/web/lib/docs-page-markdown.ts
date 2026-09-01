@@ -21,7 +21,7 @@ export function buildDocsPageMarkdown(props: DocsPageMarkdownInput): string {
   lines.push("## Installation")
   lines.push("")
   lines.push(`\`\`\`bash`)
-  lines.push(`npx componentry@latest add ${props.installPackageName}`)
+  lines.push(`npx davinciui@latest add ${props.installPackageName}`)
   lines.push(`\`\`\``)
   if (props.installDependencies) {
     lines.push("")
@@ -77,7 +77,7 @@ export function buildDocsPageMarkdown(props: DocsPageMarkdownInput): string {
 
   lines.push("---")
   lines.push("")
-  lines.push(`_Component from [Componentry](https://componentry.dev/docs/components/${props.installPackageName})_`)
+  lines.push(`_Component from [DavinciUI](https://componentry.dev/docs/components/${props.installPackageName})_`)
 
   return lines.join("\n")
 }

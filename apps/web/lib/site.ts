@@ -1,16 +1,16 @@
 export const siteConfig = {
-  name: "Componentry",
-  url: "https://componentry.dev",
-  title: "Componentry — Beautiful Animated UI Components for React",
+  name: "DavinciUI",
+  url: "https://davinciui.dev",
+  title: "DavinciUI — Beautiful Animated UI Components for React",
   description:
     "Beautiful, animated React UI components with styling and motion already handled. Built with Tailwind CSS, TypeScript, and Framer Motion.",
   author: {
-    name: "Harsh Jadhav",
-    twitter: "https://twitter.com/harshjdhv",
-    github: "https://github.com/harshjdhv",
-    handle: "@harshjdhv",
+    name: "Manthan Sorkhade",
+    twitter: "https://x.com/ManthanSorkhade",
+    github: "https://github.com/sorkhademanthan",
+    handle: "@ManthanSorkhade",
   },
-  repository: "https://github.com/harshjdhv/componentry",
+  repository: "https://github.com/sorkhademanthan/davinciui",
 } as const;
 
 export function absoluteUrl(path = "") {

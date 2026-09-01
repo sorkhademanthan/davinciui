@@ -1,6 +1,6 @@
 {
-  "name": "Componentry - Premium React UI Component Library",
-  "short_name": "Componentry",
+  "name": "DavinciUI - Premium React UI Component Library",
+  "short_name": "DavinciUI",
   "description": "Beautiful, animated, copy-paste React UI components built with Tailwind CSS, TypeScript, and Framer Motion. Free and open-source.",
   "start_url": "/",
   "display": "standalone",
