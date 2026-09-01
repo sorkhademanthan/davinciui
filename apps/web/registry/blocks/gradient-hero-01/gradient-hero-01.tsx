@@ -1,6 +1,6 @@
 export default function GradientHero01() {
   return (
-    <section className="relative min-h-screen overflow-hidden bg-background font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe_UI',sans-serif] text-foreground">
+    <section className="relative min-h-screen overflow-hidden bg-background font-sans text-foreground">
       <div
         className="absolute inset-x-[-18%] bottom-[-34%] h-[78%] rounded-[100%] blur-3xl"
         style={{
@@ -35,7 +35,7 @@ export default function GradientHero01() {
           Previewing DavinciUI Blocks
         </div>
 
-        <h1 className="mt-8 max-w-5xl text-balance text-5xl font-medium leading-[0.96] tracking-normal md:text-6xl lg:text-7xl">
+        <h1 className="mt-8 max-w-5xl text-balance text-5xl font-semibold leading-[0.96] tracking-tight md:text-6xl lg:text-7xl">
           Launch pages that feel finished from the first pass
         </h1>
 
