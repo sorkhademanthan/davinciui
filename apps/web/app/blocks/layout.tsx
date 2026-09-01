@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "Blocks",
-  description: "Production-ready Componentry blocks for React applications.",
+  description: "Production-ready DavinciUI blocks for React applications.",
   robots: {
     index: true,
     follow: true,

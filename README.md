@@ -2,10 +2,10 @@
 
 
 <div align="center">
-  <img src="apps/web/public/banner.png" alt="Componentry Banner" width="100%" />
+  <img src="apps/web/public/banner.png" alt="DavinciUI Banner" width="100%" />
 </div>
 
-<h1 align="center">Componentry</h1>
+<h1 align="center">DavinciUI</h1>
 
 <p align="center">
   <strong>Beautiful, interactive UI components you can copy and paste into your apps.</strong>
@@ -41,9 +41,9 @@
 
 ## Introduction
 
-Componentry is a collection of beautifully designed, interactive UI components built with React and Tailwind CSS. Just run the CLI command, add the component to your project, and start building.
+DavinciUI is a collection of beautifully designed, interactive UI components built with React and Tailwind CSS. Just run the CLI command, add the component to your project, and start building.
 
-### Why Componentry?
+### Why DavinciUI?
 
 - **Copy & Paste** - Not a dependency. You own the code.
 - **Interactive** - Cursor-following effects, 3D transforms, and smooth animations.
@@ -61,7 +61,7 @@ Componentry is a collection of beautifully designed, interactive UI components b
 The fastest way to add components is using the shadcn CLI:
 
 ```bash
-npx shadcn@latest add @componentry/spotlight-card
+npx shadcn@latest add @davinciui/spotlight-card
 ```
 
 
@@ -79,7 +79,7 @@ This project uses [Turborepo](https://turbo.build/repo) for monorepo management.
 ```bash
 # Clone the repository
 git clone https://github.com/harshjdhv/componentry.git
-cd componentry
+cd davinciui
 
 # Install dependencies
 pnpm install
@@ -91,7 +91,7 @@ pnpm dev
 ### Project Structure
 
 ```
-componentry/
+davinciui/
 ├── apps/
 │   └── web/                 # Documentation site (Next.js)
 ├── packages/

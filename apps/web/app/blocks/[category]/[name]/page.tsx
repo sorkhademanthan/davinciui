@@ -29,7 +29,7 @@ export async function generateMetadata({
   if (!item) return {};
 
   return {
-    title: `${item.title} Block | Componentry`,
+    title: `${item.title} Block | DavinciUI`,
     description: item.description,
   };
 }

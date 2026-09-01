@@ -24,7 +24,7 @@ export async function generateMetadata({
   if (!item) return {};
 
   return {
-    title: `${item.title} Blocks | Componentry`,
+    title: `${item.title} Blocks | DavinciUI`,
     description: item.description,
   };
 }
