@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Fully automated preview video uploader for Componentry.
+Fully automated preview video uploader for DavinciUI.
 
 Takes a video from the `temporary` root folder, then:
   1. Reads the registry to find the component's category

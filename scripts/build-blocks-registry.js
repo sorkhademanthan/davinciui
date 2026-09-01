@@ -263,9 +263,9 @@ function main() {
     path.join(PUBLIC_REGISTRY_DIR, "registry.json"),
     {
       $schema: "https://ui.shadcn.com/schema/registry.json",
-      name: "componentry",
+      name: "davinciui",
       homepage: "https://componentry.fun",
-      aliases: ["componentry", "componentryui", "ui", "cmp"],
+      aliases: ["davinciui", "ui", "cmp"],
       items: [],
     },
   );
@@ -275,6 +275,9 @@ function main() {
 
   writeJson(path.join(PUBLIC_REGISTRY_DIR, "registry.json"), {
     ...existingRegistry,
+    name: "davinciui",
+    homepage: "https://componentry.fun",
+    aliases: ["davinciui", "ui", "cmp"],
     items: [
       ...existingItems,
       ...blocks.map((block) => ({ name: block.name, type: block.type })),
