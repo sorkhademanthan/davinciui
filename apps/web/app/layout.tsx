@@ -33,11 +33,7 @@ const fontSerif = Instrument_Serif({
   display: "swap",
 });
 
-const fontDisplay = Geist({
-  subsets: ["latin"],
-  variable: "--font-display",
-  display: "swap",
-});
+
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -177,9 +173,9 @@ export default function RootLayout({
         <JsonLd />
       </head>
       <body
-        className={`${fontSans.variable} ${fontMono.variable} ${fontSerif.variable} ${fontDisplay.variable} relative font-sans antialiased`}
+        className={`${fontSans.variable} ${fontMono.variable} ${fontSerif.variable} relative font-sans antialiased`}
         style={
-          { "--font-heading": "var(--font-display)" } as React.CSSProperties
+          { "--font-heading": "var(--font-sans)" } as React.CSSProperties
         }
       >
         <div className="isolate relative flex min-h-svh flex-col">

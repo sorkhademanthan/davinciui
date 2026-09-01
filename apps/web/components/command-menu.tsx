@@ -35,6 +35,7 @@ import {
 } from "@workspace/ui/components/command"
 import { Kbd, KbdGroup } from "@workspace/ui/components/kbd"
 import { docsConfig } from "@/config/docs"
+import { navigation } from "@/config/navigation"
 
 interface CommandMenuItem {
   value: string
@@ -52,11 +53,37 @@ interface CommandMenuGroup {
 }
 
 const navGroups = docsConfig.nav
-const gettingStartedGroup = navGroups.find((group) => group.title === "Getting Started")
-const componentGroups = navGroups.filter((group) => group.title !== "Getting Started")
-const allComponentItems = componentGroups
-  .flatMap((group) => group.items)
-  .sort((a, b) => a.title.localeCompare(b.title))
+const gettingStartedGroup = navGroups.find((group) => group.title.includes("Getting Started"))
+const componentGroups = navGroups.filter((group) => !group.title.includes("Getting Started"))
+function flattenNavItems(groups: typeof navGroups) {
+  const flat: { title: string; href: string }[] = []
+  const collect = (items: { title: string; href: string; items?: { title: string; href: string; items?: unknown[] }[] }[]) => {
+    for (const item of items) {
+      flat.push({ title: item.title, href: item.href })
+      if (item.items) collect(item.items as never)
+    }
+  }
+  for (const g of groups) collect(g.items)
+  return flat
+}
+const allComponentItems = flattenNavItems(componentGroups).sort((a, b) => a.title.localeCompare(b.title))
+
+// Phase 4: Search grouped by Design System / Experience (spec §17)
+function flattenNavigationSections(sections: typeof navigation.designSystem.sections) {
+  const flat: { title: string; href: string; group: string }[] = []
+  for (const sec of sections) {
+    for (const item of sec.items) {
+      if (item.items?.length) {
+        for (const sub of item.items) flat.push({ title: sub.title, href: sub.href, group: sec.title })
+      } else {
+        flat.push({ title: item.title, href: item.href, group: sec.title })
+      }
+    }
+  }
+  return flat
+}
+const designSystemItems = flattenNavigationSections(navigation.designSystem.sections)
+const experienceItems = flattenNavigationSections(navigation.experience.sections)
 
 function createItem(
   group: string,
@@ -123,11 +150,33 @@ const commandGroups: CommandMenuGroup[] = [
       }),
     ],
   },
+  {
+    value: "Design System",
+    items: designSystemItems.slice(0, 30).map((item) =>
+      createItem("Design System", {
+        title: item.title,
+        subtitle: item.group,
+        href: item.href,
+        icon: <CircleDashed />,
+      }),
+    ),
+  },
+  {
+    value: "Components",
+    items: experienceItems.slice(0, 40).map((item) =>
+      createItem("Components", {
+        title: item.title,
+        subtitle: item.group,
+        href: item.href,
+        icon: <CircleDashed />,
+      }),
+    ),
+  },
   ...(allComponentItems.length > 0
     ? [
         {
-          value: "Components",
-          items: allComponentItems.map((item) =>
+          value: "Components (legacy)",
+          items: allComponentItems.slice(0, 20).map((item) =>
             createItem("Components", {
               title: item.title,
               href: item.href,
@@ -256,7 +305,15 @@ export function CommandMenu({ trigger }: { trigger?: React.ReactElement }) {
                           <span className="flex size-4 shrink-0 items-center justify-center text-muted-foreground/72 [&_svg]:size-4">
                             {item.icon}
                           </span>
-                          <span className="flex-1">{item.title}</span>
+                          <span className="flex-1 flex items-center gap-2">
+                            <span>{item.title}</span>
+                            {item.subtitle && <span className="text-xs text-muted-foreground hidden sm:inline">· {item.subtitle}</span>}
+                          </span>
+                          {(item.value.startsWith("design system") || item.value.startsWith("components")) && (
+                            <span className="text-[11px] font-mono text-muted-foreground border rounded px-1 hidden sm:inline">
+                              {item.value.startsWith("design system") ? "DS" : "CMP"}
+                            </span>
+                          )}
                         </CommandItem>
                       )}
                     </CommandCollection>
