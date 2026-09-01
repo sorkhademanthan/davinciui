@@ -16,15 +16,15 @@ const links = {
   ],
   resources: [
     { label: "Documentation", href: "/docs" },
-    { label: "GitHub", href: "https://github.com/harshjdhv/componentry", external: true },
-    { label: "Sponsor", href: "https://github.com/sponsors/harshjdhv", external: true },
+    { label: "GitHub", href: "https://github.com/sorkhademanthan/davinciui", external: true },
+    { label: "Sponsor", href: "https://github.com/sponsors/sorkhademanthan", external: true },
     { label: "Terms of Service", href: "/terms-of-service" },
     { label: "Privacy Policy", href: "/privacy-policy" },
   ],
   connect: [
-    { label: "Twitter / X", href: "https://x.com/harshjdhv", external: true },
-    { label: "LinkedIn", href: "https://linkedin.com/in/harshjdhv", external: true },
-    { label: "Developer", href: "https://harshjdhv.com", external: true },
+    { label: "Twitter / X", href: "https://x.com/ManthanSorkhade", external: true },
+    { label: "LinkedIn", href: "https://www.linkedin.com/in/sorkhademanthan/", external: true },
+    { label: "Developer", href: "https://www.manthansorkhade.in/", external: true },
   ],
 }
 
@@ -39,27 +39,27 @@ export function Footer() {
             <Link href="/" className="group mb-6 flex w-fit items-center gap-2.5">
               <ComponentryLogomark className="size-7 text-zinc-900 transition-transform duration-300 group-hover:scale-105 dark:text-white" />
               <span className="text-lg font-semibold tracking-tight text-zinc-900 dark:text-white">
-                Componentry
+                DavinciUI
               </span>
             </Link>
             <p className="mb-7 max-w-md text-base leading-7 text-zinc-500 dark:text-zinc-400">
               Beautiful animated React components. Copy, paste, ship. Built for modern web applications with a focus on motion and usability.
             </p>
             <div className="flex items-center gap-3">
-              <a 
-                href="https://x.com/harshjdhv" 
-                target="_blank" 
-                rel="noreferrer" 
+              <a
+                href="https://x.com/ManthanSorkhade"
+                target="_blank"
+                rel="noreferrer"
                 className="text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
               >
                 <svg className="size-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
                 </svg>
               </a>
-              <a 
-                href="https://github.com/harshjdhv/componentry" 
-                target="_blank" 
-                rel="noreferrer" 
+              <a
+                href="https://github.com/sorkhademanthan/davinciui"
+                target="_blank"
+                rel="noreferrer"
                 className="text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
               >
                 <svg className="size-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -135,14 +135,14 @@ export function Footer() {
 
         <div className="z-10 flex flex-col items-center justify-between gap-4 pb-8 text-sm md:flex-row">
           <p className="text-zinc-500 dark:text-zinc-400">
-            © {new Date().getFullYear()} Componentry. Created by{" "}
+            © {new Date().getFullYear()} DavinciUI. Created by{" "}
             <a
-              href="https://x.com/harshjdhv"
+              href="https://x.com/ManthanSorkhade"
               target="_blank"
               rel="noreferrer"
               className="text-zinc-900 dark:text-zinc-100 hover:underline underline-offset-4"
             >
-              Harsh Jadhav
+              Manthan Sorkhade
             </a>
             .
           </p>
@@ -168,7 +168,7 @@ export function Footer() {
             letterSpacing="-10"
             textAnchor="middle"
           >
-            componentry
+            davinciui
           </text>
         </svg>
       </div>

@@ -6,7 +6,7 @@ import { CopyButton } from "@/components/copy-button";
 import { LandingContent } from "@/components/landing/landing-frame";
 import posthog from "posthog-js";
 
-const emailAddress = "harshjadhavconnect@gmail.com";
+const emailAddress = "sorkhademanthan@gmail.com";
 
 const XIcon = () => (
   <svg className="size-4" viewBox="0 0 24 24" fill="currentColor">
@@ -84,7 +84,7 @@ export function CustomWorkCta() {
                   X / Twitter
                 </p>
                 <p className="mt-2 text-lg font-semibold tracking-[-0.02em] text-zinc-900 dark:text-zinc-100 sm:text-xl">
-                  @harshjdhv
+                  @ManthanSorkhade
                 </p>
                 <p className="mt-2 text-sm leading-6 text-zinc-500 text-pretty dark:text-zinc-500">
                   DMs are best for quick questions and early ideas.
@@ -93,7 +93,7 @@ export function CustomWorkCta() {
 
               <div className="mt-auto flex items-center gap-2 pt-6">
                 <a
-                  href="https://x.com/harshjdhv"
+                  href="https://x.com/ManthanSorkhade"
                   target="_blank"
                   rel="noreferrer"
                   className="group inline-flex h-9 items-center justify-center gap-2 rounded-full bg-foreground px-3.5 text-sm font-medium text-background transition-opacity hover:opacity-90"

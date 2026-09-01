@@ -11,7 +11,7 @@ import {
 
 const defaultCode = `import { Signature } from "@/components/ui/signature"
 
-<Signature text="Componentry" />`
+<Signature text="DavinciUI" />`
 
 export async function SignatureDocs() {
   const sourceCode = (await readComponentSource("signature")) || "// Unable to load source code"

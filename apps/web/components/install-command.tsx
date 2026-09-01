@@ -12,7 +12,7 @@ interface InstallCommandProps {
 }
 
 export function InstallCommand({ component }: InstallCommandProps) {
-  const registryNamespace = process.env.NEXT_PUBLIC_REGISTRY_NAMESPACE || "@componentry"
+  const registryNamespace = process.env.NEXT_PUBLIC_REGISTRY_NAMESPACE || "@davinciui"
   const componentRef = component.startsWith("@")
     ? component
     : `${registryNamespace}/${component}`
