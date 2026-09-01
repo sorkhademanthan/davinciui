@@ -26,5 +26,9 @@
   "engines": {
     "node": ">=20"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
 }
