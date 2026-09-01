@@ -1,0 +1,273 @@
+import { components } from "@/registry"
+
+// ─────────────────────────────────────────────────────────────
+// Phase 1: Data-driven IA — DESIGN SYSTEM vs EXPERIENCE
+// Preserves all existing content, only reorganizes navigation
+// Existing /docs routes remain via redirects (next.config.mjs)
+// ─────────────────────────────────────────────────────────────
+
+export type NavItem = {
+  title: string
+  href: string
+  items?: NavItem[]
+  badge?: string
+}
+
+export type NavSection = {
+  title: string
+  items: NavItem[]
+}
+
+export type TopLevelArea = {
+  label: string
+  href: string
+  description: string
+  sections: NavSection[]
+}
+
+// ─────────────── DESIGN SYSTEM — "How we design" ───────────────
+const foundationsSection: NavSection = {
+  title: "Foundations",
+  items: [
+    { title: "Overview", href: "/design-system/foundations" },
+    { title: "Colors", href: "/design-system/foundations/colors" },
+    { title: "Typography", href: "/design-system/foundations/typography" },
+    { title: "Spacing", href: "/design-system/foundations/spacing" },
+    { title: "Sizing", href: "/design-system/foundations/sizing" },
+    { title: "Borders", href: "/design-system/foundations/borders" },
+    { title: "Border Radius", href: "/design-system/foundations/border-radius" },
+    { title: "Shadows", href: "/design-system/foundations/shadows" },
+    { title: "Icons", href: "/design-system/foundations/icons" },
+    { title: "Motion", href: "/design-system/foundations/motion" },
+    { title: "Breakpoints", href: "/design-system/foundations/breakpoints" },
+  ],
+}
+
+const tokensSection: NavSection = {
+  title: "Tokens",
+  items: [
+    { title: "Overview", href: "/design-system/tokens" },
+    { title: "Primitive", href: "/design-system/tokens/primitive" },
+    { title: "Semantic", href: "/design-system/tokens/semantic" },
+    { title: "Component", href: "/design-system/tokens/component" },
+    { title: "Custom", href: "/design-system/tokens/custom" },
+  ],
+}
+
+const themesSection: NavSection = {
+  title: "Themes",
+  items: [
+    { title: "Light", href: "/design-system/themes/light" },
+    { title: "Dark", href: "/design-system/themes/dark" },
+    { title: "Custom Themes", href: "/design-system/themes/custom" },
+    { title: "Overrides", href: "/design-system/themes/overrides" },
+  ],
+}
+
+const primitivesSection: NavSection = {
+  title: "Primitives",
+  items: [
+    { title: "Box", href: "/design-system/primitives/box" },
+    { title: "Stack", href: "/design-system/primitives/stack" },
+    { title: "Flex", href: "/design-system/primitives/flex" },
+    { title: "Grid", href: "/design-system/primitives/grid" },
+    { title: "Container", href: "/design-system/primitives/container" },
+  ],
+}
+
+const accessibilitySection: NavSection = {
+  title: "Accessibility",
+  items: [
+    { title: "Overview", href: "/design-system/accessibility" },
+    { title: "Color Contrast", href: "/design-system/accessibility/contrast" },
+    { title: "Keyboard", href: "/design-system/accessibility/keyboard" },
+    { title: "Focus", href: "/design-system/accessibility/focus" },
+  ],
+}
+
+const motionPrinciplesSection: NavSection = {
+  title: "Motion Principles",
+  items: [
+    { title: "Principles", href: "/design-system/motion" },
+    { title: "Duration", href: "/design-system/motion/duration" },
+    { title: "Easing", href: "/design-system/motion/easing" },
+  ],
+}
+
+// ─────────────── EXPERIENCE — "What we build" ───────────────
+
+// Reuse existing Components IA but scoped under /experience
+const experienceComponentsSection: NavSection = {
+  title: "Components",
+  items: [
+    {
+      title: "Actions",
+      href: "/experience/components/actions",
+      items: [
+        { title: "Button", href: "/experience/components/button" },
+        { title: "Button Group", href: "/experience/components/button-group" },
+        { title: "Toggle", href: "/experience/components/toggle" },
+        { title: "Link", href: "/experience/components/link" },
+      ],
+    },
+    {
+      title: "Forms",
+      href: "/experience/components/forms",
+      items: [
+        { title: "Input", href: "/experience/components/input" },
+        { title: "Textarea", href: "/experience/components/textarea" },
+        { title: "Select", href: "/experience/components/select" },
+        { title: "Checkbox", href: "/experience/components/checkbox" },
+        { title: "Radio", href: "/experience/components/radio" },
+        { title: "Switch", href: "/experience/components/switch" },
+        { title: "Form", href: "/experience/components/form" },
+      ],
+    },
+    {
+      title: "Feedback",
+      href: "/experience/components/feedback",
+      items: [
+        { title: "Alert", href: "/experience/components/alert" },
+        { title: "Toast", href: "/experience/components/toast" },
+        { title: "Progress", href: "/experience/components/progress" },
+        { title: "Spinner", href: "/experience/components/spinner" },
+        { title: "Skeleton", href: "/experience/components/skeleton" },
+      ],
+    },
+    {
+      title: "Navigation",
+      href: "/experience/components/navigation",
+      items: [
+        { title: "Tabs", href: "/experience/components/tabs" },
+        { title: "Breadcrumb", href: "/experience/components/breadcrumb" },
+        { title: "Pagination", href: "/experience/components/pagination" },
+        { title: "Sidebar", href: "/experience/components/sidebar" },
+        { title: "Navigation Menu", href: "/experience/components/navigation-menu" },
+      ],
+    },
+    {
+      title: "Overlays",
+      href: "/experience/components/overlays",
+      items: [
+        { title: "Dialog", href: "/experience/components/dialog" },
+        { title: "Drawer", href: "/experience/components/drawer" },
+        { title: "Popover", href: "/experience/components/popover" },
+        { title: "Tooltip", href: "/experience/components/tooltip" },
+        { title: "Dropdown", href: "/experience/components/dropdown" },
+      ],
+    },
+    {
+      title: "Data Display",
+      href: "/experience/components/data-display",
+      items: [
+        { title: "Card", href: "/experience/components/card" },
+        { title: "Badge", href: "/experience/components/badge" },
+        { title: "Avatar", href: "/experience/components/avatar" },
+        { title: "Table", href: "/experience/components/table" },
+        { title: "Data Table", href: "/experience/components/data-table" },
+      ],
+    },
+    {
+      title: "Layout",
+      href: "/experience/components/layout",
+      items: [
+        { title: "Accordion", href: "/experience/components/accordion" },
+        { title: "Carousel", href: "/experience/components/carousel" },
+        { title: "Collapsible", href: "/experience/components/collapsible" },
+        { title: "Scroll Area", href: "/experience/components/scroll-area" },
+      ],
+    },
+    { title: "All Components", href: "/experience/components" },
+  ],
+}
+
+const categoryOrder = ["Text Animations", "Components", "Hero Backgrounds", "Visual Effects", "ASCII Effects"] as const
+
+function buildPremiumSections(): NavSection[] {
+  return categoryOrder.map((category) => {
+    const items = Object.values(components)
+      .filter((c) => c.category === category)
+      .sort((a, b) => a.title.localeCompare(b.title))
+      .map((c) => ({ title: c.title, href: `/experience/components/${c.slug}` }))
+    return { title: category, items }
+  })
+}
+
+const premiumSections: NavSection[] = buildPremiumSections()
+
+const motionSection: NavSection = {
+  title: "Motion",
+  items: [
+    { title: "Overview", href: "/experience/motion" },
+    { title: "Hover Effects", href: "/experience/motion/hover" },
+    { title: "Cursor Effects", href: "/experience/motion/cursor" },
+    { title: "Magnetic Effects", href: "/experience/motion/magnetic" },
+    { title: "Text Animations", href: "/experience/motion/text" },
+    { title: "Micro Interactions", href: "/experience/motion/micro" },
+  ],
+}
+
+const scrollSection: NavSection = {
+  title: "Scroll",
+  items: [
+    { title: "Overview", href: "/experience/scroll" },
+    { title: "Scroll Animations", href: "/experience/scroll/animations" },
+    { title: "Scroll Reveals", href: "/experience/scroll/reveals" },
+    { title: "Parallax", href: "/experience/scroll/parallax" },
+    { title: "Horizontal Scroll", href: "/experience/scroll/horizontal" },
+    { title: "Sticky Experiences", href: "/experience/scroll/sticky" },
+    { title: "Scroll Transitions", href: "/experience/scroll/transitions" },
+  ],
+}
+
+const blocksSection: NavSection = {
+  title: "Blocks",
+  items: [
+    { title: "Overview", href: "/experience/blocks" },
+    { title: "Hero", href: "/experience/blocks/hero" },
+    { title: "Features", href: "/experience/blocks/features" },
+    { title: "Pricing", href: "/experience/blocks/pricing" },
+    { title: "Testimonials", href: "/experience/blocks/testimonials" },
+    { title: "Navigation", href: "/experience/blocks/navigation" },
+    { title: "Footer", href: "/experience/blocks/footer" },
+  ],
+}
+
+const templatesSection: NavSection = {
+  title: "Templates",
+  items: [
+    { title: "Overview", href: "/experience/templates" },
+    { title: "Landing", href: "/experience/templates/landing" },
+    { title: "Dashboard", href: "/experience/templates/dashboard" },
+  ],
+}
+
+// ─────────────── Top-level navigation ───────────────
+export const navigation = {
+  designSystem: {
+    label: "Design System",
+    href: "/design-system",
+    description: "How we design — foundations, tokens, themes",
+    sections: [foundationsSection, tokensSection, themesSection, primitivesSection, accessibilitySection, motionPrinciplesSection],
+  } satisfies TopLevelArea,
+  experience: {
+    label: "Components",
+    href: "/experience",
+    description: "Components, motion, blocks — what we build",
+    sections: [experienceComponentsSection, ...premiumSections, motionSection, scrollSection, blocksSection, templatesSection],
+  } satisfies TopLevelArea,
+} as const
+
+// Navbar helper — primary areas (Experience renamed to Components per request)
+export const primaryNav = [
+  { label: "Design System", href: "/design-system" },
+  { label: "Components", href: "/experience/components" },
+] as const
+
+export function isDesignSystemPath(pathname: string) {
+  return pathname.startsWith("/design-system")
+}
+
+export function isExperiencePath(pathname: string) {
+  return pathname.startsWith("/experience") || pathname.startsWith("/blocks") || pathname.startsWith("/docs/components") || pathname.startsWith("/docs/premium") || pathname.startsWith("/docs/motion") || pathname.startsWith("/docs/scroll")
+}

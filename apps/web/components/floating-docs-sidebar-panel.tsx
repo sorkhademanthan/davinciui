@@ -6,9 +6,9 @@ import { motion, AnimatePresence } from "framer-motion"
 
 import { cn } from "@/lib/utils"
 import { docsConfig } from "@/config/docs"
-import { components, isNewComponent } from "@/registry"
+import { components } from "@/registry"
 import { useDocsSidebar } from "@/components/docs-sidebar-context"
-import { LineNav, type LineNavItem } from "@/components/line-nav"
+import { DocsSidebarNav } from "@/components/docs-sidebar-nav"
 
 type PreviewSources = {
   mp4: string
@@ -24,7 +24,7 @@ function getPreferredPreviewSrc(sources: PreviewSources) {
     const supportsWebm = Boolean(probe.canPlayType('video/webm; codecs="vp9,opus"'))
     preferredPreviewFormat = supportsWebm ? "webm" : "mp4"
   }
-  return preferredPreviewFormat === "webm" ? sources.webm : sources.mp4
+  return preferredPreviewFormat === "webm" ? sources.webm : "mp4"
 }
 
 function getPreviewSources(previewVideo?: string) {
@@ -45,27 +45,21 @@ export function FloatingDocsSidebarPanel() {
   const [hoverPreview, setHoverPreview] = React.useState<{
     title: string
     videoSrc: string
-    mp4: string
-    webm: string
   } | null>(null)
   const [hoverPosition, setHoverPosition] = React.useState<{ x: number; y: number } | null>(null)
   const warmedPreviewKeys = React.useRef(new Set<string>())
-  const warmingVideos = React.useRef(new Map<string, HTMLVideoElement>())
 
   const warmPreviewAssets = React.useCallback((sources: PreviewSources) => {
     if (typeof window === "undefined") return
     const selectedSrc = getPreferredPreviewSrc(sources)
     if (warmedPreviewKeys.current.has(selectedSrc)) return
-
     warmedPreviewKeys.current.add(selectedSrc)
-
     const video = document.createElement("video")
     video.preload = "auto"
     video.muted = true
     video.playsInline = true
     video.src = selectedSrc
     video.load()
-    warmingVideos.current.set(selectedSrc, video)
   }, [])
 
   const getPreviewPosition = React.useCallback((event: React.MouseEvent<HTMLAnchorElement>) => {
@@ -86,7 +80,6 @@ export function FloatingDocsSidebarPanel() {
         setHoverPreview(null)
         return
       }
-
       const previewVideo = components[slug]?.previewVideo
       const sources = getPreviewSources(previewVideo)
       if (!sources) {
@@ -96,13 +89,7 @@ export function FloatingDocsSidebarPanel() {
       }
       warmPreviewAssets(sources)
       setHoverPosition(getPreviewPosition(event))
-
-      setHoverPreview({
-        title: item.title,
-        videoSrc: getPreferredPreviewSrc(sources),
-        mp4: sources.mp4,
-        webm: sources.webm,
-      })
+      setHoverPreview({ title: item.title, videoSrc: getPreferredPreviewSrc(sources) })
     },
     [getPreviewPosition, warmPreviewAssets]
   )
@@ -136,21 +123,23 @@ export function FloatingDocsSidebarPanel() {
 
   React.useEffect(() => {
     if (!isOpen) return
-
     const initialSources: PreviewSources[] = []
     for (const group of docsConfig.nav) {
       for (const item of group.items) {
-        const slug = item.href.split("/").pop()
-        if (!slug) continue
-        const previewVideo = components[slug]?.previewVideo
-        const sources = getPreviewSources(previewVideo)
-        if (!sources) continue
-        initialSources.push(sources)
+        const candidates: typeof group.items = item.items?.length ? item.items : [item]
+        for (const candidate of candidates) {
+          const slug = candidate.href.split("/").pop()
+          if (!slug) continue
+          const previewVideo = components[slug]?.previewVideo
+          const sources = getPreviewSources(previewVideo)
+          if (!sources) continue
+          initialSources.push(sources)
+          if (initialSources.length >= 5) break
+        }
         if (initialSources.length >= 5) break
       }
       if (initialSources.length >= 5) break
     }
-
     initialSources.forEach((sources) => warmPreviewAssets(sources))
   }, [isOpen, warmPreviewAssets])
 
@@ -165,58 +154,18 @@ export function FloatingDocsSidebarPanel() {
           className="fixed top-3 left-3 z-50 flex w-72 flex-col"
           onMouseLeave={close}
         >
-          <div className="flex max-h-[calc(100vh-24px)] flex-col gap-1 overflow-hidden rounded-xl lg:rounded-2xl border border-border/50 bg-white p-2 shadow-card dark:bg-[#121212]">
-
-
-            <div className="mask-image-b flex-1 overflow-y-auto px-2 pt-3 pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              {docsConfig.nav.map((group, index) => {
-                const lineItems: LineNavItem[] = group.items.map((item) => {
-                  const slug = item.href.split("/").pop()
-                  const comp = slug ? components[slug] : undefined
-                  const isNew = comp ? isNewComponent(comp) : false
-                  return {
-                    title: item.title,
-                    href: item.href,
-                    accessory: isNew ? (
-                      <span className="inline-flex items-center rounded-full bg-blue-500/10 px-1.5 py-0.5 text-[9px] font-bold text-blue-600 dark:text-blue-400">
-                        NEW
-                      </span>
-                    ) : undefined,
-                  }
-                })
-
-                return (
-                  <div
-                    key={index}
-                    className={index > 0 ? "border-t border-border/40 pt-5 mt-5" : ""}
-                  >
-                    <h4 className="mb-2.5 px-3 text-[11px] font-semibold uppercase tracking-widest text-zinc-700 dark:text-zinc-300">
-                      {group.title}
-                    </h4>
-                    <LineNav
-                      className="py-2"
-                      items={lineItems}
-                      activeHref={pathname ?? undefined}
-                      onItemClick={() => {
-                        setHoverPreview(null)
-                        setHoverPosition(null)
-                        close()
-                      }}
-                      onItemMouseEnter={(item, event) =>
-                        updateHoverPreview(item, event)
-                      }
-                      onItemMouseMove={updateHoverPosition}
-                      onItemMouseLeave={() => {
-                        setHoverPreview(null)
-                        setHoverPosition(null)
-                      }}
-                    />
-                  </div>
-                )
-              })}
+          <div className="flex max-h-[calc(100vh-24px)] flex-col overflow-hidden rounded-2xl border border-border/50 bg-white shadow-card dark:bg-[#0a0a0a]">
+            <div className="flex-1 overflow-hidden">
+              <DocsSidebarNav
+                onNavigate={close}
+                onHoverItem={updateHoverPreview}
+                onHoverMove={updateHoverPosition}
+                onHoverLeave={() => {
+                  setHoverPreview(null)
+                  setHoverPosition(null)
+                }}
+              />
             </div>
-
-            <div className="pointer-events-none absolute bottom-2 left-2 right-2 h-6 rounded-b-2xl bg-gradient-to-t from-white to-transparent dark:from-zinc-950" />
           </div>
 
           <AnimatePresence>
@@ -228,10 +177,7 @@ export function FloatingDocsSidebarPanel() {
                 exit={{ opacity: 0, scale: 0.98 }}
                 transition={{ duration: 0.08, ease: "easeOut" }}
                 className="pointer-events-none fixed z-[70] w-56"
-                style={{
-                  left: hoverPosition.x,
-                  top: hoverPosition.y,
-                }}
+                style={{ left: hoverPosition.x, top: hoverPosition.y }}
               >
                 <div className="overflow-hidden rounded-xl border border-zinc-200/70 bg-white/95 shadow-2xl backdrop-blur-md dark:border-zinc-800/70 dark:bg-zinc-900/95">
                   <div className="relative h-32 w-full bg-zinc-100 dark:bg-zinc-800/60">
@@ -244,10 +190,7 @@ export function FloatingDocsSidebarPanel() {
                       playsInline
                       preload="auto"
                       onLoadedData={() => setIsHoverVideoReady(true)}
-                      className={cn(
-                        "relative h-full w-full object-cover transition-opacity duration-150",
-                        isHoverVideoReady ? "opacity-100" : "opacity-0"
-                      )}
+                      className={cn("relative h-full w-full object-cover transition-opacity duration-150", isHoverVideoReady ? "opacity-100" : "opacity-0")}
                     />
                   </div>
                 </div>

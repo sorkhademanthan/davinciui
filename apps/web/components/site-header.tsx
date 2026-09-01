@@ -15,7 +15,7 @@ interface SiteHeaderProps {
     landingGutter?: boolean
 }
 
-const LAST_KNOWN_GITHUB_STARS = 465
+const GITHUB_REPO = "sorkhademanthan/davinciui" as const
 
 function GitHubIcon(props: React.SVGProps<SVGSVGElement>) {
     return (
@@ -27,7 +27,7 @@ function GitHubIcon(props: React.SVGProps<SVGSVGElement>) {
 
 export function SiteHeader({ sidebarToggle, landingGutter }: SiteHeaderProps) {
     const pathname = usePathname()
-    const [stars, setStars] = React.useState<number | null>(LAST_KNOWN_GITHUB_STARS)
+    const [stars, setStars] = React.useState<number | null>(null)
     const [mobileNavOpen, setMobileNavOpen] = React.useState(false)
     const [isScrolled, setIsScrolled] = React.useState(false)
 
@@ -84,7 +84,7 @@ export function SiteHeader({ sidebarToggle, landingGutter }: SiteHeaderProps) {
                     }
                 }
 
-                const response = await fetch("https://api.github.com/repos/sorkhademanthan/davinciui")
+                const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}`)
                 if (!response.ok) return
 
                 const data = (await response.json()) as { stargazers_count?: number }
@@ -103,38 +103,38 @@ export function SiteHeader({ sidebarToggle, landingGutter }: SiteHeaderProps) {
         fetchStars()
     }, [])
 
-    const formattedStars =
-        stars === null
-            ? null
-            : new Intl.NumberFormat("en-US", {
-                notation: "compact",
-                compactDisplay: "short",
-            })
-                .format(stars)
-                .toLowerCase()
-    const fullStars = stars === null ? "GitHub" : `${new Intl.NumberFormat("en-US").format(stars)} stars`
+    const hasStars = typeof stars === "number" && stars > 0
+    const formattedStars = hasStars
+        ? new Intl.NumberFormat("en-US", { notation: "compact", compactDisplay: "short" }).format(stars!).toLowerCase()
+        : null
+    const fullStars = hasStars ? `${new Intl.NumberFormat("en-US").format(stars!)} stars on GitHub` : "View on GitHub"
+
+    const isDesignSystemActive =
+        pathname.startsWith("/design-system") ||
+        pathname.startsWith("/docs/foundations") ||
+        pathname.startsWith("/docs/tokens") ||
+        pathname.startsWith("/docs/theming") ||
+        pathname.startsWith("/docs/primitives") ||
+        pathname === "/docs" ||
+        pathname.startsWith("/docs/installation") ||
+        pathname.startsWith("/docs/quick-start") ||
+        pathname.startsWith("/docs/configuration")
+    const isExperienceActive =
+        pathname.startsWith("/experience") ||
+        pathname.startsWith("/blocks") ||
+        pathname.startsWith("/docs/components") ||
+        pathname.startsWith("/docs/premium") ||
+        pathname.startsWith("/docs/motion") ||
+        pathname.startsWith("/docs/scroll") ||
+        pathname.startsWith("/docs/registry")
+
     const navItems = [
-        {
-            href: "/docs",
-            label: "Docs",
-            active: pathname === "/docs" || (pathname.startsWith("/docs/") && !pathname.startsWith("/docs/mcp")),
-        },
-        {
-            href: "/blocks",
-            label: "Blocks",
-            active: pathname === "/blocks" || pathname.startsWith("/blocks/"),
-        },
-        {
-            href: "/docs/mcp",
-            label: "MCP",
-            active: pathname === "/docs/mcp",
-        },
-        {
-            href: "/sponsors",
-            label: "Sponsors",
-            active: pathname === "/sponsors",
-        },
-    ]
+        { href: "/experience/components", label: "Components", active: isExperienceActive },
+        { href: "/design-system", label: "Design System", active: isDesignSystemActive },
+        { href: "/blocks", label: "Blocks", active: pathname.startsWith("/blocks") || pathname.startsWith("/experience/blocks") },
+        { href: "/docs/mcp", label: "MCP", active: pathname.startsWith("/docs/mcp") },
+        { href: "/sponsors", label: "Sponsors", active: pathname === "/sponsors" },
+    ] as const
 
     return (
         <header
@@ -174,7 +174,7 @@ export function SiteHeader({ sidebarToggle, landingGutter }: SiteHeaderProps) {
                                 href={item.href}
                                 aria-current={item.active ? "page" : undefined}
                                 className={cn(
-                                    "inline-flex h-8 items-center px-1.5 transition-[color,opacity] duration-200 ease-out",
+                                    "inline-flex h-8 items-center gap-1 px-1.5 transition-[color,opacity] duration-200 ease-out",
                                     item.active
                                         ? "text-foreground"
                                         : "text-foreground/55 hover:text-foreground/80"
@@ -186,46 +186,42 @@ export function SiteHeader({ sidebarToggle, landingGutter }: SiteHeaderProps) {
                     </nav>
                 </div>
                 <div className="ml-auto flex items-center gap-1">
-                    <Link
-                        href="https://shadcnblocks.com/?utm_source=davinciui&utm_medium=sponsor&utm_campaign=header_badge"
-                        target="_blank"
-                        data-umami-event="click-sponsor-shadcnblocks"
-                        className="hidden h-8 items-center gap-1.5 rounded-md border border-input/50 bg-muted/30 pl-2 pr-2.5 text-sm font-normal transition-colors hover:border-input hover:bg-accent/50 md:inline-flex"
-                    >
-                        <span className="text-[10px] font-semibold uppercase tracking-widest text-amber-600 dark:text-amber-400">Sponsor</span>
-                        <span className="w-px h-4 bg-border/40" />
-                        <img
-                            src="https://cdn.shadcnblocks.com/shadcnblocks/images/logo/shadcnblocks-logo.svg"
-                            className="w-4 dark:invert"
-                            alt="Shadcnblocks Logo"
-                        />
-                        <span className="text-foreground/80 hover:text-foreground">Shadcnblocks.com</span>
-                    </Link>
-                    <div className="hidden h-4 w-px bg-foreground/15 dark:bg-foreground/20 md:block" />
                     <CommandMenu />
                     <div className="hidden h-4 w-px bg-foreground/15 dark:bg-foreground/20 sm:block" />
                     <div className="flex items-center gap-1">
                         <Link
-                            href="https://github.com/sorkhademanthan/davinciui"
+                            href={`https://github.com/${GITHUB_REPO}`}
                             target="_blank"
                             rel="noreferrer"
                             title={fullStars}
-                            className="group inline-flex h-8 items-center justify-center gap-1 rounded-md px-1.5 text-sm text-foreground/80 transition-colors hover:bg-muted hover:text-foreground dark:hover:bg-muted/50"
+                            className="group inline-flex h-8 items-center justify-center gap-1.5 rounded-full border border-border bg-white px-2.5 text-sm font-medium text-zinc-700 shadow-sm transition-colors hover:bg-zinc-50 hover:text-zinc-900 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-300 dark:hover:bg-white/[0.10] dark:hover:text-white"
                         >
-                            <GitHubIcon className="size-4 transition-opacity group-hover:opacity-100" />
-                            <span
-                                aria-hidden={stars === null}
-                                className="hidden w-[3ch] text-right tabular-nums leading-none sm:inline-block"
-                                style={{ textBox: "trim-end cap alphabetic" }}
-                            >
-                                {formattedStars ?? LAST_KNOWN_GITHUB_STARS}
-                            </span>
-                            <span className="sr-only">GitHub</span>
+                            <GitHubIcon className="size-4" />
+                            <span className="hidden sm:inline">GitHub</span>
+                            {hasStars ? (
+                                <>
+                                    <span className="hidden h-3 w-px bg-border sm:block dark:bg-white/10" aria-hidden="true" />
+                                    <span className="hidden tabular-nums sm:inline">{formattedStars}</span>
+                                </>
+                            ) : (
+                                <span className="hidden items-center gap-1 text-xs font-normal text-muted-foreground sm:inline-flex">
+                                    <span className="size-1 rounded-full bg-emerald-500" aria-hidden="true" />
+                                    Star
+                                </span>
+                            )}
+                            <span className="sr-only">View {GITHUB_REPO} on GitHub</span>
                         </Link>
                         <div className="hidden h-4 w-px bg-foreground/15 dark:bg-foreground/20 sm:block" />
                         <div className="hidden sm:block">
                             <ThemeToggle />
                         </div>
+                        <div className="hidden h-4 w-px bg-foreground/15 dark:bg-foreground/20 sm:block" />
+                        <Link
+                            href="/docs/installation"
+                            className="hidden h-8 items-center justify-center rounded-lg bg-foreground px-3.5 text-sm font-medium text-background transition-opacity hover:opacity-90 sm:inline-flex"
+                        >
+                            Get Started
+                        </Link>
                         <button
                             type="button"
                             className="group relative flex size-8 touch-manipulation flex-col items-center justify-center gap-1 rounded-md border-none transition-colors before:absolute before:-inset-x-2 before:-top-8 before:-bottom-1 active:scale-none aria-expanded:bg-accent sm:hidden"
@@ -251,18 +247,25 @@ export function SiteHeader({ sidebarToggle, landingGutter }: SiteHeaderProps) {
                 </div>
             </div>
             {mobileNavOpen && (
-                <div className="absolute right-4 top-[calc(100%+0.5rem)] z-50 flex w-48 origin-top-right flex-col gap-4 rounded-xl bg-popover p-1 text-sm text-popover-foreground shadow-md ring-1 ring-foreground/10 outline-hidden sm:hidden dark:ring-foreground/20">
+                <div className="absolute right-4 top-[calc(100%+0.5rem)] z-50 flex w-60 origin-top-right flex-col gap-1 rounded-xl bg-popover p-1 text-sm text-popover-foreground shadow-md ring-1 ring-foreground/10 outline-hidden sm:hidden dark:ring-foreground/20">
                     <nav className="flex flex-col" aria-label="Mobile navigation">
                         {navItems.map((item) => (
                             <Link
                                 key={item.href}
                                 href={item.href}
                                 aria-current={item.active ? "page" : undefined}
-                                className="rounded-lg px-3 py-1.5 text-base aria-[current=page]:bg-accent"
+                                className="flex items-center justify-between rounded-lg px-3 py-2 text-base aria-[current=page]:bg-accent"
                             >
-                                {item.label}
+                                <span>{item.label}</span>
                             </Link>
                         ))}
+                        <div className="my-1 h-px bg-border" />
+                        <Link
+                            href="/docs/installation"
+                            className="rounded-lg bg-foreground px-3 py-2 text-center text-base font-medium text-background"
+                        >
+                            Get Started
+                        </Link>
                     </nav>
                 </div>
             )}
