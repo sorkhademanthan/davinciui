@@ -40,7 +40,7 @@ export default function PreviewPage() {
           <div className="flex flex-col items-center justify-center">
             <h1 className="text-5xl font-bold tracking-tighter sm:text-6xl md:text-7xl lg:text-[8rem] leading-none pb-2 pr-2">
               <span className="bg-gradient-to-b from-white via-white to-white/40 bg-clip-text text-transparent block pb-4 pr-2">
-                Componentry
+                DavinciUI
               </span>
             </h1>
           </div>

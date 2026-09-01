@@ -38,7 +38,7 @@ function CodeBlock({ code }: { code: string }) {
 
 
 export default function McpDocsPage() {
-  const registryNamespace = process.env.NEXT_PUBLIC_REGISTRY_NAMESPACE || "@componentry"
+  const registryNamespace = process.env.NEXT_PUBLIC_REGISTRY_NAMESPACE || "@davinciui"
   const selectedRegistryUrl = "https://componentry.fun/r/{name}.json"
 
   return (
@@ -55,7 +55,7 @@ export default function McpDocsPage() {
             MCP
           </h1>
           <p className="mt-3 max-w-2xl text-sm font-medium tracking-tight text-zinc-400 sm:text-base dark:text-zinc-600">
-            Integrating MCP with Componentry lets you control it via AI.
+            Integrating MCP with DavinciUI lets you control it via AI.
           </p>
         </div>
 
@@ -86,7 +86,7 @@ export default function McpDocsPage() {
 
           <Section title="Usage" id="usage" className="pt-2">
             <p className="text-zinc-500 dark:text-zinc-400 leading-relaxed">
-              You can now ask your IDE to use any Componentry component. Here are some examples:
+              You can now ask your IDE to use any DavinciUI component. Here are some examples:
             </p>
             <ul className="space-y-2 text-zinc-700 dark:text-zinc-300">
               <li className="font-mono text-[13px] sm:text-sm">"Add a badge component"</li>

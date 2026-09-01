@@ -13,7 +13,7 @@ export default function OpenGraphPreviewPage() {
           <div className="flex size-[46px] items-center justify-center">
             <ComponentryLogomark className="size-[46px] text-white drop-shadow-[0_18px_46px_rgba(255,255,255,0.2)]" />
           </div>
-          Componentry
+          DavinciUI
         </div>
 
         <div className="absolute left-[104px] top-[292px]">

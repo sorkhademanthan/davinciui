@@ -53,12 +53,12 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
     default: siteConfig.title,
-    template: "%s | Componentry - UI Component Library",
+    template: "%s | DavinciUI - Design System",
   },
   description: siteConfig.description,
   keywords: [
-    "Componentry",
-    "Componentry UI",
+    "DavinciUI",
+    "DavinciUI",
     "componentry.dev",
     "UI component library",
     "React components",
@@ -111,21 +111,21 @@ export const metadata: Metadata = {
         url: absoluteUrl("/opengraph-image.png"),
         width: 1200,
         height: 630,
-        alt: "Componentry - Premium React UI Component Library",
+        alt: "DavinciUI - Premium React UI Component Library",
         type: "image/png",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Componentry - Premium React UI Component Library",
+    title: "DavinciUI - Premium React UI Component Library",
     description: siteConfig.description,
     images: [
       {
         url: absoluteUrl("/opengraph-image.png"),
         width: 1200,
         height: 630,
-        alt: "Componentry - Premium React UI Component Library",
+        alt: "DavinciUI - Premium React UI Component Library",
       },
     ],
     creator: siteConfig.author.handle,
@@ -151,7 +151,7 @@ export const metadata: Metadata = {
   },
   manifest: "/manifest.json",
   category: "technology",
-  classification: "UI Component Library",
+  classification: "Design System",
   other: {
     "msapplication-TileImage": "/opengraph-image.png",
     ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION && {

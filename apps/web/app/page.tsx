@@ -15,7 +15,7 @@ import { CustomWorkCta } from "@/components/landing/custom-work-cta";
 import { InfiniteIconField } from "@/components/landing/infinite-icon-field";
 import { Footer } from "@/components/footer";
 
-// Componentry Previews for Bento
+// DavinciUI Previews for Bento
 import { MatrixRain } from "@workspace/ui/components/matrix-rain";
 import { ScrollBasedVelocity } from "@workspace/ui/components/scroll-based-velocity";
 import { AnimatedGradient } from "@workspace/ui/components/animated-gradient";
@@ -189,7 +189,7 @@ export default function Home() {
                     }}
                   >
                     <ScrollBasedVelocity
-                      text="COMPONENTRY"
+                      text="DAVINCIUI"
                       default_velocity={3}
                       className="font-sans text-4xl font-black tracking-tighter text-zinc-800 dark:text-white sm:text-6xl md:text-8xl"
                     />
