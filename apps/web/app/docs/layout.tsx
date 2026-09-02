@@ -24,7 +24,7 @@ export default function DocsLayout({
   return (
     <div data-route-docs className="min-h-svh flex flex-col bg-background">
       <SiteHeader />
-      <div className="flex-1 grid grid-cols-1 md:grid-cols-[280px_minmax(0,1fr)] pt-14">
+      <div className="flex-1 grid grid-cols-1 md:grid-cols-[260px_minmax(0,1fr)] pt-14">
         {/* Desktop Sidebar - sticky, occupies layout space */}
         <aside className="hidden md:flex md:flex-col sticky top-14 h-[calc(100vh-3.5rem)] border-r border-border/40 bg-white dark:bg-[#0a0a0a] overflow-hidden">
           <DocsSidebarNav />

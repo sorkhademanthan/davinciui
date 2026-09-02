@@ -1,9 +1,14 @@
 import React from "react";
-import { DitheredLogo } from "@workspace/ui/components/dithered-logo";
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import { readComponentSource } from "@/lib/source-code";
-
-const componentryLogoSrc = "/images/dithered-logo/logo.svg";
+import {
+  DitheredLogoDensePreview,
+  DitheredLogoOutlinePreview,
+  DitheredLogoPersonalizePanel,
+  DitheredLogoPlayground,
+  DitheredLogoSharpPreview,
+  DitheredLogoSoftPreview,
+} from "@/components/docs/previews/dithered-logo-playground";
 
 const defaultCode = `import { DitheredLogo } from "@/components/ui/dithered-logo"
 
@@ -22,6 +27,64 @@ const defaultCode = `import { DitheredLogo } from "@/components/ui/dithered-logo
   />
 </div>`;
 
+const outlineCode = `import { DitheredLogo } from "@/components/ui/dithered-logo"
+
+<div className="h-[600px] w-full bg-white text-black">
+  <DitheredLogo
+    imageSrc="/images/dithered-logo/logo.svg"
+    className="h-full w-full"
+    scale={0.36}
+    invert={false}
+    threshold={160}
+    blur={2.5}
+  />
+</div>`;
+
+const denseCode = `import { DitheredLogo } from "@/components/ui/dithered-logo"
+
+<div className="h-[600px] w-full bg-white text-black">
+  <DitheredLogo
+    imageSrc="/images/dithered-logo/logo.svg"
+    className="h-full w-full"
+    gridSize={260}
+    scale={0.42}
+    dotScale={0.85}
+    threshold={165}
+    blur={2}
+  />
+</div>`;
+
+const softCode = `import { DitheredLogo } from "@/components/ui/dithered-logo"
+
+<div className="h-[600px] w-full bg-white text-black">
+  <DitheredLogo
+    imageSrc="/images/dithered-logo/logo.svg"
+    className="h-full w-full"
+    scale={0.36}
+    blur={6}
+    gamma={1.4}
+    threshold={190}
+    contrast={-10}
+    diffusionStrength={0.85}
+  />
+</div>`;
+
+const sharpCode = `import { DitheredLogo } from "@/components/ui/dithered-logo"
+
+<div className="h-[600px] w-full bg-white text-black">
+  <DitheredLogo
+    imageSrc="/images/dithered-logo/logo.svg"
+    className="h-full w-full"
+    gridSize={180}
+    threshold={140}
+    blur={1.2}
+    gamma={0.85}
+    contrast={20}
+    diffusionStrength={1.15}
+    cornerRadius={0.08}
+  />
+</div>`;
+
 export async function DitheredLogoDocs() {
   const sourceCode =
     (await readComponentSource("dithered-logo")) ||
@@ -31,21 +94,20 @@ export async function DitheredLogoDocs() {
     <DocsPageLayout
       title="Dithered Logo"
       description="A canvas-rendered particle logo that converts SVG or image assets into an interactive error-diffusion dither field with cursor repulsion and click ripples."
-      preview={
-        <div className="h-full min-h-full w-full bg-white text-black">
-          <DitheredLogo
-            imageSrc={componentryLogoSrc}
-            className="h-full w-full"
-            scale={0.36}
-          />
-        </div>
-      }
+      preview={<DitheredLogoPlayground />}
+      personalizeContent={<DitheredLogoPersonalizePanel />}
       previewCode={defaultCode}
       installPackageName="dithered-logo"
       installDependencies="clsx tailwind-merge"
       installSourceCode={sourceCode}
       usageCode={defaultCode}
       fullWidthPreview
+      examples={[
+        { title: "Outline", preview: <DitheredLogoOutlinePreview />, code: outlineCode },
+        { title: "Dense", preview: <DitheredLogoDensePreview />, code: denseCode },
+        { title: "Soft", preview: <DitheredLogoSoftPreview />, code: softCode },
+        { title: "Sharp", preview: <DitheredLogoSharpPreview />, code: sharpCode },
+      ]}
       props={[
         {
           name: "imageSrc",

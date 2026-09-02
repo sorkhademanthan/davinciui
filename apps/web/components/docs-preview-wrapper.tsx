@@ -190,6 +190,23 @@ export function DocsPreviewWrapper({
     setMounted(true)
   }, [])
 
+  // Hide navbar/header when fullscreen so toolbar (search, source, preferences, replay, fullscreen, theme) is not covered
+  React.useEffect(() => {
+    const header = document.querySelector("header.fixed") as HTMLElement | null
+    if (!header) return
+    if (isExpanded) {
+      header.style.display = "none"
+      document.body.style.overflow = "hidden"
+    } else {
+      header.style.display = ""
+      document.body.style.overflow = ""
+    }
+    return () => {
+      header.style.display = ""
+      document.body.style.overflow = ""
+    }
+  }, [isExpanded])
+
   React.useEffect(() => {
     cacheSplitPreviewRect()
     if (!isExpanded) return
@@ -214,9 +231,9 @@ export function DocsPreviewWrapper({
       previewShell.style.left = `${rect.left}px`
       previewShell.style.width = `${rect.width}px`
       previewShell.style.height = `${rect.height}px`
-      previewShell.style.zIndex = "60"
+      previewShell.style.zIndex = "100"
       previewShell.style.padding = padding
-      previewShell.classList.add("bg-[#f7f7f7]")
+      previewShell.classList.add("bg-[#f7f7f7]", "dark:bg-[#171717]")
     }
 
     const clearFixedStyles = () => {
@@ -224,7 +241,7 @@ export function DocsPreviewWrapper({
       for (const prop of ["position", "top", "left", "width", "height", "zIndex", "padding", "transition"] as const) {
         previewShell.style.removeProperty(prop)
       }
-      previewShell.classList.remove("bg-[#f7f7f7]")
+      previewShell.classList.remove("bg-[#f7f7f7]", "dark:bg-[#171717]")
       cacheSplitPreviewRect()
     }
 
@@ -234,16 +251,19 @@ export function DocsPreviewWrapper({
       const from = toPreviewRect(previewShell.getBoundingClientRect())
       splitPreviewRectRef.current = from
 
+      previewShell.style.transition = "none"
       applyFixedRect(from, splitPadding)
       void previewShell.offsetHeight
 
       previewShell.style.transition = transition
       requestAnimationFrame(() => {
-        applyFixedRect(
-          { top: 0, left: 0, width: window.innerWidth, height: window.innerHeight },
-          fullPadding
-        )
-        previewShell.dataset.previewExpanded = "true"
+        requestAnimationFrame(() => {
+          applyFixedRect(
+            { top: 0, left: 0, width: window.innerWidth, height: window.innerHeight },
+            fullPadding
+          )
+          previewShell.dataset.previewExpanded = "true"
+        })
       })
     } else if (previewShell.style.position === "fixed") {
       const rightColumn = layout?.querySelector<HTMLElement>("[data-docs-right-column]")
@@ -261,7 +281,9 @@ export function DocsPreviewWrapper({
 
       previewShell.style.transition = transition
       requestAnimationFrame(() => {
-        applyFixedRect(target, splitPadding)
+        requestAnimationFrame(() => {
+          applyFixedRect(target, splitPadding)
+        })
       })
 
       onTransitionEnd = (event: TransitionEvent) => {
@@ -285,10 +307,13 @@ export function DocsPreviewWrapper({
       "relative w-full h-full overflow-hidden bg-[#f7f7f7] dark:bg-[#171717] flex flex-col",
       fullWidthPreview ? "rounded-none border-0" : "rounded-xl lg:rounded-2xl border border-border/50 dark:border-[#121212]"
     )} ref={previewRef}>
-      {/* Toolbar — glass dock, fixed top-right */}
+      {/* Toolbar — glass dock, top-right: absolute in card, fixed in fullscreen */}
       <section
         aria-label="Preview controls"
-        className="fixed right-6 top-6 z-[99] flex select-none items-center gap-1 rounded-2xl border border-border/40 bg-white/70 p-1.5 shadow-card backdrop-blur-xl dark:border-white/[0.06] dark:bg-[#171717]/75"
+        className={cn(
+          "flex select-none items-center gap-1 rounded-2xl border border-border/40 bg-white/70 p-1.5 shadow-card backdrop-blur-xl dark:border-white/[0.06] dark:bg-[#171717]/75",
+          isExpanded ? "fixed right-6 top-6 z-[101]" : "absolute right-3 top-3 z-20"
+        )}
       >
         <PreviewToolbarCell>
           <React.Suspense

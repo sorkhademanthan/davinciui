@@ -129,7 +129,7 @@ export async function DocsPageLayout({
   return (
     <div
       data-docs-layout
-      className="flex flex-col lg:flex-row w-full h-full min-h-screen lg:h-screen bg-white dark:bg-background text-foreground max-w-none m-0"
+      className="flex flex-col lg:flex-row w-full h-full min-h-[calc(100vh-3.5rem)] lg:h-[calc(100vh-3.5rem)] bg-white dark:bg-background text-foreground max-w-none m-0 overflow-hidden"
     >
       {/* Minimal Navigation Cluster - hidden on desktop where persistent sidebar is visible */}
       <div className="fixed left-1 top-3 z-50 flex items-center gap-2.5 pointer-events-none sm:left-3 lg:absolute lg:left-6 lg:top-6 md:hidden">
@@ -254,14 +254,14 @@ export async function DocsPageLayout({
         </div>
       </div>
 
-      {/* Right Column: Sticky Preview — full bleed, 50% */}
+      {/* Right Column: Sticky Preview — full bleed, 50% - viewport fit, no scroll */}
       <div
         data-docs-right-column
-        className="flex-1 lg:basis-1/2 lg:max-w-[50%] min-w-0 lg:h-full lg:sticky lg:top-0 order-first lg:order-last bg-white dark:bg-[#121212] flex flex-col z-20 lg:border-l border-border/40"
+        className="flex-1 lg:basis-1/2 lg:max-w-[50%] min-w-0 h-[55vh] lg:h-[calc(100vh-3.5rem)] lg:sticky lg:top-14 order-first lg:order-last bg-white dark:bg-[#121212] flex flex-col z-20 lg:border-l border-border/40 overflow-hidden"
       >
         <div
           data-docs-preview-shell
-          className="relative w-full h-[55vh] lg:h-full overflow-hidden bg-white dark:bg-[#121212] p-0"
+          className="relative w-full h-full overflow-hidden bg-white dark:bg-[#121212] p-0"
         >
 
           {/* Floating Card Container */}
