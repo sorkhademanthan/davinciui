@@ -1,0 +1,17 @@
+{
+  "name": "skeleton",
+  "type": "registry:ui",
+  "dependencies": [],
+  "registryDependencies": [],
+  "description": "Skeleton component",
+  "files": [
+    {
+      "path": "components/ui/skeleton.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { cn } from \"@workspace/ui/lib/utils\";\n\nfunction Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {\n  return <div data-slot=\"skeleton\" className={cn(\"animate-pulse rounded-md bg-muted\", className)} {...props} />;\n}\n\nexport { Skeleton };\n",
+      "type": "registry:ui"
+    }
+  ],
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "title": "Skeleton",
+  "devDependencies": []
+}

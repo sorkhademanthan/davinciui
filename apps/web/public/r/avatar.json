@@ -1,0 +1,17 @@
+{
+  "name": "avatar",
+  "type": "registry:ui",
+  "dependencies": [],
+  "registryDependencies": [],
+  "description": "Avatar component",
+  "files": [
+    {
+      "path": "components/ui/avatar.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { cn } from \"@workspace/ui/lib/utils\";\n\nfunction Avatar({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {\n  return <div data-slot=\"avatar\" className={cn(\"relative flex size-10 shrink-0 overflow-hidden rounded-full\", className)} {...props} />;\n}\n\nfunction AvatarImage({ className, ...props }: React.ImgHTMLAttributes<HTMLImageElement>) {\n  return <img data-slot=\"avatar-image\" className={cn(\"aspect-square size-full object-cover\", className)} {...props} />;\n}\n\nfunction AvatarFallback({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {\n  return <div data-slot=\"avatar-fallback\" className={cn(\"flex size-full items-center justify-center rounded-full bg-muted text-sm font-medium\", className)} {...props} />;\n}\n\nfunction AvatarBadge({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {\n  return <div data-slot=\"avatar-badge\" className={cn(\"absolute bottom-0 right-0 size-3 rounded-full border-2 border-background bg-emerald-500\", className)} {...props} />;\n}\n\nfunction AvatarGroup({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {\n  return <div data-slot=\"avatar-group\" className={cn(\"flex -space-x-2 *:ring-2 *:ring-background\", className)} {...props} />;\n}\n\nfunction AvatarGroupCount({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {\n  return <div data-slot=\"avatar-group-count\" className={cn(\"flex size-10 items-center justify-center rounded-full border bg-muted text-xs font-medium\", className)} {...props} />;\n}\n\nexport { Avatar, AvatarImage, AvatarFallback, AvatarBadge, AvatarGroup, AvatarGroupCount };\n",
+      "type": "registry:ui"
+    }
+  ],
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "title": "Avatar",
+  "devDependencies": []
+}

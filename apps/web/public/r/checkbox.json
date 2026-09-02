@@ -1,0 +1,17 @@
+{
+  "name": "checkbox",
+  "type": "registry:ui",
+  "dependencies": [],
+  "registryDependencies": [],
+  "description": "Checkbox component",
+  "files": [
+    {
+      "path": "components/ui/checkbox.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { Check } from \"lucide-react\";\nimport { cn } from \"@workspace/ui/lib/utils\";\n\nexport interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, \"type\"> {\n  invalid?: boolean;\n}\n\nfunction Checkbox({ className, invalid, ...props }: CheckboxProps) {\n  return (\n    <label\n      data-slot=\"checkbox\"\n      className={cn(\n        \"inline-flex items-center justify-center rounded-md border border-input bg-background size-5 shadow-xs/5 transition-colors has-[input:checked]:bg-primary has-[input:checked]:text-primary-foreground has-[input:checked]:border-primary has-[input:disabled]:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20\",\n        invalid && \"border-destructive ring-1 ring-destructive/20\",\n        className\n      )}\n      aria-invalid={invalid}\n    >\n      <input type=\"checkbox\" className=\"peer sr-only\" {...props} />\n      <Check className=\"size-3.5 opacity-0 peer-checked:opacity-100 transition-opacity\" />\n    </label>\n  );\n}\n\nfunction CheckboxGroup({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {\n  return <div data-slot=\"checkbox-group\" className={cn(\"flex flex-col gap-2\", className)} {...props} />;\n}\n\nexport { Checkbox, CheckboxGroup };\n",
+      "type": "registry:ui"
+    }
+  ],
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "title": "Checkbox",
+  "devDependencies": []
+}

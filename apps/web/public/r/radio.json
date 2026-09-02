@@ -1,0 +1,17 @@
+{
+  "name": "radio",
+  "type": "registry:ui",
+  "dependencies": [],
+  "registryDependencies": [],
+  "description": "Radio component",
+  "files": [
+    {
+      "path": "components/ui/radio.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { cn } from \"@workspace/ui/lib/utils\";\n\nexport interface RadioGroupProps extends React.HTMLAttributes<HTMLDivElement> {\n  invalid?: boolean;\n}\n\nfunction RadioGroup({ className, invalid, ...props }: RadioGroupProps) {\n  return <div data-slot=\"radio-group\" role=\"radiogroup\" aria-invalid={invalid} className={cn(\"grid gap-2\", className)} {...props} />;\n}\n\nexport interface RadioProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, \"type\"> {\n  invalid?: boolean;\n}\n\nfunction Radio({ className, invalid, ...props }: RadioProps) {\n  return (\n    <label\n      data-slot=\"radio\"\n      className={cn(\n        \"flex items-center gap-2 text-sm font-medium has-[input:disabled]:opacity-50 aria-invalid:text-destructive\",\n        invalid && \"text-destructive\",\n        className\n      )}\n      aria-invalid={invalid}\n    >\n      <span className={cn(\"relative flex size-4 shrink-0 items-center justify-center rounded-full border border-input shadow-xs/5 has-[input:checked]:border-primary has-[input:checked]:bg-primary has-[input:disabled]:opacity-50\", invalid && \"border-destructive\")}>\n        <input type=\"radio\" className=\"peer sr-only\" {...props} />\n        <span className=\"size-2 rounded-full bg-primary-foreground opacity-0 peer-checked:opacity-100 transition-opacity\" />\n      </span>\n      <span>{props.value as string}</span>\n      {props.children}\n    </label>\n  );\n}\n\nfunction RadioItem({ className, children, ...props }: RadioProps) {\n  // Alias for Radio for API compat with docs expecting RadioGroup + RadioItem\n  return <Radio className={className} {...props}>{children}</Radio>;\n}\n\nexport { RadioGroup, Radio, RadioItem };\n",
+      "type": "registry:ui"
+    }
+  ],
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "title": "Radio",
+  "devDependencies": []
+}

@@ -1,0 +1,17 @@
+{
+  "name": "textarea",
+  "type": "registry:ui",
+  "dependencies": [],
+  "registryDependencies": [],
+  "description": "Textarea component",
+  "files": [
+    {
+      "path": "components/ui/textarea.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { cn } from \"@workspace/ui/lib/utils\";\n\nexport interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {}\n\nfunction Textarea({ className, ...props }: TextareaProps) {\n  return (\n    <textarea\n      data-slot=\"textarea\"\n      className={cn(\n        \"flex min-h-[80px] w-full rounded-lg border border-input bg-background px-3 py-2 text-sm shadow-xs/5 placeholder:text-muted-foreground/72 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:border-ring aria-invalid:border-destructive aria-invalid:ring-destructive/20 disabled:opacity-50 dark:bg-input/32\",\n        className\n      )}\n      {...props}\n    />\n  );\n}\n\nexport { Textarea };\n",
+      "type": "registry:ui"
+    }
+  ],
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "title": "Textarea",
+  "devDependencies": []
+}

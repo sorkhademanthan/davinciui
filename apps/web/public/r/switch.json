@@ -1,0 +1,17 @@
+{
+  "name": "switch",
+  "type": "registry:ui",
+  "dependencies": [],
+  "registryDependencies": [],
+  "description": "Switch component",
+  "files": [
+    {
+      "path": "components/ui/switch.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { cn } from \"@workspace/ui/lib/utils\";\n\nexport interface SwitchProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, \"onChange\"> {\n  checked?: boolean;\n  defaultChecked?: boolean;\n  onCheckedChange?: (checked: boolean) => void;\n  invalid?: boolean;\n  size?: \"default\" | \"sm\" | \"lg\";\n}\n\nfunction Switch({ className, checked: controlledChecked, defaultChecked = false, onCheckedChange, invalid, size = \"default\", disabled, onClick, ...props }: SwitchProps) {\n  const [internalChecked, setInternalChecked] = React.useState(defaultChecked);\n  const checked = controlledChecked !== undefined ? controlledChecked : internalChecked;\n\n  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {\n    if (disabled) return;\n    const next = !checked;\n    if (controlledChecked === undefined) setInternalChecked(next);\n    onCheckedChange?.(next);\n    onClick?.(e);\n  };\n\n  return (\n    <button\n      type=\"button\"\n      role=\"switch\"\n      aria-checked={checked}\n      aria-invalid={invalid}\n      data-state={checked ? \"checked\" : \"unchecked\"}\n      data-slot=\"switch\"\n      disabled={disabled}\n      onClick={handleClick}\n      className={cn(\n        \"relative inline-flex shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent bg-input shadow-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50 data-[state=checked]:bg-primary\",\n        size === \"default\" && \"h-6 w-11\",\n        size === \"sm\" && \"h-5 w-9\",\n        size === \"lg\" && \"h-7 w-14\",\n        invalid && \"border-destructive ring-1 ring-destructive/20\",\n        className\n      )}\n      {...props}\n    >\n      <span\n        data-slot=\"switch-thumb\"\n        className={cn(\n          \"pointer-events-none block rounded-full bg-background shadow-sm ring-0 transition-transform\",\n          size === \"default\" && \"size-5 data-[state=checked]:translate-x-5\",\n          size === \"sm\" && \"size-4 data-[state=checked]:translate-x-4\",\n          size === \"lg\" && \"size-6 data-[state=checked]:translate-x-7\",\n          checked ? \"translate-x-5\" : \"translate-x-0\",\n          size === \"sm\" && checked && \"translate-x-4\",\n          size === \"lg\" && checked && \"translate-x-7\"\n        )}\n        data-state={checked ? \"checked\" : \"unchecked\"}\n      />\n    </button>\n  );\n}\n\nexport { Switch };\n",
+      "type": "registry:ui"
+    }
+  ],
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "title": "Switch",
+  "devDependencies": []
+}

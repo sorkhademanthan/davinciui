@@ -1,0 +1,17 @@
+{
+  "name": "spinner",
+  "type": "registry:ui",
+  "dependencies": [],
+  "registryDependencies": [],
+  "description": "Spinner component",
+  "files": [
+    {
+      "path": "components/ui/spinner.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { Loader2 } from \"lucide-react\";\nimport { cva, type VariantProps } from \"class-variance-authority\";\nimport { cn } from \"@workspace/ui/lib/utils\";\n\nconst spinnerVariants = cva(\"animate-spin text-muted-foreground\", {\n  variants: {\n    size: {\n      sm: \"size-4\",\n      default: \"size-6\",\n      lg: \"size-8\",\n    },\n  },\n  defaultVariants: { size: \"default\" },\n});\n\nexport interface SpinnerProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof spinnerVariants> {}\n\nfunction Spinner({ className, size, ...props }: SpinnerProps) {\n  return (\n    <div data-slot=\"spinner\" role=\"status\" aria-label=\"Loading\" className={cn(spinnerVariants({ size }), className)} {...props}>\n      <Loader2 className=\"size-full animate-spin\" />\n      <span className=\"sr-only\">Loading</span>\n    </div>\n  );\n}\n\nexport { Spinner, spinnerVariants };\n",
+      "type": "registry:ui"
+    }
+  ],
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "title": "Spinner",
+  "devDependencies": []
+}

@@ -1,0 +1,17 @@
+{
+  "name": "link",
+  "type": "registry:ui",
+  "dependencies": [],
+  "registryDependencies": [],
+  "description": "Link component",
+  "files": [
+    {
+      "path": "components/ui/link.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { cn } from \"@workspace/ui/lib/utils\";\n\nexport interface LinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {\n  variant?: \"default\" | \"muted\" | \"underline\";\n  size?: \"default\" | \"sm\" | \"lg\";\n}\n\nfunction Link({ className, variant = \"default\", size = \"default\", ...props }: LinkProps) {\n  return (\n    <a\n      data-slot=\"link\"\n      className={cn(\n        \"inline-flex items-center gap-1 font-medium underline-offset-4 transition-colors hover:underline focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring\",\n        variant === \"default\" && \"text-primary\",\n        variant === \"muted\" && \"text-muted-foreground hover:text-foreground\",\n        variant === \"underline\" && \"underline text-foreground\",\n        size === \"sm\" && \"text-xs\",\n        size === \"lg\" && \"text-base\",\n        className\n      )}\n      {...props}\n    />\n  );\n}\n\nexport { Link };\n",
+      "type": "registry:ui"
+    }
+  ],
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "title": "Link",
+  "devDependencies": []
+}

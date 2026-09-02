@@ -19,7 +19,7 @@ interface PageProps {
     }>;
 }
 
-export const dynamicParams = false;
+export const dynamicParams = true;
 
 /**
  * Pre-generate all component pages at build time.

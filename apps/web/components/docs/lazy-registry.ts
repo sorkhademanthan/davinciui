@@ -38,6 +38,98 @@ const docsImportMap: Record<
     import("@/components/docs/button").then((m) => ({
       default: m.ButtonDocs,
     })),
+  "button-group": () =>
+    import("@/components/docs/button-group").then((m) => ({
+      default: m.ButtonGroupDocs,
+    })),
+  accordion: () =>
+    import("@/components/docs/accordion").then((m) => ({
+      default: m.AccordionDocs,
+    })),
+  alert: () =>
+    import("@/components/docs/alert").then((m) => ({
+      default: m.AlertDocs,
+    })),
+  "aspect-ratio": () =>
+    import("@/components/docs/aspect-ratio").then((m) => ({
+      default: m.AspectRatioDocs,
+    })),
+  "alert-dialog": () =>
+    import("@/components/docs/alert-dialog").then((m) => ({
+      default: m.AlertDialogDocs,
+    })),
+  avatar: () =>
+    import("@/components/docs/avatar").then((m) => ({
+      default: m.AvatarDocs,
+    })),
+  textarea: () =>
+    import("@/components/docs/textarea").then((m) => ({
+      default: m.TextareaDocs,
+    })),
+  tabs: () =>
+    import("@/components/docs/tabs").then((m) => ({
+      default: m.TabsDocs,
+    })),
+  pagination: () =>
+    import("@/components/docs/pagination").then((m) => ({
+      default: m.PaginationDocs,
+    })),
+  breadcrumb: () =>
+    import("@/components/docs/breadcrumb").then((m) => ({
+      default: m.BreadcrumbDocs,
+    })),
+  sidebar: () =>
+    import("@/components/docs/sidebar").then((m) => ({
+      default: m.SidebarDocs,
+    })),
+  switch: () =>
+    import("@/components/docs/switch").then((m) => ({
+      default: m.SwitchDocs,
+    })),
+  skeleton: () =>
+    import("@/components/docs/skeleton").then((m) => ({
+      default: m.SkeletonDocs,
+    })),
+  spinner: () =>
+    import("@/components/docs/spinner").then((m) => ({
+      default: m.SpinnerDocs,
+    })),
+  progress: () =>
+    import("@/components/docs/progress").then((m) => ({
+      default: m.ProgressDocs,
+    })),
+  toast: () =>
+    import("@/components/docs/toast").then((m) => ({
+      default: m.ToastDocs,
+    })),
+  form: () =>
+    import("@/components/docs/form").then((m) => ({
+      default: m.FormDocs,
+    })),
+  radio: () =>
+    import("@/components/docs/radio").then((m) => ({
+      default: m.RadioDocs,
+    })),
+  checkbox: () =>
+    import("@/components/docs/checkbox").then((m) => ({
+      default: m.CheckboxDocs,
+    })),
+  select: () =>
+    import("@/components/docs/select").then((m) => ({
+      default: m.SelectDocs,
+    })),
+  input: () =>
+    import("@/components/docs/input").then((m) => ({
+      default: m.InputDocs,
+    })),
+  toggle: () =>
+    import("@/components/docs/toggle").then((m) => ({
+      default: m.ToggleDocs,
+    })),
+  link: () =>
+    import("@/components/docs/link").then((m) => ({
+      default: m.LinkDocs,
+    })),
   "hover-transition": () =>
     import("@/components/docs/hover-transition").then((m) => ({
       default: m.HoverTransitionDocs,

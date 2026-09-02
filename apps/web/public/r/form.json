@@ -1,0 +1,17 @@
+{
+  "name": "form",
+  "type": "registry:ui",
+  "dependencies": [],
+  "registryDependencies": [],
+  "description": "Form component",
+  "files": [
+    {
+      "path": "components/ui/form.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { cn } from \"@workspace/ui/lib/utils\";\n\nconst Form = React.forwardRef<HTMLFormElement, React.FormHTMLAttributes<HTMLFormElement>>(({ className, ...props }, ref) => (\n  <form ref={ref} className={cn(\"space-y-6\", className)} {...props} />\n));\nForm.displayName = \"Form\";\n\nfunction FormItem({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {\n  return <div data-slot=\"form-item\" className={cn(\"space-y-2\", className)} {...props} />;\n}\n\nfunction FormLabel({ className, ...props }: React.LabelHTMLAttributes<HTMLLabelElement>) {\n  return <label data-slot=\"form-label\" className={cn(\"text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70\", className)} {...props} />;\n}\n\nfunction FormControl({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {\n  return <div data-slot=\"form-control\" className={cn(className)} {...props} />;\n}\n\nfunction FormDescription({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) {\n  return <p data-slot=\"form-description\" className={cn(\"text-xs text-muted-foreground\", className)} {...props} />;\n}\n\nfunction FormMessage({ className, children, ...props }: React.HTMLAttributes<HTMLParagraphElement>) {\n  if (!children) return null;\n  return <p data-slot=\"form-message\" className={cn(\"text-xs font-medium text-destructive\", className)} {...props}>{children}</p>;\n}\n\nexport { Form, FormItem, FormLabel, FormControl, FormDescription, FormMessage };\n",
+      "type": "registry:ui"
+    }
+  ],
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "title": "Form",
+  "devDependencies": []
+}

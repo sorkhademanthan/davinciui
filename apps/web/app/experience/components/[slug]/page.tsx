@@ -5,7 +5,7 @@ import { getDocsImporter, getDocsSlugs } from "@/components/docs/lazy-registry"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import { Suspense } from "react"
 
-export const dynamicParams = false
+export const dynamicParams = true
 export async function generateStaticParams(){ const slugs = getDocsSlugs(); return slugs.map(slug=>({slug})) }
 export async function generateMetadata({params}:{params: Promise<{slug:string}>}): Promise<Metadata>{
   const {slug}=await params; const c=getComponent(slug); if(!c) {
