@@ -11,310 +11,27 @@ type NavGroup = {
   items: NavItem[];
 };
 
-// ─────────────────────────────────────────────────────────────
-// DAVINCIUI — Experience-first IA
-// Design System is foundation, Experience is product
-// Order: Components → Premium → Motion → Scroll → Blocks
-// Foundations / Tokens / Theming fall below
-// ─────────────────────────────────────────────────────────────
+// DavinciUI docs — minimal, shadcn-inspired IA
+// Basics first: Introduction → Installation → config → Theming → CLI → Changelog
+// Dark mode lives inside Theming. Components at /docs/components + /docs/components/[slug]
 
 const gettingStarted: NavGroup = {
-  title: "🚀 GET STARTED",
+  title: "Getting Started",
   items: [
     { title: "Introduction", href: "/docs" },
     { title: "Installation", href: "/docs/installation" },
-    { title: "components.json", href: "/docs/components-json" },
+    { title: "Configuration", href: "/docs/configuration" },
     { title: "Theming", href: "/docs/theming" },
-    { title: "Dark Mode", href: "/docs/dark-mode" },
     { title: "CLI", href: "/docs/cli" },
-    { title: "Monorepo", href: "/docs/monorepo" },
     { title: "Changelog", href: "/docs/changelog" },
   ],
 };
 
-const registryNav: NavGroup = {
-  title: "📦 REGISTRY",
+const componentsNav: NavGroup = {
+  title: "Components",
   items: [
-    { title: "Introduction", href: "/docs/registry" },
-    { title: "Getting Started", href: "/docs/registry/getting-started" },
-    { title: "Examples", href: "/docs/registry/examples" },
-  ],
-};
-
-const basicGroup: NavGroup = {
-  title: "📦 BASIC",
-  items: [
-    {
-      title: "Actions",
-      href: "/docs/components/actions",
-      items: [
-        { title: "Button", href: "/docs/components/button" },
-        { title: "Button Group", href: "/docs/components/button-group" },
-        { title: "Toggle", href: "/docs/components/toggle" },
-        { title: "Link", href: "/docs/components/link" },
-      ],
-    },
-    {
-      title: "Forms",
-      href: "/docs/components/forms",
-      items: [
-        { title: "Input", href: "/docs/components/input" },
-        { title: "Textarea", href: "/docs/components/textarea" },
-        { title: "Select", href: "/docs/components/select" },
-        { title: "Checkbox", href: "/docs/components/checkbox" },
-        { title: "Radio", href: "/docs/components/radio" },
-        { title: "Switch", href: "/docs/components/switch" },
-        { title: "Form", href: "/docs/components/form" },
-      ],
-    },
-    {
-      title: "Feedback",
-      href: "/docs/components/feedback",
-      items: [
-        { title: "Alert", href: "/docs/components/alert" },
-        { title: "Toast", href: "/docs/components/toast" },
-        { title: "Progress", href: "/docs/components/progress" },
-        { title: "Spinner", href: "/docs/components/spinner" },
-        { title: "Skeleton", href: "/docs/components/skeleton" },
-      ],
-    },
-    {
-      title: "Navigation",
-      href: "/docs/components/navigation",
-      items: [
-        { title: "Tabs", href: "/docs/components/tabs" },
-        { title: "Breadcrumb", href: "/docs/components/breadcrumb" },
-        { title: "Pagination", href: "/docs/components/pagination" },
-        { title: "Sidebar", href: "/docs/components/sidebar" },
-        { title: "Navigation Menu", href: "/docs/components/navigation-menu" },
-      ],
-    },
-    {
-      title: "Overlays",
-      href: "/docs/components/overlays",
-      items: [
-        { title: "Dialog", href: "/docs/components/dialog" },
-        { title: "Drawer", href: "/docs/components/drawer" },
-        { title: "Popover", href: "/docs/components/popover" },
-        { title: "Tooltip", href: "/docs/components/tooltip" },
-        { title: "Dropdown", href: "/docs/components/dropdown" },
-      ],
-    },
-    {
-      title: "Data Display",
-      href: "/docs/components/data-display",
-      items: [
-        { title: "Card", href: "/docs/components/card" },
-        { title: "Badge", href: "/docs/components/badge" },
-        { title: "Avatar", href: "/docs/components/avatar" },
-        { title: "Table", href: "/docs/components/table" },
-        { title: "Data Table", href: "/docs/components/data-table" },
-      ],
-    },
-    {
-      title: "Layout",
-      href: "/docs/components/layout",
-      items: [
-        { title: "Accordion", href: "/docs/components/accordion" },
-        { title: "Carousel", href: "/docs/components/carousel" },
-        { title: "Collapsible", href: "/docs/components/collapsible" },
-        { title: "Scroll Area", href: "/docs/components/scroll-area" },
-      ],
-    },
-    {
-      title: "All Components",
-      href: "/docs/components",
-      items: [],
-    },
-  ],
-};
-
-// Keep for backwards compat – now exploded into individual top-level groups below
-// Order requested: Basic -> Text Animations -> Premium Components -> Hero Backgrounds -> Visual Effects -> Sky (ASCII) -> Motion -> Scroll -> Blocks -> Templates
-const categoryOrder = [
-  "Text Animations",
-  "Premium Components",
-  "Hero Backgrounds",
-  "Visual Effects",
-  "ASCII Effects",
-] as const;
-
-function buildCategoryNav(category: (typeof categoryOrder)[number], title: string, href: string): NavGroup {
-  const items = Object.values(components)
-    .filter((c) => c.category === category)
-    .sort((a, b) => a.title.localeCompare(b.title))
-    .map((c) => ({ title: c.title, href: `/docs/components/${c.slug}` }));
-  return { title, items: [{ title, href, items }] };
-}
-
-function buildPremiumItems(): NavItem[] {
-  return categoryOrder.map((category) => {
-    const items = Object.values(components)
-      .filter((c) => c.category === category)
-      .sort((a, b) => a.title.localeCompare(b.title))
-      .map((c) => ({ title: c.title, href: `/docs/components/${c.slug}` }));
-    const slug = category.toLowerCase().replace(/\s+/g, "-");
-    return { title: category, href: `/docs/premium/${slug}`, items };
-  });
-}
-
-const premium: NavGroup = {
-  title: "✨ PREMIUM",
-  items: buildPremiumItems(),
-};
-
-// Exploded premium categories – each as top-level filter as requested
-const textAnimationsNav: NavGroup = (() => {
-  const items = Object.values(components)
-    .filter((c) => c.category === "Text Animations")
-    .sort((a, b) => a.title.localeCompare(b.title))
-    .map((c) => ({ title: c.title, href: `/docs/components/${c.slug}` }));
-  return { title: "✨ TEXT ANIMATIONS", items: [{ title: "Text Animations", href: "/docs/premium/text-animations", items }] };
-})();
-
-const premiumComponentsNav: NavGroup = (() => {
-  const items = Object.values(components)
-    .filter((c) => c.category === "Premium Components")
-    .sort((a, b) => a.title.localeCompare(b.title))
-    .map((c) => ({ title: c.title, href: `/docs/components/${c.slug}` }));
-  return { title: "💎 PREMIUM", items: [{ title: "Premium Components", href: "/docs/premium/components", items }] };
-})();
-
-const heroBackgroundsNav: NavGroup = (() => {
-  const items = Object.values(components)
-    .filter((c) => c.category === "Hero Backgrounds")
-    .sort((a, b) => a.title.localeCompare(b.title))
-    .map((c) => ({ title: c.title, href: `/docs/components/${c.slug}` }));
-  return { title: "🌄 HERO BACKGROUNDS", items: [{ title: "Hero Backgrounds", href: "/docs/premium/hero-backgrounds", items }] };
-})();
-
-const visualEffectsNav: NavGroup = (() => {
-  const items = Object.values(components)
-    .filter((c) => c.category === "Visual Effects")
-    .sort((a, b) => a.title.localeCompare(b.title))
-    .map((c) => ({ title: c.title, href: `/docs/components/${c.slug}` }));
-  return { title: "🎨 VISUAL EFFECTS", items: [{ title: "Visual Effects", href: "/docs/premium/visual-effects", items }] };
-})();
-
-const skyEffectsNav: NavGroup = (() => {
-  const items = Object.values(components)
-    .filter((c) => c.category === "ASCII Effects")
-    .sort((a, b) => a.title.localeCompare(b.title))
-    .map((c) => ({ title: c.title, href: `/docs/components/${c.slug}` }));
-  return { title: "🌌 SKY EFFECTS", items: [{ title: "Sky Effects", href: "/docs/premium/ascii-effects", items }] };
-})();
-
-const motionNav: NavGroup = {
-  title: "🌀 MOTION",
-  items: [
-    { title: "Motion Components", href: "/docs/motion/components" },
-    { title: "Hover Effects", href: "/docs/motion/hover" },
-    { title: "Cursor Effects", href: "/docs/motion/cursor" },
-    { title: "Magnetic Effects", href: "/docs/motion/magnetic" },
-    { title: "Text Animations", href: "/docs/motion/text" },
-    { title: "Micro Interactions", href: "/docs/motion/micro" },
-  ],
-};
-
-const scrollNav: NavGroup = {
-  title: "🪶 SCROLL",
-  items: [
-    { title: "Scroll Animations", href: "/docs/scroll/animations" },
-    { title: "Scroll Reveals", href: "/docs/scroll/reveals" },
-    { title: "Parallax", href: "/docs/scroll/parallax" },
-    { title: "Horizontal Scroll", href: "/docs/scroll/horizontal" },
-    { title: "Sticky Experiences", href: "/docs/scroll/sticky" },
-    { title: "Scroll Transitions", href: "/docs/scroll/transitions" },
-  ],
-};
-
-const blocks: NavGroup = {
-  title: "🧱 BLOCKS",
-  items: [
-    { title: "Hero", href: "/blocks/hero-section" },
-    { title: "Features", href: "/blocks/features" },
-    { title: "Testimonials", href: "/blocks/testimonials" },
-    { title: "Pricing", href: "/blocks/pricing" },
-    { title: "Navigation", href: "/blocks/navigation" },
-    { title: "Footer", href: "/blocks/footer" },
-    { title: "Complete Sections", href: "/blocks" },
-  ],
-};
-
-const foundations: NavGroup = {
-  title: "🎨 FOUNDATIONS",
-  items: [
-    { title: "Colors", href: "/docs/foundations/colors" },
-    { title: "Typography", href: "/docs/foundations/typography" },
-    { title: "Spacing", href: "/docs/foundations/spacing" },
-    { title: "Sizing", href: "/docs/foundations/sizing" },
-    { title: "Border Radius", href: "/docs/foundations/border-radius" },
-    { title: "Shadows", href: "/docs/foundations/shadows" },
-    { title: "Borders", href: "/docs/foundations/borders" },
-    { title: "Icons", href: "/docs/foundations/icons" },
-    { title: "Motion", href: "/docs/foundations/motion" },
-    { title: "Breakpoints", href: "/docs/foundations/breakpoints" },
-  ],
-};
-
-const designTokens: NavGroup = {
-  title: "🎛️ TOKENS",
-  items: [
-    { title: "Overview", href: "/docs/tokens" },
-    { title: "Primitive", href: "/docs/tokens/primitive" },
-    { title: "Semantic", href: "/docs/tokens/semantic" },
-    { title: "Component", href: "/docs/tokens/component" },
-    { title: "Custom", href: "/docs/tokens/custom" },
-  ],
-};
-
-const theming: NavGroup = {
-  title: "🌓 THEMING",
-  items: [
-    { title: "Light", href: "/docs/theming/light" },
-    { title: "Dark", href: "/docs/theming/dark" },
-    { title: "Custom Themes", href: "/docs/theming/custom" },
-    { title: "Overrides", href: "/docs/theming/overrides" },
-  ],
-};
-
-const primitives: NavGroup = {
-  title: "🧱 PRIMITIVES",
-  items: [
-    { title: "Box", href: "/docs/primitives/box" },
-    { title: "Stack", href: "/docs/primitives/stack" },
-    { title: "Flex", href: "/docs/primitives/flex" },
-    { title: "Grid", href: "/docs/primitives/grid" },
-    { title: "Container", href: "/docs/primitives/container" },
-  ],
-};
-
-const templatesNav: NavGroup = {
-  title: "📄 TEMPLATES",
-  items: [
-    { title: "Overview", href: "/templates" },
-    { title: "Landing", href: "/templates/landing" },
-    { title: "Dashboard", href: "/templates/dashboard" },
-  ],
-};
-
-const tools: NavGroup = {
-  title: "🛠️ TOOLS",
-  items: [
-    { title: "CLI", href: "/docs/tools/cli" },
-    { title: "Registry", href: "/docs/registry/components" },
-    { title: "Playground", href: "/docs/resources/playground" },
-    { title: "Generators", href: "/docs/tools/generator" },
-  ],
-};
-
-const resources: NavGroup = {
-  title: "📚 RESOURCES",
-  items: [
-    { title: "Examples", href: "/docs/resources/examples" },
-    { title: "Templates", href: "/docs/resources/templates" },
-    { title: "Changelog", href: "/docs/resources/changelog" },
-    { title: "Roadmap", href: "/docs/resources/roadmap" },
+    { title: "All Components", href: "/docs/components" },
+    // Categories are discoverable on the index page — keeps sidebar clean
   ],
 };
 
@@ -322,14 +39,14 @@ const getLlmsText = () => {
   const baseUrl = "https://davinciui.dev";
   let text = `# DavinciUI
 
-> DavinciUI — Build interfaces that feel alive. Beautiful components, motion, scroll experiences and premium UI — ready to ship. Built with TypeScript, Tailwind CSS, and Framer Motion.
+> DavinciUI — Beautiful animated components for React. Copy, paste, customize. Tailwind CSS + Framer Motion. Open code.
 
 ## Philosophy
-Foundations explain how DavinciUI is built. Components are what developers use. Premium is what makes DavinciUI special. Motion and Scroll are what make it memorable. Blocks are what make it immediately useful.
+Open code you own. Composable APIs. Beautiful defaults. Animations handled.
 
 ## Overview`;
 
-  const allNavGroups: NavGroup[] = [gettingStarted, registryNav];
+  const allNavGroups: NavGroup[] = [gettingStarted, componentsNav];
 
   allNavGroups.forEach((group) => {
     text += `\n\n## ${group.title}\n`;
@@ -346,6 +63,13 @@ Foundations explain how DavinciUI is built. Components are what developers use. 
   });
 
   text += `\n\n## Registry Components\n`;
+  const categoryOrder = [
+    "Text Animations",
+    "Premium Components",
+    "Hero Backgrounds",
+    "Visual Effects",
+    "ASCII Effects",
+  ] as const;
   categoryOrder.forEach((category) => {
     text += `\n\n### ${category}\n\n`;
     const categoryComponents = Object.values(components)
@@ -360,8 +84,7 @@ Foundations explain how DavinciUI is built. Components are what developers use. 
   return text;
 };
 
-// Docs: direct – GET STARTED + REGISTRY (shadcn-style, no component lists)
-const precomputedNav = Object.freeze([gettingStarted, registryNav]);
+const precomputedNav = Object.freeze([gettingStarted, componentsNav]);
 
 export const docsConfig = {
   nav: precomputedNav,

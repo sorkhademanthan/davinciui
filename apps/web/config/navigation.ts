@@ -31,9 +31,8 @@ const designSystemGettingStartedSection: NavSection = {
   items: [
     { title: "Introduction", href: "/docs" },
     { title: "Installation", href: "/docs/installation" },
-    { title: "components.json", href: "/docs/components-json" },
+    { title: "Configuration", href: "/docs/configuration" },
     { title: "Theming", href: "/docs/theming" },
-    { title: "Dark Mode", href: "/docs/dark-mode" },
     { title: "CLI", href: "/docs/cli" },
     { title: "Monorepo", href: "/docs/monorepo" },
     { title: "Changelog", href: "/docs/changelog" },
@@ -115,9 +114,8 @@ const experienceGettingStartedSection: NavSection = {
   items: [
     { title: "Introduction", href: "/docs" },
     { title: "Installation", href: "/docs/installation" },
-    { title: "components.json", href: "/docs/components-json" },
+    { title: "Configuration", href: "/docs/configuration" },
     { title: "Theming", href: "/docs/theming" },
-    { title: "Dark Mode", href: "/docs/dark-mode" },
     { title: "CLI", href: "/docs/cli" },
     { title: "Monorepo", href: "/docs/monorepo" },
     { title: "Changelog", href: "/docs/changelog" },
