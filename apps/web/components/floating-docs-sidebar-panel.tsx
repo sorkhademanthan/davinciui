@@ -147,11 +147,11 @@ export function FloatingDocsSidebarPanel() {
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          initial={{ x: -300, opacity: 0 }}
+          initial={{ x: -280, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: -40, opacity: 0 }}
           transition={{ type: "spring", duration: 0.35, bounce: 0 }}
-          className="fixed top-3 left-3 z-50 flex w-[268px] flex-col"
+          className="fixed top-3 left-3 z-50 flex w-[248px] flex-col"
           onMouseLeave={close}
         >
           <div className="flex max-h-[calc(100vh-24px)] flex-col overflow-hidden rounded-2xl border border-border/50 bg-white shadow-card dark:bg-[#0a0a0a]">

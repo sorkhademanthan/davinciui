@@ -163,7 +163,7 @@ const commandGroups: CommandMenuGroup[] = [
   },
   {
     value: "Components",
-    items: experienceItems.slice(0, 40).map((item) =>
+    items: experienceItems.slice(0, 60).map((item) =>
       createItem("Components", {
         title: item.title,
         subtitle: item.group,
@@ -172,20 +172,6 @@ const commandGroups: CommandMenuGroup[] = [
       }),
     ),
   },
-  ...(allComponentItems.length > 0
-    ? [
-        {
-          value: "Components (legacy)",
-          items: allComponentItems.slice(0, 20).map((item) =>
-            createItem("Components", {
-              title: item.title,
-              href: item.href,
-              icon: <CircleDashed />,
-            }),
-          ),
-        },
-      ]
-    : []),
   {
     value: "Settings",
     items: [

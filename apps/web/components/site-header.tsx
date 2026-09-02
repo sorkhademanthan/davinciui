@@ -128,7 +128,10 @@ export function SiteHeader({ sidebarToggle, landingGutter }: SiteHeaderProps) {
         pathname.startsWith("/docs/scroll") ||
         pathname.startsWith("/docs/registry")
 
+    const isDocsActive = pathname === "/docs" || pathname.startsWith("/docs/installation") || pathname.startsWith("/docs/components-json") || pathname.startsWith("/docs/theming") || pathname.startsWith("/docs/dark-mode") || pathname.startsWith("/docs/cli") || pathname.startsWith("/docs/monorepo") || pathname.startsWith("/docs/changelog")
+
     const navItems = [
+        { href: "/docs", label: "Docs", active: isDocsActive },
         { href: "/experience/components", label: "Components", active: isExperienceActive },
         { href: "/design-system", label: "Design System", active: isDesignSystemActive },
         { href: "/blocks", label: "Blocks", active: pathname.startsWith("/blocks") || pathname.startsWith("/experience/blocks") },

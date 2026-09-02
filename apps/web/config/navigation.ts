@@ -26,6 +26,20 @@ export type TopLevelArea = {
 }
 
 // ─────────────── DESIGN SYSTEM — "How we design" ───────────────
+const designSystemGettingStartedSection: NavSection = {
+  title: "Getting Started",
+  items: [
+    { title: "Introduction", href: "/docs" },
+    { title: "Installation", href: "/docs/installation" },
+    { title: "components.json", href: "/docs/components-json" },
+    { title: "Theming", href: "/docs/theming" },
+    { title: "Dark Mode", href: "/docs/dark-mode" },
+    { title: "CLI", href: "/docs/cli" },
+    { title: "Monorepo", href: "/docs/monorepo" },
+    { title: "Changelog", href: "/docs/changelog" },
+  ],
+}
+
 const foundationsSection: NavSection = {
   title: "Foundations",
   items: [
@@ -96,9 +110,23 @@ const motionPrinciplesSection: NavSection = {
 
 // ─────────────── EXPERIENCE — "What we build" ───────────────
 
+const experienceGettingStartedSection: NavSection = {
+  title: "Getting Started",
+  items: [
+    { title: "Introduction", href: "/docs" },
+    { title: "Installation", href: "/docs/installation" },
+    { title: "components.json", href: "/docs/components-json" },
+    { title: "Theming", href: "/docs/theming" },
+    { title: "Dark Mode", href: "/docs/dark-mode" },
+    { title: "CLI", href: "/docs/cli" },
+    { title: "Monorepo", href: "/docs/monorepo" },
+    { title: "Changelog", href: "/docs/changelog" },
+  ],
+}
+
 // Reuse existing Components IA but scoped under /experience
 const experienceComponentsSection: NavSection = {
-  title: "Components",
+  title: "Basic",
   items: [
     {
       title: "Actions",
@@ -181,7 +209,7 @@ const experienceComponentsSection: NavSection = {
   ],
 }
 
-const categoryOrder = ["Text Animations", "Components", "Hero Backgrounds", "Visual Effects", "ASCII Effects"] as const
+const categoryOrder = ["Text Animations", "Premium Components", "Hero Backgrounds", "Visual Effects", "ASCII Effects"] as const
 
 function buildPremiumSections(): NavSection[] {
   return categoryOrder.map((category) => {
@@ -248,20 +276,21 @@ export const navigation = {
     label: "Design System",
     href: "/design-system",
     description: "How we design — foundations, tokens, themes",
-    sections: [foundationsSection, tokensSection, themesSection, primitivesSection, accessibilitySection, motionPrinciplesSection],
+    sections: [designSystemGettingStartedSection, foundationsSection, tokensSection, themesSection, primitivesSection, accessibilitySection, motionPrinciplesSection],
   } satisfies TopLevelArea,
   experience: {
     label: "Components",
     href: "/experience",
     description: "Components, motion, blocks — what we build",
-    sections: [experienceComponentsSection, ...premiumSections, motionSection, scrollSection, blocksSection, templatesSection],
+    sections: [experienceGettingStartedSection, experienceComponentsSection, ...premiumSections, motionSection, scrollSection, blocksSection, templatesSection],
   } satisfies TopLevelArea,
 } as const
 
-// Navbar helper — primary areas (Experience renamed to Components per request)
+// Navbar helper — primary areas
 export const primaryNav = [
-  { label: "Design System", href: "/design-system" },
+  { label: "Docs", href: "/docs" },
   { label: "Components", href: "/experience/components" },
+  { label: "Design System", href: "/design-system" },
 ] as const
 
 export function isDesignSystemPath(pathname: string) {

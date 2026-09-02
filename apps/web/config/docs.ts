@@ -23,13 +23,26 @@ const gettingStarted: NavGroup = {
   items: [
     { title: "Introduction", href: "/docs" },
     { title: "Installation", href: "/docs/installation" },
-    { title: "Quick Start", href: "/docs/quick-start" },
-    { title: "Configuration", href: "/docs/configuration" },
+    { title: "components.json", href: "/docs/components-json" },
+    { title: "Theming", href: "/docs/theming" },
+    { title: "Dark Mode", href: "/docs/dark-mode" },
+    { title: "CLI", href: "/docs/cli" },
+    { title: "Monorepo", href: "/docs/monorepo" },
+    { title: "Changelog", href: "/docs/changelog" },
   ],
 };
 
-const componentsGroup: NavGroup = {
-  title: "🧩 COMPONENTS",
+const registryNav: NavGroup = {
+  title: "📦 REGISTRY",
+  items: [
+    { title: "Introduction", href: "/docs/registry" },
+    { title: "Getting Started", href: "/docs/registry/getting-started" },
+    { title: "Examples", href: "/docs/registry/examples" },
+  ],
+};
+
+const basicGroup: NavGroup = {
+  title: "📦 BASIC",
   items: [
     {
       title: "Actions",
@@ -116,15 +129,23 @@ const componentsGroup: NavGroup = {
   ],
 };
 
-// PREMIUM now IS the visual library — Text Animations, Components, Hero Backgrounds, Visual Effects, ASCII Effects
-// Previously these were duplicated as standalone top-level groups at the bottom; now they live under PREMIUM
+// Keep for backwards compat – now exploded into individual top-level groups below
+// Order requested: Basic -> Text Animations -> Premium Components -> Hero Backgrounds -> Visual Effects -> Sky (ASCII) -> Motion -> Scroll -> Blocks -> Templates
 const categoryOrder = [
   "Text Animations",
-  "Components",
+  "Premium Components",
   "Hero Backgrounds",
   "Visual Effects",
   "ASCII Effects",
 ] as const;
+
+function buildCategoryNav(category: (typeof categoryOrder)[number], title: string, href: string): NavGroup {
+  const items = Object.values(components)
+    .filter((c) => c.category === category)
+    .sort((a, b) => a.title.localeCompare(b.title))
+    .map((c) => ({ title: c.title, href: `/docs/components/${c.slug}` }));
+  return { title, items: [{ title, href, items }] };
+}
 
 function buildPremiumItems(): NavItem[] {
   return categoryOrder.map((category) => {
@@ -132,7 +153,6 @@ function buildPremiumItems(): NavItem[] {
       .filter((c) => c.category === category)
       .sort((a, b) => a.title.localeCompare(b.title))
       .map((c) => ({ title: c.title, href: `/docs/components/${c.slug}` }));
-    // slugify category for group href — keeps deep-linking even though page is the premium section
     const slug = category.toLowerCase().replace(/\s+/g, "-");
     return { title: category, href: `/docs/premium/${slug}`, items };
   });
@@ -142,6 +162,47 @@ const premium: NavGroup = {
   title: "✨ PREMIUM",
   items: buildPremiumItems(),
 };
+
+// Exploded premium categories – each as top-level filter as requested
+const textAnimationsNav: NavGroup = (() => {
+  const items = Object.values(components)
+    .filter((c) => c.category === "Text Animations")
+    .sort((a, b) => a.title.localeCompare(b.title))
+    .map((c) => ({ title: c.title, href: `/docs/components/${c.slug}` }));
+  return { title: "✨ TEXT ANIMATIONS", items: [{ title: "Text Animations", href: "/docs/premium/text-animations", items }] };
+})();
+
+const premiumComponentsNav: NavGroup = (() => {
+  const items = Object.values(components)
+    .filter((c) => c.category === "Premium Components")
+    .sort((a, b) => a.title.localeCompare(b.title))
+    .map((c) => ({ title: c.title, href: `/docs/components/${c.slug}` }));
+  return { title: "💎 PREMIUM", items: [{ title: "Premium Components", href: "/docs/premium/components", items }] };
+})();
+
+const heroBackgroundsNav: NavGroup = (() => {
+  const items = Object.values(components)
+    .filter((c) => c.category === "Hero Backgrounds")
+    .sort((a, b) => a.title.localeCompare(b.title))
+    .map((c) => ({ title: c.title, href: `/docs/components/${c.slug}` }));
+  return { title: "🌄 HERO BACKGROUNDS", items: [{ title: "Hero Backgrounds", href: "/docs/premium/hero-backgrounds", items }] };
+})();
+
+const visualEffectsNav: NavGroup = (() => {
+  const items = Object.values(components)
+    .filter((c) => c.category === "Visual Effects")
+    .sort((a, b) => a.title.localeCompare(b.title))
+    .map((c) => ({ title: c.title, href: `/docs/components/${c.slug}` }));
+  return { title: "🎨 VISUAL EFFECTS", items: [{ title: "Visual Effects", href: "/docs/premium/visual-effects", items }] };
+})();
+
+const skyEffectsNav: NavGroup = (() => {
+  const items = Object.values(components)
+    .filter((c) => c.category === "ASCII Effects")
+    .sort((a, b) => a.title.localeCompare(b.title))
+    .map((c) => ({ title: c.title, href: `/docs/components/${c.slug}` }));
+  return { title: "🌌 SKY EFFECTS", items: [{ title: "Sky Effects", href: "/docs/premium/ascii-effects", items }] };
+})();
 
 const motionNav: NavGroup = {
   title: "🌀 MOTION",
@@ -228,6 +289,15 @@ const primitives: NavGroup = {
   ],
 };
 
+const templatesNav: NavGroup = {
+  title: "📄 TEMPLATES",
+  items: [
+    { title: "Overview", href: "/templates" },
+    { title: "Landing", href: "/templates/landing" },
+    { title: "Dashboard", href: "/templates/dashboard" },
+  ],
+};
+
 const tools: NavGroup = {
   title: "🛠️ TOOLS",
   items: [
@@ -259,20 +329,7 @@ Foundations explain how DavinciUI is built. Components are what developers use. 
 
 ## Overview`;
 
-  const allNavGroups: NavGroup[] = [
-    gettingStarted,
-    componentsGroup,
-    premium,
-    motionNav,
-    scrollNav,
-    blocks,
-    foundations,
-    designTokens,
-    theming,
-    primitives,
-    tools,
-    resources,
-  ];
+  const allNavGroups: NavGroup[] = [gettingStarted, registryNav];
 
   allNavGroups.forEach((group) => {
     text += `\n\n## ${group.title}\n`;
@@ -303,22 +360,8 @@ Foundations explain how DavinciUI is built. Components are what developers use. 
   return text;
 };
 
-// Full Experience-first navigation: product surfaces first, foundation last
-// Premium now owns the visual library — no duplicate bottom groups
-const precomputedNav = Object.freeze([
-  gettingStarted,
-  componentsGroup,
-  premium,
-  motionNav,
-  scrollNav,
-  blocks,
-  foundations,
-  designTokens,
-  theming,
-  primitives,
-  tools,
-  resources,
-]);
+// Docs: direct – GET STARTED + REGISTRY (shadcn-style, no component lists)
+const precomputedNav = Object.freeze([gettingStarted, registryNav]);
 
 export const docsConfig = {
   nav: precomputedNav,

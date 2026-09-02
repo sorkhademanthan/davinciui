@@ -1,6 +1,6 @@
 export type ComponentCategory =
   | "Text Animations"
-  | "Components"
+  | "Premium Components"
   | "Hero Backgrounds"
   | "Visual Effects"
   | "ASCII Effects";
@@ -28,7 +28,7 @@ export const components: Record<string, ComponentMetadata> = {
     title: "Case Study Flip Stack",
     description:
       "Editorial case study cards that fold upward on scroll to reveal the next story.",
-    category: "Components",
+    category: "Premium Components",
     slug: "case-study-flip-stack",
     addedAt: "2026-08-08",
     previewVideo:
@@ -48,7 +48,7 @@ export const components: Record<string, ComponentMetadata> = {
     title: "Sticky Scroll Cards",
     description:
       "A scroll-driven card stack where images pin and scale as you scroll, creating a layered depth effect.",
-    category: "Components",
+    category: "Premium Components",
     slug: "sticky-scroll-cards",
     addedAt: "2026-04-10",
     previewVideo:
@@ -58,7 +58,7 @@ export const components: Record<string, ComponentMetadata> = {
     title: "Music Player",
     description:
       "A fun interactive vinyl record music player with swinging tonearm.",
-    category: "Components",
+    category: "Premium Components",
     slug: "music-player",
     addedAt: "2026-04-03",
     previewVideo:
@@ -68,7 +68,7 @@ export const components: Record<string, ComponentMetadata> = {
     title: "Scroll Split Card",
     description:
       "A scroll-driven interactive card that splits into three panels and flips.",
-    category: "Components",
+    category: "Premium Components",
     slug: "scroll-split-card",
     addedAt: "2026-04-03",
     previewVideo:
@@ -78,7 +78,7 @@ export const components: Record<string, ComponentMetadata> = {
     title: "Hover Transition",
     description:
       "Eight polished hover transitions with per-card animation, direction, color, and content controls.",
-    category: "Components",
+    category: "Premium Components",
     slug: "hover-transition",
     addedAt: "2026-08-08",
     previewVideo:
@@ -88,7 +88,7 @@ export const components: Record<string, ComponentMetadata> = {
     title: "Mac Keyboard",
     description:
       "A realistic Mac keyboard component with interactive keys and detailed styling.",
-    category: "Components",
+    category: "Premium Components",
     slug: "mac-keyboard",
     addedAt: "2026-03-13",
     previewVideo:
@@ -100,7 +100,7 @@ export const components: Record<string, ComponentMetadata> = {
     category: "Text Animations",
     slug: "scroll-based-velocity",
     previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/text-animations/scrollvelocity.mov",
+      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/text-animations/scrollvelocity.webm",
   },
   "letter-cascade": {
     title: "Letter Cascade",
@@ -163,15 +163,15 @@ export const components: Record<string, ComponentMetadata> = {
     title: "Circuit Board",
     description:
       "Animated circuit board visualization with nodes and connections.",
-    category: "Components",
+    category: "Premium Components",
     slug: "circuit-board",
     previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/component-animations/circuitboard.mov",
+      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/component-animations/circuitboard.webm",
   },
   "flight-status-card": {
     title: "Flight Status Card",
     description: "A detailed card showing flight information with animations.",
-    category: "Components",
+    category: "Premium Components",
     slug: "flight-status-card",
     previewVideo:
       "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/component-animations/flightstatuscard.webm",
@@ -179,24 +179,24 @@ export const components: Record<string, ComponentMetadata> = {
   "magnetic-dock": {
     title: "Magnetic Dock",
     description: "MacOS style dock that scales items based on mouse proximity.",
-    category: "Components",
+    category: "Premium Components",
     slug: "magnetic-dock",
     previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/component-animations/magneticdock.mov",
+      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/component-animations/magneticdock.webm",
   },
   "collection-surfer": {
     title: "Collection Surfer",
     description: "Smooth surfing interaction for browsing collections.",
-    category: "Components",
+    category: "Premium Components",
     slug: "collection-surfer",
     previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/component-animations/collectionsurfer.mov",
+      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/component-animations/collectionsurfer.webm",
   },
   "fisheye-infinite-grid": {
     title: "Fisheye Infinite Grid",
     description:
       "A dense draggable image wall warped as one continuous fisheye surface with weighted momentum.",
-    category: "Components",
+    category: "Premium Components",
     slug: "fisheye-infinite-grid",
     addedAt: "2026-08-08",
     previewVideo:
@@ -205,16 +205,16 @@ export const components: Record<string, ComponentMetadata> = {
   "github-calendar": {
     title: "Github Calendar",
     description: "GitHub-style contribution calendar heatmap.",
-    category: "Components",
+    category: "Premium Components",
     slug: "github-calendar",
     previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/component-animations/githubcalendar.mov",
+      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/component-animations/githubcalendar.webm",
   },
   "scroll-choreography": {
     title: "Scroll Choreography",
     description:
       "A smooth, scroll-driven image choreography component using Framer Motion.",
-    category: "Components",
+    category: "Premium Components",
     slug: "scroll-choreography",
     addedAt: "2026-02-28",
     previewVideo:
@@ -224,7 +224,7 @@ export const components: Record<string, ComponentMetadata> = {
     title: "Scroll Tilted Grid",
     description:
       "A cinematic image grid that tilts and resolves into focus as each frame crosses the viewport.",
-    category: "Components",
+    category: "Premium Components",
     slug: "scroll-tilted-grid",
     addedAt: "2026-07-17",
     previewVideo:
@@ -233,7 +233,7 @@ export const components: Record<string, ComponentMetadata> = {
   "layered-stack": {
     title: "Layered Stack",
     description: "A stack of layered cards that interact with mouse hover.",
-    category: "Components",
+    category: "Premium Components",
     slug: "layered-stack",
     addedAt: "2026-03-15",
     previewVideo:
@@ -243,7 +243,7 @@ export const components: Record<string, ComponentMetadata> = {
     title: "Orbit Card Stack",
     description:
       "Premium hover card deck that fans outward and lifts the active card without changing its color or angle.",
-    category: "Components",
+    category: "Premium Components",
     slug: "orbit-card-stack",
     addedAt: "2026-06-07",
     previewVideo:
@@ -253,7 +253,7 @@ export const components: Record<string, ComponentMetadata> = {
     title: "Wheel Carousel",
     description:
       "A cinematic rotating-wheel picker with inertial drag, curved fading labels, and crossfading project imagery.",
-    category: "Components",
+    category: "Premium Components",
     slug: "wheel-carousel",
     addedAt: "2026-08-10",
     previewVideo:
@@ -263,7 +263,7 @@ export const components: Record<string, ComponentMetadata> = {
     title: "Spiral 3D Slider",
     description:
       "A compact, autoplaying image gallery that responds to scroll along a smooth 3D spiral.",
-    category: "Components",
+    category: "Premium Components",
     slug: "spiral-3d-slider",
     addedAt: "2026-08-08",
     previewVideo:
@@ -274,7 +274,7 @@ export const components: Record<string, ComponentMetadata> = {
     title: "Newsletter Bookshelf",
     description:
       "A tactile 3D newsletter archive with hover lift, camera browsing, centered covers, and automatic drag-adjustable orbiting.",
-    category: "Components",
+    category: "Premium Components",
     slug: "newsletter-bookshelf",
     addedAt: "2026-08-06",
     previewVideo:
@@ -285,7 +285,7 @@ export const components: Record<string, ComponentMetadata> = {
     title: "Split Flap Display",
     description:
       "A premium split-flap display component inspired by vintage departure boards.",
-    category: "Components",
+    category: "Premium Components",
     slug: "split-flap-display",
     addedAt: "2026-03-27",
     previewVideo:
@@ -295,7 +295,7 @@ export const components: Record<string, ComponentMetadata> = {
     title: "Eye Tracking",
     description:
       "Hyper-realistic eyes that follow your cursor with smooth spring physics, reactive pupils, blinking, and multiple stunning variants.",
-    category: "Components",
+    category: "Premium Components",
     slug: "eye-tracking",
     addedAt: "2026-03-28",
     previewVideo:
@@ -308,7 +308,7 @@ export const components: Record<string, ComponentMetadata> = {
     category: "Hero Backgrounds",
     slug: "hero-geometric",
     previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/hero-backgrounds/herogeometric.mov",
+      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/hero-backgrounds/herogeometric.webm",
   },
   "dither-prism-hero": {
     title: "Dither Prism Hero",
@@ -317,7 +317,7 @@ export const components: Record<string, ComponentMetadata> = {
     category: "Hero Backgrounds",
     slug: "dither-prism-hero",
     previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/hero-backgrounds/ditherprismhero.mov",
+      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/hero-backgrounds/ditherprismhero.webm",
   },
   "webgl-liquid": {
     title: "WebGL Liquid",
@@ -326,7 +326,7 @@ export const components: Record<string, ComponentMetadata> = {
     category: "Hero Backgrounds",
     slug: "webgl-liquid",
     previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/hero-backgrounds/webglliquid.mov",
+      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/hero-backgrounds/webglliquid.webm",
   },
   "silk-aurora": {
     title: "Silk Aurora",
@@ -353,7 +353,7 @@ export const components: Record<string, ComponentMetadata> = {
     category: "Hero Backgrounds",
     slug: "closing-plasma",
     previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/hero-backgrounds/closingplasma.mov",
+      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/hero-backgrounds/closingplasma.webm",
   },
 
   "animated-gradient": {
@@ -441,7 +441,7 @@ export const components: Record<string, ComponentMetadata> = {
     category: "Visual Effects",
     slug: "dither-gradient",
     previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/visual-effects/dithergradient.mov",
+      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/visual-effects/dithergradient.webm",
   },
   "magnet-lines": {
     title: "Magnet Lines",
@@ -449,7 +449,7 @@ export const components: Record<string, ComponentMetadata> = {
     category: "Visual Effects",
     slug: "magnet-lines",
     previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/visual-effects/magneticlines.mov",
+      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/visual-effects/magneticlines.webm",
   },
   "pixel-canvas": {
     title: "Pixel Canvas",
@@ -457,7 +457,7 @@ export const components: Record<string, ComponentMetadata> = {
     category: "Visual Effects",
     slug: "pixel-canvas",
     previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/visual-effects/pixelcanvas.mov",
+      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/visual-effects/pixelcanvas.webm",
   },
   "pixel-image-trail": {
     title: "Pixel Image Trail",
@@ -473,7 +473,7 @@ export const components: Record<string, ComponentMetadata> = {
     title: "Signature",
     description:
       "An animated SVG signature effect that draws out text as if hand-written.",
-    category: "Components",
+    category: "Premium Components",
     slug: "signature",
     addedAt: "2026-03-17",
     previewVideo:
@@ -485,7 +485,7 @@ export const components: Record<string, ComponentMetadata> = {
     category: "Visual Effects",
     slug: "matrix-rain",
     previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/visual-effects/matrixrain.mov",
+      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/visual-effects/matrixrain.webm",
   },
 };
 

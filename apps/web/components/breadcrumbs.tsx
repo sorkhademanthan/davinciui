@@ -21,17 +21,30 @@ export function Breadcrumbs({ className }: { className?: string }) {
 
   const crumbs: Crumb[] = [{ label: "Home", href: "/" }]
 
+  // Collapse /experience/components -> single "Components" crumb to avoid Home > Components > Components
   let href = ""
   for (let i = 0; i < segs.length; i++) {
     const seg = segs[i]!
+    // skip duplicate components segment after experience
+    if (seg === "components" && segs[i - 1] === "experience") {
+      href += `/${seg}`
+      continue
+    }
     href += `/${seg}`
-    const isLast = i === segs.length - 1
+    const isLast = i === segs.length - 1 || (seg === "experience" && segs[i + 1] === "components" && i + 1 === segs.length - 1)
     // pretty labels for top areas
     let label = toTitle(seg)
     if (seg === "design-system") label = "Design System"
     if (seg === "experience") label = "Components"
     if (seg === "foundations") label = "Foundations"
     if (seg === "components") label = "Components"
+    // when experience is followed by components, render single crumb for the pair
+    if (seg === "experience" && segs[i + 1] === "components") {
+      crumbs.push({ label: "Components", href: isLast ? undefined : "/experience/components" })
+      i++ // skip next seg
+      href = "/experience/components"
+      continue
+    }
     crumbs.push({ label, href: isLast ? undefined : href })
   }
 

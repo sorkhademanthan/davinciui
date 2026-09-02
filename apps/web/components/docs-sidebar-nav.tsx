@@ -215,13 +215,7 @@ export function DocsSidebarNav({
           )
         })}
 
-        <div className="mt-8 rounded-xl border border-border bg-zinc-50 p-3.5 dark:bg-zinc-900/50 dark:border-white/[0.06]">
-          <p className="text-[13px] font-semibold text-zinc-900 dark:text-zinc-100">DavinciUI Pro</p>
-          <p className="mt-1 text-[13px] leading-5 text-muted-foreground">Premium blocks & experiences — coming soon.</p>
-          <Link href="/blocks" className="mt-3 inline-flex items-center gap-1 text-[13px] font-medium text-zinc-900 hover:gap-1.5 transition-all dark:text-zinc-100">
-            Browse blocks <ChevronRight className="size-3.5" />
-          </Link>
-        </div>
+
       </div>
     </div>
   )
