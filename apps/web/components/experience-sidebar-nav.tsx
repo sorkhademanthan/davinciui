@@ -1,5 +1,6 @@
 "use client"
 
+import * as React from "react"
 import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -7,6 +8,7 @@ import { ChevronDown, Search } from "lucide-react"
 import { navigation } from "@/config/navigation"
 import { components, isNewComponent } from "@/registry"
 import { cn } from "@/lib/utils"
+import { CommandMenu } from "@/components/command-menu"
 
 function SidebarItem({
   title,
@@ -46,16 +48,35 @@ export function ExperienceSidebarNav() {
     <div className="flex flex-1 flex-col overflow-hidden">
       {/* Search — shadcn/Linear style, tight */}
       <div className="shrink-0 p-2.5 border-b border-border/40 bg-white dark:bg-[#0a0a0a]">
-        <button
-          type="button"
-          className="flex w-full items-center gap-2 rounded-md border border-border/50 bg-white px-2.5 py-1.5 text-left text-[13px] text-zinc-500 shadow-sm hover:bg-zinc-50 hover:border-border dark:bg-zinc-900 dark:border-white/10 dark:text-zinc-400 dark:hover:bg-zinc-800"
+        <React.Suspense
+          fallback={
+            <button
+              type="button"
+              className="flex w-full items-center gap-2 rounded-md border border-border/50 bg-white px-2.5 py-1.5 text-left text-[13px] text-zinc-500 shadow-sm dark:bg-zinc-900 dark:border-white/10 dark:text-zinc-400"
+            >
+              <Search className="size-3.5 shrink-0 opacity-60" />
+              <span className="flex-1 truncate">Search components…</span>
+              <span className="ml-auto hidden items-center gap-0.5 rounded border bg-zinc-50 px-1 py-0.5 font-mono text-[10px] leading-none text-zinc-500 dark:bg-zinc-800 dark:border-white/10 sm:inline-flex">
+                ⌘K
+              </span>
+            </button>
+          }
         >
-          <Search className="size-3.5 shrink-0 opacity-60" />
-          <span className="flex-1 truncate">Search components…</span>
-          <span className="ml-auto hidden items-center gap-0.5 rounded border bg-zinc-50 px-1 py-0.5 font-mono text-[10px] leading-none text-zinc-500 dark:bg-zinc-800 dark:border-white/10 sm:inline-flex">
-            ⌘K
-          </span>
-        </button>
+          <CommandMenu
+            trigger={
+              <button
+                type="button"
+                className="flex w-full items-center gap-2 rounded-md border border-border/50 bg-white px-2.5 py-1.5 text-left text-[13px] text-zinc-500 shadow-sm hover:bg-zinc-50 hover:border-border dark:bg-zinc-900 dark:border-white/10 dark:text-zinc-400 dark:hover:bg-zinc-800"
+              >
+                <Search className="size-3.5 shrink-0 opacity-60" />
+                <span className="flex-1 truncate">Search components…</span>
+                <span className="ml-auto hidden items-center gap-0.5 rounded border bg-zinc-50 px-1 py-0.5 font-mono text-[10px] leading-none text-zinc-500 dark:bg-zinc-800 dark:border-white/10 sm:inline-flex">
+                  ⌘K
+                </span>
+              </button>
+            }
+          />
+        </React.Suspense>
       </div>
 
       <div className="flex-1 overflow-y-auto px-2.5 py-3 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
