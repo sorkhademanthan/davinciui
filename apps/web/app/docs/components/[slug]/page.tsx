@@ -154,15 +154,25 @@ async function DocsContent({ slug }: { slug: string }) {
 export default async function ComponentPage(props: PageProps) {
     const params = await props.params;
     const component = getComponent(params.slug);
+    const importer = getDocsImporter(params.slug);
 
-    if (!component) {
+    if (!component && !importer) {
         return notFound();
     }
 
-    const importer = getDocsImporter(params.slug);
-
     // If we have a dedicated docs component, render it with Suspense
     if (importer) {
+        // fallback for basic components not in registry (e.g., button)
+        const fallbackTitle = component?.title ?? params.slug.charAt(0).toUpperCase() + params.slug.slice(1);
+        const fallbackDesc = component?.description ?? `${fallbackTitle} component`;
+        const isFallback = !component;
+        if (isFallback) {
+            return (
+                <Suspense fallback={<DocsPageSkeleton />}>
+                    <DocsContent slug={params.slug} />
+                </Suspense>
+            );
+        }
         const componentUrl = absoluteUrl(`/docs/components/${component.slug}`);
         const componentJsonLd = {
             "@context": "https://schema.org",
@@ -208,16 +218,16 @@ export default async function ComponentPage(props: PageProps) {
         );
     }
 
-    // Fallback for components without dedicated docs
+    // Fallback for components without dedicated docs (component guaranteed here)
     return (
         <DocsPageLayout
-            title={component.title}
-            description={component.description}
-            installPackageName={component.slug}
+            title={component!.title}
+            description={component!.description}
+            installPackageName={component!.slug}
             preview={
                 <div className="border border-border rounded-xl p-12 flex flex-col justify-center items-center bg-muted/20 min-h-[350px] gap-4">
                     <div className="text-center space-y-2">
-                        <h3 className="text-lg font-medium">{component.title} Preview</h3>
+                        <h3 className="text-lg font-medium">{component!.title} Preview</h3>
                         <p className="text-sm text-muted-foreground">
                             Component preview will appear here.
                         </p>

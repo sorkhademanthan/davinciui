@@ -34,6 +34,10 @@ const docsImportMap: Record<
     import("@/components/docs/scroll-split-card").then((m) => ({
       default: m.ScrollSplitCardDocs,
     })),
+  button: () =>
+    import("@/components/docs/button").then((m) => ({
+      default: m.ButtonDocs,
+    })),
   "hover-transition": () =>
     import("@/components/docs/hover-transition").then((m) => ({
       default: m.HoverTransitionDocs,
