@@ -29,6 +29,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "carousel",
+      "type": "registry:ui"
+    },
+    {
       "name": "case-study-flip-stack",
       "type": "registry:ui"
     },
@@ -38,6 +42,10 @@
     },
     {
       "name": "closing-plasma",
+      "type": "registry:ui"
+    },
+    {
+      "name": "collapsible",
       "type": "registry:ui"
     },
     {
@@ -186,6 +194,10 @@
     },
     {
       "name": "ripple-transition",
+      "type": "registry:ui"
+    },
+    {
+      "name": "scroll-area",
       "type": "registry:ui"
     },
     {
