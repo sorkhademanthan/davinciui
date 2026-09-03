@@ -9,6 +9,10 @@
   ],
   "items": [
     {
+      "name": "alert-dialog",
+      "type": "registry:ui"
+    },
+    {
       "name": "animated-gradient",
       "type": "registry:ui"
     },
@@ -25,7 +29,15 @@
       "type": "registry:ui"
     },
     {
+      "name": "badge",
+      "type": "registry:ui"
+    },
+    {
       "name": "border-beam",
+      "type": "registry:ui"
+    },
+    {
+      "name": "card",
       "type": "registry:ui"
     },
     {
@@ -61,6 +73,14 @@
       "type": "registry:ui"
     },
     {
+      "name": "data-table",
+      "type": "registry:ui"
+    },
+    {
+      "name": "dialog",
+      "type": "registry:ui"
+    },
+    {
       "name": "dither-gradient",
       "type": "registry:ui"
     },
@@ -70,6 +90,14 @@
     },
     {
       "name": "dithered-logo",
+      "type": "registry:ui"
+    },
+    {
+      "name": "drawer",
+      "type": "registry:ui"
+    },
+    {
+      "name": "dropdown-menu",
       "type": "registry:ui"
     },
     {
@@ -161,6 +189,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "navigation-menu",
+      "type": "registry:ui"
+    },
+    {
       "name": "newsletter-bookshelf",
       "type": "registry:ui"
     },
@@ -182,6 +214,10 @@
     },
     {
       "name": "pixel-image-trail",
+      "type": "registry:ui"
+    },
+    {
+      "name": "popover",
       "type": "registry:ui"
     },
     {
@@ -253,6 +289,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "table",
+      "type": "registry:ui"
+    },
+    {
       "name": "testimonial-marquee",
       "type": "registry:ui"
     },
@@ -266,6 +306,10 @@
     },
     {
       "name": "text-repel",
+      "type": "registry:ui"
+    },
+    {
+      "name": "tooltip",
       "type": "registry:ui"
     },
     {

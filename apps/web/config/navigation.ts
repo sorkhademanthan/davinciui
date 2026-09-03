@@ -179,7 +179,7 @@ const experienceComponentsSection: NavSection = {
         { title: "Drawer", href: "/experience/components/drawer" },
         { title: "Popover", href: "/experience/components/popover" },
         { title: "Tooltip", href: "/experience/components/tooltip" },
-        { title: "Dropdown", href: "/experience/components/dropdown" },
+        { title: "Dropdown Menu", href: "/experience/components/dropdown-menu" },
       ],
     },
     {

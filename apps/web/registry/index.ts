@@ -487,6 +487,21 @@ export const components: Record<string, ComponentMetadata> = {
     previewVideo:
       "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/visual-effects/matrixrain.webm",
   },
+  table: {
+    title: "Table",
+    description:
+      "Virtualized data table that stays smooth at 100+ rows, with sortable headers, row selection, column resize and reorder, and a sticky header. Minimal, reduced-motion-safe motion.",
+    category: "Premium Components",
+    slug: "table",
+    addedAt: "2026-07-13",
+  },
+  "data-table": {
+    title: "Data Table",
+    description: "Feature-rich data table with sorting, filtering, pagination, column visibility, row selection, and RTL support — built on TanStack Table.",
+    category: "Premium Components",
+    slug: "data-table",
+    addedAt: "2026-07-14",
+  },
 };
 
 export function getComponent(slug: string) {

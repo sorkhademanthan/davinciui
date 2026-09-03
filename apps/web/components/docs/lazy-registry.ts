@@ -314,6 +314,46 @@ const docsImportMap: Record<
     import("@/components/docs/eye-tracking").then((m) => ({
       default: m.EyeTrackingDocs,
     })),
+  "navigation-menu": () =>
+    import("@/components/docs/navigation-menu").then((m) => ({
+      default: m.NavigationMenuDocs,
+    })),
+  dialog: () =>
+    import("@/components/docs/dialog").then((m) => ({
+      default: m.DialogDocs,
+    })),
+  drawer: () =>
+    import("@/components/docs/drawer").then((m) => ({
+      default: m.DrawerDocs,
+    })),
+  popover: () =>
+    import("@/components/docs/popover").then((m) => ({
+      default: m.PopoverDocs,
+    })),
+  tooltip: () =>
+    import("@/components/docs/tooltip").then((m) => ({
+      default: m.TooltipDocs,
+    })),
+  "dropdown-menu": () =>
+    import("@/components/docs/dropdown-menu").then((m) => ({
+      default: m.DropdownMenuDocs,
+    })),
+  card: () =>
+    import("@/components/docs/card").then((m) => ({
+      default: m.CardDocs,
+    })),
+  badge: () =>
+    import("@/components/docs/badge").then((m) => ({
+      default: m.BadgeDocs,
+    })),
+  table: () =>
+    import("@/components/docs/table").then((m) => ({
+      default: m.TableDocs,
+    })),
+  "data-table": () =>
+    import("@/components/docs/data-table").then((m) => ({
+      default: m.DataTableDocs,
+    })),
 };
 
 /**

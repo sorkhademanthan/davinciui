@@ -12,7 +12,7 @@ const BASIC_SLUGS: Record<string, string[]> = {
   Forms: ["input", "textarea", "select", "checkbox", "radio", "switch", "form"],
   Feedback: ["alert", "toast", "progress", "spinner", "skeleton"],
   Navigation: ["tabs", "breadcrumb", "pagination", "sidebar", "navigation-menu"],
-  Overlays: ["dialog", "drawer", "popover", "tooltip", "dropdown"],
+  Overlays: ["dialog", "drawer", "popover", "tooltip", "dropdown-menu"],
   "Data Display": ["card", "badge", "avatar", "table", "data-table"],
   Layout: ["accordion", "carousel", "collapsible", "scroll-area"],
 }
