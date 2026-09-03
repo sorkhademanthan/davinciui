@@ -46,6 +46,18 @@ const docsImportMap: Record<
     import("@/components/docs/accordion").then((m) => ({
       default: m.AccordionDocs,
     })),
+  carousel: () =>
+    import("@/components/docs/carousel").then((m) => ({
+      default: m.CarouselDocs,
+    })),
+  collapsible: () =>
+    import("@/components/docs/collapsible").then((m) => ({
+      default: m.CollapsibleDocs,
+    })),
+  "scroll-area": () =>
+    import("@/components/docs/scroll-area").then((m) => ({
+      default: m.ScrollAreaDocs,
+    })),
   alert: () =>
     import("@/components/docs/alert").then((m) => ({
       default: m.AlertDocs,
