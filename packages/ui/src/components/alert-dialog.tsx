@@ -9,14 +9,14 @@ function AlertDialog({ ...props }: React.ComponentProps<typeof DialogPrimitive.R
   return <DialogPrimitive.Root {...props} />;
 }
 
-function AlertDialogTrigger({ children, ...props }: React.ComponentProps<typeof DialogPrimitive.Trigger> & { asChild?: boolean }) {
+function AlertDialogTrigger({ children, asChild, ...props }: React.ComponentProps<typeof DialogPrimitive.Trigger> & { asChild?: boolean }) {
   // Base UI Trigger supports render prop for asChild; fallback to direct children
-  if ((props as any).asChild && React.isValidElement(children)) {
+  if (asChild && React.isValidElement(children)) {
     return (
-      <DialogPrimitive.Trigger render={children as React.ReactElement} {...(props as any)} />
+      <DialogPrimitive.Trigger data-slot="alert-dialog-trigger" render={children as React.ReactElement} {...props} />
     );
   }
-  return <DialogPrimitive.Trigger {...props}>{children}</DialogPrimitive.Trigger>;
+  return <DialogPrimitive.Trigger data-slot="alert-dialog-trigger" {...props}>{children}</DialogPrimitive.Trigger>;
 }
 
 function AlertDialogPortal(props: React.ComponentProps<typeof DialogPrimitive.Portal>) {
