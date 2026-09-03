@@ -22,17 +22,22 @@ export default function DocsLayout({
   children: React.ReactNode
 }): React.JSX.Element {
   return (
-    <div data-route-docs className="min-h-svh flex flex-col bg-background">
+    <div data-route-docs className="min-h-svh flex flex-col bg-[#fcfcfc] dark:bg-[#050505]">
       <SiteHeader />
-      <div className="flex-1 grid grid-cols-1 md:grid-cols-[240px_minmax(0,1fr)] pt-14">
-        {/* Desktop Sidebar - sticky, occupies layout space */}
-        <aside className="hidden md:flex md:flex-col sticky top-14 h-[calc(100vh-3.5rem)] border-r border-border/40 bg-white dark:bg-[#0a0a0a] overflow-hidden">
+      {/* Subtle top anchor offset */}
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-[280px_minmax(0,1fr)] pt-14">
+        {/* Desktop Sidebar — premium, inset */}
+        <aside className="hidden lg:sticky lg:top-14 lg:z-30 lg:flex lg:h-[calc(100vh-3.5rem)] lg:flex-col lg:overflow-hidden lg:border-r lg:border-border/40 lg:bg-white dark:lg:bg-[#0a0a0a]">
+          {/* subtle left rail highlight */}
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-px bg-gradient-to-b from-transparent via-border/30 to-transparent" aria-hidden="true" />
           <DocsSidebarNav />
         </aside>
 
-        {/* Main content - full width, pages handle their own containers */}
-        <main className="min-w-0 w-full max-w-none m-0 overflow-hidden bg-white dark:bg-background">
-          {children}
+        {/* Main — breathable, max-width centered */}
+        <main className="min-w-0 w-full overflow-hidden bg-white dark:bg-[#0a0a0a] lg:border-l lg:border-transparent">
+          <div className="mx-auto w-full max-w-[860px] px-4 py-8 sm:px-6 lg:px-8">
+            {children}
+          </div>
         </main>
       </div>
     </div>

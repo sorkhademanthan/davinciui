@@ -52,6 +52,7 @@ export interface DocsPageLayoutProps {
   dependencies?: string[]
   personalizeContent?: React.ReactNode
   hideDefaultPreviewVariant?: boolean
+  hideExamples?: boolean
   installationNote?: React.ReactNode
   usageNote?: React.ReactNode
 }
@@ -78,6 +79,7 @@ export async function DocsPageLayout({
   fullWidthPreview = false,
   personalizeContent,
   hideDefaultPreviewVariant = false,
+  hideExamples = false,
   installationNote,
   usageNote,
 }: DocsPageLayoutProps) {
@@ -123,8 +125,8 @@ export async function DocsPageLayout({
     }
   }
 
-  const variantCodes = examples.map((ex) => stripImportFromCode(ex.code || ""))
-  const variantTitles = examples.map((ex) => ex.title)
+  const variantCodes = hideExamples ? [] : examples.map((ex) => stripImportFromCode(ex.code || ""))
+  const variantTitles = hideExamples ? [] : examples.map((ex) => ex.title)
 
   return (
     <div
@@ -235,6 +237,99 @@ export async function DocsPageLayout({
               </div>
             </Section>
 
+            {/* Composition */}
+            {title === "Dialog" && (
+              <Section title="Composition" className="pt-8">
+                <div className="space-y-3">
+                  <p className="text-sm leading-6 text-muted-foreground">Use the following composition to build a Dialog:</p>
+                  <pre className="overflow-x-auto rounded-lg border bg-muted/30 p-4 font-mono text-xs leading-6">
+{`Dialog
+├── DialogTrigger
+└── DialogContent
+    ├── DialogHeader
+    │   ├── DialogTitle
+    │   └── DialogDescription
+    └── DialogFooter`}
+                  </pre>
+                </div>
+              </Section>
+            )}
+            {title === "Popover" && (
+              <Section title="Composition" className="pt-8">
+                <div className="space-y-3">
+                  <p className="text-sm leading-6 text-muted-foreground">Use the following composition to build a Popover:</p>
+                  <pre className="overflow-x-auto rounded-lg border bg-muted/30 p-4 font-mono text-xs leading-6">
+{`Popover
+├── PopoverTrigger
+└── PopoverContent`}
+                  </pre>
+                </div>
+              </Section>
+            )}
+            {title === "Tooltip" && (
+              <Section title="Composition" className="pt-8">
+                <div className="space-y-3">
+                  <p className="text-sm leading-6 text-muted-foreground">Use the following composition to build a Tooltip:</p>
+                  <pre className="overflow-x-auto rounded-lg border bg-muted/30 p-4 font-mono text-xs leading-6">
+{`TooltipProvider
+└── Tooltip
+    ├── TooltipTrigger
+    └── TooltipContent`}
+                  </pre>
+                </div>
+              </Section>
+            )}
+
+            {title === "Card" && (
+              <Section title="Composition" className="pt-8">
+                <div className="space-y-3">
+                  <p className="text-sm leading-6 text-muted-foreground">Use the following composition to build a Card:</p>
+                  <pre className="overflow-x-auto rounded-lg border bg-muted/30 p-4 font-mono text-xs leading-6">
+{`Card
+├── CardHeader
+│   ├── CardTitle
+│   ├── CardDescription
+│   └── CardAction
+├── CardContent
+└── CardFooter`}
+                  </pre>
+                </div>
+              </Section>
+            )}
+
+            {title === "Dropdown Menu" && (
+              <Section title="Composition" className="pt-8">
+                <div className="space-y-3">
+                  <p className="text-sm leading-6 text-muted-foreground">Use the following composition to build a Dropdown Menu:</p>
+                  <pre className="overflow-x-auto rounded-lg border bg-muted/30 p-4 font-mono text-xs leading-6">
+{`DropdownMenu
+├── DropdownMenuTrigger
+└── DropdownMenuContent
+    ├── DropdownMenuLabel
+    ├── DropdownMenuItem (+ Shortcut)
+    ├── DropdownMenuSeparator
+    ├── DropdownMenuCheckboxItem / RadioGroup + RadioItem
+    └── DropdownMenuSub
+        ├── DropdownMenuSubTrigger
+        └── DropdownMenuSubContent`}
+                  </pre>
+                </div>
+              </Section>
+            )}
+
+            {/* Variant examples — visible in left column for TOC (hidden when hideExamples) */}
+            {!hideExamples && examples.length > 0 && (
+              <div className="space-y-8 pt-2">
+                {examples.map((ex) => (
+                  <Section key={ex.title} title={ex.title} className="pt-8">
+                    <div className="space-y-4">
+                      <div className="overflow-hidden rounded-xl border bg-white dark:bg-[#121212]">{ex.preview}</div>
+                    </div>
+                  </Section>
+                ))}
+              </div>
+            )}
+
             {/* Props */}
             {props.length > 0 && (
               <Section title="API Reference" className="pt-8">
@@ -245,8 +340,6 @@ export async function DocsPageLayout({
             <div className="mt-12">
               <DocsFooterSection />
             </div>
-
-            {/* Examples section removed as per user request to avoid redundancy with the interactive preview */}
 
 
             <div className="h-12" />

@@ -146,15 +146,25 @@ export function FloatingDocsSidebarPanel() {
   return (
     <AnimatePresence>
       {isOpen && (
-        <motion.div
-          initial={{ x: -280, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          exit={{ x: -40, opacity: 0 }}
-          transition={{ type: "spring", duration: 0.35, bounce: 0 }}
-          className="fixed top-3 left-3 z-50 flex w-[248px] flex-col"
-          onMouseLeave={close}
-        >
-          <div className="flex max-h-[calc(100vh-24px)] flex-col overflow-hidden rounded-2xl border border-border/50 bg-white shadow-card dark:bg-[#0a0a0a]">
+        <>
+          {/* backdrop */}
+          <motion.button
+            aria-label="Close navigation"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={close}
+            className="fixed inset-0 z-40 bg-black/20 backdrop-blur-[2px] lg:hidden"
+          />
+          <motion.div
+            initial={{ x: -288, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: -40, opacity: 0 }}
+            transition={{ type: "spring", duration: 0.34, bounce: 0.05 }}
+            className="fixed top-3 left-3 z-50 flex w-[292px] flex-col"
+            onMouseLeave={close}
+          >
+            <div className="flex max-h-[calc(100vh-24px)] flex-col overflow-hidden rounded-2xl border border-border/60 bg-white/95 shadow-[0_8px_40px_rgba(0,0,0,0.12),0_2px_8px_rgba(0,0,0,0.06)] backdrop-blur-xl dark:bg-zinc-900/90 dark:shadow-[0_16px_48px_rgba(0,0,0,0.5)]">
             <div className="flex-1 overflow-hidden">
               <DocsSidebarNav
                 onNavigate={close}
@@ -168,36 +178,43 @@ export function FloatingDocsSidebarPanel() {
             </div>
           </div>
 
-          <AnimatePresence>
-            {hoverPreview && hoverPosition && (
-              <motion.div
-                key={hoverPreview.videoSrc}
-                initial={{ opacity: 0, scale: 0.98 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.98 }}
-                transition={{ duration: 0.08, ease: "easeOut" }}
-                className="pointer-events-none fixed z-[70] w-56"
-                style={{ left: hoverPosition.x, top: hoverPosition.y }}
-              >
-                <div className="overflow-hidden rounded-xl border border-zinc-200/70 bg-white/95 shadow-2xl backdrop-blur-md dark:border-zinc-800/70 dark:bg-zinc-900/95">
-                  <div className="relative h-32 w-full bg-zinc-100 dark:bg-zinc-800/60">
-                    <video
-                      key={hoverPreview.videoSrc}
-                      src={hoverPreview.videoSrc}
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      preload="auto"
-                      onLoadedData={() => setIsHoverVideoReady(true)}
-                      className={cn("relative h-full w-full object-cover transition-opacity duration-150", isHoverVideoReady ? "opacity-100" : "opacity-0")}
-                    />
+            <AnimatePresence>
+              {hoverPreview && hoverPosition && (
+                <motion.div
+                  key={hoverPreview.videoSrc}
+                  initial={{ opacity: 0, y: 4, scale: 0.98 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 4, scale: 0.98 }}
+                  transition={{ duration: 0.12, ease: [0.25, 0.1, 0.25, 1] }}
+                  className="pointer-events-none fixed z-[70] w-[232px]"
+                  style={{ left: hoverPosition.x, top: hoverPosition.y }}
+                >
+                  <div className="overflow-hidden rounded-2xl border border-border/60 bg-white shadow-xl backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900">
+                    <div className="relative h-[132px] w-full bg-zinc-100 dark:bg-zinc-800">
+                      <video
+                        key={hoverPreview.videoSrc}
+                        src={hoverPreview.videoSrc}
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        preload="auto"
+                        onLoadedData={() => setIsHoverVideoReady(true)}
+                        className={cn(
+                          "relative h-full w-full object-cover transition-opacity duration-150",
+                          isHoverVideoReady ? "opacity-100" : "opacity-0",
+                        )}
+                      />
+                      <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/50 to-transparent p-2">
+                        <p className="truncate text-xs font-medium text-white">{hoverPreview.title}</p>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </motion.div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+        </>
       )}
     </AnimatePresence>
   )
