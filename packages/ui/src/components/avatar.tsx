@@ -4,15 +4,17 @@ import * as React from "react";
 import { cn } from "@workspace/ui/lib/utils";
 
 function Avatar({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div data-slot="avatar" className={cn("relative flex size-10 shrink-0 overflow-hidden rounded-full", className)} {...props} />;
+  return <div data-slot="avatar" className={cn("relative flex size-10 shrink-0 overflow-hidden rounded-full bg-muted", className)} {...props} />;
 }
 
 function AvatarImage({ className, ...props }: React.ImgHTMLAttributes<HTMLImageElement>) {
-  return <img data-slot="avatar-image" className={cn("aspect-square size-full object-cover", className)} {...props} />;
+  const [error, setError] = React.useState(false);
+  if (error) return null;
+  return <img data-slot="avatar-image" onError={() => setError(true)} className={cn("absolute inset-0 aspect-square size-full object-cover", className)} {...props} />;
 }
 
 function AvatarFallback({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div data-slot="avatar-fallback" className={cn("flex size-full items-center justify-center rounded-full bg-muted text-sm font-medium", className)} {...props} />;
+  return <div data-slot="avatar-fallback" className={cn("flex size-full items-center justify-center rounded-full bg-muted text-sm font-medium text-muted-foreground", className)} {...props} />;
 }
 
 function AvatarBadge({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
