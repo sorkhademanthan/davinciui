@@ -121,6 +121,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "gsap-text",
+      "type": "registry:ui"
+    },
+    {
       "name": "hero-geometric",
       "type": "registry:ui"
     },
@@ -146,6 +150,10 @@
     },
     {
       "name": "interactive-hover-button",
+      "type": "registry:ui"
+    },
+    {
+      "name": "kinetic-text",
       "type": "registry:ui"
     },
     {
