@@ -148,6 +148,21 @@ export const components: Record<string, ComponentMetadata> = {
     previewVideo:
       "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/text-animations/kinetictextreveal.webm",
   },
+  "kinetic-text": {
+    title: "Kinetic Text",
+    description: "A compact kinetic typography composition where overlapping text clones move continuously around a stable central anchor, creating a layered slicing effect.",
+    category: "Text Animations",
+    slug: "kinetic-text",
+    addedAt: "2026-09-03",
+  },
+  "gsap-text": {
+    title: "GSAP Text",
+    description:
+      "A cinematic kinetic typography component that creates a layered 3D depth effect using continuous vertical text motion.",
+    category: "Text Animations",
+    slug: "gsap-text",
+    addedAt: "2026-09-03",
+  },
   "cursor-driven-particle-typography": {
     title: "Particle Typography",
     description:

@@ -258,6 +258,14 @@ const docsImportMap: Record<
     import("@/components/docs/kinetic-text-reveal").then((m) => ({
       default: m.KineticTextRevealDocs,
     })),
+  "kinetic-text": () =>
+    import("@/components/docs/kinetic-text").then((m) => ({
+      default: m.KineticTextDocs,
+    })),
+  "gsap-text": () =>
+    import("@/components/docs/gsap-text").then((m) => ({
+      default: m.GSAPTextDocs,
+    })),
   "cursor-driven-particle-typography": () =>
     import("@/components/docs/cursor-driven-particle-typography").then((m) => ({
       default: m.CursorDrivenParticleTypographyDocs,
