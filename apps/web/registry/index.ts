@@ -3,7 +3,14 @@ export type ComponentCategory =
   | "Premium Components"
   | "Hero Backgrounds"
   | "Visual Effects"
-  | "ASCII Effects";
+  | "ASCII Effects"
+  | "Actions"
+  | "Forms"
+  | "Feedback"
+  | "Navigation"
+  | "Overlays"
+  | "Data Display"
+  | "Layout";
 
 export interface ComponentMetadata {
   title: string;
@@ -162,6 +169,318 @@ export const components: Record<string, ComponentMetadata> = {
     category: "Text Animations",
     slug: "gsap-text",
     addedAt: "2026-09-03",
+  },
+  "button": {
+    title: "Button",
+    description:
+      "Button component",
+    category: "Actions",
+    slug: "button",
+    addedAt: "2026-09-04",
+  },
+  "button-group": {
+    title: "Button Group",
+    description:
+      "Button group component",
+    category: "Actions",
+    slug: "button-group",
+    addedAt: "2026-09-04",
+  },
+  "toggle": {
+    title: "Toggle",
+    description:
+      "Toggle component",
+    category: "Actions",
+    slug: "toggle",
+    addedAt: "2026-09-04",
+  },
+  "link": {
+    title: "Link",
+    description:
+      "Link component",
+    category: "Actions",
+    slug: "link",
+    addedAt: "2026-09-04",
+  },
+  "input": {
+    title: "Input",
+    description:
+      "input component",
+    category: "Forms",
+    slug: "input",
+    addedAt: "2026-09-04",
+  },
+  "textarea": {
+    title: "Textarea",
+    description:
+      "Textarea component",
+    category: "Forms",
+    slug: "textarea",
+    addedAt: "2026-09-04",
+  },
+  "select": {
+    title: "Select",
+    description:
+      "Select component",
+    category: "Forms",
+    slug: "select",
+    addedAt: "2026-09-04",
+  },
+  "checkbox": {
+    title: "Checkbox",
+    description:
+      "Checkbox component",
+    category: "Forms",
+    slug: "checkbox",
+    addedAt: "2026-09-04",
+  },
+  "radio": {
+    title: "Radio",
+    description:
+      "Radio component",
+    category: "Forms",
+    slug: "radio",
+    addedAt: "2026-09-04",
+  },
+  "switch": {
+    title: "Switch",
+    description:
+      "Switch component",
+    category: "Forms",
+    slug: "switch",
+    addedAt: "2026-09-04",
+  },
+  "form": {
+    title: "Form",
+    description:
+      "Form component",
+    category: "Forms",
+    slug: "form",
+    addedAt: "2026-09-04",
+  },
+  "alert": {
+    title: "Alert",
+    description:
+      "Alert component",
+    category: "Feedback",
+    slug: "alert",
+    addedAt: "2026-09-04",
+  },
+  "toast": {
+    title: "Toast",
+    description:
+      "Toast component",
+    category: "Feedback",
+    slug: "toast",
+    addedAt: "2026-09-04",
+  },
+  "progress": {
+    title: "Progress",
+    description:
+      "Progress component",
+    category: "Feedback",
+    slug: "progress",
+    addedAt: "2026-09-04",
+  },
+  "spinner": {
+    title: "Spinner",
+    description:
+      "Spinner component",
+    category: "Feedback",
+    slug: "spinner",
+    addedAt: "2026-09-04",
+  },
+  "skeleton": {
+    title: "Skeleton",
+    description:
+      "Skeleton component",
+    category: "Feedback",
+    slug: "skeleton",
+    addedAt: "2026-09-04",
+  },
+  "tabs": {
+    title: "Tabs",
+    description:
+      "Tabs component",
+    category: "Navigation",
+    slug: "tabs",
+    addedAt: "2026-09-04",
+  },
+  "breadcrumb": {
+    title: "Breadcrumb",
+    description:
+      "Breadcrumb component",
+    category: "Navigation",
+    slug: "breadcrumb",
+    addedAt: "2026-09-04",
+  },
+  "pagination": {
+    title: "Pagination",
+    description:
+      "Pagination component",
+    category: "Navigation",
+    slug: "pagination",
+    addedAt: "2026-09-04",
+  },
+  "sidebar": {
+    title: "Sidebar",
+    description:
+      "Sidebar component",
+    category: "Navigation",
+    slug: "sidebar",
+    addedAt: "2026-09-04",
+  },
+  "navigation-menu": {
+    title: "Navigation Menu",
+    description:
+      "A collection of links for navigating websites.",
+    category: "Navigation",
+    slug: "navigation-menu",
+    addedAt: "2026-09-04",
+  },
+  "dialog": {
+    title: "Dialog",
+    description:
+      "A window overlaid on either the primary window or another dialog window, rendering the content underneath inert.",
+    category: "Overlays",
+    slug: "dialog",
+    addedAt: "2026-09-04",
+  },
+  "drawer": {
+    title: "Drawer",
+    description:
+      "A drawer component for React. Built on top of Vaul.",
+    category: "Overlays",
+    slug: "drawer",
+    addedAt: "2026-09-04",
+  },
+  "popover": {
+    title: "Popover",
+    description:
+      "Displays rich content in a portal, triggered by a button.",
+    category: "Overlays",
+    slug: "popover",
+    addedAt: "2026-09-04",
+  },
+  "tooltip": {
+    title: "Tooltip",
+    description:
+      "A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.",
+    category: "Overlays",
+    slug: "tooltip",
+    addedAt: "2026-09-04",
+  },
+  "dropdown-menu": {
+    title: "Dropdown Menu",
+    description:
+      "Displays a menu to the user - such as a set of actions or functions - triggered by a button.",
+    category: "Overlays",
+    slug: "dropdown-menu",
+    addedAt: "2026-09-04",
+  },
+  "card": {
+    title: "Card",
+    description:
+      "Displays a card with header, content, and footer.",
+    category: "Data Display",
+    slug: "card",
+    addedAt: "2026-09-04",
+  },
+  "badge": {
+    title: "Badge",
+    description:
+      "badge component",
+    category: "Data Display",
+    slug: "badge",
+    addedAt: "2026-09-04",
+  },
+  "avatar": {
+    title: "Avatar",
+    description:
+      "Avatar component",
+    category: "Data Display",
+    slug: "avatar",
+    addedAt: "2026-09-04",
+  },
+  "accordion": {
+    title: "Accordion",
+    description:
+      "Accordion component",
+    category: "Layout",
+    slug: "accordion",
+    addedAt: "2026-09-04",
+  },
+  "carousel": {
+    title: "Carousel",
+    description:
+      "A carousel with motion and swipe built using Embla.",
+    category: "Layout",
+    slug: "carousel",
+    addedAt: "2026-09-04",
+  },
+  "collapsible": {
+    title: "Collapsible",
+    description:
+      "An interactive component which expands/collapses a panel.",
+    category: "Layout",
+    slug: "collapsible",
+    addedAt: "2026-09-04",
+  },
+  "scroll-area": {
+    title: "Scroll Area",
+    description:
+      "Augments native scroll functionality for custom, cross-browser styling.",
+    category: "Layout",
+    slug: "scroll-area",
+    addedAt: "2026-09-04",
+  },
+  "shake-text": {
+    title: "Shake Text",
+    description:
+      "A premium 3D layered text effect with a physical GSAP shake — five depth-stacked copies with dimensional black edges that jitter as one locked object.",
+    category: "Text Animations",
+    slug: "shake-text",
+    addedAt: "2026-09-04",
+  },
+  "calendar": {
+    title: "Calendar",
+    description:
+      "A dependency-free date picker with single and range selection, Jalali and Hijri calendar systems, time selects, presets, booked dates, week numbers, and full RTL support.",
+    category: "Forms",
+    slug: "calendar",
+    addedAt: "2026-09-04",
+  },
+  "combobox": {
+    title: "Combobox",
+    description:
+      "An autocomplete dropdown with single and multiple selection, chips, grouped collections, custom rows, keyboard navigation, and RTL — dependency-free.",
+    category: "Forms",
+    slug: "combobox",
+    addedAt: "2026-09-04",
+  },
+  "date-picker": {
+    title: "Date Picker",
+    description:
+      "An input-anchored single-date picker with presets, time selects, booked dates, popup placement, and RTL — built on Calendar, dependency-free.",
+    category: "Forms",
+    slug: "date-picker",
+    addedAt: "2026-09-04",
+  },
+  "field": {
+    title: "Field",
+    description:
+      "Compound form primitives — labels, descriptions, errors, groups, and layouts that compose around any control with shared ids and invalid state.",
+    category: "Forms",
+    slug: "field",
+    addedAt: "2026-09-04",
+  },
+  "input-group": {
+    title: "Input Group",
+    description:
+      "Compound field with dockable addons — icons, text, buttons, and hints arranged inline or stacked around an input or textarea.",
+    category: "Forms",
+    slug: "input-group",
+    addedAt: "2026-09-04",
   },
   "cursor-driven-particle-typography": {
     title: "Particle Typography",
