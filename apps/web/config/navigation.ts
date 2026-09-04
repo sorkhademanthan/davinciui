@@ -140,6 +140,11 @@ const experienceComponentsSection: NavSection = {
       title: "Forms",
       href: "/experience/components/forms",
       items: [
+        { title: "Calendar", href: "/experience/components/calendar" },
+        { title: "Combobox", href: "/experience/components/combobox" },
+        { title: "Date Picker", href: "/experience/components/date-picker" },
+        { title: "Field", href: "/experience/components/field" },
+        { title: "Input Group", href: "/experience/components/input-group" },
         { title: "Input", href: "/experience/components/input" },
         { title: "Textarea", href: "/experience/components/textarea" },
         { title: "Select", href: "/experience/components/select" },

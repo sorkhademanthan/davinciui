@@ -55,6 +55,8 @@ export interface DocsPageLayoutProps {
   hideExamples?: boolean
   installationNote?: React.ReactNode
   usageNote?: React.ReactNode
+  /** Optional extra sections rendered after API Reference (e.g. Changelog). */
+  afterContent?: React.ReactNode
 }
 
 function CodeBlockSkeleton({ className }: { className?: string }) {
@@ -82,6 +84,7 @@ export async function DocsPageLayout({
   hideExamples = false,
   installationNote,
   usageNote,
+  afterContent,
 }: DocsPageLayoutProps) {
 
   const pageMarkdown = buildDocsPageMarkdown({
@@ -155,10 +158,14 @@ export async function DocsPageLayout({
         </div>
       </div>
 
-      {/* Left Column: Scrollable Content */}
+      {/* Left Column: Scrollable Content.
+          overflow-clip contains inner overflow so this fixed-height column
+          never turns ancestor layouts into scroll containers (which would
+          trap the sticky preview column). Unlike overflow-hidden it is not
+          a scroll container, so anchor navigation keeps working. */}
       <div
         data-docs-left-column
-        className="w-full lg:basis-1/2 lg:max-w-[50%] min-w-0 h-full flex flex-col relative z-10 bg-white dark:bg-background"
+        className="w-full lg:basis-1/2 lg:max-w-[50%] min-w-0 h-full flex flex-col relative z-10 bg-white dark:bg-background overflow-clip"
       >
         {/* Scroll edge fades — subtly blend content into page background */}
         <div className="absolute top-0 left-0 right-0 z-30 h-24 bg-gradient-to-b from-white to-transparent dark:from-background pointer-events-none hidden lg:block" />
@@ -336,6 +343,8 @@ export async function DocsPageLayout({
                 <DocsPropsTable props={props} />
               </Section>
             )}
+
+            {afterContent}
 
             <div className="mt-12">
               <DocsFooterSection />

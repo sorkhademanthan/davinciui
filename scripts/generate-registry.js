@@ -45,7 +45,10 @@ function normalizeRegistryContent(content) {
     .replace(
       /@workspace\/ui\/components\/webgl-error-boundary/g,
       './webgl-error-boundary'
-    );
+    )
+    // Extensionless sibling imports resolve in every bundler; the source
+    // keeps the explicit .js extension for node16/nodenext typechecking.
+    .replace(/from\s+["']\.\/([a-z0-9-]+)\.js["']/g, 'from "./$1"');
 }
 
 // Prepare registry data
@@ -130,6 +133,39 @@ if (usesWebGLErrorBoundary && fs.existsSync(WEBGL_ERROR_BOUNDARY_SOURCE_PATH)) {
     registryData.files.push({
       path: boundaryTargetPath,
       content: boundaryContent,
+      type: 'registry:ui'
+    });
+  }
+}
+
+// Include sibling component files when the source imports them relatively
+// (e.g. `from "./calendar"` or `from "./calendar.js"`), so multi-file
+// components install all of their parts.
+const siblingImports = new Set();
+for (const match of sourceContent.matchAll(/from\s+["']\.\/([a-z0-9-]+)(?:\.js)?["']/g)) {
+  siblingImports.add(match[1]);
+}
+for (const sibling of siblingImports) {
+  const siblingFilename = `${sibling}.tsx`;
+  const siblingSourcePath = path.join(COMPONENT_DIR, siblingFilename);
+  if (!fs.existsSync(siblingSourcePath)) {
+    console.error(`Warning: sibling component not found at: ${siblingSourcePath}`);
+    continue;
+  }
+  const siblingContent = normalizeRegistryContent(
+    fs.readFileSync(siblingSourcePath, 'utf8')
+  );
+  const siblingTargetPath = `components/ui/${siblingFilename}`;
+  const siblingIndex = registryData.files.findIndex(
+    (f) => f.path === siblingTargetPath || f.path.endsWith(siblingFilename)
+  );
+
+  if (siblingIndex >= 0) {
+    registryData.files[siblingIndex].content = siblingContent;
+  } else {
+    registryData.files.push({
+      path: siblingTargetPath,
+      content: siblingContent,
       type: 'registry:ui'
     });
   }
