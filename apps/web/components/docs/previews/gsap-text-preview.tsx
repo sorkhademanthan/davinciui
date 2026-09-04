@@ -75,7 +75,7 @@ export function GSAPTextPlayground() {
   }, [config]);
 
   return (
-    <div className="flex h-full min-h-[420px] w-full items-center justify-center overflow-hidden bg-black p-6 lg:min-h-[520px]">
+    <div className="flex h-full min-h-[420px] w-full items-center justify-center overflow-hidden bg-background p-6 lg:min-h-[520px]">
       <KineticText
         text={config.text}
         htmlTag="h1"

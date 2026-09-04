@@ -29,9 +29,9 @@ export interface KineticTextProps extends Omit<React.HTMLAttributes<HTMLDivEleme
   text?: string;
   /** Structured font object. Falls back to Inter Display defaults. */
   font?: KineticTextFont;
-  /** Text color. @default "#FEFFED" */
+  /** Text color. Follows the site theme when omitted (light: dark text, dark: light text). */
   textColor?: string;
-  /** Opaque background shared by the stage and every clone (masking). @default "#000000" */
+  /** Opaque background shared by every layer (masking). Follows the site theme when omitted. */
   backgroundColor?: string;
   /** Number of kinetic layers. `both` creates 2 clones per layer. @default 10 */
   layerCount?: number;
@@ -68,8 +68,16 @@ export type KineticTextTag = KineticHtmlTag;
 export type KineticTextDirection = KineticDirection;
 
 const DEFAULT_TEXT = "GSAP TEXT";
+// Framer reference colors — used as fallbacks when the host app does not
+// define theme variables. With no explicit props, the component follows the
+// site theme instead (see THEME_TEXT_COLOR / THEME_BACKGROUND_COLOR).
 const DEFAULT_TEXT_COLOR = "#FEFFED";
 const DEFAULT_BACKGROUND_COLOR = "#000000";
+// Theme-aware runtime defaults: light mode → dark text on light bg,
+// dark mode → light text on dark bg. Pure CSS, so toggling the theme
+// never rebuilds the GSAP timelines.
+const THEME_TEXT_COLOR = `var(--foreground, ${DEFAULT_TEXT_COLOR})`;
+const THEME_BACKGROUND_COLOR = `var(--background, ${DEFAULT_BACKGROUND_COLOR})`;
 const DEFAULT_LAYER_COUNT = 10;
 const DEFAULT_DURATION = 4;
 const DEFAULT_DISTANCE = 300;
@@ -158,7 +166,7 @@ export function KineticText({
   text = DEFAULT_TEXT,
   font,
   textColor,
-  backgroundColor = DEFAULT_BACKGROUND_COLOR,
+  backgroundColor,
   layerCount,
   duration = DEFAULT_DURATION,
   distance = DEFAULT_DISTANCE,
@@ -178,7 +186,8 @@ export function KineticText({
 }: KineticTextProps) {
   const resolvedHtmlTag: KineticHtmlTag = htmlTag ?? tag ?? DEFAULT_HTML_TAG;
   const resolvedLayerCount = layerCount ?? amount ?? DEFAULT_LAYER_COUNT;
-  const resolvedTextColor = textColor ?? color ?? DEFAULT_TEXT_COLOR;
+  const resolvedTextColor = textColor ?? color ?? THEME_TEXT_COLOR;
+  const resolvedBackgroundColor = backgroundColor ?? THEME_BACKGROUND_COLOR;
   const safeLayerCount = Number.isFinite(resolvedLayerCount)
     ? Math.max(0, Math.round(resolvedLayerCount as number))
     : DEFAULT_LAYER_COUNT;
@@ -230,9 +239,9 @@ export function KineticText({
       boxSizing: "content-box",
       ...fontStyles,
       color: resolvedTextColor,
-      backgroundColor,
+      backgroundColor: resolvedBackgroundColor,
     }),
-    [fontStyles, resolvedTextColor, backgroundColor],
+    [fontStyles, resolvedTextColor, resolvedBackgroundColor],
   );
 
   const directionPaddingTop = direction === "up" ? safeDistance : direction === "both" ? safeDistance / 2 : 0;
@@ -329,7 +338,7 @@ export function KineticText({
       timelinesRef.current = [];
       if (container) container.innerHTML = "";
     };
-  }, [resolvedText, safeLayerCount, safeDuration, safeDistance, direction, resolvedTextColor, backgroundColor, fontKey]);
+  }, [resolvedText, safeLayerCount, safeDuration, safeDistance, direction, resolvedTextColor, resolvedBackgroundColor, fontKey]);
 
   const mainText = React.createElement(
     resolvedHtmlTag,
