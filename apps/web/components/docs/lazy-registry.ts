@@ -266,6 +266,30 @@ const docsImportMap: Record<
     import("@/components/docs/gsap-text").then((m) => ({
       default: m.GSAPTextDocs,
     })),
+  "shake-text": () =>
+    import("@/components/docs/shake-text").then((m) => ({
+      default: m.ShakeTextDocs,
+    })),
+  "calendar": () =>
+    import("@/components/docs/calendar").then((m) => ({
+      default: m.CalendarDocs,
+    })),
+  "combobox": () =>
+    import("@/components/docs/combobox").then((m) => ({
+      default: m.ComboboxDocs,
+    })),
+  "date-picker": () =>
+    import("@/components/docs/date-picker").then((m) => ({
+      default: m.DatePickerDocs,
+    })),
+  "field": () =>
+    import("@/components/docs/field").then((m) => ({
+      default: m.FieldDocs,
+    })),
+  "input-group": () =>
+    import("@/components/docs/input-group").then((m) => ({
+      default: m.InputGroupDocs,
+    })),
   "cursor-driven-particle-typography": () =>
     import("@/components/docs/cursor-driven-particle-typography").then((m) => ({
       default: m.CursorDrivenParticleTypographyDocs,

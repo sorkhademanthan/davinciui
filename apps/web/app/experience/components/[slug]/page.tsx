@@ -3,6 +3,7 @@ import { notFound, redirect } from "next/navigation"
 import { getComponent } from "@/registry"
 import { getDocsImporter, getDocsSlugs } from "@/components/docs/lazy-registry"
 import { Breadcrumbs } from "@/components/breadcrumbs"
+import { galleryHrefForSlug, galleryTabLabel, galleryTabForSlug } from "@/lib/component-groups"
 import { Suspense } from "react"
 
 // Aliases for renamed / shortened slugs (e.g. /dropdown → /dropdown-menu)
@@ -26,9 +27,19 @@ export default async function Page({params}:{params: Promise<{slug:string}>}){
   const alias = SLUG_ALIASES[slug];
   if (alias) redirect(`/experience/components/${alias}`);
   const c=getComponent(slug); const imp=getDocsImporter(slug)
+  const { tab, sub } = galleryTabForSlug(slug, c?.category)
+  const crumbs = [
+    { label: "Home", href: "/" },
+    { label: galleryTabLabel(tab, sub), href: galleryHrefForSlug(slug, c?.category) },
+    { label: c?.title ?? slug },
+  ]
   if(imp){
-    return (<div className="w-full max-w-none m-0 p-0 min-w-0"><Suspense><DocsContent slug={slug} /></Suspense></div>)
+    return (<div className="w-full max-w-none m-0 p-0 min-w-0">
+      <div className="px-6 lg:px-8 pt-4 max-w-[1280px] w-full mx-auto">
+        <Breadcrumbs items={crumbs} />
+      </div>
+      <Suspense><DocsContent slug={slug} /></Suspense></div>)
   }
   if(!c) return notFound();
-  return (<div className="w-full max-w-none m-0 p-0 min-w-0 px-6 py-6"><Breadcrumbs className="mb-4" /><h1 className="text-2xl font-semibold">{c.title}</h1><p className="text-sm text-muted-foreground">{c.description}</p></div>)
+  return (<div className="w-full max-w-none m-0 p-0 min-w-0 px-6 py-6"><Breadcrumbs className="mb-4" items={crumbs} /><h1 className="text-2xl font-semibold">{c.title}</h1><p className="text-sm text-muted-foreground">{c.description}</p></div>)
 }

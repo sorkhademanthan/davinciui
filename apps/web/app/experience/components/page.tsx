@@ -1,21 +1,15 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { Suspense, useEffect, useState, useMemo } from "react"
 import Link from "next/link"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { Search, ArrowUpRight } from "lucide-react"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import { components } from "@/registry"
+import { BASIC_GROUPS, BASIC_SUBS } from "@/lib/component-groups"
 import { cn } from "@/lib/utils"
 
-const BASIC_SLUGS: Record<string, string[]> = {
-  Actions: ["button", "button-group", "toggle", "link"],
-  Forms: ["input", "textarea", "select", "checkbox", "radio", "switch", "form"],
-  Feedback: ["alert", "toast", "progress", "spinner", "skeleton"],
-  Navigation: ["tabs", "breadcrumb", "pagination", "sidebar", "navigation-menu"],
-  Overlays: ["dialog", "drawer", "popover", "tooltip", "dropdown-menu"],
-  "Data Display": ["card", "badge", "avatar", "table", "data-table"],
-  Layout: ["accordion", "carousel", "collapsible", "scroll-area"],
-}
+const BASIC_SLUGS: Record<string, string[]> = BASIC_GROUPS
 const BASIC_ALL = Object.values(BASIC_SLUGS).flat()
 
 const TOP_FILTERS = [
@@ -32,15 +26,46 @@ const TOP_FILTERS = [
   "Templates",
 ] as const
 
-const BASIC_SUBS = ["All", "Actions", "Forms", "Feedback", "Navigation", "Overlays", "Data Display", "Layout"] as const
+const BASIC_SUBS_ALL: readonly string[] = BASIC_SUBS
 
 type TopFilter = (typeof TOP_FILTERS)[number]
 type BasicSub = (typeof BASIC_SUBS)[number]
 
+function validTop(value: string | null): TopFilter | null {
+  if (!value) return null
+  return (TOP_FILTERS as readonly string[]).includes(value) ? (value as TopFilter) : null
+}
+
+function validSub(value: string | null): BasicSub | null {
+  if (!value) return null
+  return (BASIC_SUBS_ALL as readonly string[]).includes(value) ? (value as BasicSub) : null
+}
+
 export default function ComponentsGalleryPage() {
+  return (
+    <Suspense>
+      <ComponentsGallery />
+    </Suspense>
+  )
+}
+
+function ComponentsGallery() {
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const pathname = usePathname()
   const [q, setQ] = useState("")
-  const [activeTop, setActiveTop] = useState<TopFilter>("All")
-  const [activeSub, setActiveSub] = useState<BasicSub>("All")
+  const [activeTop, setActiveTop] = useState<TopFilter>(() => validTop(searchParams.get("tab")) ?? "All")
+  const [activeSub, setActiveSub] = useState<BasicSub>(() => validSub(searchParams.get("sub")) ?? "All")
+
+  // Keep the active tabs in the URL so browser-back, reloads and shared
+  // links restore the exact filtered view.
+  useEffect(() => {
+    const params = new URLSearchParams()
+    if (activeTop !== "All") params.set("tab", activeTop)
+    if (activeTop === "Basic" && activeSub !== "All") params.set("sub", activeSub)
+    const query = params.toString()
+    router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false })
+  }, [activeTop, activeSub, pathname, router])
 
   const all = useMemo(() => Object.values(components).sort((a, b) => a.title.localeCompare(b.title)), [])
 
