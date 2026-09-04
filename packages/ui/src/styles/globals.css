@@ -7,6 +7,27 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Self-hosted Inter (OFL) exposed under the "Inter Display" family name so
+   components referencing the Framer font stack resolve to real Inter metrics.
+   Served from the host app's /fonts directory; falls back gracefully. */
+@font-face {
+  font-family: "Inter Display";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/inter-display/inter-display-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+2000-206F, U+20AC, U+2122;
+}
+
+@font-face {
+  font-family: "Inter Display";
+  font-style: italic;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/inter-display/inter-display-latin-italic.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+2000-206F, U+20AC, U+2122;
+}
+
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);
