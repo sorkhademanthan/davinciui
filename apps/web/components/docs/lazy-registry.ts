@@ -290,6 +290,22 @@ const docsImportMap: Record<
     import("@/components/docs/input-group").then((m) => ({
       default: m.InputGroupDocs,
     })),
+  "input-otp": () =>
+    import("@/components/docs/input-otp").then((m) => ({
+      default: m.InputOTPDocs,
+    })),
+  "native-select": () =>
+    import("@/components/docs/native-select").then((m) => ({
+      default: m.NativeSelectDocs,
+    })),
+  "slider": () =>
+    import("@/components/docs/slider").then((m) => ({
+      default: m.SliderDocs,
+    })),
+  "context-menu": () =>
+    import("@/components/docs/context-menu").then((m) => ({
+      default: m.ContextMenuDocs,
+    })),
   "cursor-driven-particle-typography": () =>
     import("@/components/docs/cursor-driven-particle-typography").then((m) => ({
       default: m.CursorDrivenParticleTypographyDocs,

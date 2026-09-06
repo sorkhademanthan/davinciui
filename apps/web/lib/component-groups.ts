@@ -108,39 +108,3 @@ export function galleryTabLabel(tab: string, sub?: string): string {
   if (tab === "Basic") return sub && sub !== "All" ? `Basic › ${sub}` : "Basic";
   return tab;
 }
-
-// ─────────────────────────────────────────────────────────────
-// Guided build queue. Docs pages show an "up next" card driven by
-// this order; unbuilt entries render as queued placeholders.
-// ─────────────────────────────────────────────────────────────
-
-export const BUILD_QUEUE: string[] = [
-  "calendar",
-  "combobox",
-  "date-picker",
-  "field",
-  "input-group",
-  "input-otp",
-  "native-select",
-  "slider",
-  "context-menu",
-  "hover-card",
-  "sheet",
-  "attachment",
-  "bubble",
-  "chart",
-  "item",
-  "marker",
-  "message",
-  "message-scroller",
-  "separator",
-  "empty",
-  "menubar",
-];
-
-/** Slug that follows `slug` in the queue, or null when finished. */
-export function nextInQueue(slug: string): string | null {
-  const i = BUILD_QUEUE.indexOf(slug);
-  if (i === -1 || i + 1 >= BUILD_QUEUE.length) return null;
-  return BUILD_QUEUE[i + 1] ?? null;
-}
