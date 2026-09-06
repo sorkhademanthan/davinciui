@@ -145,6 +145,9 @@ const experienceComponentsSection: NavSection = {
         { title: "Date Picker", href: "/experience/components/date-picker" },
         { title: "Field", href: "/experience/components/field" },
         { title: "Input Group", href: "/experience/components/input-group" },
+        { title: "Input OTP", href: "/experience/components/input-otp" },
+        { title: "Native Select", href: "/experience/components/native-select" },
+        { title: "Slider", href: "/experience/components/slider" },
         { title: "Input", href: "/experience/components/input" },
         { title: "Textarea", href: "/experience/components/textarea" },
         { title: "Select", href: "/experience/components/select" },
@@ -180,6 +183,7 @@ const experienceComponentsSection: NavSection = {
       title: "Overlays",
       href: "/experience/components/overlays",
       items: [
+        { title: "Context Menu", href: "/experience/components/context-menu" },
         { title: "Dialog", href: "/experience/components/dialog" },
         { title: "Drawer", href: "/experience/components/drawer" },
         { title: "Popover", href: "/experience/components/popover" },

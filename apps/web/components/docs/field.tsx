@@ -1,6 +1,5 @@
 import { Section } from "@/components/component-layout";
 import { DocsPageLayout } from "@/components/docs-page-layout";
-import { NextComponentCard } from "@/components/next-component-card";
 import {
   AnatomyDemo,
   CheckboxFieldDemo,
@@ -345,12 +344,7 @@ const invalid = touched && !isEmail(email);
         { name: "FieldDescription", type: "p element", description: "Hint text with a stable context id for aria-describedby." },
         { name: "FieldSeparator", type: "div", description: "Labeled divider between field sections." },
       ]}
-      afterContent={
-        <>
-          <AccessibilityNote />
-          <NextComponentCard current="field" />
-        </>
-      }
+      afterContent={<AccessibilityNote />}
     />
   );
 }

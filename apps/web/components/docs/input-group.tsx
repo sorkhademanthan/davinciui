@@ -1,5 +1,4 @@
 import { DocsPageLayout } from "@/components/docs-page-layout";
-import { NextComponentCard } from "@/components/next-component-card";
 import {
   AlignDemo,
   BlockEndDemo,
@@ -267,7 +266,6 @@ export async function InputGroupDocs() {
         { name: "InputGroupTextarea", type: "textarea element", description: "Resizable multiline field for taller groups." },
         { name: "InputGroupButton", type: "button element", description: "Action button docked as an addon." },
       ]}
-      afterContent={<NextComponentCard current="input-group" />}
     />
   );
 }
