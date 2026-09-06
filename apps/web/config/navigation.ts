@@ -184,6 +184,8 @@ const experienceComponentsSection: NavSection = {
       href: "/experience/components/overlays",
       items: [
         { title: "Context Menu", href: "/experience/components/context-menu" },
+        { title: "Hover Card", href: "/experience/components/hover-card" },
+        { title: "Sheet", href: "/experience/components/sheet" },
         { title: "Dialog", href: "/experience/components/dialog" },
         { title: "Drawer", href: "/experience/components/drawer" },
         { title: "Popover", href: "/experience/components/popover" },

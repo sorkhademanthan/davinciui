@@ -514,6 +514,22 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "context-menu",
     addedAt: "2026-09-04",
   },
+  "hover-card": {
+    title: "Hover Card",
+    description:
+      "A hover preview panel with intent delays, four sides, alignment control, keyboard support, and RTL.",
+    category: "Overlays",
+    slug: "hover-card",
+    addedAt: "2026-09-04",
+  },
+  "sheet": {
+    title: "Sheet",
+    description:
+      "A modal side panel docked to any edge with directional motion, header/footer primitives, and RTL.",
+    category: "Overlays",
+    slug: "sheet",
+    addedAt: "2026-09-04",
+  },
   "cursor-driven-particle-typography": {
     title: "Particle Typography",
     description:

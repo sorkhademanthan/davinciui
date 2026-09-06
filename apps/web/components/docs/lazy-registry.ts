@@ -306,6 +306,14 @@ const docsImportMap: Record<
     import("@/components/docs/context-menu").then((m) => ({
       default: m.ContextMenuDocs,
     })),
+  "hover-card": () =>
+    import("@/components/docs/hover-card").then((m) => ({
+      default: m.HoverCardDocs,
+    })),
+  "sheet": () =>
+    import("@/components/docs/sheet").then((m) => ({
+      default: m.SheetDocs,
+    })),
   "cursor-driven-particle-typography": () =>
     import("@/components/docs/cursor-driven-particle-typography").then((m) => ({
       default: m.CursorDrivenParticleTypographyDocs,
