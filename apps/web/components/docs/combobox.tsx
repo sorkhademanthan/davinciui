@@ -1,5 +1,4 @@
 import { DocsPageLayout } from "@/components/docs-page-layout";
-import { NextComponentCard } from "@/components/next-component-card";
 import {
   AutoHighlightDemo,
   BasicComboboxDemo,
@@ -234,7 +233,6 @@ const [value, setValue] = React.useState(["next"]);
         { name: "className", type: "string", description: "Extra classes for the root." },
         { name: "inputClassName", type: "string", description: "Extra classes for the text input." },
       ]}
-      afterContent={<NextComponentCard current="combobox" />}
     />
   );
 }

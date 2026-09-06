@@ -1,6 +1,5 @@
 import { Section } from "@/components/component-layout";
 import { DocsPageLayout } from "@/components/docs-page-layout";
-import { NextComponentCard } from "@/components/next-component-card";
 import {
   BasicCalendarDemo,
   BookedDatesDemo,
@@ -91,8 +90,6 @@ function AfterContent() {
           </p>
         </div>
       </Section>
-
-      <NextComponentCard current="calendar" />
     </>
   );
 }

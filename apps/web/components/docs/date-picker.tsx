@@ -1,5 +1,4 @@
 import { DocsPageLayout } from "@/components/docs-page-layout";
-import { NextComponentCard } from "@/components/next-component-card";
 import {
   BasicDatePickerDemo,
   ClearDatePickerDemo,
@@ -122,7 +121,6 @@ const booked = [new Date(2026, 7, 8), new Date(2026, 7, 9)];
         { name: "inputClassName", type: "string", description: "Extra classes for the text input." },
         { name: "calendarClassName", type: "string", description: "Extra classes for the inner calendar." },
       ]}
-      afterContent={<NextComponentCard current="date-picker" />}
     />
   );
 }
