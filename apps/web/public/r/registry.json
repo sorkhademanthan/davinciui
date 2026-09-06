@@ -153,6 +153,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "hover-card",
+      "type": "registry:ui"
+    },
+    {
       "name": "hover-transition",
       "type": "registry:ui"
     },
@@ -310,6 +314,10 @@
     },
     {
       "name": "shake-text",
+      "type": "registry:ui"
+    },
+    {
+      "name": "sheet",
       "type": "registry:ui"
     },
     {
