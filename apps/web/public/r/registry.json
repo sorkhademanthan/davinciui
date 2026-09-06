@@ -77,6 +77,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "context-menu",
+      "type": "registry:ui"
+    },
+    {
       "name": "cursor-driven-particle-typography",
       "type": "registry:ui"
     },
@@ -173,6 +177,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "input-otp",
+      "type": "registry:ui"
+    },
+    {
       "name": "interactive-hover-button",
       "type": "registry:ui"
     },
@@ -218,6 +226,10 @@
     },
     {
       "name": "music-player",
+      "type": "registry:ui"
+    },
+    {
+      "name": "native-select",
       "type": "registry:ui"
     },
     {
@@ -314,6 +326,10 @@
     },
     {
       "name": "silk-aurora",
+      "type": "registry:ui"
+    },
+    {
+      "name": "slider",
       "type": "registry:ui"
     },
     {

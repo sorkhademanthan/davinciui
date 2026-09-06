@@ -482,6 +482,38 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "input-group",
     addedAt: "2026-09-04",
   },
+  "input-otp": {
+    title: "Input OTP",
+    description:
+      "One-time code input with per-digit slots, paste-to-fill, patterns, separators, completion callback, and RTL.",
+    category: "Forms",
+    slug: "input-otp",
+    addedAt: "2026-09-04",
+  },
+  "native-select": {
+    title: "Native Select",
+    description:
+      "A styled native select with grouped options, invalid and disabled states, and RTL — the OS picker on mobile, zero JavaScript.",
+    category: "Forms",
+    slug: "native-select",
+    addedAt: "2026-09-04",
+  },
+  "slider": {
+    title: "Slider",
+    description:
+      "Pointer and keyboard multi-thumb slider with range fill, vertical layout, controlled values, and RTL mirroring.",
+    category: "Forms",
+    slug: "slider",
+    addedAt: "2026-09-04",
+  },
+  "context-menu": {
+    title: "Context Menu",
+    description:
+      "A right-click menu with submenus, shortcuts, checkbox and radio states, destructive actions, viewport flipping, and RTL.",
+    category: "Overlays",
+    slug: "context-menu",
+    addedAt: "2026-09-04",
+  },
   "cursor-driven-particle-typography": {
     title: "Particle Typography",
     description:
