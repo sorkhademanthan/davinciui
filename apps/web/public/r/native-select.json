@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "native-select",
+  "type": "registry:ui",
+  "title": "Native Select",
+  "dependencies": [],
+  "devDependencies": [],
+  "registryDependencies": [],
+  "description": "A styled native select with grouped options, invalid and disabled states, and RTL — the OS picker on mobile, zero JavaScript.",
+  "files": [
+    {
+      "path": "components/ui/native-select.tsx",
+      "content": "\"use client\";\n\nimport { cn } from \"@/lib/utils\";\nimport { ChevronDown } from \"lucide-react\";\nimport * as React from \"react\";\n\n// ─────────────────────────────────────────────────────────────\n// Types\n// ─────────────────────────────────────────────────────────────\n\nexport interface NativeSelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {\n  /** Error state with destructive ring. @default false */\n  invalid?: boolean;\n}\n\nfunction NativeSelect({ className, invalid, children, ...props }: NativeSelectProps) {\n  return (\n    <span\n      data-slot=\"native-select\"\n      className={cn(\n        \"relative inline-flex w-72 items-center rounded-lg border border-input bg-background text-sm shadow-xs transition-colors\",\n        \"focus-within:outline-none focus-within:ring-2 focus-within:ring-ring\",\n        \"has-[select:disabled]:opacity-50\",\n        invalid && \"border-destructive ring-1 ring-destructive/20 focus-within:ring-destructive/40\",\n        className,\n      )}\n    >\n      <select\n        aria-invalid={invalid || undefined}\n        className=\"h-10 w-full cursor-pointer appearance-none bg-transparent pe-9 ps-3 outline-none disabled:cursor-not-allowed [&>option]:bg-background\"\n        {...props}\n      >\n        {children}\n      </select>\n      <ChevronDown\n        aria-hidden\n        className=\"pointer-events-none absolute end-2.5 size-4 shrink-0 text-muted-foreground\"\n      />\n    </span>\n  );\n}\n\nfunction NativeSelectGroup({ className, ...props }: React.OptgroupHTMLAttributes<HTMLOptGroupElement>) {\n  return <optgroup data-slot=\"native-select-group\" className={cn(className)} {...props} />;\n}\n\nfunction NativeSelectOption({ className, ...props }: React.OptionHTMLAttributes<HTMLOptionElement>) {\n  return <option data-slot=\"native-select-option\" className={cn(className)} {...props} />;\n}\n\nexport { NativeSelect, NativeSelectGroup, NativeSelectOption };\n\nexport default NativeSelect;\n",
+      "type": "registry:ui"
+    }
+  ]
+}
