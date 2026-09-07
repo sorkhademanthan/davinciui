@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "separator",
+  "type": "registry:ui",
+  "title": "Separator",
+  "dependencies": [],
+  "devDependencies": [],
+  "registryDependencies": [],
+  "description": "Component for separator",
+  "files": [
+    {
+      "path": "components/ui/separator.tsx",
+      "content": "\"use client\";\n\nimport { cn } from \"@/lib/utils\";\nimport * as React from \"react\";\n\nexport type SeparatorOrientation = \"horizontal\" | \"vertical\";\n\nexport interface SeparatorProps extends React.HTMLAttributes<HTMLDivElement> {\n  /** Layout direction. @default \"horizontal\" */\n  orientation?: SeparatorOrientation;\n  /** Purely visual divider. False exposes role=\"separator\" with aria-orientation. @default true */\n  decorative?: boolean;\n  /** Ref to the underlying divider element. */\n  ref?: React.Ref<HTMLDivElement>;\n}\n\nfunction Separator({\n  orientation = \"horizontal\",\n  decorative = true,\n  className,\n  ref,\n  ...props\n}: SeparatorProps) {\n  return (\n    <div\n      ref={ref}\n      data-slot=\"separator\"\n      data-orientation={orientation}\n      role={decorative ? \"presentation\" : \"separator\"}\n      aria-orientation={decorative ? undefined : orientation}\n      aria-hidden={decorative || undefined}\n      className={cn(\n        \"bg-border shrink-0\",\n        \"data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full\",\n        // Vertical dividers must survive row layouts that center their\n        // children (items-center) or have an indefinite height: self-stretch\n        // keeps the line spanning the row even when h-full cannot resolve.\n        \"data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px data-[orientation=vertical]:self-stretch\",\n        className\n      )}\n      {...props}\n    />\n  );\n}\n\nexport { Separator };\n\nexport default Separator;\n",
+      "type": "registry:ui"
+    }
+  ]
+}
