@@ -133,6 +133,7 @@ const experienceComponentsSection: NavSection = {
         { title: "Button", href: "/experience/components/button" },
         { title: "Button Group", href: "/experience/components/button-group" },
         { title: "Toggle", href: "/experience/components/toggle" },
+        { title: "Toggle Group", href: "/experience/components/toggle-group" },
         { title: "Link", href: "/experience/components/link" },
       ],
     },
@@ -155,6 +156,7 @@ const experienceComponentsSection: NavSection = {
         { title: "Radio", href: "/experience/components/radio" },
         { title: "Switch", href: "/experience/components/switch" },
         { title: "Form", href: "/experience/components/form" },
+        { title: "Questionnaire", href: "/experience/components/questionnaire" },
       ],
     },
     {
@@ -202,6 +204,12 @@ const experienceComponentsSection: NavSection = {
         { title: "Avatar", href: "/experience/components/avatar" },
         { title: "Table", href: "/experience/components/table" },
         { title: "Data Table", href: "/experience/components/data-table" },
+        { title: "Separator", href: "/experience/components/separator" },
+        { title: "Bubble", href: "/experience/components/bubble" },
+        { title: "Attachment", href: "/experience/components/attachment" },
+        { title: "Chart", href: "/experience/components/chart" },
+        { title: "Item", href: "/experience/components/item" },
+        { title: "Message Scroller", href: "/experience/components/message-scroller" },
       ],
     },
     {

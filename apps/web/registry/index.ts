@@ -884,6 +884,62 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "data-table",
     addedAt: "2026-07-14",
   },
+  "questionnaire": {
+    title: "Questionnaire",
+    description: "A multi-step questionnaire with single-choice, multiple-choice, freeform, and skippable questions.",
+    category: "Forms",
+    slug: "questionnaire",
+    addedAt: "2026-09-07",
+  },
+  "separator": {
+    title: "Separator",
+    description: "A visual divider between sections — horizontal by default, vertical inside row layouts.",
+    category: "Data Display",
+    slug: "separator",
+    addedAt: "2026-09-07",
+  },
+  "bubble": {
+    title: "Bubble",
+    description: "Conversational message bubbles with variants, alignment, grouping, and edge-anchored reactions.",
+    category: "Data Display",
+    slug: "bubble",
+    addedAt: "2026-09-07",
+  },
+  "toggle-group": {
+    title: "Toggle Group",
+    description: "A set of two-state buttons for single or multiple selection with full keyboard support.",
+    category: "Actions",
+    slug: "toggle-group",
+    addedAt: "2026-09-07",
+  },
+  "attachment": {
+    title: "Attachment",
+    description: "File and image attachments with media, metadata, upload states, actions, and triggers.",
+    category: "Data Display",
+    slug: "attachment",
+    addedAt: "2026-09-07",
+  },
+  "chart": {
+    title: "Chart",
+    description: "Beautiful charts built on Recharts v3 with config-driven theming, tooltips, and legends.",
+    category: "Data Display",
+    slug: "chart",
+    addedAt: "2026-09-07",
+  },
+  "item": {
+    title: "Item",
+    description: "Versatile rows with media, title, description, and actions — groupable into lists.",
+    category: "Data Display",
+    slug: "item",
+    addedAt: "2026-09-07",
+  },
+  "message-scroller": {
+    title: "Message Scroller",
+    description: "Chat scroll container with turn anchoring, live-edge follow, history preservation, and jumps.",
+    category: "Data Display",
+    slug: "message-scroller",
+    addedAt: "2026-09-07",
+  },
 };
 
 export function getComponent(slug: string) {

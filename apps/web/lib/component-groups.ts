@@ -20,14 +20,8 @@ const PLANNED_FORMS = [
 const PLANNED_OVERLAYS = ["context-menu", "hover-card", "sheet"];
 
 const PLANNED_DATA_DISPLAY = [
-  "attachment",
-  "bubble",
-  "chart",
-  "item",
   "marker",
   "message",
-  "message-scroller",
-  "separator",
 ];
 
 const PLANNED_FEEDBACK = ["empty"];
@@ -35,7 +29,7 @@ const PLANNED_FEEDBACK = ["empty"];
 const PLANNED_NAVIGATION = ["menubar"];
 
 export const BASIC_GROUPS: Record<string, string[]> = {
-  Actions: ["button", "button-group", "toggle", "link"],
+  Actions: ["button", "button-group", "toggle", "toggle-group", "link"],
   Forms: [
     "input",
     "textarea",
@@ -44,12 +38,13 @@ export const BASIC_GROUPS: Record<string, string[]> = {
     "radio",
     "switch",
     "form",
+    "questionnaire",
     ...PLANNED_FORMS,
   ],
   Feedback: ["alert", "toast", "progress", "spinner", "skeleton", ...PLANNED_FEEDBACK],
   Navigation: ["tabs", "breadcrumb", "pagination", "sidebar", "navigation-menu", ...PLANNED_NAVIGATION],
   Overlays: ["dialog", "drawer", "popover", "tooltip", "dropdown-menu", ...PLANNED_OVERLAYS],
-  "Data Display": ["card", "badge", "avatar", "table", "data-table", ...PLANNED_DATA_DISPLAY],
+  "Data Display": ["card", "badge", "avatar", "table", "data-table", "separator", "bubble", "attachment", "chart", "item", "message-scroller", ...PLANNED_DATA_DISPLAY],
   Layout: ["accordion", "carousel", "collapsible", "scroll-area"],
 };
 

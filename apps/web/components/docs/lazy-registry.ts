@@ -410,6 +410,38 @@ const docsImportMap: Record<
     import("@/components/docs/data-table").then((m) => ({
       default: m.DataTableDocs,
     })),
+  questionnaire: () =>
+    import("@/components/docs/questionnaire").then((m) => ({
+      default: m.QuestionnaireDocs,
+    })),
+  separator: () =>
+    import("@/components/docs/separator").then((m) => ({
+      default: m.SeparatorDocs,
+    })),
+  bubble: () =>
+    import("@/components/docs/bubble").then((m) => ({
+      default: m.BubbleDocs,
+    })),
+  "toggle-group": () =>
+    import("@/components/docs/toggle-group").then((m) => ({
+      default: m.ToggleGroupDocs,
+    })),
+  attachment: () =>
+    import("@/components/docs/attachment").then((m) => ({
+      default: m.AttachmentDocs,
+    })),
+  chart: () =>
+    import("@/components/docs/chart").then((m) => ({
+      default: m.ChartDocs,
+    })),
+  item: () =>
+    import("@/components/docs/item").then((m) => ({
+      default: m.ItemDocs,
+    })),
+  "message-scroller": () =>
+    import("@/components/docs/message-scroller").then((m) => ({
+      default: m.MessageScrollerDocs,
+    })),
 };
 
 /**
