@@ -21,6 +21,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "attachment",
+      "type": "registry:ui"
+    },
+    {
       "name": "aurora-flow",
       "type": "registry:ui"
     },
@@ -37,6 +41,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "bubble",
+      "type": "registry:ui"
+    },
+    {
       "name": "calendar",
       "type": "registry:ui"
     },
@@ -50,6 +58,10 @@
     },
     {
       "name": "case-study-flip-stack",
+      "type": "registry:ui"
+    },
+    {
+      "name": "chart",
       "type": "registry:ui"
     },
     {
@@ -189,6 +201,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "item",
+      "type": "registry:ui"
+    },
+    {
       "name": "kinetic-text",
       "type": "registry:ui"
     },
@@ -226,6 +242,10 @@
     },
     {
       "name": "matrix-rain",
+      "type": "registry:ui"
+    },
+    {
+      "name": "message-scroller",
       "type": "registry:ui"
     },
     {
@@ -285,6 +305,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "questionnaire",
+      "type": "registry:ui"
+    },
+    {
       "name": "ripple-transition",
       "type": "registry:ui"
     },
@@ -310,6 +334,10 @@
     },
     {
       "name": "scrub-input",
+      "type": "registry:ui"
+    },
+    {
+      "name": "separator",
       "type": "registry:ui"
     },
     {
@@ -374,6 +402,10 @@
     },
     {
       "name": "text-repel",
+      "type": "registry:ui"
+    },
+    {
+      "name": "toggle-group",
       "type": "registry:ui"
     },
     {
