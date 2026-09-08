@@ -245,7 +245,19 @@
       "type": "registry:ui"
     },
     {
+      "name": "marker",
+      "type": "registry:ui"
+    },
+    {
       "name": "matrix-rain",
+      "type": "registry:ui"
+    },
+    {
+      "name": "menubar",
+      "type": "registry:ui"
+    },
+    {
+      "name": "message",
       "type": "registry:ui"
     },
     {
