@@ -947,6 +947,27 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "empty",
     addedAt: "2026-09-07",
   },
+  "menubar": {
+    title: "Menubar",
+    description: "Horizontal bar of dropdown menus with checkbox, radio, submenu, and shortcut support.",
+    category: "Navigation",
+    slug: "menubar",
+    addedAt: "2026-09-07",
+  },
+  "message": {
+    title: "Message",
+    description: "Conversation rows with avatar, alignment, header, and footer around any message surface.",
+    category: "Data Display",
+    slug: "message",
+    addedAt: "2026-09-07",
+  },
+  "marker": {
+    title: "Marker",
+    description: "Inline status, system notes, bordered rows, and labeled separators for conversations.",
+    category: "Data Display",
+    slug: "marker",
+    addedAt: "2026-09-07",
+  },
 };
 
 export function getComponent(slug: string) {

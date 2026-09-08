@@ -446,6 +446,18 @@ const docsImportMap: Record<
     import("@/components/docs/empty").then((m) => ({
       default: m.EmptyDocs,
     })),
+  menubar: () =>
+    import("@/components/docs/menubar").then((m) => ({
+      default: m.MenubarDocs,
+    })),
+  message: () =>
+    import("@/components/docs/message").then((m) => ({
+      default: m.MessageDocs,
+    })),
+  marker: () =>
+    import("@/components/docs/marker").then((m) => ({
+      default: m.MarkerDocs,
+    })),
 };
 
 /**

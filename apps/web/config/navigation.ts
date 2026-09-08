@@ -180,6 +180,7 @@ const experienceComponentsSection: NavSection = {
         { title: "Pagination", href: "/experience/components/pagination" },
         { title: "Sidebar", href: "/experience/components/sidebar" },
         { title: "Navigation Menu", href: "/experience/components/navigation-menu" },
+        { title: "Menubar", href: "/experience/components/menubar" },
       ],
     },
     {
@@ -211,6 +212,8 @@ const experienceComponentsSection: NavSection = {
         { title: "Chart", href: "/experience/components/chart" },
         { title: "Item", href: "/experience/components/item" },
         { title: "Message Scroller", href: "/experience/components/message-scroller" },
+        { title: "Message", href: "/experience/components/message" },
+        { title: "Marker", href: "/experience/components/marker" },
       ],
     },
     {
