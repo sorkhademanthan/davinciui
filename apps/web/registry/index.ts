@@ -940,6 +940,13 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "message-scroller",
     addedAt: "2026-09-07",
   },
+  "empty": {
+    title: "Empty",
+    description: "Empty states with media, title, description, and actions for lists, search, and errors.",
+    category: "Feedback",
+    slug: "empty",
+    addedAt: "2026-09-07",
+  },
 };
 
 export function getComponent(slug: string) {

@@ -168,6 +168,7 @@ const experienceComponentsSection: NavSection = {
         { title: "Progress", href: "/experience/components/progress" },
         { title: "Spinner", href: "/experience/components/spinner" },
         { title: "Skeleton", href: "/experience/components/skeleton" },
+        { title: "Empty", href: "/experience/components/empty" },
       ],
     },
     {

@@ -129,6 +129,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "empty",
+      "type": "registry:ui"
+    },
+    {
       "name": "eye-tracking",
       "type": "registry:ui"
     },

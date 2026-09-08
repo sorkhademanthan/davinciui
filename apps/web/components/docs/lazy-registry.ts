@@ -442,6 +442,10 @@ const docsImportMap: Record<
     import("@/components/docs/message-scroller").then((m) => ({
       default: m.MessageScrollerDocs,
     })),
+  empty: () =>
+    import("@/components/docs/empty").then((m) => ({
+      default: m.EmptyDocs,
+    })),
 };
 
 /**

@@ -24,7 +24,7 @@ const PLANNED_DATA_DISPLAY = [
   "message",
 ];
 
-const PLANNED_FEEDBACK = ["empty"];
+const PLANNED_FEEDBACK: string[] = [];
 
 const PLANNED_NAVIGATION = ["menubar"];
 
@@ -41,7 +41,7 @@ export const BASIC_GROUPS: Record<string, string[]> = {
     "questionnaire",
     ...PLANNED_FORMS,
   ],
-  Feedback: ["alert", "toast", "progress", "spinner", "skeleton", ...PLANNED_FEEDBACK],
+  Feedback: ["alert", "toast", "progress", "spinner", "skeleton", "empty", ...PLANNED_FEEDBACK],
   Navigation: ["tabs", "breadcrumb", "pagination", "sidebar", "navigation-menu", ...PLANNED_NAVIGATION],
   Overlays: ["dialog", "drawer", "popover", "tooltip", "dropdown-menu", ...PLANNED_OVERLAYS],
   "Data Display": ["card", "badge", "avatar", "table", "data-table", "separator", "bubble", "attachment", "chart", "item", "message-scroller", ...PLANNED_DATA_DISPLAY],
