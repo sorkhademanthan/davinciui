@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "empty",
+  "type": "registry:ui",
+  "title": "Empty",
+  "dependencies": [],
+  "devDependencies": [],
+  "registryDependencies": [],
+  "description": "Component for empty",
+  "files": [
+    {
+      "path": "components/ui/empty.tsx",
+      "content": "\"use client\";\n\nimport { cn } from \"@/lib/utils\";\nimport * as React from \"react\";\n\nfunction Empty({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {\n  return (\n    <div\n      data-slot=\"empty\"\n      className={cn(\n        \"flex min-w-0 flex-1 flex-col items-center justify-center gap-6 rounded-lg p-6 text-center text-balance\",\n        className\n      )}\n      {...props}\n    />\n  );\n}\n\nfunction EmptyHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {\n  return (\n    <div data-slot=\"empty-header\" className={cn(\"flex max-w-sm flex-col items-center gap-2 text-center\", className)} {...props} />\n  );\n}\n\nexport type EmptyMediaVariant = \"default\" | \"icon\";\n\nexport interface EmptyMediaProps extends React.HTMLAttributes<HTMLDivElement> {\n  /** Icon treatment with muted tile. @default \"default\" */\n  variant?: EmptyMediaVariant;\n}\n\nfunction EmptyMedia({ variant = \"default\", className, ...props }: EmptyMediaProps) {\n  return (\n    <div\n      data-slot=\"empty-media\"\n      data-variant={variant}\n      className={cn(\n        \"mb-2 flex shrink-0 items-center justify-center\",\n        variant === \"icon\" && \"bg-muted text-foreground flex size-10 shrink-0 items-center justify-center rounded-lg [&_svg:not([class*='size-'])]:size-6\",\n        className\n      )}\n      {...props}\n    />\n  );\n}\n\nfunction EmptyTitle({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {\n  return (\n    <div data-slot=\"empty-title\" className={cn(\"text-lg font-medium tracking-tight\", className)} {...props} />\n  );\n}\n\nfunction EmptyDescription({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {\n  return (\n    <div\n      data-slot=\"empty-description\"\n      className={cn(\"text-muted-foreground text-sm/relaxed [&>a:hover]:text-primary [&>a]:underline [&>a]:underline-offset-4\", className)}\n      {...props}\n    />\n  );\n}\n\nfunction EmptyContent({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {\n  return (\n    <div data-slot=\"empty-content\" className={cn(\"flex w-full max-w-sm min-w-0 flex-col items-center gap-4 text-sm text-balance\", className)} {...props} />\n  );\n}\n\nexport { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription, EmptyContent };\n\nexport default Empty;\n",
+      "type": "registry:ui"
+    }
+  ]
+}
