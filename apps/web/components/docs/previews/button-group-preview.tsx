@@ -2,7 +2,17 @@
 
 import { Button } from "@workspace/ui/components/button";
 import { ButtonGroup, ButtonGroupSeparator, ButtonGroupText } from "@workspace/ui/components/button-group";
-import { ChevronDown, Search, Star } from "lucide-react";
+import {
+  AlignCenter,
+  AlignLeft,
+  AlignRight,
+  Bold,
+  ChevronDown,
+  Italic,
+  Search,
+  Star,
+  Underline,
+} from "lucide-react";
 
 export function ButtonGroupPreview() {
   return (
@@ -11,6 +21,58 @@ export function ButtonGroupPreview() {
         <Button variant="outline">Left</Button>
         <Button variant="outline">Middle</Button>
         <Button variant="outline">Right</Button>
+      </ButtonGroup>
+    </div>
+  );
+}
+
+export function ButtonGroupSegmentedPreview() {
+  return (
+    <div className="flex h-full w-full flex-wrap items-center justify-center gap-6 p-8">
+      <ButtonGroup variant="segmented" aria-label="Range">
+        <Button variant="ghost" size="sm">
+          Day
+        </Button>
+        <Button variant="ghost" size="sm">
+          Week
+        </Button>
+        <Button variant="ghost" size="sm">
+          Month
+        </Button>
+      </ButtonGroup>
+      <ButtonGroup variant="segmented" aria-label="Plan">
+        <Button size="sm">Monthly</Button>
+        <Button variant="ghost" size="sm">
+          Yearly
+        </Button>
+      </ButtonGroup>
+    </div>
+  );
+}
+
+export function ButtonGroupToolbarPreview() {
+  return (
+    <div className="flex h-full w-full items-center justify-center p-8">
+      <ButtonGroup variant="segmented" aria-label="Formatting">
+        <Button variant="ghost" size="icon-sm" aria-label="Bold">
+          <Bold className="size-4" />
+        </Button>
+        <Button variant="ghost" size="icon-sm" aria-label="Italic">
+          <Italic className="size-4" />
+        </Button>
+        <Button variant="ghost" size="icon-sm" aria-label="Underline">
+          <Underline className="size-4" />
+        </Button>
+        <ButtonGroupSeparator orientation="vertical" />
+        <Button variant="ghost" size="icon-sm" aria-label="Align left">
+          <AlignLeft className="size-4" />
+        </Button>
+        <Button variant="ghost" size="icon-sm" aria-label="Align center">
+          <AlignCenter className="size-4" />
+        </Button>
+        <Button variant="ghost" size="icon-sm" aria-label="Align right">
+          <AlignRight className="size-4" />
+        </Button>
       </ButtonGroup>
     </div>
   );
@@ -78,7 +140,7 @@ export function ButtonGroupSplitPreview() {
     <div className="flex h-full w-full items-center justify-center p-8">
       <ButtonGroup>
         <Button>Action</Button>
-        <Button variant="outline" size="icon" aria-label="More">
+        <Button size="icon" aria-label="More options">
           <ChevronDown className="size-4" />
         </Button>
       </ButtonGroup>
@@ -90,7 +152,7 @@ export function ButtonGroupInputPreview() {
   return (
     <div className="flex h-full w-full items-center justify-center p-8">
       <ButtonGroup>
-        <input className="h-9 w-32 rounded-l-md border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-ring" placeholder="Search" />
+        <input className="h-9 w-32 rounded-s-[10px] border bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-ring" placeholder="Search" />
         <Button>Go</Button>
       </ButtonGroup>
     </div>
@@ -128,7 +190,7 @@ export function ButtonGroupSelectPreview() {
   return (
     <div className="flex h-full w-full items-center justify-center p-8">
       <ButtonGroup>
-        <select className="h-9 rounded-l-md border bg-background px-3 text-sm">
+        <select className="h-9 rounded-s-[10px] border bg-background px-3 text-sm">
           <option>Select</option>
           <option>Option A</option>
         </select>

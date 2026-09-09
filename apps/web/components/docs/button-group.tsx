@@ -1,6 +1,8 @@
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import {
   ButtonGroupPreview,
+  ButtonGroupSegmentedPreview,
+  ButtonGroupToolbarPreview,
   ButtonGroupOrientationPreview,
   ButtonGroupSizePreview,
   ButtonGroupNestedPreview,
@@ -29,7 +31,7 @@ export async function ButtonGroupDocs() {
   return (
     <DocsPageLayout
       title="Button Group"
-      description="A collection of buttons grouped together with consistent styling, supporting orientation, nesting, and composition with inputs and dropdowns."
+      description="A connected instrument or frosted segmented tray for related actions — RTL-safe radius surgery, inset dividers, hover seam elevation, and composition with inputs and dropdowns."
       preview={<ButtonGroupPreview />}
       previewCode={defaultCode}
       installPackageName="button-group"
@@ -47,6 +49,16 @@ export async function ButtonGroupDocs() {
       }
       examples={[
         { title: "Composition", preview: <ButtonGroupPreview />, code: defaultCode },
+        {
+          title: "Segmented",
+          preview: <ButtonGroupSegmentedPreview />,
+          code: `<ButtonGroup variant="segmented">\n  <Button variant="ghost" size="sm">Day</Button>\n  <Button variant="ghost" size="sm">Week</Button>\n  <Button variant="ghost" size="sm">Month</Button>\n</ButtonGroup>`,
+        },
+        {
+          title: "Toolbar",
+          preview: <ButtonGroupToolbarPreview />,
+          code: `<ButtonGroup variant="segmented" aria-label="Formatting">\n  <Button variant="ghost" size="icon-sm" aria-label="Bold"><Bold /></Button>\n  <Button variant="ghost" size="icon-sm" aria-label="Italic"><Italic /></Button>\n  <ButtonGroupSeparator orientation="vertical" />\n  <Button variant="ghost" size="icon-sm" aria-label="Align left"><AlignLeft /></Button>\n</ButtonGroup>`,
+        },
         { title: "Orientation", preview: <ButtonGroupOrientationPreview />, code: `<ButtonGroup>\n  <Button>Horizontal</Button>\n</ButtonGroup>\n<ButtonGroup orientation="vertical">\n  <Button>Vertical</Button>\n</ButtonGroup>` },
         { title: "Size", preview: <ButtonGroupSizePreview />, code: `<ButtonGroup>\n  <Button size="sm">Small</Button>\n</ButtonGroup>` },
         { title: "Nested", preview: <ButtonGroupNestedPreview />, code: `<ButtonGroup>\n  <Button>One</Button>\n  <ButtonGroup><Button>Nested</Button></ButtonGroup>\n</ButtonGroup>` },
@@ -60,7 +72,8 @@ export async function ButtonGroupDocs() {
         { title: "RTL", preview: <ButtonGroupRtlPreview />, code: `<div dir="rtl">\n  <ButtonGroup>\n    <Button>يمين</Button>\n    <Button>يسار</Button>\n  </ButtonGroup>\n</div>` },
       ]}
       props={[
-        { name: "orientation", type: '"horizontal" | "vertical"', default: '"horizontal"', description: "Orientation of the group." },
+        { name: "variant", type: '"connected" | "segmented"', default: '"connected"', description: "Connected shares edges as one instrument; segmented is a frosted tray for distinct controls." },
+        { name: "orientation", type: '"horizontal" | "vertical"', default: '"horizontal"', description: "Orientation of the group. Sets aria-orientation when vertical." },
         { name: "className", type: "string", description: "Additional CSS classes." },
         { name: "ButtonGroupSeparator", type: "Component", description: "Visual separator between grouped buttons." },
         { name: "ButtonGroupText", type: "Component", description: "Text container within a button group (e.g., for icons or labels)." },
