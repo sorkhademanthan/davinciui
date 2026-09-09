@@ -242,10 +242,6 @@ const docsImportMap: Record<
     import("@/components/docs/letter-cascade").then((m) => ({
       default: m.LetterCascadeDocs,
     })),
-  "text-repel": () =>
-    import("@/components/docs/text-repel").then((m) => ({
-      default: m.TextRepelDocs,
-    })),
   "text-morph": () =>
     import("@/components/docs/text-morph").then((m) => ({
       default: m.TextMorphDocs,
@@ -257,10 +253,6 @@ const docsImportMap: Record<
   "kinetic-text-reveal": () =>
     import("@/components/docs/kinetic-text-reveal").then((m) => ({
       default: m.KineticTextRevealDocs,
-    })),
-  "kinetic-text": () =>
-    import("@/components/docs/kinetic-text").then((m) => ({
-      default: m.KineticTextDocs,
     })),
   "gsap-text": () =>
     import("@/components/docs/gsap-text").then((m) => ({
@@ -313,10 +305,6 @@ const docsImportMap: Record<
   "sheet": () =>
     import("@/components/docs/sheet").then((m) => ({
       default: m.SheetDocs,
-    })),
-  "cursor-driven-particle-typography": () =>
-    import("@/components/docs/cursor-driven-particle-typography").then((m) => ({
-      default: m.CursorDrivenParticleTypographyDocs,
     })),
   "image-trail": () =>
     import("@/components/docs/image-trail").then((m) => ({

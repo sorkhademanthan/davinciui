@@ -9,6 +9,14 @@
   ],
   "items": [
     {
+      "name": "accordion",
+      "type": "registry:ui"
+    },
+    {
+      "name": "alert",
+      "type": "registry:ui"
+    },
+    {
       "name": "alert-dialog",
       "type": "registry:ui"
     },
@@ -33,11 +41,19 @@
       "type": "registry:ui"
     },
     {
+      "name": "avatar",
+      "type": "registry:ui"
+    },
+    {
       "name": "badge",
       "type": "registry:ui"
     },
     {
       "name": "border-beam",
+      "type": "registry:ui"
+    },
+    {
+      "name": "breadcrumb",
       "type": "registry:ui"
     },
     {
@@ -62,6 +78,10 @@
     },
     {
       "name": "chart",
+      "type": "registry:ui"
+    },
+    {
+      "name": "checkbox",
       "type": "registry:ui"
     },
     {
@@ -90,10 +110,6 @@
     },
     {
       "name": "context-menu",
-      "type": "registry:ui"
-    },
-    {
-      "name": "cursor-driven-particle-typography",
       "type": "registry:ui"
     },
     {
@@ -157,10 +173,6 @@
       "type": "registry:ui"
     },
     {
-      "name": "gradient-hero-01",
-      "type": "registry:block"
-    },
-    {
       "name": "gsap-text",
       "type": "registry:ui"
     },
@@ -206,10 +218,6 @@
     },
     {
       "name": "item",
-      "type": "registry:ui"
-    },
-    {
-      "name": "kinetic-text",
       "type": "registry:ui"
     },
     {
@@ -303,14 +311,6 @@
     {
       "name": "popover",
       "type": "registry:ui"
-    },
-    {
-      "name": "pricing-01",
-      "type": "registry:block"
-    },
-    {
-      "name": "pricing-02",
-      "type": "registry:block"
     },
     {
       "name": "prism-gradient",
@@ -417,10 +417,6 @@
       "type": "registry:ui"
     },
     {
-      "name": "text-repel",
-      "type": "registry:ui"
-    },
-    {
       "name": "toggle-group",
       "type": "registry:ui"
     },
@@ -435,6 +431,18 @@
     {
       "name": "wheel-carousel",
       "type": "registry:ui"
+    },
+    {
+      "name": "gradient-hero-01",
+      "type": "registry:block"
+    },
+    {
+      "name": "pricing-01",
+      "type": "registry:block"
+    },
+    {
+      "name": "pricing-02",
+      "type": "registry:block"
     }
   ]
 }
