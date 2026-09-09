@@ -172,7 +172,8 @@ function weekdayNames(locale: string, weekStartsOn: number): string[] {
 }
 
 /** ISO-8601 week number for a gregorian date. */
-function isoWeek(date: Date): number {  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+function isoWeek(date: Date): number {
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
   const day = (d.getUTCDay() + 6) % 7; // Mon=0
   d.setUTCDate(d.getUTCDate() - day + 3); // Thursday
   const firstThursday = new Date(Date.UTC(d.getUTCFullYear(), 0, 4));
@@ -245,7 +246,11 @@ export function Calendar({
   // (Intl week data differs across runtimes and would hydration-mismatch).
   const firstDay = weekStartsOn ?? 0;
 
+  const [navDir, setNavDir] = React.useState<"next" | "prev" | null>(null);
+
   const setView = (y: number, m: number) => {
+    const d = (y - viewParts.y) * 12 + (m - viewParts.m);
+    if (d !== 0) setNavDir(d > 0 ? "next" : "prev");
     if (controlledMonth === undefined) setInternalView({ y, m });
     const days = monthDays(y, m, locale, calendarSystem);
     onMonthChange?.(days[Math.min(14, days.length - 1)] ?? today);
@@ -345,11 +350,141 @@ export function Calendar({
   const NextIcon = dir === "rtl" ? ChevronLeft : ChevronRight;
   const [hh, mm] = timeValue.split(":");
 
+  const fullFmt = React.useMemo(
+    () => new Intl.DateTimeFormat(calTag(locale, calendarSystem), { dateStyle: "full" }),
+    [locale, calendarSystem],
+  );
+
+  // ── Keyboard navigation (react-day-picker parity, RTL-aware) ──
+  // Roving tabindex: one tab stop per grid, arrows move focus freely.
+  const dayRefs = React.useRef(new Map<string, HTMLButtonElement>());
+  const pendingFocus = React.useRef<string | null>(null);
+  const [tabStop, setTabStop] = React.useState<string | null>(null);
+
+  const defaultStopKey = React.useMemo(() => {
+    const flat = weeks.flat();
+    const inView = (d: Date) => {
+      const p = calParts(d, locale, calendarSystem);
+      return p.y === viewParts.y && p.m === viewParts.m;
+    };
+    const cands: Array<Date | undefined> =
+      mode === "single"
+        ? [(selected as Date | null) ?? undefined, today]
+        : [range?.from, range?.to, today];
+    for (const c of cands) {
+      if (c && flat.some((d) => sameDay(d, c))) return c.toDateString();
+    }
+    return (flat.find(inView) ?? flat[0])?.toDateString() ?? null;
+  }, [weeks, selected, today, range, mode, viewParts, locale, calendarSystem]);
+
+  const defaultStopRef = React.useRef<string | null>(null);
+  defaultStopRef.current = defaultStopKey;
+
+  React.useEffect(() => {
+    const p = pendingFocus.current;
+    pendingFocus.current = null;
+    if (!p) return;
+    const el = dayRefs.current.get(p === "__default__" ? (defaultStopRef.current ?? "") : p);
+    el?.focus();
+  }, [weeks]);
+
+  const setDayRef = (key: string) => (el: HTMLButtonElement | null) => {
+    if (el) dayRefs.current.set(key, el);
+    else dayRefs.current.delete(key);
+  };
+
+  const focusDay = (target: Date) => {
+    const key = target.toDateString();
+    const el = dayRefs.current.get(key);
+    if (el) {
+      el.focus();
+      return;
+    }
+    // Target lives in another month — jump the view, then focus it.
+    const op = calParts(target, locale, calendarSystem);
+    pendingFocus.current = key;
+    setView(op.y, op.m);
+  };
+
+  const jumpMonthFocus = (delta: number, from: Date) => {
+    if (calendarSystem === "gregory") {
+      const dim = new Date(from.getFullYear(), from.getMonth() + delta + 1, 0).getDate();
+      const t = new Date(from.getFullYear(), from.getMonth() + delta, Math.min(from.getDate(), dim), 12);
+      pendingFocus.current = t.toDateString();
+    } else {
+      pendingFocus.current = "__default__";
+    }
+    shiftMonth(delta);
+  };
+
+  const onDayKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>, date: Date) => {
+    const rtl = dir === "rtl";
+    const shift = e.shiftKey;
+    let target: Date | null = null;
+    switch (e.key) {
+      case "ArrowLeft":
+        if (shift) {
+          e.preventDefault();
+          jumpMonthFocus(rtl ? 1 : -1, date);
+          return;
+        }
+        target = addDays(date, rtl ? 1 : -1);
+        break;
+      case "ArrowRight":
+        if (shift) {
+          e.preventDefault();
+          jumpMonthFocus(rtl ? -1 : 1, date);
+          return;
+        }
+        target = addDays(date, rtl ? -1 : 1);
+        break;
+      case "ArrowUp":
+        if (shift) {
+          e.preventDefault();
+          jumpMonthFocus(-12, date);
+          return;
+        }
+        target = addDays(date, -7);
+        break;
+      case "ArrowDown":
+        if (shift) {
+          e.preventDefault();
+          jumpMonthFocus(12, date);
+          return;
+        }
+        target = addDays(date, 7);
+        break;
+      case "Home":
+        target = addDays(date, -((date.getDay() - firstDay + 7) % 7));
+        break;
+      case "End":
+        target = addDays(date, 6 - ((date.getDay() - firstDay + 7) % 7));
+        break;
+      case "PageUp":
+        e.preventDefault();
+        jumpMonthFocus(shift ? -12 : -1, date);
+        return;
+      case "PageDown":
+        e.preventDefault();
+        jumpMonthFocus(shift ? 12 : 1, date);
+        return;
+      default:
+        return;
+    }
+    e.preventDefault();
+    if (target) focusDay(target);
+  };
+
   return (
     <div
       data-slot="calendar"
       dir={dir}
-      className={cn("inline-block rounded-xl border bg-card p-3 text-card-foreground shadow-sm", className)}
+      className={cn(
+        "inline-block rounded-2xl border border-border/70 bg-card p-4 text-card-foreground",
+        "shadow-[inset_0_1px_0_0_rgba(255,255,255,0.5),0_1px_2px_rgba(0,0,0,0.05),0_16px_40px_-16px_rgba(0,0,0,0.18)]",
+        "dark:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.07),0_1px_2px_rgba(0,0,0,0.3),0_16px_40px_-16px_rgba(0,0,0,0.6)]",
+        className,
+      )}
     >
       {/* Header */}
       <div className="mb-2 flex items-center justify-between gap-2 px-1">
@@ -357,7 +492,7 @@ export function Calendar({
           type="button"
           aria-label="Previous month"
           onClick={() => shiftMonth(-1)}
-          className="flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+          className="flex size-8 items-center justify-center rounded-[10px] text-muted-foreground transition-all duration-150 hover:bg-accent hover:text-foreground hover:shadow-sm active:scale-90"
         >
           <PrevIcon className="size-4" />
         </button>
@@ -367,7 +502,7 @@ export function Calendar({
               aria-label="Month"
               value={viewParts.m}
               onChange={(e) => setView(viewParts.y, Number(e.target.value))}
-              className="h-8 max-w-[8rem] rounded-md border border-input bg-background px-1.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-ring"
+              className="h-8 max-w-[8rem] rounded-[10px] border border-input bg-background px-1.5 text-[13px] font-medium shadow-sm transition-colors hover:border-foreground/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               {monthOptions.map((o) => (
                 <option key={o.value} value={o.value}>
@@ -379,7 +514,7 @@ export function Calendar({
               aria-label="Year"
               value={viewParts.y}
               onChange={(e) => setView(Number(e.target.value), viewParts.m)}
-              className="h-8 rounded-md border border-input bg-background px-1.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-ring"
+              className="h-8 rounded-[10px] border border-input bg-background px-1.5 text-[13px] font-medium tabular-nums shadow-sm transition-colors hover:border-foreground/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               {yearOptions.map((y) => (
                 <option key={y.value} value={y.value}>
@@ -389,7 +524,7 @@ export function Calendar({
             </select>
           </div>
         ) : (
-          <div className="text-sm font-semibold" aria-live="polite">
+          <div className="text-[15px] font-semibold tracking-tight" aria-live="polite">
             {title}
           </div>
         )}
@@ -397,92 +532,115 @@ export function Calendar({
           type="button"
           aria-label="Next month"
           onClick={() => shiftMonth(1)}
-          className="flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+          className="flex size-8 items-center justify-center rounded-[10px] text-muted-foreground transition-all duration-150 hover:bg-accent hover:text-foreground hover:shadow-sm active:scale-90"
         >
           <NextIcon className="size-4" />
         </button>
       </div>
 
-      {/* Weekday header */}
-      <div className="flex">
-        {showWeekNumbers && <div className="shrink-0" style={{ width: cellSize * 0.9 }} />}
-        {weekNames.map((name, i) => (
-          <div
-            key={i}
-            style={{ width: cellSize }}
-            className="pb-1 text-center text-xs font-medium text-muted-foreground"
-          >
-            {name}
-          </div>
-        ))}
-      </div>
+      {/* Animated grid — key remount replays the slide on month change */}
+      <div
+        key={`${calendarSystem}-${locale}-${viewParts.y}-${viewParts.m}`}
+        className={cn(
+          navDir === "prev" && "motion-safe:animate-cal-prev",
+          navDir === "next" && "motion-safe:animate-cal-next",
+        )}
+      >
+        {/* Weekday header */}
+        <div className="flex">
+          {showWeekNumbers && <div className="shrink-0" style={{ width: cellSize * 0.9 }} />}
+          {weekNames.map((name, i) => (
+            <div
+              key={i}
+              style={{ width: cellSize }}
+              className="pb-1.5 text-center text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground/70"
+            >
+              {name}
+            </div>
+          ))}
+        </div>
 
-      {/* Weeks */}
-      {weeks.map((week, wi) => {
-        const thursday = week.find((d) => (d.getDay() + 6) % 7 === 3) ?? week[0];
-        return (
-          <div key={wi} className="flex">
-            {showWeekNumbers && (
-              <div
-                style={{ width: cellSize * 0.9 }}
-                className="flex items-center justify-center text-xs tabular-nums text-muted-foreground/60"
-              >
-                {thursday ? isoWeek(thursday) : ""}
-              </div>
-            )}
-            {week.map((date, di) => {
-              const p = calParts(date, locale, calendarSystem);
-              const outside = p.m !== viewParts.m || p.y !== viewParts.y;
-              const dis = isDisabled(date);
-              const isToday = sameDay(date, today);
-              const isFrom = mode === "range" ? sameDay(range?.from, date) : false;
-              const isTo = mode === "range" ? sameDay(range?.to, date) : false;
-              const isSelected = mode === "single" ? sameDay(selected as Date | null, date) : isFrom || isTo;
-              const mid = inRange(date);
-              return (
-                <button
-                  key={di}
-                  type="button"
-                  disabled={dis}
-                  aria-label={date.toDateString()}
-                  aria-pressed={isSelected}
-                  onClick={() => {
-                    pick(date);
-                    if (outside) {
-                      const op = calParts(date, locale, calendarSystem);
-                      setView(op.y, op.m);
-                    }
-                  }}
-                  style={{ width: cellSize, height: cellSize }}
-                  className={cn(
-                    "relative flex items-center justify-center rounded-md text-sm transition-colors",
-                    "hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-                    outside && !isSelected && "text-muted-foreground/50",
-                    dis && "cursor-not-allowed opacity-40 line-through hover:bg-transparent hover:text-current",
-                    isToday && !isSelected && "ring-1 ring-ring",
-                    isSelected && "bg-primary font-semibold text-primary-foreground hover:bg-primary hover:text-primary-foreground",
-                    mid && "rounded-none bg-accent font-medium",
-                    isFrom && "rounded-l-md rounded-r-none",
-                    isTo && "rounded-l-none rounded-r-md",
-                  )}
+        {/* Weeks */}
+        {weeks.map((week, wi) => {
+          const thursday = week.find((d) => (d.getDay() + 6) % 7 === 3) ?? week[0];
+          return (
+            <div key={wi} className="flex">
+              {showWeekNumbers && (
+                <div
+                  style={{ width: cellSize * 0.9 }}
+                  className="flex items-center justify-center text-xs font-medium tabular-nums text-muted-foreground/50"
                 >
-                  {dayNumber(date, locale, calendarSystem)}
-                </button>
-              );
-            })}
-          </div>
-        );
-      })}
+                  {thursday ? isoWeek(thursday) : ""}
+                </div>
+              )}
+              {week.map((date, di) => {
+                const p = calParts(date, locale, calendarSystem);
+                const outside = p.m !== viewParts.m || p.y !== viewParts.y;
+                const dis = isDisabled(date);
+                const isToday = sameDay(date, today);
+                const isFrom = mode === "range" ? sameDay(range?.from, date) : false;
+                const isTo = mode === "range" ? sameDay(range?.to, date) : false;
+                const isSelected = mode === "single" ? sameDay(selected as Date | null, date) : isFrom || isTo;
+                const mid = inRange(date);
+                const key = date.toDateString();
+                return (
+                  <button
+                    key={di}
+                    ref={setDayRef(key)}
+                    type="button"
+                    disabled={dis}
+                    tabIndex={tabStop ? (key === tabStop ? 0 : -1) : key === defaultStopKey ? 0 : -1}
+                    aria-label={fullFmt.format(date)}
+                    aria-pressed={isSelected}
+                    aria-current={isToday ? "date" : undefined}
+                    onFocus={() => setTabStop(key)}
+                    onKeyDown={(e) => onDayKeyDown(e, date)}
+                    onClick={() => {
+                      pick(date);
+                      if (outside) {
+                        const op = calParts(date, locale, calendarSystem);
+                        setView(op.y, op.m);
+                      }
+                    }}
+                    style={{ width: cellSize, height: cellSize }}
+                    className={cn(
+                      "relative flex items-center justify-center rounded-full text-sm font-normal tabular-nums transition-all duration-150 ease-out",
+                      "hover:scale-[1.06] hover:bg-accent hover:text-accent-foreground active:scale-95",
+                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-card",
+                      "motion-reduce:transition-none motion-reduce:hover:scale-100 motion-reduce:active:scale-100",
+                      outside && !isSelected && "text-muted-foreground/40 hover:text-foreground",
+                      dis &&
+                        "cursor-not-allowed text-muted-foreground/30 line-through decoration-muted-foreground/40 decoration-1 hover:scale-100 hover:bg-transparent hover:text-muted-foreground/30",
+                      isToday &&
+                        !isSelected &&
+                        "font-semibold text-foreground after:absolute after:bottom-[5px] after:size-1 after:rounded-full after:bg-primary",
+                      isSelected &&
+                        "bg-primary bg-[linear-gradient(180deg,rgba(255,255,255,0.22),rgba(255,255,255,0)_55%)] font-semibold text-primary-foreground shadow-[inset_0_1px_0_0_rgba(255,255,255,0.3),inset_0_-1px_0_0_rgba(0,0,0,0.2),0_4px_14px_-4px_rgba(0,0,0,0.45)] ring-1 ring-inset ring-black/10 hover:bg-primary hover:text-primary-foreground hover:brightness-110 dark:ring-white/20",
+                      mid &&
+                        "rounded-none bg-primary/[0.12] font-medium text-foreground hover:scale-100 hover:bg-primary/[0.2] dark:bg-primary/[0.18] dark:hover:bg-primary/[0.26]",
+                      // Logical endpoints — stay correct in RTL (was rounded-l/r).
+                      isFrom && "rounded-e-none rounded-s-full hover:scale-100",
+                      isTo && "rounded-e-full rounded-s-none hover:scale-100",
+                    )}
+                  >
+                    {dayNumber(date, locale, calendarSystem)}
+                  </button>
+                );
+              })}
+            </div>
+          );
+        })}
+      </div>
 
       {/* Time */}
       {showTimeSelect && (
-        <div className="mt-2 flex items-center justify-center gap-1.5 border-t border-border pt-2">
-          <span className="text-xs text-muted-foreground">Time</span>
+        <div className="mt-3 flex items-center justify-center gap-1.5 border-t border-border/70 pt-3">
+          <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground/70">Time</span>
           <select
             aria-label="Hours"
             value={hh?.padStart(2, "0") ?? "12"}
             onChange={(e) => setTime(`${e.target.value}:${(mm ?? "00").padStart(2, "0")}`)}
-            className="h-8 rounded-md border border-input bg-background px-1.5 text-sm tabular-nums focus:outline-none focus:ring-2 focus:ring-ring"
+            className="h-8 rounded-[10px] border border-input bg-background px-1.5 text-[13px] font-medium tabular-nums shadow-sm transition-colors hover:border-foreground/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             {Array.from({ length: 24 }, (_, h) => (
               <option key={h} value={String(h).padStart(2, "0")}>
@@ -495,7 +653,7 @@ export function Calendar({
             aria-label="Minutes"
             value={mm?.padStart(2, "0") ?? "00"}
             onChange={(e) => setTime(`${(hh ?? "12").padStart(2, "0")}:${e.target.value}`)}
-            className="h-8 rounded-md border border-input bg-background px-1.5 text-sm tabular-nums focus:outline-none focus:ring-2 focus:ring-ring"
+            className="h-8 rounded-[10px] border border-input bg-background px-1.5 text-[13px] font-medium tabular-nums shadow-sm transition-colors hover:border-foreground/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             {Array.from({ length: 12 }, (_, i) => String(i * 5).padStart(2, "0")).map((m) => (
               <option key={m} value={m}>

@@ -111,6 +111,20 @@ export async function DataTableDocs() {
 {
   id: "actions",
   cell: ({ row }) => <DataTableRowActions onDelete={() => deleteRow(row.original)} />
+}
+
+// Right-click any row for the same actions in the premium
+// context menu — wire it at the table level:
+<DataTable columns={columns} data={data} onRowEdit={editRow} onRowDelete={deleteRow} />`,
+        },
+        {
+          title: "Column Alignment",
+          preview: <DataTablePreview />,
+          code: `// Align numerics to the end edge via column meta
+// (actions and select columns align automatically):
+{
+  accessorKey: "salary",
+  meta: { align: "end" },
 }`,
         },
         { title: "Pagination", preview: <DataTablePaginationPreview />, code: paginationCode },
@@ -121,13 +135,14 @@ export async function DataTableDocs() {
         { title: "RTL", preview: <DataTableRtlPreview />, code: rtlCode },
       ]}
       props={[
-        { name: "columns", type: "ColumnDef<TData, TValue>[]", description: "TanStack column definitions." },
+        { name: "columns", type: "ColumnDef<TData, TValue>[]", description: "TanStack column definitions. Use meta.align (start | center | end) for cell alignment." },
         { name: "data", type: "TData[]", description: "Row data." },
         { name: "filterKey", type: "string", description: "Accessor key to filter on (shows toolbar input)." },
-        { name: "filterPlaceholder", type: "string", default: '"Filter…"', description: "Placeholder for filter input." },
+        { name: "filterPlaceholder", type: "string", default: '"Search…"', description: "Placeholder for filter input." },
         { name: "dir", type: '"ltr" | "rtl"', description: "Direction for RTL support." },
         { name: "className", type: "string", description: "Additional CSS classes." },
-        { name: "onRowDelete", type: "(row: TData) => void", description: "Callback for row-actions delete (via meta)." },
+        { name: "onRowDelete", type: "(row: TData) => void", description: "Callback for row-actions delete and the row context menu." },
+        { name: "onRowEdit", type: "(row: TData) => void", description: "Callback for the row context menu (right-click) edit action." },
       ]}
     />
   );

@@ -40,11 +40,31 @@ const aboutNote = (
       the view to its month. Range mode normalises reversed picks, and time selects write straight
       into the selected date.
     </p>
+    <p>
+      The grid is fully keyboard navigable with a single tab stop: arrows move by day (mirrored in
+      RTL) or week, <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px]">Home</code> /{" "}
+      <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px]">End</code> jump to week
+      edges, <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px]">PageUp</code> /{" "}
+      <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px]">PageDown</code> change
+      months (with <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px]">Shift</code> for
+      years), and <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px]">Enter</code> selects
+      the focused day. Month changes glide with a direction-aware slide.
+    </p>
     </div>
   </div>
 );
 
 const CHANGELOG: Array<{ version: string; date: string; notes: string[] }> = [
+  {
+    version: "1.2.0",
+    date: "2026-09-08",
+    notes: [
+      "Full keyboard navigation with roving tabindex (arrows, Home/End, PageUp/PageDown, Shift for years — RTL-aware)",
+      "Direction-aware month slide transitions",
+      "Capsule range pill with glowing gradient endpoints and RTL-safe logical radius",
+      "Today dot indicator and locale-aware full-date labels",
+    ],
+  },
   {
     version: "1.1.0",
     date: "2026-09-04",
@@ -100,7 +120,7 @@ export async function CalendarDocs() {
   return (
     <DocsPageLayout
       title="Calendar"
-      description="A dependency-free date picker with single and range selection, Jalali and Hijri calendar systems, time selects, presets, booked dates, week numbers, and full RTL support."
+      description="A dependency-free date picker with single and range selection, Jalali and Hijri calendar systems, full keyboard navigation, animated month transitions, time selects, presets, booked dates, week numbers, and full RTL support."
       preview={
         <div className="flex flex-col items-center justify-center">
           <Calendar />
