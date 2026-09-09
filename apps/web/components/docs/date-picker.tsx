@@ -113,7 +113,7 @@ const booked = [new Date(2026, 7, 8), new Date(2026, 7, 9)];
         { name: "weekStartsOn", type: "0 | 1 | 2 | 3 | 4 | 5 | 6", default: '"0"', description: "First weekday, 0 = Sunday." },
         { name: "calendarSystem", type: '"gregory" | "persian" | "islamic"', default: '"gregory"', description: "Grid calendar system." },
         { name: "dir", type: '"ltr" | "rtl"', default: '"ltr"', description: "Text direction." },
-        { name: "placement", type: '"bottom-start" | "bottom-end" | "top-start" | "top-end"', default: '"bottom-start"', description: "Popup alignment relative to the field." },
+        { name: "placement", type: '"bottom-start" | "bottom-end" | "top-start" | "top-end"', default: '"bottom-start"', description: "Preferred popup alignment; flips to stay in viewport." },
         { name: "open", type: "boolean", default: "—", description: "Controlled popup state." },
         { name: "defaultOpen", type: "boolean", default: "false", description: "Uncontrolled initial popup state." },
         { name: "onOpenChange", type: "(open: boolean) => void", description: "Fires when the popup opens or closes." },

@@ -10,6 +10,7 @@ import { readComponentSource } from "@/lib/source-code";
 
 const importCode = `import {
   Drawer,
+  DrawerBody,
   DrawerClose,
   DrawerContent,
   DrawerDescription,
@@ -63,9 +64,10 @@ export async function DrawerDocs() {
             <code className="font-mono text-xs">DrawerClose</code>.
           </p>
           <p>
-            <strong className="text-foreground">Scrolling:</strong> Keep header/footer sticky with{" "}
-            <code className="font-mono text-xs">DrawerContent className=&quot;max-h-[85vh]&quot;</code> + inner{" "}
-            <code className="font-mono text-xs">overflow-y-auto flex-1</code>.
+            <strong className="text-foreground">Scrolling:</strong> Keep header/footer pinned with{" "}
+            <code className="font-mono text-xs">DrawerBody</code> — the dedicated scroll region between{" "}
+            <code className="font-mono text-xs">DrawerHeader</code> and{" "}
+            <code className="font-mono text-xs">DrawerFooter</code>.
           </p>
           <p>
             <strong className="text-foreground">Sides:</strong> Use{" "}
@@ -85,8 +87,10 @@ export async function DrawerDocs() {
       props={[
         { name: "Drawer", type: "Component", description: "Root. Props: direction, shouldScaleBackground, open, onOpenChange." },
         { name: "DrawerTrigger", type: "Component", description: "Button that opens the drawer. Supports asChild." },
-        { name: "DrawerContent", type: "Component", description: "Slide-out panel with handle. Handles direction via data attribute." },
+        { name: "DrawerContent", type: "Component", description: "Slide-out panel with grabber. Props: showHandle (default true). Handles direction via data attribute." },
+        { name: "DrawerHandle", type: "Component", description: "iOS-style grabber for top/bottom sheets." },
         { name: "DrawerHeader", type: "Component", description: "Header wrapper." },
+        { name: "DrawerBody", type: "Component", description: "Scrollable body region; keeps header/footer pinned." },
         { name: "DrawerTitle", type: "Component", description: "Accessible title." },
         { name: "DrawerDescription", type: "Component", description: "Accessible description." },
         { name: "DrawerFooter", type: "Component", description: "Footer for actions." },

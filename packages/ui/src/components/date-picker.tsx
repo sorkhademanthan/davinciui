@@ -1,12 +1,13 @@
 "use client";
 
 import { cn } from "@workspace/ui/lib/utils";
+import { Popover as PopoverPrimitive } from "@base-ui/react/popover";
 import { CalendarDays, X } from "lucide-react";
 import * as React from "react";
 import { Calendar, type CalendarSystem, type DateRange } from "./calendar";
 
 // ─────────────────────────────────────────────────────────────
-// Types
+// Types (public API unchanged)
 // ─────────────────────────────────────────────────────────────
 
 export interface DatePickerPreset {
@@ -67,15 +68,20 @@ function resolvePreset(p: DatePickerPreset): Date {
   return typeof p.value === "function" ? p.value() : p.value;
 }
 
-const POPUP_POSITION: Record<DatePickerPlacement, string> = {
-  "bottom-start": "top-full start-0 mt-1.5",
-  "bottom-end": "top-full end-0 mt-1.5",
-  "top-start": "bottom-full start-0 mb-1.5",
-  "top-end": "bottom-full end-0 mb-1.5",
+// Placement → popover side/align. The positioner flips and shifts
+// from here to stay inside the viewport — no overflow bugs.
+const PLACEMENT: Record<DatePickerPlacement, { side: "top" | "bottom"; align: "start" | "end" }> = {
+  "bottom-start": { side: "bottom", align: "start" },
+  "bottom-end": { side: "bottom", align: "end" },
+  "top-start": { side: "top", align: "start" },
+  "top-end": { side: "top", align: "end" },
 };
 
 // ─────────────────────────────────────────────────────────────
 // Component — input-anchored single-date picker.
+// Popup positioning, portal, outside-dismiss, Escape, and focus
+// return come from the Base UI Popover primitive; this file owns
+// the premium field + unified card visual layer.
 // ─────────────────────────────────────────────────────────────
 
 export function DatePicker({
@@ -108,8 +114,6 @@ export function DatePicker({
   const [internalOpen, setInternalOpen] = React.useState(defaultOpen);
   const open = controlledOpen !== undefined ? controlledOpen : internalOpen;
 
-  const rootRef = React.useRef<HTMLDivElement>(null);
-
   const setOpen = (next: boolean) => {
     if (controlledOpen === undefined) setInternalOpen(next);
     onOpenChange?.(next);
@@ -131,121 +135,155 @@ export function DatePicker({
     });
   }, [value, formatDate, locale, showTimeSelect]);
 
-  // Close on outside pointer / Escape.
-  React.useEffect(() => {
-    if (!open) return;
-    const onDown = (e: PointerEvent) => {
-      if (rootRef.current && !rootRef.current.contains(e.target as Node)) setOpen(false);
-    };
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
-    };
-    document.addEventListener("pointerdown", onDown);
-    document.addEventListener("keydown", onKey);
-    return () => {
-      document.removeEventListener("pointerdown", onDown);
-      document.removeEventListener("keydown", onKey);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open ]);
-
   const hasValue = value != null;
+  const pos = PLACEMENT[placement];
+
+  const pickAndClose = (next: Date | null) => {
+    emit(next);
+    setOpen(false);
+  };
+
+  const goToday = () => {
+    const now = new Date();
+    const noon = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 12);
+    pickAndClose(noon);
+  };
 
   return (
-    <div ref={rootRef} data-slot="date-picker" dir={dir} className={cn("relative w-72", className)}>
-      <div
-        role="button"
-        tabIndex={disabled ? undefined : 0}
-        aria-haspopup="dialog"
-        aria-expanded={open}
-        aria-disabled={disabled || undefined}
-        onClick={() => {
-          if (!disabled) setOpen(!open);
-        }}
-        onKeyDown={(e) => {
-          if ((e.key === "Enter" || e.key === " ") && !disabled) {
-            e.preventDefault();
-            setOpen(!open);
-          }
-        }}
-        className={cn(
-          "flex h-10 w-full cursor-pointer items-center gap-2 rounded-lg border border-input bg-background px-3 text-sm shadow-xs transition-colors",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-          !hasValue && "text-muted-foreground",
-          disabled && "cursor-not-allowed opacity-50",
-          invalid && "border-destructive ring-1 ring-destructive/20",
-        )}
-      >
-        <CalendarDays className="size-4 shrink-0 text-muted-foreground" aria-hidden />
-        <input
-          readOnly
-          tabIndex={-1}
-          value={display}
-          placeholder={placeholder}
+    <PopoverPrimitive.Root
+      data-slot="date-picker"
+      open={open}
+      onOpenChange={(next) => {
+        if (!disabled) setOpen(next);
+      }}
+    >
+      <span dir={dir} data-slot="date-picker-dir" className={cn("inline-block w-72", className)}>
+        <PopoverPrimitive.Trigger
+          data-slot="date-picker-trigger"
           disabled={disabled}
-          aria-label="Selected date"
-          onFocus={(e) => e.target.blur()}
-          className={cn(
-            "min-w-0 flex-1 cursor-pointer bg-transparent outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed",
-            inputClassName,
-          )}
+          render={
+            <div
+              aria-label={hasValue ? `Change date, currently ${display}` : placeholder}
+              className={cn(
+                "flex h-10 w-full cursor-pointer items-center gap-2 rounded-xl border border-input bg-background px-3 text-sm shadow-xs transition-all duration-150",
+                "outline-none hover:border-foreground/25 hover:shadow-sm",
+                "focus-visible:ring-2 focus-visible:ring-ring/70 focus-visible:ring-offset-1 focus-visible:ring-offset-background",
+                "data-[popup-open]:border-foreground/30 data-[popup-open]:shadow-sm data-[popup-open]:ring-2 data-[popup-open]:ring-ring/40",
+                !hasValue && "text-muted-foreground",
+                disabled && "cursor-not-allowed opacity-50 hover:border-input hover:shadow-none",
+                invalid && "border-destructive/60 ring-2 ring-destructive/15 hover:border-destructive/60",
+              )}
+            >
+              <CalendarDays className="size-4 shrink-0 text-muted-foreground" aria-hidden />
+              <input
+                readOnly
+                tabIndex={-1}
+                aria-hidden
+                value={display}
+                placeholder={placeholder}
+                disabled={disabled}
+                className={cn(
+                  "min-w-0 flex-1 cursor-pointer bg-transparent outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed",
+                  inputClassName,
+                )}
+              />
+              {showClearButton && hasValue && !disabled && (
+                <span
+                  role="button"
+                  tabIndex={0}
+                  aria-label="Clear date"
+                  onClick={(e: React.MouseEvent) => {
+                    e.stopPropagation();
+                    emit(null);
+                  }}
+                  onKeyDown={(e: React.KeyboardEvent) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      emit(null);
+                    }
+                  }}
+                  className="flex shrink-0 items-center rounded-md p-0.5 text-muted-foreground outline-none transition-colors hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/70"
+                >
+                  <X className="size-4" />
+                </span>
+              )}
+            </div>
+          }
         />
-        {showClearButton && hasValue && !disabled && (
-          <button
-            type="button"
-            aria-label="Clear date"
-            onClick={(e) => {
-              e.stopPropagation();
-              emit(null);
-            }}
-            className="shrink-0 rounded-sm text-muted-foreground transition-colors hover:text-foreground"
-          >
-            <X className="size-4" />
-          </button>
-        )}
-      </div>
 
-      {open && !disabled && (
-        <div className={cn("absolute z-50", POPUP_POSITION[placement])}>
-          <div role="dialog" aria-label="Choose date" className="flex flex-col items-stretch gap-2">
-            {presets && presets.length > 0 && (
-              <div className="flex flex-wrap gap-1.5 rounded-xl border bg-card p-2 shadow-md">
-                {presets.map((p) => (
-                  <button
-                    key={p.label}
-                    type="button"
-                    onClick={() => {
-                      emit(resolvePreset(p));
-                      setOpen(false);
-                    }}
-                    className="rounded-full border border-border px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:border-foreground/30 hover:text-foreground"
-                  >
-                    {p.label}
-                  </button>
-                ))}
+        <PopoverPrimitive.Portal data-slot="date-picker-portal">
+          <PopoverPrimitive.Positioner
+            data-slot="date-picker-positioner"
+            side={pos.side}
+            align={pos.align}
+            sideOffset={6}
+            collisionPadding={8}
+            sticky
+            className="z-50"
+          >
+            <PopoverPrimitive.Popup
+              data-slot="date-picker-content"
+              role="dialog"
+              aria-label="Choose date"
+              className={cn(
+                "relative z-50 overflow-hidden rounded-2xl border border-border/70 bg-popover/95 text-popover-foreground",
+                "shadow-[0_0_0_1px_rgb(0_0_0/0.02),0_2px_6px_rgb(0_0_0/0.06),0_16px_40px_-12px_rgb(0_0_0/0.22)]",
+                "bg-clip-padding backdrop-blur-xl backdrop-saturate-150",
+                "dark:border-white/[0.08] dark:shadow-[0_0_0_1px_rgb(255_255_255/0.04),0_2px_8px_rgb(0_0_0/0.4),0_24px_56px_-12px_rgb(0_0_0/0.65)]",
+                "origin-[var(--transform-origin)] transition-[opacity,scale,translate] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] will-change-transform",
+                "data-[starting-style]:translate-y-1 data-[starting-style]:scale-[0.96] data-[starting-style]:opacity-0",
+                "data-[ending-style]:scale-[0.97] data-[ending-style]:opacity-0",
+                "outline-none motion-reduce:transition-none motion-reduce:data-[starting-style]:translate-y-0 motion-reduce:data-[starting-style]:scale-100",
+              )}
+            >
+              {presets && presets.length > 0 && (
+                <div className="flex flex-wrap items-center gap-1.5 border-b border-border/60 bg-muted/40 px-3 py-2.5">
+                  {presets.map((p) => (
+                    <button
+                      key={p.label}
+                      type="button"
+                      onClick={() => pickAndClose(resolvePreset(p))}
+                      className="rounded-full border border-border/70 bg-background px-3 py-1 text-xs font-medium text-muted-foreground shadow-xs outline-none transition-all duration-150 hover:border-foreground/30 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/70 active:scale-[0.97]"
+                    >
+                      {p.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+              <div className="p-2">
+                <Calendar
+                  mode="single"
+                  selected={value}
+                  onSelect={(v: Date | DateRange | null) => {
+                    if (v instanceof Date) pickAndClose(v);
+                  }}
+                  disabled={disabledDates}
+                  locale={locale}
+                  weekStartsOn={weekStartsOn}
+                  calendarSystem={calendarSystem}
+                  showTimeSelect={showTimeSelect}
+                  dir={dir}
+                  className={cn("border-0 bg-transparent shadow-none", calendarClassName)}
+                />
               </div>
-            )}
-            <Calendar
-              mode="single"
-              selected={value}
-              onSelect={(v: Date | DateRange | null) => {
-                if (v instanceof Date) {
-                  emit(v);
-                  setOpen(false);
-                }
-              }}
-              disabled={disabledDates}
-              locale={locale}
-              weekStartsOn={weekStartsOn}
-              calendarSystem={calendarSystem}
-              showTimeSelect={showTimeSelect}
-              dir={dir}
-              className={calendarClassName}
-            />
-          </div>
-        </div>
-      )}
-    </div>
+              <div className="flex items-center justify-between gap-2 border-t border-border/60 bg-muted/40 px-3 py-2">
+                <button
+                  type="button"
+                  onClick={goToday}
+                  className="rounded-md px-2 py-1 text-xs font-medium text-muted-foreground outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring/70"
+                >
+                  Today
+                </button>
+                <span className="font-mono text-[11px] text-muted-foreground tabular-nums" aria-live="polite">
+                  {display || "No date selected"}
+                </span>
+              </div>
+            </PopoverPrimitive.Popup>
+          </PopoverPrimitive.Positioner>
+        </PopoverPrimitive.Portal>
+      </span>
+    </PopoverPrimitive.Root>
   );
 }
 
