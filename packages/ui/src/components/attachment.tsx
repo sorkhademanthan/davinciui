@@ -37,9 +37,11 @@ function Attachment({ state = "done", size = "default", orientation = "horizonta
         data-size={size}
         data-orientation={orientation}
         className={cn(
-          "relative flex w-full gap-3 overflow-hidden rounded-xl border bg-card p-3 text-card-foreground shadow-xs",
+          "relative flex w-full gap-3 overflow-hidden rounded-xl border bg-card p-3 text-card-foreground transition-colors duration-200",
           orientation === "vertical" && "flex-col",
           state === "error" && "border-destructive/50",
+          // Clickable cards shift the border on hover so the trigger affordance reads.
+          "has-[[data-slot=attachment-trigger]]:hover:border-ring/40",
           className
         )}
         {...props}
@@ -60,13 +62,13 @@ function AttachmentMedia({ variant = "icon", className, children, ...props }: At
       data-slot="attachment-media"
       data-variant={variant}
       className={cn(
-        "shrink-0 overflow-hidden",
+        "shrink-0 self-center overflow-hidden",
         variant === "icon" &&
           "flex items-center justify-center rounded-lg bg-muted text-muted-foreground [&_svg]:size-1/2",
         variant === "icon" && size === "default" && "size-10",
         variant === "icon" && size === "sm" && "size-8 rounded-md",
         variant === "icon" && size === "xs" && "size-7 rounded-md",
-        variant === "image" && "rounded-md bg-muted",
+        variant === "image" && "rounded-md border border-border/60 bg-muted",
         variant === "image" && orientation === "horizontal" && "aspect-square w-16 [&_img]:size-full [&_img]:object-cover",
         variant === "image" && orientation === "vertical" && "aspect-video w-full [&_img]:size-full [&_img]:object-cover",
         className
@@ -96,7 +98,7 @@ function AttachmentTitle({ className, ...props }: React.HTMLAttributes<HTMLDivEl
       data-slot="attachment-title"
       data-busy={busy || undefined}
       className={cn(
-        "truncate font-medium",
+        "truncate font-medium tracking-[-0.01em]",
         size === "default" && "text-sm",
         size === "sm" && "text-[13px]",
         size === "xs" && "text-xs",
@@ -124,10 +126,21 @@ function AttachmentDescription({ className, ...props }: React.HTMLAttributes<HTM
 }
 
 function AttachmentActions({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  const { orientation } = React.useContext(AttachmentContext);
+  const overlay = orientation === "vertical";
   return (
     <div
       data-slot="attachment-actions"
-      className={cn("relative z-10 flex shrink-0 items-start gap-0.5", className)}
+      data-overlay={overlay || undefined}
+      className={cn(
+        "z-10 flex shrink-0 items-center gap-1",
+        // Horizontal rows balance around the middle; vertical cards float
+        // the actions over the media like a photo viewer.
+        overlay
+          ? "absolute end-2 top-2 rounded-full border border-border/60 bg-background/85 p-0.5 shadow-sm backdrop-blur [&_[data-slot=attachment-action]]:rounded-full"
+          : "relative",
+        className
+      )}
       {...props}
     />
   );

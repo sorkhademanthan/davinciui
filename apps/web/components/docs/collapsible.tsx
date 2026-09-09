@@ -5,6 +5,8 @@ import {
   CollapsibleControlledPreview,
   CollapsibleSettingsPreview,
   CollapsibleFileTreePreview,
+  CollapsibleFaqPreview,
+  CollapsibleSidebarPreview,
   CollapsibleRtlPreview,
 } from "@/components/docs/previews/collapsible-preview"
 import { readComponentSource } from "@/lib/source-code"
@@ -126,16 +128,64 @@ export async function CollapsibleDocs() {
   <CollapsibleTrigger>
     <ChevronRight /> <Folder /> components
   </CollapsibleTrigger>
-  <CollapsibleContent className="ml-4 border-l pl-2">
-    <Collapsible>
-      <CollapsibleTrigger><Folder /> ui</CollapsibleTrigger>
-      <CollapsibleContent>
-        <File /> button.tsx
-        <File /> collapsible.tsx
-      </CollapsibleContent>
-    </Collapsible>
+  <CollapsibleContent>
+    <div className="ms-4 border-s ps-2">
+      <Collapsible>
+        <CollapsibleTrigger><Folder /> ui</CollapsibleTrigger>
+        <CollapsibleContent>
+          <File /> button.tsx
+          <File /> collapsible.tsx
+        </CollapsibleContent>
+      </Collapsible>
+    </div>
   </CollapsibleContent>
 </Collapsible>`,
+        },
+        {
+          title: "FAQ",
+          preview: <CollapsibleFaqPreview />,
+          code: `{faqItems.map((item, i) => (
+  <Collapsible key={item.q} defaultOpen={i === 0}>
+    <CollapsibleTrigger>
+      {item.q}
+      <Plus />
+    </CollapsibleTrigger>
+    <CollapsibleContent>
+      <p>{item.a}</p>
+    </CollapsibleContent>
+  </Collapsible>
+))}`,
+        },
+        {
+          title: "Navigation Sidebar",
+          preview: <CollapsibleSidebarPreview />,
+          code: `const [openSection, setOpenSection] = React.useState("components")
+const [activeLink, setActiveLink] = React.useState("Collapsible")
+
+<nav aria-label="Docs">
+  {sections.map((section) => (
+    <Collapsible
+      key={section.id}
+      open={openSection === section.id}
+      onOpenChange={(open) => setOpenSection(open ? section.id : null)}
+    >
+      <CollapsibleTrigger>
+        <Icon /> {section.title} <ChevronDown />
+      </CollapsibleTrigger>
+      <CollapsibleContent>
+        {section.links.map((link) => (
+          <a
+            key={link}
+            href={link.href}
+            aria-current={activeLink === link ? "page" : undefined}
+          >
+            {link}
+          </a>
+        ))}
+      </CollapsibleContent>
+    </Collapsible>
+  ))}
+</nav>`,
         },
         {
           title: "RTL",
@@ -162,7 +212,7 @@ export async function CollapsibleDocs() {
         {
           name: "CollapsibleContent",
           type: "Component",
-          description: "Panel with collapsible contents. Renders Base UI Panel with height animation via --collapsible-panel-height.",
+          description: "Panel with grid-rows open/close animation (300ms out, 200ms in). Put borders, padding and spacing on content inside — the panel collapses to 0fr. Supports keepMounted, hiddenUntilFound.",
         },
         {
           name: "open",
@@ -185,6 +235,12 @@ export async function CollapsibleDocs() {
           type: "boolean",
           default: "false",
           description: "Disables trigger interaction.",
+        },
+        {
+          name: "keepMounted",
+          type: "boolean",
+          default: "false",
+          description: "Keep the panel in the DOM when closed (find-in-page support).",
         },
         {
           name: "className",
