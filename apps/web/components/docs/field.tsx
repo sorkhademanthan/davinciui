@@ -52,13 +52,13 @@ function AccessibilityNote() {
       <div className="max-w-2xl space-y-4 text-[15px] leading-7 text-muted-foreground">
         <p>
           Pair every control with <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px]">FieldLabel htmlFor</code> matching
-          the control&apos;s <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px]">id</code>. Descriptions
-          and errors receive stable ids from Field context (<code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px]">…-description</code> /{" "}
-          <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px]">…-error</code>) — reference them from{" "}
-          <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px]">aria-describedby</code> and mirror
-          invalid state with <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px]">aria-invalid</code> on
-          the control. Errors render with <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px]">role="alert"</code> so
-          assistive technology announces them immediately.
+          the control&apos;s <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px]">id</code> — or skip both
+          and wrap the control in <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px]">FieldControl</code>,
+          which wires <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px]">id</code>,{" "}
+          <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px]">aria-invalid</code>, and{" "}
+          <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px]">aria-describedby</code> (description + error ids)
+          automatically. Errors render with <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px]">role="alert"</code> and
+          a leading icon, so assistive technology announces them immediately and sighted users never rely on color alone.
         </p>
       </div>
     </Section>
@@ -317,15 +317,19 @@ import { Switch } from "@/components/ui/switch";
         {
           title: "Validation and Errors",
           preview: <ValidationDemo />,
-          code: `import { Field, FieldLabel, FieldError } from "@/components/ui/field";
+          code: `import { Field, FieldControl, FieldLabel, FieldError } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 
 const [email, setEmail] = useState("");
 const invalid = touched && !isEmail(email);
 
+// FieldControl wires id, aria-invalid, and aria-describedby
+// automatically — no hardcoded ids needed.
 <Field invalid={invalid}>
-  <FieldLabel htmlFor="email">Work email</FieldLabel>
-  <Input id="email" aria-invalid={invalid} onBlur={() => setTouched(true)} />
+  <FieldLabel>Work email</FieldLabel>
+  <FieldControl>
+    <Input type="email" onBlur={() => setTouched(true)} />
+  </FieldControl>
   <FieldError errors={invalid ? ["Enter a valid work email address."] : []} />
 </Field>`,
         },
@@ -333,8 +337,11 @@ const invalid = touched && !isEmail(email);
       props={[
         { name: "Field · orientation", type: '"vertical" | "horizontal" | "responsive"', default: '"vertical"', description: "Layout direction; responsive stacks on mobile, rows on sm+." },
         { name: "Field · invalid", type: "boolean", default: "false", description: "Error state shared with FieldError via context." },
+        { name: "FieldControl", type: "Component", description: "Wraps one control; auto-wires id, aria-invalid, and aria-describedby. Explicit props win." },
+        { name: "FieldLabel · htmlFor", type: "string", description: "Defaults to the FieldControl id — omit it when using FieldControl." },
         { name: "FieldError · errors", type: "string[]", description: "Error messages; renders a list when more than one." },
         { name: "FieldError · forceShow", type: "boolean", default: "false", description: "Show regardless of Field invalid state." },
+        { name: "FieldError · showIcon", type: "boolean", default: "true", description: "Leading alert icon — errors never rely on color alone." },
         { name: "FieldSet", type: "fieldset element", description: "Native fieldset grouping with border." },
         { name: "FieldLegend", type: "legend element", description: "Caption for a FieldSet." },
         { name: "FieldGroup", type: "div", description: "Vertical stack of fields with even spacing." },

@@ -68,9 +68,14 @@ export async function EmptyDocs() {
           preview: <EmptyOutlinePreview />,
           code: `import { Empty } from "@/components/ui/empty"
 
-// The border utility turns it into a drop-zone card.
+// The border utility turns it into a drop-zone card;
+// the dashed media tile marks the drop target.
 <Empty className="border border-dashed">
-  <EmptyHeader>{/* media + title + description */}</EmptyHeader>
+  <EmptyHeader>
+    <EmptyMedia variant="dashed">
+      <CloudIcon />
+    </EmptyMedia>
+  </EmptyHeader>
   <EmptyContent>
     <Button size="sm">Upload Files</Button>
   </EmptyContent>
@@ -152,7 +157,8 @@ import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "
         },
       ]}
       props={[
-        { name: "variant", type: '"default" | "icon"', default: '"default"', description: "Icon tile treatment (EmptyMedia)." },
+        { name: "variant", type: '"default" | "icon" | "dashed"', default: '"default"', description: "Media treatment: custom host, gradient icon tile, or dashed drop-zone tile (EmptyMedia)." },
+        { name: "role", type: "string", default: '"status"', description: "Empty announces via role=status; override if you manage live regions yourself." },
         { name: "className", type: "string", description: "Additional classes on any part. Border and bg utilities restyle the card." },
       ]}
     />

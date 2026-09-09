@@ -49,10 +49,10 @@ export function EmptyBasicPreview() {
 
 export function EmptyOutlinePreview() {
   return (
-    <DemoShell readout="border utility turns it into a drop zone card">
+    <DemoShell readout="dashed media tile marks the drop zone">
       <Empty className="border border-dashed">
         <EmptyHeader>
-          <EmptyMedia variant="icon">
+          <EmptyMedia variant="dashed">
             <Cloud />
           </EmptyMedia>
           <EmptyTitle>Cloud Storage Empty</EmptyTitle>
