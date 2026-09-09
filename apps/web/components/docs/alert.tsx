@@ -1,17 +1,33 @@
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import {
   AlertPreview,
+  AlertInfoPreview,
+  AlertSuccessPreview,
+  AlertWarningPreview,
   AlertDestructivePreview,
   AlertActionPreview,
+  AlertDismissiblePreview,
   AlertCustomColorsPreview,
   AlertRtlPreview,
 } from "@/components/docs/previews/alert-preview";
 import { readComponentSource } from "@/lib/source-code";
 
-const importCode = `import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert"`;
+const importCode = `import {
+  Alert,
+  AlertAction,
+  AlertBody,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
+} from "@/components/ui/alert"`;
 const defaultCode = `<Alert>
-  <AlertTitle>Heads up!</AlertTitle>
-  <AlertDescription>You can add components to your app using the CLI.</AlertDescription>
+  <AlertIcon>
+    <RocketIcon />
+  </AlertIcon>
+  <AlertBody>
+    <AlertTitle>Heads up!</AlertTitle>
+    <AlertDescription>You can add components to your app using the CLI.</AlertDescription>
+  </AlertBody>
 </Alert>`;
 
 export async function AlertDocs() {
@@ -20,34 +36,164 @@ export async function AlertDocs() {
   return (
     <DocsPageLayout
       title="Alert"
-      description="Displays a callout for user attention."
+      description="Callouts with unmistakable tones — five variants, an icon tile, and an action slot. Never another gray box you have to squint at."
       preview={<AlertPreview />}
       previewCode={defaultCode}
       installPackageName="alert"
-      installDependencies=""
       installSourceCode={sourceCode}
       installSourceFilename="components/ui/alert.tsx"
       importCode={importCode}
       usageCode={defaultCode}
       usageNote={
-        <div className="space-y-2 text-sm leading-6 text-muted-foreground">
-          <p><strong className="text-foreground">Composition:</strong> <code className="font-mono text-xs">Alert</code> wraps <code className="font-mono text-xs">AlertTitle</code> + <code className="font-mono text-xs">AlertDescription</code> with optional icon as first child.</p>
+        <div className="space-y-3">
+          <p className="text-sm leading-6 text-muted-foreground">
+            Every variant carries three signals — tinted border, tinted surface, and a tone-matched icon tile — so
+            severity reads instantly in either theme. Titles stay neutral for readability; only destructive alarms
+            the title too. Actions pin to the inline end; the row mirrors automatically in RTL.
+          </p>
+          <pre className="overflow-x-auto rounded-lg border bg-muted/30 p-4 font-mono text-xs leading-6">
+{`Alert
+├── AlertIcon
+├── AlertBody
+│   ├── AlertTitle
+│   └── AlertDescription
+└── AlertAction`}
+          </pre>
         </div>
       }
       examples={[
-        { title: "Composition", preview: <AlertPreview />, code: defaultCode },
-        { title: "Basic", preview: <AlertPreview />, code: defaultCode },
-        { title: "Destructive", preview: <AlertDestructivePreview />, code: `<Alert variant="destructive">\n  <AlertTitle>Error</AlertTitle>\n  <AlertDescription>Your session has expired.</AlertDescription>\n</Alert>` },
-        { title: "Action", preview: <AlertActionPreview />, code: `<Alert>\n  <AlertTitle>Update</AlertTitle>\n  <AlertDescription>New version ready.</AlertDescription>\n  <Button size="sm">Action</Button>\n</Alert>` },
-        { title: "Custom Colors", preview: <AlertCustomColorsPreview />, code: `<Alert className="border-emerald-500/20 bg-emerald-50">\n  <AlertTitle>Custom</AlertTitle>\n</Alert>` },
-        { title: "RTL", preview: <AlertRtlPreview />, code: `<div dir="rtl">\n  <Alert>\n    <AlertTitle>تنبيه</AlertTitle>\n  </Alert>\n</div>` },
+        {
+          title: "Info",
+          preview: <AlertInfoPreview />,
+          code: `<Alert variant="info">
+  <AlertIcon>
+    <InfoIcon />
+  </AlertIcon>
+  <AlertBody>
+    <AlertTitle>New feature available</AlertTitle>
+    <AlertDescription>Enable dark mode in settings.</AlertDescription>
+  </AlertBody>
+</Alert>`,
+        },
+        {
+          title: "Success",
+          preview: <AlertSuccessPreview />,
+          code: `<Alert variant="success">
+  <AlertIcon>
+    <CheckCircle2Icon />
+  </AlertIcon>
+  <AlertBody>
+    <AlertTitle>Payment successful</AlertTitle>
+    <AlertDescription>Your payment of $29.99 has been processed.</AlertDescription>
+  </AlertBody>
+</Alert>`,
+        },
+        {
+          title: "Warning",
+          preview: <AlertWarningPreview />,
+          code: `<Alert variant="warning">
+  <AlertIcon>
+    <AlertTriangleIcon />
+  </AlertIcon>
+  <AlertBody>
+    <AlertTitle>Subscription expiring</AlertTitle>
+    <AlertDescription>Your trial ends in 3 days.</AlertDescription>
+  </AlertBody>
+</Alert>`,
+        },
+        {
+          title: "Destructive",
+          preview: <AlertDestructivePreview />,
+          code: `<Alert variant="destructive">
+  <AlertIcon>
+    <OctagonXIcon />
+  </AlertIcon>
+  <AlertBody>
+    <AlertTitle>Payment failed</AlertTitle>
+    <AlertDescription>Your card was declined.</AlertDescription>
+  </AlertBody>
+</Alert>`,
+        },
+        {
+          title: "With Action",
+          preview: <AlertActionPreview />,
+          code: `<Alert>
+  <AlertIcon>
+    <BellRingIcon />
+  </AlertIcon>
+  <AlertBody>
+    <AlertTitle>Dark mode is now available</AlertTitle>
+    <AlertDescription>Enable it under settings.</AlertDescription>
+  </AlertBody>
+  <AlertAction>
+    <Button size="sm">Enable</Button>
+  </AlertAction>
+</Alert>`,
+        },
+        {
+          title: "Dismissible",
+          preview: <AlertDismissiblePreview />,
+          code: `const [open, setOpen] = React.useState(true)
+
+{open ? (
+  <Alert variant="info">
+    <AlertIcon>
+      <InfoIcon />
+    </AlertIcon>
+    <AlertBody>
+      <AlertTitle>Scheduled maintenance</AlertTitle>
+      <AlertDescription>Deploys pause Sunday 02:00 UTC.</AlertDescription>
+    </AlertBody>
+    <AlertAction>
+      <button type="button" aria-label="Dismiss announcement" onClick={() => setOpen(false)}>
+        <XIcon />
+      </button>
+    </AlertAction>
+  </Alert>
+) : null}`,
+        },
+        {
+          title: "Custom Colors",
+          preview: <AlertCustomColorsPreview />,
+          code: `// Every tone composes — override border, surface,
+// tile, and text independently.
+<Alert className="border-violet-500/25 bg-violet-500/[0.07]">
+  <AlertIcon className="border-violet-500/20 bg-violet-500/10 text-violet-600">
+    <RocketIcon />
+  </AlertIcon>
+  <AlertBody>
+    <AlertTitle>Custom accent</AlertTitle>
+    <AlertDescription className="text-violet-900/75">
+      Fully themeable with utilities.
+    </AlertDescription>
+  </AlertBody>
+</Alert>`,
+        },
+        {
+          title: "RTL",
+          preview: <AlertRtlPreview />,
+          code: `<div dir="rtl">
+  <Alert variant="success">
+    <AlertIcon>
+      <CheckCircle2Icon />
+    </AlertIcon>
+    <AlertBody>
+      <AlertTitle>تم الدفع بنجاح</AlertTitle>
+      <AlertDescription>تمت معالجة الدفع.</AlertDescription>
+    </AlertBody>
+  </Alert>
+</div>`,
+        },
       ]}
       props={[
-        { name: "variant", type: '"default" | "destructive"', default: '"default"', description: "Visual style." },
-        { name: "Alert", type: "Component", description: "Root alert container (role=alert)." },
-        { name: "AlertTitle", type: "Component", description: "Title element inside Alert." },
-        { name: "AlertDescription", type: "Component", description: "Description element inside Alert." },
-        { name: "className", type: "string", description: "Additional CSS classes." },
+        { name: "variant", type: '"default" | "info" | "success" | "warning" | "destructive"', default: '"default"', description: "Tone. Border, surface, tile, and description all shift." },
+        { name: "role", type: "string", default: '"alert"', description: "Root landmark role. Override for status-like usage." },
+        { name: "AlertIcon", type: "Component", default: "—", description: "Tone-matched icon tile. Decorative, hidden from assistive tech." },
+        { name: "AlertBody", type: "Component", default: "—", description: "Title + description stack." },
+        { name: "AlertTitle", type: "Component", default: "—", description: "Neutral title, except destructive which alarms." },
+        { name: "AlertDescription", type: "Component", default: "—", description: "Tone-tinted supporting text." },
+        { name: "AlertAction", type: "Component", default: "—", description: "End-pinned slot for buttons or dismiss controls." },
+        { name: "className", type: "string", description: "Additional CSS classes on any part." },
       ]}
     />
   );
