@@ -23,6 +23,7 @@ import {
   ChevronDown,
   Copy,
   CreditCard,
+  Download,
   Italic,
   LogOut,
   Mail,
@@ -49,20 +50,20 @@ export function DropdownMenuPreview() {
             Open <ChevronDown className="size-4 opacity-60" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-56">
+        <DropdownMenuContent className="w-60">
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
-            Profile <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+          <DropdownMenuItem icon={<User />} kbd={["⇧", "⌘", "P"]}>
+            Profile
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            Billing <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+          <DropdownMenuItem icon={<CreditCard />} kbd={["⌘", "B"]}>
+            Billing
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            Settings <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+          <DropdownMenuItem icon={<Settings />} kbd={["⌘", "S"]}>
+            Settings
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>Log out</DropdownMenuItem>
+          <DropdownMenuItem icon={<LogOut />}>Log out</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </Shell>
@@ -152,19 +153,11 @@ export function DropdownMenuIconsPreview() {
           <Button variant="outline">Icons</Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56">
-          <DropdownMenuItem>
-            <User /> Profile
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <CreditCard /> Billing
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Settings /> Settings
-          </DropdownMenuItem>
+          <DropdownMenuItem icon={<User />}>Profile</DropdownMenuItem>
+          <DropdownMenuItem icon={<CreditCard />}>Billing</DropdownMenuItem>
+          <DropdownMenuItem icon={<Settings />}>Settings</DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
-            <LogOut /> Log out
-          </DropdownMenuItem>
+          <DropdownMenuItem icon={<LogOut />}>Log out</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </Shell>
@@ -208,14 +201,14 @@ export function DropdownMenuCheckboxesIconsPreview() {
         <DropdownMenuContent className="w-56">
           <DropdownMenuLabel>Formatting</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuCheckboxItem checked={bold} onCheckedChange={setBold}>
-            <Bold /> Bold
+          <DropdownMenuCheckboxItem checked={bold} onCheckedChange={setBold} icon={<Bold />}>
+            Bold
           </DropdownMenuCheckboxItem>
-          <DropdownMenuCheckboxItem checked={italic} onCheckedChange={setItalic}>
-            <Italic /> Italic
+          <DropdownMenuCheckboxItem checked={italic} onCheckedChange={setItalic} icon={<Italic />}>
+            Italic
           </DropdownMenuCheckboxItem>
-          <DropdownMenuCheckboxItem checked={underline} onCheckedChange={setUnderline}>
-            <Underline /> Underline
+          <DropdownMenuCheckboxItem checked={underline} onCheckedChange={setUnderline} icon={<Underline />}>
+            Underline
           </DropdownMenuCheckboxItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -257,14 +250,14 @@ export function DropdownMenuRadioIconsPreview() {
           <DropdownMenuLabel>Text align</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuRadioGroup value={align} onValueChange={setAlign}>
-            <DropdownMenuRadioItem value="left">
-              <Mail /> Left aligned
+            <DropdownMenuRadioItem value="left" icon={<Mail />}>
+              Left aligned
             </DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="center">
-              <MessageSquare /> Centered
+            <DropdownMenuRadioItem value="center" icon={<MessageSquare />}>
+              Centered
             </DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="right">
-              <Pencil /> Right aligned
+            <DropdownMenuRadioItem value="right" icon={<Pencil />}>
+              Right aligned
             </DropdownMenuRadioItem>
           </DropdownMenuRadioGroup>
         </DropdownMenuContent>
@@ -281,15 +274,40 @@ export function DropdownMenuDestructivePreview() {
           <Button variant="outline">Destructive</Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56">
-          <DropdownMenuItem>
-            <Pencil /> Rename
+          <DropdownMenuItem icon={<Pencil />}>Rename</DropdownMenuItem>
+          <DropdownMenuItem icon={<Copy />}>Duplicate</DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem variant="destructive" icon={<Trash2 />}>
+            Delete
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Copy /> Duplicate
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </Shell>
+  );
+}
+
+export function DropdownMenuRichPreview() {
+  return (
+    <Shell>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline">Rich items</Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-72">
+          <DropdownMenuLabel>Project</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem icon={<User />} description="manthan@example.com" badge="Owner">
+            Manthan Sorkhade
+          </DropdownMenuItem>
+          <DropdownMenuItem icon={<Copy />} description="Copy the shareable link" kbd={["⌘", "L"]}>
+            Copy link
+          </DropdownMenuItem>
+          <DropdownMenuItem icon={<Download />} shortcut="12 MB">
+            Export archive
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem variant="destructive">
-            <Trash2 /> Delete
+          <DropdownMenuItem icon={<Trash2 />} variant="destructive" kbd={["⌫"]}>
+            Delete project
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -323,17 +341,11 @@ export function DropdownMenuAvatarPreview() {
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <DropdownMenuItem>
-              <UserPlus /> Invite members
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Plus /> New team
-            </DropdownMenuItem>
+            <DropdownMenuItem icon={<UserPlus />}>Invite members</DropdownMenuItem>
+            <DropdownMenuItem icon={<Plus />}>New team</DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
-            <LogOut /> Log out
-          </DropdownMenuItem>
+          <DropdownMenuItem icon={<LogOut />}>Log out</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </Shell>
@@ -353,11 +365,11 @@ export function DropdownMenuComplexPreview() {
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <DropdownMenuItem>
-              <User /> Profile <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+            <DropdownMenuItem icon={<User />}>
+              Profile <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
             </DropdownMenuItem>
-            <DropdownMenuItem>
-              <CreditCard /> Billing <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+            <DropdownMenuItem icon={<CreditCard />}>
+              Billing <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
             </DropdownMenuItem>
             <DropdownMenuSub>
               <DropdownMenuSubTrigger>
@@ -378,11 +390,9 @@ export function DropdownMenuComplexPreview() {
             </DropdownMenuSub>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
-            <UserPlus /> Invite users
-          </DropdownMenuItem>
-          <DropdownMenuItem variant="destructive">
-            <Trash2 /> Delete account
+          <DropdownMenuItem icon={<UserPlus />}>Invite users</DropdownMenuItem>
+          <DropdownMenuItem variant="destructive" icon={<Trash2 />}>
+            Delete account
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

@@ -10,6 +10,7 @@ import {
   DropdownMenuPreview,
   DropdownMenuRadioGroupPreview,
   DropdownMenuRadioIconsPreview,
+  DropdownMenuRichPreview,
   DropdownMenuRtlPreview,
   DropdownMenuShortcutsPreview,
   DropdownMenuSubmenuPreview,
@@ -46,7 +47,7 @@ export async function DropdownMenuDocs() {
       preview={<DropdownMenuPreview />}
       previewCode={defaultCode}
       installPackageName="dropdown-menu"
-      installDependencies=""
+      installDependencies="@base-ui/react lucide-react"
       installSourceCode={sourceCode}
       installSourceFilename="components/ui/dropdown-menu.tsx"
       importCode={importCode}
@@ -82,12 +83,13 @@ export async function DropdownMenuDocs() {
         { title: "Basic", preview: <DropdownMenuBasicPreview />, code: `<DropdownMenu>\n  <DropdownMenuTrigger>Basic</DropdownMenuTrigger>\n  <DropdownMenuContent>\n    <DropdownMenuItem>New file</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>` },
         { title: "Submenu", preview: <DropdownMenuSubmenuPreview />, code: `<DropdownMenuSub>\n  <DropdownMenuSubTrigger>Share</DropdownMenuSubTrigger>\n  <DropdownMenuSubContent>\n    <DropdownMenuItem>Email link</DropdownMenuItem>\n  </DropdownMenuSubContent>\n</DropdownMenuSub>` },
         { title: "Shortcuts", preview: <DropdownMenuShortcutsPreview />, code: `<DropdownMenuItem>\n  Save <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>\n</DropdownMenuItem>` },
-        { title: "Icons", preview: <DropdownMenuIconsPreview />, code: `<DropdownMenuItem>\n  <User /> Profile\n</DropdownMenuItem>` },
+        { title: "Icons", preview: <DropdownMenuIconsPreview />, code: `<DropdownMenuItem icon={<User />}>\n  Profile\n</DropdownMenuItem>` },
         { title: "Checkboxes", preview: <DropdownMenuCheckboxesPreview />, code: `<DropdownMenuCheckboxItem checked={show} onCheckedChange={setShow}>\n  Status Bar\n</DropdownMenuCheckboxItem>` },
         { title: "Checkboxes Icons", preview: <DropdownMenuCheckboxesIconsPreview />, code: `<DropdownMenuCheckboxItem checked={bold} onCheckedChange={setBold}>\n  <Bold /> Bold\n</DropdownMenuCheckboxItem>` },
         { title: "Radio Group", preview: <DropdownMenuRadioGroupPreview />, code: `<DropdownMenuRadioGroup value={position} onValueChange={setPosition}>\n  <DropdownMenuRadioItem value="top">Top</DropdownMenuRadioItem>\n</DropdownMenuRadioGroup>` },
         { title: "Radio Icons", preview: <DropdownMenuRadioIconsPreview />, code: `<DropdownMenuRadioGroup value={align} onValueChange={setAlign}>\n  <DropdownMenuRadioItem value="left"><Mail /> Left</DropdownMenuRadioItem>\n</DropdownMenuRadioGroup>` },
-        { title: "Destructive", preview: <DropdownMenuDestructivePreview />, code: `<DropdownMenuItem variant="destructive">\n  <Trash2 /> Delete\n</DropdownMenuItem>` },
+        { title: "Destructive", preview: <DropdownMenuDestructivePreview />, code: `<DropdownMenuItem variant="destructive" icon={<Trash2 />}>\n  Delete\n</DropdownMenuItem>` },
+        { title: "Rich items", preview: <DropdownMenuRichPreview />, code: `<DropdownMenuItem icon={<User />} description="manthan@example.com" badge="Owner">\n  Manthan Sorkhade\n</DropdownMenuItem>\n<DropdownMenuItem icon={<Copy />} kbd={["⌘", "L"]}>\n  Copy link\n</DropdownMenuItem>` },
         { title: "Avatar", preview: <DropdownMenuAvatarPreview />, code: `<DropdownMenuLabel>...user card...</DropdownMenuLabel>\n<DropdownMenuGroup>\n  <DropdownMenuItem><UserPlus /> Invite</DropdownMenuItem>\n</DropdownMenuGroup>` },
         { title: "Complex", preview: <DropdownMenuComplexPreview />, code: `<DropdownMenuContent>\n  <DropdownMenuLabel>My Account</DropdownMenuLabel>\n  <DropdownMenuGroup>...</DropdownMenuGroup>\n  <DropdownMenuSub>...</DropdownMenuSub>\n  <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>\n</DropdownMenuContent>` },
         { title: "RTL", preview: <DropdownMenuRtlPreview />, code: `<div dir="rtl">\n  <DropdownMenu>\n    <DropdownMenuTrigger>فتح القائمة</DropdownMenuTrigger>\n  </DropdownMenu>\n</div>` },
@@ -95,15 +97,15 @@ export async function DropdownMenuDocs() {
       props={[
         { name: "DropdownMenu", type: "Component", description: "Root. Controls open state." },
         { name: "DropdownMenuTrigger", type: "Component", description: "Button that opens the menu. Supports asChild." },
-        { name: "DropdownMenuContent", type: "Component", description: "Popup menu. Props: align, side, sideOffset, alignOffset." },
-        { name: "DropdownMenuItem", type: "Component", description: "Menu action. Props: inset, variant (default | destructive)." },
+        { name: "DropdownMenuContent", type: "Component", description: "Popup menu. Props: align, side, sideOffset, alignOffset, collisionPadding." },
+        { name: "DropdownMenuItem", type: "Component", description: "Menu action. Props: inset, variant (default | destructive), icon, description, shortcut, kbd, badge." },
         { name: "DropdownMenuLabel", type: "Component", description: "Section label. Prop: inset." },
         { name: "DropdownMenuSeparator", type: "Component", description: "Divider line between sections." },
         { name: "DropdownMenuShortcut", type: "Component", description: "Keyboard hint, right-aligned." },
         { name: "DropdownMenuGroup", type: "Component", description: "Groups related items." },
-        { name: "DropdownMenuCheckboxItem", type: "Component", description: "Toggle item. Props: checked, onCheckedChange." },
+        { name: "DropdownMenuCheckboxItem", type: "Component", description: "Toggle item. Props: checked, onCheckedChange, icon, description, shortcut, kbd." },
         { name: "DropdownMenuRadioGroup", type: "Component", description: "Single-select group. Props: value, onValueChange." },
-        { name: "DropdownMenuRadioItem", type: "Component", description: "Radio option. Prop: value." },
+        { name: "DropdownMenuRadioItem", type: "Component", description: "Radio option. Props: value, description, shortcut." },
         { name: "DropdownMenuSub", type: "Component", description: "Submenu root." },
         { name: "DropdownMenuSubTrigger", type: "Component", description: "Opens the submenu. Prop: inset." },
         { name: "DropdownMenuSubContent", type: "Component", description: "Submenu popup." },
