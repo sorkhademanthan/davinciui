@@ -119,16 +119,6 @@ export const components: Record<string, ComponentMetadata> = {
     previewVideo:
       "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/text-animations/lettercascade.webm",
   },
-  "text-repel": {
-    title: "Text Repel",
-    description:
-      "Physics-based text where each letter reacts to cursor proximity with spring dynamics, creating an interactive magnetic force-field effect.",
-    category: "Text Animations",
-    slug: "text-repel",
-    addedAt: "2026-02-28",
-    previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/text-animations/textrepel.webm",
-  },
   "text-morph": {
     title: "Text Morph",
     description:
@@ -155,13 +145,6 @@ export const components: Record<string, ComponentMetadata> = {
     previewVideo:
       "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/text-animations/kinetictextreveal.webm",
   },
-  "kinetic-text": {
-    title: "Kinetic Text",
-    description: "A compact kinetic typography composition where overlapping text clones move continuously around a stable central anchor, creating a layered slicing effect.",
-    category: "Text Animations",
-    slug: "kinetic-text",
-    addedAt: "2026-09-03",
-  },
   "gsap-text": {
     title: "GSAP Text",
     description:
@@ -173,7 +156,7 @@ export const components: Record<string, ComponentMetadata> = {
   "button": {
     title: "Button",
     description:
-      "Button component",
+      "Versatile buttons with variants, sizes, loading states, and as-child link rendering.",
     category: "Actions",
     slug: "button",
     addedAt: "2026-09-04",
@@ -181,7 +164,7 @@ export const components: Record<string, ComponentMetadata> = {
   "button-group": {
     title: "Button Group",
     description:
-      "Button group component",
+      "Joined button segments sharing borders for toolbars and split actions.",
     category: "Actions",
     slug: "button-group",
     addedAt: "2026-09-04",
@@ -189,7 +172,7 @@ export const components: Record<string, ComponentMetadata> = {
   "toggle": {
     title: "Toggle",
     description:
-      "Toggle component",
+      "Two-state pill buttons with pressed styling and size variants.",
     category: "Actions",
     slug: "toggle",
     addedAt: "2026-09-04",
@@ -197,7 +180,7 @@ export const components: Record<string, ComponentMetadata> = {
   "link": {
     title: "Link",
     description:
-      "Link component",
+      "Typographic links with variants, underline treatments, and icon support.",
     category: "Actions",
     slug: "link",
     addedAt: "2026-09-04",
@@ -205,7 +188,7 @@ export const components: Record<string, ComponentMetadata> = {
   "input": {
     title: "Input",
     description:
-      "input component",
+      "Text inputs with variants, invalid states, icons, and full RTL support.",
     category: "Forms",
     slug: "input",
     addedAt: "2026-09-04",
@@ -213,7 +196,7 @@ export const components: Record<string, ComponentMetadata> = {
   "textarea": {
     title: "Textarea",
     description:
-      "Textarea component",
+      "Multiline text inputs with auto sizing, invalid states, and RTL support.",
     category: "Forms",
     slug: "textarea",
     addedAt: "2026-09-04",
@@ -221,7 +204,7 @@ export const components: Record<string, ComponentMetadata> = {
   "select": {
     title: "Select",
     description:
-      "Select component",
+      "Custom dropdown selects with search, grouping, and keyboard navigation.",
     category: "Forms",
     slug: "select",
     addedAt: "2026-09-04",
@@ -229,7 +212,7 @@ export const components: Record<string, ComponentMetadata> = {
   "checkbox": {
     title: "Checkbox",
     description:
-      "Checkbox component",
+      "Checkboxes with indeterminate state, descriptions, and invalid styling.",
     category: "Forms",
     slug: "checkbox",
     addedAt: "2026-09-04",
@@ -237,7 +220,7 @@ export const components: Record<string, ComponentMetadata> = {
   "radio": {
     title: "Radio",
     description:
-      "Radio component",
+      "Radio options with grouped layouts, descriptions, and invalid styling.",
     category: "Forms",
     slug: "radio",
     addedAt: "2026-09-04",
@@ -245,7 +228,7 @@ export const components: Record<string, ComponentMetadata> = {
   "switch": {
     title: "Switch",
     description:
-      "Switch component",
+      "Toggle switches with sizes, labels, and smooth thumb motion.",
     category: "Forms",
     slug: "switch",
     addedAt: "2026-09-04",
@@ -253,7 +236,7 @@ export const components: Record<string, ComponentMetadata> = {
   "form": {
     title: "Form",
     description:
-      "Form component",
+      "Validated forms with field wiring, error display, and submit handling.",
     category: "Forms",
     slug: "form",
     addedAt: "2026-09-04",
@@ -261,7 +244,7 @@ export const components: Record<string, ComponentMetadata> = {
   "alert": {
     title: "Alert",
     description:
-      "Alert component",
+      "Callouts with five unmistakable tones, icon tiles, and action slots.",
     category: "Feedback",
     slug: "alert",
     addedAt: "2026-09-04",
@@ -269,7 +252,7 @@ export const components: Record<string, ComponentMetadata> = {
   "toast": {
     title: "Toast",
     description:
-      "Toast component",
+      "Stacked notifications with variants, actions, and auto-dismiss.",
     category: "Feedback",
     slug: "toast",
     addedAt: "2026-09-04",
@@ -277,7 +260,7 @@ export const components: Record<string, ComponentMetadata> = {
   "progress": {
     title: "Progress",
     description:
-      "Progress component",
+      "Determinate and indeterminate progress bars with sizes and tones.",
     category: "Feedback",
     slug: "progress",
     addedAt: "2026-09-04",
@@ -285,7 +268,7 @@ export const components: Record<string, ComponentMetadata> = {
   "spinner": {
     title: "Spinner",
     description:
-      "Spinner component",
+      "Loading spinners in five sizes with label support.",
     category: "Feedback",
     slug: "spinner",
     addedAt: "2026-09-04",
@@ -293,7 +276,7 @@ export const components: Record<string, ComponentMetadata> = {
   "skeleton": {
     title: "Skeleton",
     description:
-      "Skeleton component",
+      "Content placeholders with shimmer and configurable shapes.",
     category: "Feedback",
     slug: "skeleton",
     addedAt: "2026-09-04",
@@ -301,7 +284,7 @@ export const components: Record<string, ComponentMetadata> = {
   "tabs": {
     title: "Tabs",
     description:
-      "Tabs component",
+      "Tabbed interfaces with animated indicators and keyboard navigation.",
     category: "Navigation",
     slug: "tabs",
     addedAt: "2026-09-04",
@@ -309,7 +292,7 @@ export const components: Record<string, ComponentMetadata> = {
   "breadcrumb": {
     title: "Breadcrumb",
     description:
-      "Breadcrumb component",
+      "Trail hierarchies with auto separators and self-collapsing overflow.",
     category: "Navigation",
     slug: "breadcrumb",
     addedAt: "2026-09-04",
@@ -317,7 +300,7 @@ export const components: Record<string, ComponentMetadata> = {
   "pagination": {
     title: "Pagination",
     description:
-      "Pagination component",
+      "Page navigation with ranges, ellipsis, and boundary controls.",
     category: "Navigation",
     slug: "pagination",
     addedAt: "2026-09-04",
@@ -325,7 +308,7 @@ export const components: Record<string, ComponentMetadata> = {
   "sidebar": {
     title: "Sidebar",
     description:
-      "Sidebar component",
+      "App sidebars with collapsible sections, nesting, and mobile drawers.",
     category: "Navigation",
     slug: "sidebar",
     addedAt: "2026-09-04",
@@ -389,7 +372,7 @@ export const components: Record<string, ComponentMetadata> = {
   "badge": {
     title: "Badge",
     description:
-      "badge component",
+      "Pills with nine tones, three sizes, status dots, and removable chips.",
     category: "Data Display",
     slug: "badge",
     addedAt: "2026-09-04",
@@ -397,7 +380,7 @@ export const components: Record<string, ComponentMetadata> = {
   "avatar": {
     title: "Avatar",
     description:
-      "Avatar component",
+      "Identity circles with sizes, presence badges, generative fallbacks, and auto-collapsing groups.",
     category: "Data Display",
     slug: "avatar",
     addedAt: "2026-09-04",
@@ -405,7 +388,7 @@ export const components: Record<string, ComponentMetadata> = {
   "accordion": {
     title: "Accordion",
     description:
-      "Accordion component",
+      "Keyboard-navigable disclosure stacks with animated panels and card layouts.",
     category: "Layout",
     slug: "accordion",
     addedAt: "2026-09-04",
@@ -509,7 +492,7 @@ export const components: Record<string, ComponentMetadata> = {
   "context-menu": {
     title: "Context Menu",
     description:
-      "A right-click menu with submenus, shortcuts, checkbox and radio states, destructive actions, viewport flipping, and RTL.",
+      "A cursor-anchored right-click menu with type-ahead, submenus, checkable states, and viewport-aware flipping. Opens on right-click, Ctrl+click, long-press, or Shift+F10.",
     category: "Overlays",
     slug: "context-menu",
     addedAt: "2026-09-04",
@@ -529,16 +512,6 @@ export const components: Record<string, ComponentMetadata> = {
     category: "Overlays",
     slug: "sheet",
     addedAt: "2026-09-04",
-  },
-  "cursor-driven-particle-typography": {
-    title: "Particle Typography",
-    description:
-      "Renders dynamic typography constructed entirely from particles that elegantly disperse and reassemble upon cursor interaction using spring physics.",
-    category: "Text Animations",
-    slug: "cursor-driven-particle-typography",
-    addedAt: "2026-03-01",
-    previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/text-animations/cursordrivenparticletypography.webm",
   },
   // Components
   "circuit-board": {

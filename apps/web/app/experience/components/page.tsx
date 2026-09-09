@@ -19,7 +19,7 @@ const TOP_FILTERS = [
   "Premium Components",
   "Hero Backgrounds",
   "Visual Effects",
-  "Sky Effects",
+  "ASCII Effects",
   "Motion",
   "Scroll",
   "Blocks",
@@ -73,7 +73,12 @@ function ComponentsGallery() {
     return all.filter((c) => {
       const matchesSearch = !q.trim() || c.title.toLowerCase().includes(q.toLowerCase()) || c.description.toLowerCase().includes(q.toLowerCase())
       if (!matchesSearch) return false
-      if (activeTop === "All") return true
+      // "All" showcases non-Basic work — Basics live under the Basic tab.
+      // A search query still spans everything so nothing is undiscoverable.
+      if (activeTop === "All") {
+        if (BASIC_ALL.includes(c.slug)) return q.trim() !== ""
+        return true
+      }
       if (activeTop === "Basic") {
         if (activeSub === "All") return BASIC_ALL.includes(c.slug)
         return (BASIC_SLUGS[activeSub] || []).includes(c.slug)
@@ -82,7 +87,7 @@ function ComponentsGallery() {
       if (activeTop === "Premium Components") return c.category === "Premium Components"
       if (activeTop === "Hero Backgrounds") return c.category === "Hero Backgrounds"
       if (activeTop === "Visual Effects") return c.category === "Visual Effects"
-      if (activeTop === "Sky Effects") return c.category === "ASCII Effects"
+      if (activeTop === "ASCII Effects") return c.category === "ASCII Effects"
       // Motion / Scroll / Blocks / Templates have dedicated pages – show no registry match (handled as empty state with link)
       if (activeTop === "Motion" || activeTop === "Scroll" || activeTop === "Blocks" || activeTop === "Templates") return false
       return false
@@ -217,10 +222,6 @@ function ComponentsGallery() {
           )}
         </div>
       )}
-
-      <p className="mt-8 text-xs text-muted-foreground">
-        Preview on the right, variants at bottom, toolbar with <span className="font-mono">Search · Source · Replay · Fullscreen · Theme</span> — same as Letter Cascade detail view. Click any card.
-      </p>
     </div>
   )
 }
