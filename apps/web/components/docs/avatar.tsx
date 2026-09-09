@@ -1,8 +1,11 @@
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import {
+  AvatarBadgeIconPreview,
   AvatarBadgePreview,
+  AvatarDropdownPreview,
   AvatarFallbackPreview,
   AvatarGroupCountPreview,
+  AvatarGroupIconPreview,
   AvatarGroupPreview,
   AvatarPreview,
   AvatarRtlPreview,
@@ -16,7 +19,7 @@ const defaultCode = `import { Avatar, AvatarImage, AvatarFallback } from "@/comp
 
 <Avatar>
   <AvatarImage src="https://github.com/shadcn.png" alt="Aarav Sharma" />
-  <AvatarFallback>AS</AvatarFallback>
+  <AvatarFallback name="Aarav Sharma" />
 </Avatar>`;
 
 export async function AvatarDocs() {
@@ -25,24 +28,32 @@ export async function AvatarDocs() {
   return (
     <DocsPageLayout
       title="Avatar"
-      description="Circular image with initials fallback, status badge, and stacked group — perfect for teams and user profiles."
+      description="Identity in a circle — Base UI loading states, five sizes, presence badges, generative fallbacks, and groups that collapse themselves."
       preview={<AvatarPreview />}
       previewCode={defaultCode}
       installPackageName="avatar"
+      installDependencies="@base-ui/react"
       installSourceCode={sourceCode}
       installSourceFilename="components/ui/avatar.tsx"
       importCode={importCode}
       usageCode={defaultCode}
       usageNote={
-        <div className="space-y-2 text-sm leading-6 text-muted-foreground">
-          <p>
-            <strong className="text-foreground">Structure:</strong> <code className="font-mono text-xs">Avatar</code> →{" "}
-            <code className="font-mono text-xs">AvatarImage</code> + <code className="font-mono text-xs">AvatarFallback</code>. Add{" "}
-            <code className="font-mono text-xs">AvatarBadge</code> for online status and <code className="font-mono text-xs">AvatarGroup</code> for stacking.
+        <div className="space-y-3">
+          <p className="text-sm leading-6 text-muted-foreground">
+            Pass a <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px]">name</code> to the fallback
+            and it renders initials on a stable generative tint — no two teammates share a color by accident, and no
+            image request is needed. Sizes cascade: badge, fallback type, and group count all scale with the avatar.
           </p>
-          <p>
-            <strong className="text-foreground">Image:</strong> Falls back to initials when <code className="font-mono text-xs">src</code> fails — no extra handlers needed.
-          </p>
+          <pre className="overflow-x-auto rounded-lg border bg-muted/30 p-4 font-mono text-xs leading-6">
+{`Avatar
+├── AvatarImage
+├── AvatarFallback
+└── AvatarBadge
+
+AvatarGroup
+├── Avatar × n
+└── AvatarGroupCount (or max={n})`}
+          </pre>
         </div>
       }
       examples={[
@@ -51,71 +62,112 @@ export async function AvatarDocs() {
           preview: <AvatarFallbackPreview />,
           code: `import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 
+// name → initials + deterministic tint. Children win when provided.
 <Avatar>
-  <AvatarFallback>AS</AvatarFallback>
+  <AvatarFallback name="Aarav Sharma" />
 </Avatar>`,
         },
         {
           title: "Badge",
           preview: <AvatarBadgePreview />,
-          code: `import { Avatar, AvatarImage, AvatarFallback, AvatarBadge } from "@/components/ui/avatar"
+          code: `import { Avatar, AvatarFallback, AvatarBadge } from "@/components/ui/avatar"
 
+// online · busy · away · offline — scales with size, mirrors in RTL.
 <Avatar>
-  <AvatarImage src="/avatars/aarav.jpg" alt="Aarav" />
-  <AvatarFallback>AS</AvatarFallback>
-  <AvatarBadge />
+  <AvatarFallback name="Aarav Sharma" />
+  <AvatarBadge status="online" />
 </Avatar>`,
+        },
+        {
+          title: "Badge with Icon",
+          preview: <AvatarBadgeIconPreview />,
+          code: `import { AvatarBadge } from "@/components/ui/avatar"
+
+<AvatarBadge className="flex size-4 items-center justify-center bg-primary text-primary-foreground">
+  <PlusIcon />
+</AvatarBadge>`,
         },
         {
           title: "Group",
           preview: <AvatarGroupPreview />,
-          code: `import { AvatarGroup, Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
+          code: `import { AvatarGroup } from "@/components/ui/avatar"
 
+// Overlapping stack with hairline rings — fans out on hover.
 <AvatarGroup>
-  <Avatar><AvatarImage src="/a.jpg" /><AvatarFallback>AS</AvatarFallback></Avatar>
-  <Avatar><AvatarImage src="/b.jpg" /><AvatarFallback>VP</AvatarFallback></Avatar>
-  <Avatar><AvatarImage src="/c.jpg" /><AvatarFallback>AR</AvatarFallback></Avatar>
+  <Avatar>{/* … */}</Avatar>
+  <Avatar>{/* … */}</Avatar>
+  <Avatar>{/* … */}</Avatar>
 </AvatarGroup>`,
         },
         {
           title: "Group Count",
           preview: <AvatarGroupCountPreview />,
-          code: `import { AvatarGroup, AvatarGroupCount } from "@/components/ui/avatar"
+          code: `import { AvatarGroup } from "@/components/ui/avatar"
 
-<AvatarGroup>
-  <Avatar><AvatarImage src="/a.jpg" /></Avatar>
-  <Avatar><AvatarImage src="/b.jpg" /></Avatar>
-  <AvatarGroupCount>+5</AvatarGroupCount>
+// max collapses the rest into +N automatically.
+<AvatarGroup max={3}>
+  <Avatar>{/* … */}</Avatar>
+  <Avatar>{/* … */}</Avatar>
+  <Avatar>{/* … */}</Avatar>
+  <Avatar>{/* … */}</Avatar>
+</AvatarGroup>`,
+        },
+        {
+          title: "Group Icon",
+          preview: <AvatarGroupIconPreview />,
+          code: `import { AvatarGroup } from "@/components/ui/avatar"
+
+// Any avatar can carry an action face.
+<AvatarGroup max={2}>
+  <Avatar>{/* … */}</Avatar>
+  <Avatar>{/* … */}</Avatar>
+  <Avatar>
+    <AvatarFallback className="bg-primary text-primary-foreground">
+      <PlusIcon />
+    </AvatarFallback>
+  </Avatar>
 </AvatarGroup>`,
         },
         {
           title: "Sizes",
           preview: <AvatarSizesPreview />,
-          code: `import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+          code: `import { Avatar } from "@/components/ui/avatar"
 
-<Avatar className="size-8"><AvatarFallback>S</AvatarFallback></Avatar>
-<Avatar className="size-12"><AvatarFallback>M</AvatarFallback></Avatar>
-<Avatar className="size-16"><AvatarFallback>L</AvatarFallback></Avatar>`,
+// xs · sm · default · lg · xl — badge and fallback type follow.
+<Avatar size="xs" />
+<Avatar size="sm" />
+<Avatar size="default" />
+<Avatar size="lg" />
+<Avatar size="xl" />`,
+        },
+        {
+          title: "Dropdown",
+          preview: <AvatarDropdownPreview />,
+          code: `import { Avatar } from "@/components/ui/avatar"
+import { DropdownMenu, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+
+<DropdownMenu>
+  <DropdownMenuTrigger asChild>
+    <Avatar>{/* … */}</Avatar>
+  </DropdownMenuTrigger>
+  {/* menu content */}
+</DropdownMenu>`,
         },
         {
           title: "RTL",
           preview: <AvatarRtlPreview />,
-          code: `div dir="rtl"
-
-<AvatarGroup>
-  <Avatar><AvatarImage src="/a.jpg" /></Avatar>
-  <Avatar><AvatarFallback>٣</AvatarFallback></Avatar>
-</AvatarGroup>`,
+          code: `<div dir="rtl">
+  <AvatarGroup max={3}>{/* … */}</AvatarGroup>
+</div>`,
         },
       ]}
       props={[
-        { name: "Avatar", type: "Component", description: "Root — relative flex, rounded-full, overflow-hidden." },
-        { name: "AvatarImage", type: "Component", description: "Absolute image with auto fallback on error." },
-        { name: "AvatarFallback", type: "Component", description: "Centered initials shown when image fails." },
-        { name: "AvatarBadge", type: "Component", description: "Status dot — absolute bottom-right, emerald by default." },
-        { name: "AvatarGroup", type: "Component", description: "Stacked flex with -space-x-2 and ring." },
-        { name: "AvatarGroupCount", type: "Component", description: "Overflow count pill — +5, +99." },
-        { name: "className", type: "string", description: "Tailwind classes to resize or theme." },
+        { name: "size", type: '"xs" | "sm" | "default" | "lg" | "xl"', default: '"default"', description: "Diameter. Badge, fallback type, and count inherit it." },
+        { name: "name", type: "string", default: "—", description: "Fallback full name → initials plus stable tint." },
+        { name: "status", type: '"online" | "busy" | "away" | "offline"', default: '"online"', description: "Presence tone (AvatarBadge)." },
+        { name: "max", type: "number", default: "—", description: "Auto-collapse group beyond N avatars into +N (AvatarGroup)." },
+        { name: "src", type: "string", default: "—", description: "Image source with Base UI loading states (AvatarImage)." },
+        { name: "className", type: "string", description: "Additional classes on any part." },
       ]}
     />
   );
