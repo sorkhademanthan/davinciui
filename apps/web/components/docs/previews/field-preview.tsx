@@ -3,6 +3,7 @@
 import * as React from "react";
 import {
   Field,
+  FieldControl,
   FieldGroup,
   FieldSet,
   FieldLegend,
@@ -381,21 +382,20 @@ export function ValidationDemo() {
   const [touched, setTouched] = React.useState(false);
   const invalid = touched && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   return (
-    <DemoShell>
+    <DemoShell readout={invalid ? "invalid — error announced via role=alert" : "type an invalid email, then blur"}>
       <Field invalid={invalid}>
-        <FieldLabel htmlFor="val-email">Work email</FieldLabel>
-        <Input
-          id="val-email"
-          type="email"
-          value={email}
-          aria-invalid={invalid}
-          aria-describedby={invalid ? "val-email-error" : "val-email-desc"}
-          onChange={(e) => setEmail(e.target.value)}
-          onBlur={() => setTouched(true)}
-          placeholder="ada@analytical.engine"
-        />
+        <FieldLabel>Work email</FieldLabel>
+        <FieldControl>
+          <Input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            onBlur={() => setTouched(true)}
+            placeholder="ada@analytical.engine"
+          />
+        </FieldControl>
         {!invalid && <FieldDescription>We will verify this address.</FieldDescription>}
-        <FieldError id="val-email-error" errors={invalid ? ["Enter a valid work email address."] : []} />
+        <FieldError errors={invalid ? ["Enter a valid work email address."] : []} />
       </Field>
     </DemoShell>
   );

@@ -79,8 +79,9 @@ export async function DialogDocs() {
       props={[
         { name: "Dialog", type: "Component", description: "Root. Controls open state." },
         { name: "DialogTrigger", type: "Component", description: "Button that opens the dialog. Supports asChild." },
-        { name: "DialogContent", type: "Component", description: "Centered popup. Props: showCloseButton (default true)." },
+        { name: "DialogContent", type: "Component", description: "Centered popup. Props: showCloseButton (default true), size (sm | md | lg | xl, default md)." },
         { name: "DialogHeader", type: "Component", description: "Header wrapper for Title + Description." },
+        { name: "DialogBody", type: "Component", description: "Scrollable body region with overlay scrollbar and scroll containment." },
         { name: "DialogTitle", type: "Component", description: "Accessible title." },
         { name: "DialogDescription", type: "Component", description: "Accessible description." },
         { name: "DialogFooter", type: "Component", description: "Footer for actions. Use with sticky layout." },
