@@ -25,11 +25,37 @@ export function ButtonCursorPreview() {
 export function ButtonSizesPreview() {
   return (
     <div className="flex h-full w-full flex-wrap items-center justify-center gap-4 p-8">
+      <Button size="xs">Extra small</Button>
       <Button size="sm">Small</Button>
       <Button size="default">Default</Button>
       <Button size="lg">Large</Button>
+      <Button size="xl">Extra large</Button>
       <Button size="icon" aria-label="Icon">
         ★
+      </Button>
+    </div>
+  );
+}
+
+export function ButtonPremiumPreview() {
+  return (
+    <div className="flex h-full w-full flex-wrap items-center justify-center gap-4 p-8">
+      <Button variant="gradient">Gradient</Button>
+      <Button variant="glass">Glass</Button>
+      <Button variant="success">Success</Button>
+    </div>
+  );
+}
+
+export function ButtonLoadingPreview() {
+  return (
+    <div className="flex h-full w-full flex-wrap items-center justify-center gap-4 p-8">
+      <Button loading>Submitting</Button>
+      <Button variant="outline" loading>
+        Saving
+      </Button>
+      <Button variant="gradient" loading>
+        Processing
       </Button>
     </div>
   );
