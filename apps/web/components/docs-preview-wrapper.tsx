@@ -397,9 +397,10 @@ export function DocsPreviewWrapper({
         </PreviewToolbarCell>
       </section>
 
-      {/* Content Area */}
+      {/* Content Area — fills the pane exactly, never scrolls internally.
+          Demos are sized to fit one viewport; the left docs column scrolls. */}
       <div className={cn(
-        "w-full overflow-auto flex bg-[#f7f7f7] dark:bg-[#171717] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]",
+        "w-full overflow-hidden flex bg-[#f7f7f7] dark:bg-[#171717]",
         "h-full",
         !fullWidthPreview && "items-center justify-center"
       )}>
