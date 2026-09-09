@@ -1,357 +1,478 @@
 "use client";
 
 import { cn } from "@workspace/ui/lib/utils";
-import { Check, ChevronRight, Dot } from "lucide-react";
+import { ContextMenu as ContextMenuPrimitive } from "@base-ui/react/context-menu";
+import { Check, ChevronRight, Circle } from "lucide-react";
 import * as React from "react";
 
 // ─────────────────────────────────────────────────────────────
-// Context
+// Design notes
+// ─────────────────────────────────────────────────────────────
+// Built on Base UI's ContextMenu primitive (floating-ui positioning,
+// focus management, roving highlight, type-ahead, submenu pointer
+// grace, long-press touch, Shift+F10 / ContextMenu-key trigger).
+// This file owns only the premium visual layer + a friendlier API:
+// icons, descriptions, kbd hints, destructive states, and motion
+// tuned to feel instant with reduced-motion support.
+//
+// Highlighting is driven by `data-highlighted` (pointer, keyboard,
+// type-ahead) — never `:hover` alone — so mouse and keyboard stay
+// in sync for sighted users and screen readers alike.
 // ─────────────────────────────────────────────────────────────
 
-interface MenuContextValue {
-  open: boolean;
-  setOpen: (open: boolean) => void;
-  dir: "ltr" | "rtl";
-}
+const POPUP_SHELL = cn(
+  // Layout
+  "relative z-50 max-h-[min(28rem,var(--available-height,28rem))] min-w-56 overflow-x-hidden overflow-y-auto p-1.5",
+  // Surface — translucent + blurred like Linear / Raycast / macOS
+  "rounded-xl border border-border/70 bg-popover/95 text-popover-foreground shadow-[0_0_0_1px_rgb(0_0_0/0.02),0_2px_6px_rgb(0_0_0/0.06),0_12px_32px_-8px_rgb(0_0_0/0.18)]",
+  "bg-clip-padding backdrop-blur-xl backdrop-saturate-150",
+  "dark:border-white/[0.08] dark:shadow-[0_0_0_1px_rgb(255_255_255/0.04),0_2px_8px_rgb(0_0_0/0.4),0_16px_48px_-8px_rgb(0_0_0/0.6)]",
+  // Entrance / exit — anchored at the cursor via --transform-origin
+  "origin-[var(--transform-origin)] transition-[opacity,scale,translate] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] will-change-transform",
+  "data-[starting-style]:translate-y-1 data-[starting-style]:scale-[0.96] data-[starting-style]:opacity-0",
+  "data-[ending-style]:scale-[0.97] data-[ending-style]:opacity-0",
+  // Thin, unobtrusive scrollbar for long menus
+  "[scrollbar-width:thin] [scrollbar-color:var(--border)_transparent] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-border",
+  "text-[13px] outline-none",
+  // Reduced motion — appear instantly, no transform
+  "motion-reduce:transition-none motion-reduce:data-[starting-style]:translate-y-0 motion-reduce:data-[starting-style]:scale-100",
+);
 
-const MenuContext = React.createContext<MenuContextValue>({ open: false, setOpen: () => {}, dir: "ltr" });
+const ITEM_SHELL = cn(
+  "group relative flex w-full cursor-default items-center gap-2.5 rounded-lg px-2.5 text-[13px] font-medium leading-5 outline-none select-none",
+  "min-h-8 text-foreground/90",
+  // Highlighted (hover / keyboard / type-ahead)
+  "data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground",
+  // Pressed
+  "active:scale-[0.99] active:transition-transform active:duration-75",
+  // Keyboard focus — high contrast in both themes
+  "focus-visible:ring-2 focus-visible:ring-ring/70 focus-visible:ring-inset",
+  // Disabled
+  "data-[disabled]:pointer-events-none data-[disabled]:opacity-40",
+  // Icon normalization
+  "[&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  // Open submenu parent stays highlighted
+  "data-[popup-open]:bg-accent data-[popup-open]:text-accent-foreground",
+);
 
-function useMenu() {
-  return React.useContext(MenuContext);
-}
-
-export interface ContextMenuProps {
-  children: React.ReactNode;
-  /** Controlled open state. */
-  open?: boolean;
-  /** Uncontrolled initial open state. */
-  defaultOpen?: boolean;
-  /** Fires when the menu opens or closes. */
-  onOpenChange?: (open: boolean) => void;
-  /** Text direction — mirrors submenu sides. @default "ltr" */
-  dir?: "ltr" | "rtl";
-  /** Extra classes for the root. */
-  className?: string;
-}
-
-function ContextMenu({
-  children,
-  open: controlledOpen,
-  defaultOpen = false,
-  onOpenChange,
-  dir = "ltr",
-  className,
-}: ContextMenuProps) {
-  const [internalOpen, setInternalOpen] = React.useState(defaultOpen);
-  const open = controlledOpen !== undefined ? controlledOpen : internalOpen;
-  const rootRef = React.useRef<HTMLDivElement>(null);
-
-  const setOpen = (next: boolean) => {
-    if (controlledOpen === undefined) setInternalOpen(next);
-    onOpenChange?.(next);
-  };
-
-  // Close on outside pointer or Escape.
-  React.useEffect(() => {
-    if (!open) return;
-    const onDown = (e: PointerEvent) => {
-      if (rootRef.current && !rootRef.current.contains(e.target as Node)) setOpen(false);
-    };
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
-    };
-    document.addEventListener("pointerdown", onDown);
-    document.addEventListener("keydown", onKey);
-    return () => {
-      document.removeEventListener("pointerdown", onDown);
-      document.removeEventListener("keydown", onKey);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open ]);
-
+function KbdHint({ keys }: { keys: string[] }) {
   return (
-    <MenuContext.Provider value={{ open, setOpen, dir }}>
-      <div ref={rootRef} data-slot="context-menu" dir={dir} className={cn("relative", className)}>
-        {children}
-      </div>
-    </MenuContext.Provider>
+    <span className="ml-auto flex shrink-0 items-center gap-0.5 pl-6" aria-hidden>
+      {keys.map((key) => (
+        <kbd
+          key={key}
+          className="inline-flex min-w-5 items-center justify-center rounded-md border border-border/70 bg-muted/60 px-1 py-px font-mono text-[11px] font-medium text-muted-foreground shadow-[0_1px_0_rgb(0_0_0/0.06)]"
+        >
+          {key}
+        </kbd>
+      ))}
+    </span>
   );
 }
 
-function ContextMenuTrigger({
-  className,
-  children,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) {
-  const { setOpen } = useMenu();
+// ─────────────────────────────────────────────────────────────
+// Root
+// ─────────────────────────────────────────────────────────────
+
+export interface ContextMenuProps
+  extends Omit<React.ComponentProps<typeof ContextMenuPrimitive.Root>, "onOpenChange" | "children"> {
+  children?: React.ReactNode;
+  /** Fires when the menu opens or closes. */
+  onOpenChange?: (open: boolean, details: { reason?: string }) => void;
+  /** Text direction — mirrors submenu sides and chevrons. @default "ltr" */
+  dir?: "ltr" | "rtl";
+}
+
+function ContextMenu({ dir = "ltr", onOpenChange, children, ...props }: ContextMenuProps) {
   return (
-    <div
+    <ContextMenuPrimitive.Root
+      data-slot="context-menu"
+      onOpenChange={(open, details) => onOpenChange?.(open, { reason: details?.reason })}
+      {...props}
+    >
+      <span dir={dir} data-slot="context-menu-dir" className="contents">
+        {children}
+      </span>
+    </ContextMenuPrimitive.Root>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Trigger — right-click, Ctrl+click (macOS), long-press (touch),
+// Shift+F10 and the ContextMenu key are handled by the primitive.
+// ─────────────────────────────────────────────────────────────
+
+export interface ContextMenuTriggerProps extends Omit<
+  React.ComponentProps<typeof ContextMenuPrimitive.Trigger>,
+  "render"
+> {
+  /** Render into the child element instead of a wrapper div. */
+  asChild?: boolean;
+}
+
+function ContextMenuTrigger({ asChild, children, className, ...props }: ContextMenuTriggerProps) {
+  if (asChild && React.isValidElement(children)) {
+    return (
+      <ContextMenuPrimitive.Trigger
+        data-slot="context-menu-trigger"
+        render={children as React.ReactElement<Record<string, unknown>>}
+        {...props}
+      />
+    );
+  }
+  return (
+    <ContextMenuPrimitive.Trigger
       data-slot="context-menu-trigger"
-      onContextMenu={(e) => {
-        e.preventDefault();
-        (e.currentTarget as HTMLElement).dataset.anchor = `${e.clientX},${e.clientY}`;
-        setOpen(true);
-      }}
-      className={className}
+      className={cn(
+        "rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring/70 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+        className,
+      )}
       {...props}
     >
       {children}
-    </div>
+    </ContextMenuPrimitive.Trigger>
   );
 }
 
-function readAnchor(trigger: HTMLElement | null): { x: number; y: number } {
-  const raw = trigger?.dataset.anchor;
-  if (!raw) return { x: 0, y: 0 };
-  const [x = 0, y = 0] = raw.split(",").map(Number);
-  return { x: Number.isFinite(x) ? x : 0, y: Number.isFinite(y) ? y : 0 };
-}
+// ─────────────────────────────────────────────────────────────
+// Content — portal + collision-aware positioner + popup.
+// Flips and shifts to stay inside the viewport; no placement
+// props needed for the common case.
+// ─────────────────────────────────────────────────────────────
 
-const itemClasses =
-  "relative flex w-full cursor-pointer items-center gap-2 rounded-md px-2.5 py-2 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent focus-visible:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-40";
+export interface ContextMenuContentProps extends React.ComponentProps<typeof ContextMenuPrimitive.Popup> {
+  /** Offset from the cursor along the opening axis. @default 4 */
+  sideOffset?: number;
+  /** Offset along the alignment axis. @default 0 */
+  alignOffset?: number;
+  /** Safe-area padding for collision flipping. @default 8 */
+  collisionPadding?: number | Record<string, number>;
+}
 
 function ContextMenuContent({
   className,
+  sideOffset = 4,
+  alignOffset = 0,
+  collisionPadding = 8,
   children,
   ...props
-}: React.HTMLAttributes<HTMLDivElement>) {
-  const { open } = useMenu();
-  const panelRef = React.useRef<HTMLDivElement>(null);
-  const [pos, setPos] = React.useState<{ x: number; y: number } | null>(null);
-
-  React.useLayoutEffect(() => {
-    if (!open || !panelRef.current) return;
-    const trigger =
-      panelRef.current.parentElement?.querySelector<HTMLElement>('[data-slot="context-menu-trigger"]') ?? null;
-    const anchor = readAnchor(trigger);
-    const r = panelRef.current.getBoundingClientRect();
-    const pad = 8;
-    setPos({
-      x: Math.max(pad, Math.min(anchor.x, window.innerWidth - r.width - pad)),
-      y: Math.max(pad, Math.min(anchor.y, window.innerHeight - r.height - pad)),
-    });
-  }, [open ]);
-
-  // Focus only once positioned — hidden panels refuse focus.
-  React.useLayoutEffect(() => {
-    if (!open || !pos || !panelRef.current) return;
-    const first = panelRef.current.querySelector<HTMLButtonElement>('button:not([disabled])');
-    first?.focus();
-  }, [open, pos ]);
-
-  if (!open) return null;
-
-  const moveFocus = (e: React.KeyboardEvent) => {
-    // Keystrokes from inside an open submenu are handled by the submenu itself.
-    if ((e.target as HTMLElement).closest?.('[data-slot="context-menu-sub-content"]')) return;
-    const items = Array.from(
-      panelRef.current?.querySelectorAll<HTMLButtonElement>(':scope > button:not([disabled]), :scope > div > button:not([disabled])') ?? [],
-    );
-    const current = document.activeElement as HTMLElement | null;
-    const idx = items.findIndex((el) => el === current);
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      (items[(idx + 1 + items.length) % items.length] ?? items[0])?.focus();
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      (items[(idx - 1 + items.length) % items.length] ?? items[items.length - 1])?.focus();
-    } else if (e.key === "Home") {
-      e.preventDefault();
-      items[0]?.focus();
-    } else if (e.key === "End") {
-      e.preventDefault();
-      items[items.length - 1]?.focus();
-    }
-  };
-
+}: ContextMenuContentProps) {
   return (
-    <div
-      ref={panelRef}
-      data-slot="context-menu-content"
-      role="menu"
-      onKeyDown={moveFocus}
-      style={{
-        position: "fixed",
-        left: pos ? pos.x : -9999,
-        top: pos ? pos.y : -9999,
-        visibility: pos ? "visible" : "hidden",
-      }}
-      className={cn("z-50 min-w-56 overflow-hidden rounded-xl border bg-popover p-1.5 text-popover-foreground shadow-md", className)}
-      {...props}
-    >
-      {children}
-    </div>
+    <ContextMenuPrimitive.Portal data-slot="context-menu-portal">
+      <ContextMenuPrimitive.Positioner
+        data-slot="context-menu-positioner"
+        sideOffset={sideOffset}
+        alignOffset={alignOffset}
+        collisionPadding={collisionPadding}
+        sticky
+        className="z-50"
+      >
+        <ContextMenuPrimitive.Popup
+          data-slot="context-menu-content"
+          role="menu"
+          className={cn(POPUP_SHELL, className)}
+          {...props}
+        >
+          {children}
+        </ContextMenuPrimitive.Popup>
+      </ContextMenuPrimitive.Positioner>
+    </ContextMenuPrimitive.Portal>
   );
 }
 
-export interface ContextMenuItemProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  /** Right-aligned shortcut hint. */
-  shortcut?: string;
-  /** Leading icon. */
+// ─────────────────────────────────────────────────────────────
+// Item — icon · label · description · shortcut/kbd · badge
+// ─────────────────────────────────────────────────────────────
+
+export interface ContextMenuItemProps extends React.ComponentProps<typeof ContextMenuPrimitive.Item> {
+  /** Leading icon (16px, muted → foreground on highlight). */
   icon?: React.ReactNode;
+  /** Second line of muted detail text under the label. */
+  description?: React.ReactNode;
+  /** Right-aligned shortcut hint, e.g. "⌘C". Prefer `kbd` for keycap styling. */
+  shortcut?: string;
+  /** Keycap-style shortcut, e.g. kbd={["⌘", "C"]}. */
+  kbd?: string[];
+  /** Trailing badge / count / status pill. */
+  badge?: React.ReactNode;
   /** Destructive styling. @default false */
   destructive?: boolean;
-  /** Called on select (click or Enter); closes the menu. */
-  onSelect?: () => void;
+  /** Indent to align with checkable items. @default false */
+  inset?: boolean;
 }
 
-function ContextMenuItem({ shortcut, icon, destructive = false, onSelect, className, children, onClick, ...props }: ContextMenuItemProps) {
-  const { setOpen } = useMenu();
+function ContextMenuItem({
+  icon,
+  description,
+  shortcut,
+  kbd,
+  badge,
+  destructive = false,
+  inset = false,
+  className,
+  children,
+  ...props
+}: ContextMenuItemProps) {
   return (
-    <button
+    <ContextMenuPrimitive.Item
       data-slot="context-menu-item"
-      role="menuitem"
-      type="button"
-      onClick={(e) => {
-        onClick?.(e);
-        onSelect?.();
-        setOpen(false);
-      }}
-      className={cn(itemClasses, destructive && "text-destructive hover:bg-destructive/10 hover:text-destructive focus-visible:bg-destructive/10", className)}
+      data-inset={inset || undefined}
+      data-variant={destructive ? "destructive" : undefined}
+      className={cn(
+        ITEM_SHELL,
+        inset && "pl-9",
+        destructive &&
+          "text-destructive data-[highlighted]:bg-destructive/10 data-[highlighted]:text-destructive focus-visible:ring-destructive/40",
+        description && "items-start py-1.5",
+        className,
+      )}
       {...props}
     >
       {icon && (
-        <span aria-hidden className="flex size-4 shrink-0 items-center justify-center">
+        <span
+          aria-hidden
+          data-slot="context-menu-item-icon"
+          className={cn(
+            "flex size-4 shrink-0 items-center justify-center text-muted-foreground transition-colors group-data-[highlighted]:text-current",
+            description && "mt-0.5",
+          )}
+        >
           {icon}
         </span>
       )}
-      <span className="flex-1 text-start">{children}</span>
-      {shortcut && (
-        <kbd className="font-mono text-[11px] tracking-widest text-muted-foreground">{shortcut}</kbd>
+      <span data-slot="context-menu-item-text" className="flex min-w-0 flex-1 flex-col items-start gap-px text-start">
+        <span className="w-full truncate">{children}</span>
+        {description && (
+          <span className="w-full truncate text-xs font-normal text-muted-foreground">{description}</span>
+        )}
+      </span>
+      {badge && (
+        <span
+          data-slot="context-menu-item-badge"
+          className="ml-auto inline-flex shrink-0 items-center rounded-md bg-muted px-1.5 py-0.5 text-[11px] font-semibold tabular-nums text-muted-foreground"
+        >
+          {badge}
+        </span>
       )}
-    </button>
+      {kbd ? <KbdHint keys={kbd} /> : shortcut ? <ContextMenuShortcut>{shortcut}</ContextMenuShortcut> : null}
+    </ContextMenuPrimitive.Item>
   );
 }
 
-function ContextMenuLabel({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+// ─────────────────────────────────────────────────────────────
+// Label / Separator / Shortcut / Group
+// ─────────────────────────────────────────────────────────────
+
+function ContextMenuLabel({
+  className,
+  inset,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement> & { inset?: boolean }) {
+  // Plain div on purpose: Base UI's GroupLabel requires a Menu.Group
+  // ancestor and throws otherwise, but labels are valid anywhere in
+  // a menu (e.g. above a RadioGroup or a loose item list).
   return (
     <div
       data-slot="context-menu-label"
-      className={cn("px-2.5 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground", className)}
+      data-inset={inset || undefined}
+      aria-hidden
+      className={cn(
+        "px-2.5 pt-2 pb-1 text-[11px] font-semibold tracking-wider text-muted-foreground/90 uppercase select-none",
+        inset && "pl-9",
+        className,
+      )}
       {...props}
     />
   );
 }
 
-function ContextMenuSeparator({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+function ContextMenuSeparator({
+  className,
+  ...props
+}: React.ComponentProps<typeof ContextMenuPrimitive.Separator>) {
   return (
-    <div
+    <ContextMenuPrimitive.Separator
       data-slot="context-menu-separator"
-      role="separator"
-      aria-orientation="horizontal"
-      className={cn("-mx-1.5 my-1.5 h-px bg-border", className)}
+      className={cn(
+        "-mx-1.5 my-1.5 h-px bg-gradient-to-r from-transparent via-border to-transparent",
+        className,
+      )}
       {...props}
     />
   );
 }
 
-export interface ContextMenuCheckboxItemProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "checked" | "onChange"> {
-  checked?: boolean;
-  defaultChecked?: boolean;
-  onCheckedChange?: (checked: boolean) => void;
+function ContextMenuShortcut({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) {
+  return (
+    <span
+      data-slot="context-menu-shortcut"
+      aria-hidden
+      className={cn(
+        "ml-auto shrink-0 pl-6 font-mono text-[11px] tracking-widest text-muted-foreground/80",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+function ContextMenuGroup({ ...props }: React.ComponentProps<typeof ContextMenuPrimitive.Group>) {
+  return <ContextMenuPrimitive.Group data-slot="context-menu-group" {...props} />;
+}
+
+// ─────────────────────────────────────────────────────────────
+// Checkbox item — indicator pops in with a springy scale
+// ─────────────────────────────────────────────────────────────
+
+export interface ContextMenuCheckboxItemProps
+  extends React.ComponentProps<typeof ContextMenuPrimitive.CheckboxItem> {
+  icon?: React.ReactNode;
+  description?: React.ReactNode;
+  shortcut?: string;
+  kbd?: string[];
 }
 
 function ContextMenuCheckboxItem({
-  checked: controlledChecked,
-  defaultChecked = false,
-  onCheckedChange,
   className,
   children,
-  onClick,
+  icon,
+  description,
+  shortcut,
+  kbd,
   ...props
 }: ContextMenuCheckboxItemProps) {
-  const [internal, setInternal] = React.useState(defaultChecked);
-  const checked = controlledChecked !== undefined ? controlledChecked : internal;
   return (
-    <button
+    <ContextMenuPrimitive.CheckboxItem
       data-slot="context-menu-checkbox-item"
-      role="menuitemcheckbox"
-      aria-checked={checked}
-      type="button"
-      onClick={(e) => {
-        onClick?.(e);
-        const next = !checked;
-        if (controlledChecked === undefined) setInternal(next);
-        onCheckedChange?.(next);
-      }}
-      className={cn(itemClasses, className)}
+      className={cn(ITEM_SHELL, "pl-2", description && "items-start py-1.5", className)}
       {...props}
     >
-      <span aria-hidden className="flex size-4 shrink-0 items-center justify-center">
-        {checked && <Check className="size-4" />}
+      <span aria-hidden className="flex size-5 shrink-0 items-center justify-center">
+        <ContextMenuPrimitive.CheckboxItemIndicator className="flex items-center justify-center transition-transform duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] data-[starting-style]:scale-50 data-[ending-style]:scale-50 motion-reduce:transition-none [&_svg]:size-4">
+          <Check />
+        </ContextMenuPrimitive.CheckboxItemIndicator>
       </span>
-      <span className="flex-1 text-start">{children}</span>
-    </button>
+      {icon && (
+        <span aria-hidden className="flex size-4 shrink-0 items-center justify-center text-muted-foreground">
+          {icon}
+        </span>
+      )}
+      <span className="flex min-w-0 flex-1 flex-col items-start gap-px text-start">
+        <span className="w-full truncate">{children}</span>
+        {description && (
+          <span className="w-full truncate text-xs font-normal text-muted-foreground">{description}</span>
+        )}
+      </span>
+      {kbd ? <KbdHint keys={kbd} /> : shortcut ? <ContextMenuShortcut>{shortcut}</ContextMenuShortcut> : null}
+    </ContextMenuPrimitive.CheckboxItem>
   );
 }
 
-interface RadioGroupContextValue {
-  value?: string;
-  onValueChange?: (value: string) => void;
-}
-
-const RadioGroupContext = React.createContext<RadioGroupContextValue>({});
-
-export interface ContextMenuRadioGroupProps extends React.HTMLAttributes<HTMLDivElement> {
-  value?: string;
-  defaultValue?: string;
-  onValueChange?: (value: string) => void;
-}
+// ─────────────────────────────────────────────────────────────
+// Radio group / item
+// ─────────────────────────────────────────────────────────────
 
 function ContextMenuRadioGroup({
-  value: controlledValue,
-  defaultValue,
-  onValueChange,
-  className,
-  children,
   ...props
-}: ContextMenuRadioGroupProps) {
-  const [internal, setInternal] = React.useState(defaultValue);
-  const value = controlledValue !== undefined ? controlledValue : internal;
+}: React.ComponentProps<typeof ContextMenuPrimitive.RadioGroup>) {
+  return <ContextMenuPrimitive.RadioGroup data-slot="context-menu-radio-group" {...props} />;
+}
+
+export interface ContextMenuRadioItemProps extends React.ComponentProps<typeof ContextMenuPrimitive.RadioItem> {
+  description?: React.ReactNode;
+  shortcut?: string;
+}
+
+function ContextMenuRadioItem({ className, children, description, shortcut, ...props }: ContextMenuRadioItemProps) {
   return (
-    <RadioGroupContext.Provider
-      value={{
-        value,
-        onValueChange: (next) => {
-          if (controlledValue === undefined) setInternal(next);
-          onValueChange?.(next);
-        },
-      }}
+    <ContextMenuPrimitive.RadioItem
+      data-slot="context-menu-radio-item"
+      className={cn(ITEM_SHELL, "pl-2", description && "items-start py-1.5", className)}
+      {...props}
     >
-      <div data-slot="context-menu-radio-group" role="group" className={cn(className)} {...props}>
-        {children}
-      </div>
-    </RadioGroupContext.Provider>
+      <span aria-hidden className="flex size-5 shrink-0 items-center justify-center">
+        <ContextMenuPrimitive.RadioItemIndicator className="flex items-center justify-center transition-transform duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] data-[starting-style]:scale-50 data-[ending-style]:scale-50 motion-reduce:transition-none [&_svg]:size-2 [&_svg]:fill-current">
+          <Circle />
+        </ContextMenuPrimitive.RadioItemIndicator>
+      </span>
+      <span className="flex min-w-0 flex-1 flex-col items-start gap-px text-start">
+        <span className="w-full truncate">{children}</span>
+        {description && (
+          <span className="w-full truncate text-xs font-normal text-muted-foreground">{description}</span>
+        )}
+      </span>
+      {shortcut && <ContextMenuShortcut>{shortcut}</ContextMenuShortcut>}
+    </ContextMenuPrimitive.RadioItem>
   );
 }
 
-export interface ContextMenuRadioItemProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  value: string;
+// ─────────────────────────────────────────────────────────────
+// Submenu — headless composition (Root / Trigger / Content)
+// plus a declarative `<ContextMenuSub label>` back-compat wrapper.
+// Hover intent + pointer grace area come from the primitive.
+// ─────────────────────────────────────────────────────────────
+
+function ContextMenuSubRoot({ ...props }: React.ComponentProps<typeof ContextMenuPrimitive.SubmenuRoot>) {
+  return <ContextMenuPrimitive.SubmenuRoot data-slot="context-menu-sub" {...props} />;
 }
 
-function ContextMenuRadioItem({ value, className, children, onClick, ...props }: ContextMenuRadioItemProps) {
-  const group = React.useContext(RadioGroupContext);
-  const selected = group.value === value;
-  const { setOpen } = useMenu();
+function ContextMenuSubTrigger({
+  className,
+  inset,
+  children,
+  ...props
+}: React.ComponentProps<typeof ContextMenuPrimitive.SubmenuTrigger> & { inset?: boolean }) {
   return (
-    <button
-      data-slot="context-menu-radio-item"
-      role="menuitemradio"
-      aria-checked={selected}
-      type="button"
-      onClick={(e) => {
-        onClick?.(e);
-        group.onValueChange?.(value);
-        setOpen(false);
-      }}
-      className={cn(itemClasses, className)}
+    <ContextMenuPrimitive.SubmenuTrigger
+      data-slot="context-menu-sub-trigger"
+      data-inset={inset || undefined}
+      className={cn(ITEM_SHELL, "group/sub", inset && "pl-9", className)}
       {...props}
     >
-      <span aria-hidden className="flex size-4 shrink-0 items-center justify-center">
-        {selected ? <Dot className="size-5" /> : null}
-      </span>
-      <span className="flex-1 text-start">{children}</span>
-    </button>
+      {children}
+      <ChevronRight
+        aria-hidden
+        data-slot="context-menu-sub-chevron"
+        className="ml-auto size-4 shrink-0 text-muted-foreground/70 transition-transform duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] group-data-[highlighted]/sub:translate-x-px group-data-[highlighted]/sub:text-current group-data-[popup-open]/sub:translate-x-px rtl:rotate-180"
+      />
+    </ContextMenuPrimitive.SubmenuTrigger>
+  );
+}
+
+export interface ContextMenuSubContentProps extends React.ComponentProps<typeof ContextMenuPrimitive.Popup> {
+  sideOffset?: number;
+  alignOffset?: number;
+  collisionPadding?: number | Record<string, number>;
+}
+
+function ContextMenuSubContent({
+  className,
+  sideOffset = 6,
+  alignOffset = -4,
+  collisionPadding = 8,
+  children,
+  ...props
+}: ContextMenuSubContentProps) {
+  return (
+    <ContextMenuPrimitive.Portal data-slot="context-menu-sub-portal">
+      <ContextMenuPrimitive.Positioner
+        data-slot="context-menu-sub-positioner"
+        sideOffset={sideOffset}
+        alignOffset={alignOffset}
+        collisionPadding={collisionPadding}
+        sticky
+        className="z-50"
+      >
+        <ContextMenuPrimitive.Popup
+          data-slot="context-menu-sub-content"
+          role="menu"
+          className={cn(POPUP_SHELL, "min-w-48", className)}
+          {...props}
+        >
+          {children}
+        </ContextMenuPrimitive.Popup>
+      </ContextMenuPrimitive.Positioner>
+    </ContextMenuPrimitive.Portal>
   );
 }
 
@@ -362,131 +483,23 @@ export interface ContextMenuSubProps {
   icon?: React.ReactNode;
   disabled?: boolean;
   children: React.ReactNode;
+  className?: string;
 }
 
-function ContextMenuSub({ label, icon, disabled = false, children }: ContextMenuSubProps) {
-  const { dir } = useMenu();
-  const [subOpen, setSubOpen] = React.useState(false);
-  const triggerRef = React.useRef<HTMLButtonElement>(null);
-  const panelRef = React.useRef<HTMLDivElement>(null);
-  const [pos, setPos] = React.useState<{ x: number; y: number } | null>(null);
-  const closeTimer = React.useRef<number | null>(null);
-
-  const openSub = () => {
-    if (disabled) return;
-    if (closeTimer.current) window.clearTimeout(closeTimer.current);
-    setSubOpen(true);
-  };
-  const scheduleClose = () => {
-    if (closeTimer.current) window.clearTimeout(closeTimer.current);
-    closeTimer.current = window.setTimeout(() => setSubOpen(false), 120);
-  };
-
-  React.useLayoutEffect(() => {
-    if (!subOpen || !triggerRef.current || !panelRef.current) return;
-    const r = triggerRef.current.getBoundingClientRect();
-    const p = panelRef.current.getBoundingClientRect();
-    const pad = 8;
-    const openLeft = dir === "rtl";
-    let x = openLeft ? r.left - p.width : r.right;
-    if (!openLeft && x + p.width > window.innerWidth - pad) x = r.left - p.width;
-    if (openLeft && x < pad) x = r.right;
-    let y = r.top - 6;
-    y = Math.max(pad, Math.min(y, window.innerHeight - p.height - pad));
-    setPos({ x, y });
-  }, [subOpen, dir ]);
-
-  React.useLayoutEffect(() => {
-    if (!subOpen || !pos) return;
-    panelRef.current?.querySelector<HTMLButtonElement>("button:not([disabled])")?.focus();
-  }, [subOpen, pos ]);
-
-  React.useEffect(() => {
-    return () => {
-      if (closeTimer.current) window.clearTimeout(closeTimer.current);
-    };
-  }, []);
-
+/** Declarative submenu — `<ContextMenuSub label="Share">…</ContextMenuSub>`. */
+function ContextMenuSub({ label, icon, disabled = false, children, className }: ContextMenuSubProps) {
   return (
-    <div data-slot="context-menu-sub" onMouseLeave={scheduleClose}>
-      <button
-        ref={triggerRef}
-        data-slot="context-menu-sub-trigger"
-        role="menuitem"
-        aria-haspopup="menu"
-        aria-expanded={subOpen}
-        type="button"
-        disabled={disabled}
-        onMouseEnter={openSub}
-        onClick={openSub}
-        onKeyDown={(e) => {
-          const fwd = dir === "rtl" ? "ArrowLeft" : "ArrowRight";
-          const back = dir === "rtl" ? "ArrowRight" : "ArrowLeft";
-          if (e.key === fwd) {
-            e.preventDefault();
-            openSub();
-          } else if (e.key === back || e.key === "Escape") {
-            e.preventDefault();
-            e.stopPropagation();
-            setSubOpen(false);
-            triggerRef.current?.focus();
-          }
-        }}
-        className={cn(itemClasses, subOpen && "bg-accent text-accent-foreground")}
-      >
+    <ContextMenuSubRoot>
+      <ContextMenuSubTrigger disabled={disabled} className={className}>
         {icon && (
-          <span aria-hidden className="flex size-4 shrink-0 items-center justify-center">
+          <span aria-hidden className="flex size-4 shrink-0 items-center justify-center text-muted-foreground">
             {icon}
           </span>
         )}
-        <span className="flex-1 text-start">{label}</span>
-        <ChevronRight aria-hidden className={cn("size-4 shrink-0 text-muted-foreground", dir === "rtl" && "rotate-180")} />
-      </button>
-      {subOpen && (
-        <div
-          ref={panelRef}
-          data-slot="context-menu-sub-content"
-          role="menu"
-          onMouseEnter={openSub}
-          onKeyDown={(e) => {
-            const back = dir === "rtl" ? "ArrowRight" : "ArrowLeft";
-            if (e.key === back || e.key === "Escape") {
-              e.preventDefault();
-              e.stopPropagation();
-              setSubOpen(false);
-              triggerRef.current?.focus();
-              return;
-            }
-            // Local navigation inside the submenu.
-            const items = Array.from(
-              panelRef.current?.querySelectorAll<HTMLButtonElement>("button:not([disabled])") ?? [],
-            );
-            if (items.length === 0) return;
-            const current = document.activeElement as HTMLElement | null;
-            const idx = items.findIndex((el) => el === current);
-            if (e.key === "ArrowDown" || e.key === "ArrowUp") {
-              e.preventDefault();
-              e.stopPropagation();
-              const next = e.key === "ArrowDown" ? (idx + 1) % items.length : (idx - 1 + items.length) % items.length;
-              items[next]?.focus();
-            } else if (e.key === "Home" || e.key === "End") {
-              e.preventDefault();
-              e.stopPropagation();
-              (e.key === "Home" ? items[0] : items[items.length - 1])?.focus();
-            }
-          }}
-          style={{
-            position: "fixed",
-            left: pos ? pos.x : -9999,
-            top: pos ? pos.y : -9999,
-            visibility: pos ? "visible" : "hidden",
-          }}
-          className="z-50 min-w-48 overflow-hidden rounded-xl border bg-popover p-1.5 text-popover-foreground shadow-md"
-        >
-          {children}
-        </div>
-      )}
-    </div>
+        <span className="flex-1 truncate text-start">{label}</span>
+      </ContextMenuSubTrigger>
+      <ContextMenuSubContent>{children}</ContextMenuSubContent>
+    </ContextMenuSubRoot>
   );
 }
 
@@ -497,10 +510,15 @@ export {
   ContextMenuItem,
   ContextMenuLabel,
   ContextMenuSeparator,
+  ContextMenuShortcut,
+  ContextMenuGroup,
   ContextMenuCheckboxItem,
   ContextMenuRadioGroup,
   ContextMenuRadioItem,
   ContextMenuSub,
+  ContextMenuSubRoot,
+  ContextMenuSubTrigger,
+  ContextMenuSubContent,
 };
 
 export default ContextMenu;

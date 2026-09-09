@@ -17,6 +17,9 @@ import { FloatingDocsSidebarLazy } from "@/components/floating-docs-sidebar-lazy
 import { buildDocsPageMarkdown } from "@/lib/docs-page-markdown"
 import { PageContextMenu } from "@/components/page-context-menu"
 import { ChevronRight } from "lucide-react"
+import { Breadcrumbs } from "@/components/breadcrumbs"
+import { getComponent } from "@/registry"
+import { galleryHrefForSlug, galleryTabForSlug, galleryTabLabel } from "@/lib/component-groups"
 
 export interface PropItem {
   name: string
@@ -173,6 +176,23 @@ export async function DocsPageLayout({
 
         <div className="flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           <div className="pl-3 pr-4 lg:pl-4 lg:pr-6 pt-6 lg:pt-8 pb-40 space-y-8 lg:space-y-10 w-full max-w-none m-0">
+
+            {/* Breadcrumbs — lives inside the scroll column so the
+                layout starts flush under the site header and the
+                right preview pane fits exactly one viewport. */}
+            {(() => {
+              const component = getComponent(installPackageName)
+              const { tab, sub } = galleryTabForSlug(installPackageName, component?.category)
+              return (
+                <Breadcrumbs
+                  items={[
+                    { label: "Home", href: "/" },
+                    { label: galleryTabLabel(tab, sub), href: galleryHrefForSlug(installPackageName, component?.category) },
+                    { label: title },
+                  ]}
+                />
+              )
+            })()}
 
             {/* Header Section */}
             <header>

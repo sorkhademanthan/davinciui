@@ -2,13 +2,20 @@
 
 import * as React from "react";
 import {
+  Archive,
+  ArrowUpDown,
   ClipboardPaste,
   Copy,
   Download,
+  Eye,
+  FilePenLine,
+  FolderInput,
   Link2,
   Mail,
+  Pencil,
   Scissors,
   Share2,
+  Star,
   Trash2,
 } from "lucide-react";
 import {
@@ -18,10 +25,15 @@ import {
   ContextMenuItem,
   ContextMenuLabel,
   ContextMenuSeparator,
+  ContextMenuShortcut,
+  ContextMenuGroup,
   ContextMenuCheckboxItem,
   ContextMenuRadioGroup,
   ContextMenuRadioItem,
   ContextMenuSub,
+  ContextMenuSubTrigger,
+  ContextMenuSubContent,
+  ContextMenuSubRoot,
 } from "@workspace/ui/components/context-menu";
 
 function TriggerBox({ children }: { children: React.ReactNode }) {
@@ -51,14 +63,20 @@ export function BasicContextMenuDemo() {
   const [last, setLast] = React.useState("—");
   return (
     <DemoShell readout={last}>
-      <ContextMenu>
+      <ContextMenu onOpenChange={(open) => open && setLast("opened")}>
         <ContextMenuTrigger>
           <TriggerBox>Right-click here</TriggerBox>
         </ContextMenuTrigger>
         <ContextMenuContent>
-          <ContextMenuItem onSelect={() => setLast("cut")}>Cut</ContextMenuItem>
-          <ContextMenuItem onSelect={() => setLast("copy")}>Copy</ContextMenuItem>
-          <ContextMenuItem onSelect={() => setLast("paste")}>Paste</ContextMenuItem>
+          <ContextMenuItem icon={<Scissors aria-hidden />} kbd={["⌘", "X"]} onClick={() => setLast("cut")}>
+            Cut
+          </ContextMenuItem>
+          <ContextMenuItem icon={<Copy aria-hidden />} kbd={["⌘", "C"]} onClick={() => setLast("copy")}>
+            Copy
+          </ContextMenuItem>
+          <ContextMenuItem icon={<ClipboardPaste aria-hidden />} kbd={["⌘", "V"]} onClick={() => setLast("paste")}>
+            Paste
+          </ContextMenuItem>
         </ContextMenuContent>
       </ContextMenu>
     </DemoShell>
@@ -74,16 +92,52 @@ export function SubmenuDemo() {
           <TriggerBox>Right-click here</TriggerBox>
         </ContextMenuTrigger>
         <ContextMenuContent>
-          <ContextMenuItem onSelect={() => setLast("open")}>Open</ContextMenuItem>
-          <ContextMenuSub label="Share" icon={<Share2 className="size-4" aria-hidden />}>
-            <ContextMenuItem icon={<Mail className="size-4" aria-hidden />} onSelect={() => setLast("share → email")}>
+          <ContextMenuItem onClick={() => setLast("open")}>Open</ContextMenuItem>
+          <ContextMenuSub label="Share" icon={<Share2 aria-hidden />}>
+            <ContextMenuItem icon={<Mail aria-hidden />} onClick={() => setLast("share → email")}>
               Email
             </ContextMenuItem>
-            <ContextMenuItem icon={<Link2 className="size-4" aria-hidden />} onSelect={() => setLast("share → link")}>
+            <ContextMenuItem icon={<Link2 aria-hidden />} kbd={["⌘", "L"]} onClick={() => setLast("share → link")}>
               Copy link
             </ContextMenuItem>
           </ContextMenuSub>
-          <ContextMenuItem onSelect={() => setLast("rename")}>Rename</ContextMenuItem>
+          <ContextMenuItem onClick={() => setLast("rename")}>Rename</ContextMenuItem>
+        </ContextMenuContent>
+      </ContextMenu>
+    </DemoShell>
+  );
+}
+
+/** Headless submenu composition — full control over trigger + content. */
+export function ComposedSubmenuDemo() {
+  const [last, setLast] = React.useState("—");
+  return (
+    <DemoShell readout={last}>
+      <ContextMenu>
+        <ContextMenuTrigger>
+          <TriggerBox>Right-click here</TriggerBox>
+        </ContextMenuTrigger>
+        <ContextMenuContent>
+          <ContextMenuItem icon={<Eye aria-hidden />} onClick={() => setLast("preview")}>
+            Preview
+          </ContextMenuItem>
+          <ContextMenuSubRoot>
+            <ContextMenuSubTrigger>
+              <span className="flex size-4 items-center justify-center text-muted-foreground">
+                <Share2 aria-hidden />
+              </span>
+              <span className="flex-1 text-start">Share</span>
+            </ContextMenuSubTrigger>
+            <ContextMenuSubContent>
+              <ContextMenuLabel>Collaborate</ContextMenuLabel>
+              <ContextMenuItem icon={<Mail aria-hidden />} description="Send as attachment" onClick={() => setLast("share → email")}>
+                Email
+              </ContextMenuItem>
+              <ContextMenuItem icon={<Link2 aria-hidden />} kbd={["⌘", "L"]} onClick={() => setLast("share → link")}>
+                Copy link
+              </ContextMenuItem>
+            </ContextMenuSubContent>
+          </ContextMenuSubRoot>
         </ContextMenuContent>
       </ContextMenu>
     </DemoShell>
@@ -98,11 +152,11 @@ export function ShortcutsDemo() {
           <TriggerBox>Right-click here</TriggerBox>
         </ContextMenuTrigger>
         <ContextMenuContent>
-          <ContextMenuItem shortcut="⌘X">Cut</ContextMenuItem>
-          <ContextMenuItem shortcut="⌘C">Copy</ContextMenuItem>
-          <ContextMenuItem shortcut="⌘V">Paste</ContextMenuItem>
+          <ContextMenuItem kbd={["⌘", "X"]}>Cut</ContextMenuItem>
+          <ContextMenuItem kbd={["⌘", "C"]}>Copy</ContextMenuItem>
+          <ContextMenuItem kbd={["⌘", "V"]}>Paste</ContextMenuItem>
           <ContextMenuSeparator />
-          <ContextMenuItem shortcut="⌘A">Select all</ContextMenuItem>
+          <ContextMenuItem kbd={["⌘", "A"]}>Select all</ContextMenuItem>
         </ContextMenuContent>
       </ContextMenu>
     </DemoShell>
@@ -118,13 +172,25 @@ export function GroupsDemo() {
           <TriggerBox>Right-click here</TriggerBox>
         </ContextMenuTrigger>
         <ContextMenuContent>
-          <ContextMenuLabel>Edit</ContextMenuLabel>
-          <ContextMenuItem onSelect={() => setLast("undo")}>Undo</ContextMenuItem>
-          <ContextMenuItem onSelect={() => setLast("redo")}>Redo</ContextMenuItem>
+          <ContextMenuGroup>
+            <ContextMenuLabel>Edit</ContextMenuLabel>
+            <ContextMenuItem kbd={["⌘", "Z"]} onClick={() => setLast("undo")}>
+              Undo
+            </ContextMenuItem>
+            <ContextMenuItem kbd={["⇧", "⌘", "Z"]} onClick={() => setLast("redo")}>
+              Redo
+            </ContextMenuItem>
+          </ContextMenuGroup>
           <ContextMenuSeparator />
-          <ContextMenuLabel>View</ContextMenuLabel>
-          <ContextMenuItem onSelect={() => setLast("zoom-in")}>Zoom in</ContextMenuItem>
-          <ContextMenuItem onSelect={() => setLast("zoom-out")}>Zoom out</ContextMenuItem>
+          <ContextMenuGroup>
+            <ContextMenuLabel>View</ContextMenuLabel>
+            <ContextMenuItem kbd={["⌘", "+"]} onClick={() => setLast("zoom-in")}>
+              Zoom in
+            </ContextMenuItem>
+            <ContextMenuItem kbd={["⌘", "−"]} onClick={() => setLast("zoom-out")}>
+              Zoom out
+            </ContextMenuItem>
+          </ContextMenuGroup>
         </ContextMenuContent>
       </ContextMenu>
     </DemoShell>
@@ -139,10 +205,50 @@ export function IconsDemo() {
           <TriggerBox>Right-click here</TriggerBox>
         </ContextMenuTrigger>
         <ContextMenuContent>
-          <ContextMenuItem icon={<Scissors className="size-4" aria-hidden />}>Cut</ContextMenuItem>
-          <ContextMenuItem icon={<Copy className="size-4" aria-hidden />}>Copy</ContextMenuItem>
-          <ContextMenuItem icon={<ClipboardPaste className="size-4" aria-hidden />}>Paste</ContextMenuItem>
-          <ContextMenuItem icon={<Download className="size-4" aria-hidden />}>Download</ContextMenuItem>
+          <ContextMenuItem icon={<Scissors aria-hidden />}>Cut</ContextMenuItem>
+          <ContextMenuItem icon={<Copy aria-hidden />}>Copy</ContextMenuItem>
+          <ContextMenuItem icon={<ClipboardPaste aria-hidden />}>Paste</ContextMenuItem>
+          <ContextMenuItem icon={<Download aria-hidden />}>Download</ContextMenuItem>
+        </ContextMenuContent>
+      </ContextMenu>
+    </DemoShell>
+  );
+}
+
+/** Rich items — descriptions, badges, and mixed states. */
+export function RichItemsDemo() {
+  const [last, setLast] = React.useState("—");
+  return (
+    <DemoShell readout={last}>
+      <ContextMenu>
+        <ContextMenuTrigger>
+          <TriggerBox>Right-click here</TriggerBox>
+        </ContextMenuTrigger>
+        <ContextMenuContent className="min-w-64">
+          <ContextMenuLabel>File</ContextMenuLabel>
+          <ContextMenuItem
+            icon={<FilePenLine aria-hidden />}
+            description="Open in the editor"
+            kbd={["↵"]}
+            onClick={() => setLast("open")}
+          >
+            Open
+          </ContextMenuItem>
+          <ContextMenuItem
+            icon={<Star aria-hidden />}
+            description="Pin to quick access"
+            badge="Pro"
+            onClick={() => setLast("star")}
+          >
+            Add to favorites
+          </ContextMenuItem>
+          <ContextMenuItem icon={<FolderInput aria-hidden />} badge={12} onClick={() => setLast("move")}>
+            Move to…
+          </ContextMenuItem>
+          <ContextMenuSeparator />
+          <ContextMenuItem icon={<Download aria-hidden />} shortcut="12 MB" onClick={() => setLast("download")}>
+            Download
+          </ContextMenuItem>
         </ContextMenuContent>
       </ContextMenu>
     </DemoShell>
@@ -159,10 +265,15 @@ export function CheckboxesDemo() {
           <TriggerBox>Right-click here</TriggerBox>
         </ContextMenuTrigger>
         <ContextMenuContent>
-          <ContextMenuCheckboxItem checked={bookmarks} onCheckedChange={setBookmarks}>
+          <ContextMenuLabel>Appearance</ContextMenuLabel>
+          <ContextMenuCheckboxItem checked={bookmarks} onCheckedChange={(v) => setBookmarks(v)}>
             Show bookmarks bar
           </ContextMenuCheckboxItem>
-          <ContextMenuCheckboxItem checked={numbers} onCheckedChange={setNumbers}>
+          <ContextMenuCheckboxItem
+            checked={numbers}
+            onCheckedChange={(v) => setNumbers(v)}
+            description="Gutter line numbers"
+          >
             Show line numbers
           </ContextMenuCheckboxItem>
         </ContextMenuContent>
@@ -182,9 +293,15 @@ export function RadioDemo() {
         <ContextMenuContent>
           <ContextMenuLabel>Sort by</ContextMenuLabel>
           <ContextMenuRadioGroup value={sort} onValueChange={setSort}>
-            <ContextMenuRadioItem value="name">Name</ContextMenuRadioItem>
-            <ContextMenuRadioItem value="date">Date</ContextMenuRadioItem>
-            <ContextMenuRadioItem value="size">Size</ContextMenuRadioItem>
+            <ContextMenuRadioItem value="name" description="A → Z">
+              Name
+            </ContextMenuRadioItem>
+            <ContextMenuRadioItem value="date" description="Newest first">
+              Date
+            </ContextMenuRadioItem>
+            <ContextMenuRadioItem value="size" description="Largest first">
+              Size
+            </ContextMenuRadioItem>
           </ContextMenuRadioGroup>
         </ContextMenuContent>
       </ContextMenu>
@@ -201,11 +318,57 @@ export function DestructiveDemo() {
           <TriggerBox>Right-click here</TriggerBox>
         </ContextMenuTrigger>
         <ContextMenuContent>
-          <ContextMenuItem onSelect={() => setLast("archived")}>Archive</ContextMenuItem>
+          <ContextMenuItem icon={<Archive aria-hidden />} onClick={() => setLast("archived")}>
+            Archive
+          </ContextMenuItem>
+          <ContextMenuItem icon={<Pencil aria-hidden />} kbd={["⌘", "R"]} onClick={() => setLast("renamed")}>
+            Rename
+          </ContextMenuItem>
           <ContextMenuSeparator />
-          <ContextMenuItem destructive icon={<Trash2 className="size-4" aria-hidden />} onSelect={() => setLast("deleted")}>
+          <ContextMenuItem destructive icon={<Trash2 aria-hidden />} kbd={["⌫"]} onClick={() => setLast("deleted")}>
             Delete
           </ContextMenuItem>
+        </ContextMenuContent>
+      </ContextMenu>
+    </DemoShell>
+  );
+}
+
+/** Long menu — scrolls past 28rem and supports type-ahead (press a letter). */
+const TEAMMATES = [
+  "Ada Lovelace",
+  "Alan Turing",
+  "Grace Hopper",
+  "Margaret Hamilton",
+  "Katherine Johnson",
+  "Linus Torvalds",
+  "Barbara Liskov",
+  "Donald Knuth",
+  "Edsger Dijkstra",
+  "Frances Allen",
+  "John Carmack",
+  "Radia Perlman",
+  "Tim Berners-Lee",
+  "Vint Cerf",
+  "Shafi Goldwasser",
+  "Leslie Lamport",
+];
+
+export function LongListDemo() {
+  const [assignee, setAssignee] = React.useState("—");
+  return (
+    <DemoShell readout={`assignee=${assignee} · tip: press “g” to jump`}>
+      <ContextMenu>
+        <ContextMenuTrigger>
+          <TriggerBox>Right-click, then type to search</TriggerBox>
+        </ContextMenuTrigger>
+        <ContextMenuContent>
+          <ContextMenuLabel>Assign to</ContextMenuLabel>
+          {TEAMMATES.map((name) => (
+            <ContextMenuItem key={name} onClick={() => setAssignee(name)}>
+              {name}
+            </ContextMenuItem>
+          ))}
         </ContextMenuContent>
       </ContextMenu>
     </DemoShell>
@@ -231,6 +394,27 @@ export function SidesDemo() {
   );
 }
 
+export function DisabledDemo() {
+  return (
+    <DemoShell>
+      <ContextMenu>
+        <ContextMenuTrigger>
+          <TriggerBox>Right-click here</TriggerBox>
+        </ContextMenuTrigger>
+        <ContextMenuContent>
+          <ContextMenuItem kbd={["⌘", "C"]}>Copy</ContextMenuItem>
+          <ContextMenuItem disabled shortcut="Empty">
+            Paste
+          </ContextMenuItem>
+          <ContextMenuSub label="More actions" disabled>
+            <ContextMenuItem>Never reachable</ContextMenuItem>
+          </ContextMenuSub>
+        </ContextMenuContent>
+      </ContextMenu>
+    </DemoShell>
+  );
+}
+
 export function RtlContextMenuDemo() {
   const [last, setLast] = React.useState("—");
   return (
@@ -240,14 +424,122 @@ export function RtlContextMenuDemo() {
           <TriggerBox>انقر بزر الماوس الأيمن هنا</TriggerBox>
         </ContextMenuTrigger>
         <ContextMenuContent>
-          <ContextMenuItem onSelect={() => setLast("قص")}>قص</ContextMenuItem>
-          <ContextMenuItem onSelect={() => setLast("نسخ")}>نسخ</ContextMenuItem>
+          <ContextMenuItem onClick={() => setLast("قص")}>قص</ContextMenuItem>
+          <ContextMenuItem onClick={() => setLast("نسخ")}>نسخ</ContextMenuItem>
           <ContextMenuSub label="مشاركة">
-            <ContextMenuItem onSelect={() => setLast("بريد")}>بريد</ContextMenuItem>
-            <ContextMenuItem onSelect={() => setLast("رابط")}>رابط</ContextMenuItem>
+            <ContextMenuItem onClick={() => setLast("بريد")}>بريد</ContextMenuItem>
+            <ContextMenuItem onClick={() => setLast("رابط")}>رابط</ContextMenuItem>
           </ContextMenuSub>
         </ContextMenuContent>
       </ContextMenu>
     </DemoShell>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Multi-context showcase — table row · canvas object · editor.
+// One component, three menus, each tuned to its surface.
+// ─────────────────────────────────────────────────────────────
+
+const ROWS = [
+  { name: "launch-plan.md", meta: "Markdown · 24 KB", starred: true },
+  { name: "hero-render.png", meta: "Image · 2.1 MB", starred: false },
+  { name: "pricing-model.csv", meta: "CSV · 88 KB", starred: false },
+];
+
+export function MultiContextDemo() {
+  const [last, setLast] = React.useState("right-click a surface");
+  return (
+    <div className="flex w-full flex-col gap-4 bg-background p-6">
+      <div className="grid gap-4 md:grid-cols-3">
+        {/* Table rows */}
+        <div className="overflow-hidden rounded-xl border border-border/60">
+          <p className="border-b border-border/60 bg-muted/30 px-3 py-2 text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">
+            Files
+          </p>
+          {ROWS.map((row) => (
+            <ContextMenu key={row.name}>
+              <ContextMenuTrigger className="flex w-full items-center gap-2 px-3 py-2.5 text-left text-[13px] hover:bg-muted/50">
+                <span className="min-w-0 flex-1 truncate font-medium">{row.name}</span>
+                {row.starred && <Star aria-label="starred" className="size-3.5 fill-amber-400 text-amber-400" />}
+              </ContextMenuTrigger>
+              <ContextMenuContent>
+                <ContextMenuItem icon={<Eye aria-hidden />} kbd={["↵"]} onClick={() => setLast(`open ${row.name}`)}>
+                  Open
+                </ContextMenuItem>
+                <ContextMenuItem icon={<ArrowUpDown aria-hidden />} onClick={() => setLast(`rename ${row.name}`)}>
+                  Rename
+                </ContextMenuItem>
+                <ContextMenuSub label="Share" icon={<Share2 aria-hidden />}>
+                  <ContextMenuItem icon={<Mail aria-hidden />} onClick={() => setLast(`emailed ${row.name}`)}>
+                    Email
+                  </ContextMenuItem>
+                  <ContextMenuItem icon={<Link2 aria-hidden />} kbd={["⌘", "L"]} onClick={() => setLast("link copied")}>
+                    Copy link
+                  </ContextMenuItem>
+                </ContextMenuSub>
+                <ContextMenuSeparator />
+                <ContextMenuItem destructive icon={<Trash2 aria-hidden />} onClick={() => setLast(`deleted ${row.name}`)}>
+                  Delete
+                </ContextMenuItem>
+              </ContextMenuContent>
+            </ContextMenu>
+          ))}
+        </div>
+
+        {/* Canvas object */}
+        <div className="flex min-h-44 items-center justify-center rounded-xl border border-border/60 bg-[radial-gradient(circle_at_1px_1px,var(--border)_1px,transparent_0)] bg-[size:16px_16px] p-4">
+          <ContextMenu>
+            <ContextMenuTrigger className="flex h-24 w-32 cursor-default items-center justify-center rounded-lg bg-gradient-to-br from-violet-500 to-fuchsia-500 text-xs font-semibold text-white shadow-lg select-none">
+              hero-card
+            </ContextMenuTrigger>
+            <ContextMenuContent>
+              <ContextMenuLabel>Object</ContextMenuLabel>
+              <ContextMenuItem kbd={["⌘", "D"]} onClick={() => setLast("duplicated hero-card")}>
+                Duplicate
+              </ContextMenuItem>
+              <ContextMenuItem onClick={() => setLast("brought to front")}>Bring to front</ContextMenuItem>
+              <ContextMenuItem onClick={() => setLast("grouped")}>Group selection</ContextMenuItem>
+            </ContextMenuContent>
+          </ContextMenu>
+        </div>
+
+        {/* Editor selection */}
+        <div className="rounded-xl border border-border/60 bg-muted/20 p-4">
+          <ContextMenu>
+            <ContextMenuTrigger>
+              <p className="font-mono text-xs leading-6 select-none">
+                <span className="text-muted-foreground">{"const theme = "}</span>
+                <span className="rounded bg-amber-400/20 px-1">await davinci.load("midnight")</span>
+                <span className="text-muted-foreground">;</span>
+              </p>
+            </ContextMenuTrigger>
+            <ContextMenuContent>
+              <ContextMenuItem icon={<Scissors aria-hidden />} kbd={["⌘", "X"]} onClick={() => setLast("cut code")}>
+                Cut
+              </ContextMenuItem>
+              <ContextMenuItem icon={<Copy aria-hidden />} kbd={["⌘", "C"]} onClick={() => setLast("copied code")}>
+                Copy
+              </ContextMenuItem>
+              <ContextMenuItem
+                icon={<ClipboardPaste aria-hidden />}
+                description="Paste and format"
+                kbd={["⇧", "⌘", "V"]}
+                onClick={() => setLast("pasted code")}
+              >
+                Paste
+              </ContextMenuItem>
+            </ContextMenuContent>
+          </ContextMenu>
+        </div>
+      </div>
+      <p className="font-mono text-xs text-muted-foreground" aria-live="polite">
+        {last}
+      </p>
+      {/* Keeps the shortcut export referenced for tree-shaking audits */}
+      <span className="hidden">
+        <ContextMenuShortcut>⌘K</ContextMenuShortcut>
+      </span>
+    </div>
   );
 }
