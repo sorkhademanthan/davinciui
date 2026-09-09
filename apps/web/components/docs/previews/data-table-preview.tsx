@@ -88,24 +88,37 @@ function columnsBase(handleDelete?: (row: Staff) => void): ColumnDef<Staff>[] {
     {
       accessorKey: "salary",
       header: ({ column }) => <DataTableColumnHeader column={column} title="CTC" />,
-      cell: ({ row }) => <span className="tabular-nums font-medium">₹{(row.getValue("salary") as number).toLocaleString("en-IN")}</span>,
+      cell: ({ row }) => <span className="font-medium">₹{(row.getValue("salary") as number).toLocaleString("en-IN")}</span>,
+      meta: { align: "end" },
     },
     {
       id: "actions",
       header: "Actions",
       cell: ({ row }) => <DataTableRowActions onEdit={() => console.log("edit", row.original.id)} onDelete={() => handleDelete?.(row.original)} />,
       enableHiding: false,
+      meta: { align: "end" },
     },
   ];
 }
 
-// Default — full feature (42 rows)
+// Default — full feature (right-click a row for the context menu)
 export function DataTablePreview() {
   const data = React.useMemo(() => buildStaff(6), []);
   const cols = React.useMemo(() => columnsBase(), []);
+  const [last, setLast] = React.useState("tip: right-click a row");
   return (
     <Shell>
-      <DataTable columns={cols} data={data} filterKey="name" filterPlaceholder="Search employees…" />
+      <div className="space-y-2">
+        <DataTable
+          columns={cols}
+          data={data}
+          filterKey="name"
+          filterPlaceholder="Search employees…"
+          onRowEdit={(row) => setLast(`edit ${row.id}`)}
+          onRowDelete={(row) => setLast(`delete ${row.id}`)}
+        />
+        <p className="font-mono text-xs text-muted-foreground" aria-live="polite">{last}</p>
+      </div>
     </Shell>
   );
 }
