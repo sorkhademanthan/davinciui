@@ -1,11 +1,17 @@
 import { DocsPageLayout } from "@/components/docs-page-layout"
 import {
+  CarouselApiPreview,
+  CarouselAutoplayPreview,
+  CarouselCounterPreview,
+  CarouselDotsPreview,
+  CarouselHeroPreview,
+  CarouselOrientationPreview,
+  CarouselPeekPreview,
   CarouselPreview,
+  CarouselProgressPreview,
   CarouselSizePreview,
   CarouselSpacingPreview,
-  CarouselOrientationPreview,
-  CarouselOptionsPreview,
-  CarouselApiPreview,
+  CarouselThumbnailsPreview,
 } from "@/components/docs/previews/carousel-preview"
 import { readComponentSource } from "@/lib/source-code"
 
@@ -118,19 +124,99 @@ export async function CarouselDocs() {
 </Carousel>`,
         },
         {
-          title: "Options",
-          preview: <CarouselOptionsPreview />,
-          code: `<Carousel
-  opts={{
-    align: "start",
-    loop: true,
-  }}
->
+          title: "Dots",
+          preview: <CarouselDotsPreview />,
+          code: `import {
+  Carousel,
+  CarouselContent,
+  CarouselDots,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel"
+
+<Carousel ariaLabel="Featured items">
   <CarouselContent>
     <CarouselItem>...</CarouselItem>
     <CarouselItem>...</CarouselItem>
+  </CarouselContent>
+  <CarouselPrevious />
+  <CarouselNext />
+  <CarouselDots />
+</Carousel>`,
+        },
+        {
+          title: "Counter",
+          preview: <CarouselCounterPreview />,
+          code: `<Carousel ariaLabel="Gallery with counter">
+  <CarouselContent>
     <CarouselItem>...</CarouselItem>
   </CarouselContent>
+  <CarouselCounter />
+</Carousel>`,
+        },
+        {
+          title: "Progress",
+          preview: <CarouselProgressPreview />,
+          code: `<Carousel ariaLabel="Gallery with progress">
+  <CarouselContent>
+    <CarouselItem>...</CarouselItem>
+  </CarouselContent>
+  <CarouselProgress />
+</Carousel>`,
+        },
+        {
+          title: "Autoplay",
+          preview: <CarouselAutoplayPreview />,
+          code: `// Off by default; pauses on hover/focus with visible play/pause.
+<Carousel autoplay autoplayInterval={5000} opts={{ loop: true }} ariaLabel="Autoplaying highlights">
+  <CarouselContent>
+    <CarouselItem>...</CarouselItem>
+  </CarouselContent>
+  <CarouselPlayButton />
+  <CarouselDots />
+</Carousel>`,
+        },
+        {
+          title: "Peek",
+          preview: <CarouselPeekPreview />,
+          code: `<Carousel opts={{ align: "start", containScroll: "trimSnaps" }}>
+  <CarouselContent className="-ml-3">
+    <CarouselItem className="basis-[78%] pl-3 sm:basis-1/3">...</CarouselItem>
+    <CarouselItem className="basis-[78%] pl-3 sm:basis-1/3">...</CarouselItem>
+  </CarouselContent>
+</Carousel>`,
+        },
+        {
+          title: "Thumbnails",
+          preview: <CarouselThumbnailsPreview />,
+          code: `// Thumbnail-driven gallery: eager first image (LCP), lazy rest.
+<Carousel setApi={setApi}>
+  <CarouselContent>
+    <CarouselItem>
+      <img src="..." alt="Gallery image 1" loading="eager" />
+    </CarouselItem>
+    <CarouselItem>
+      <img src="..." alt="Gallery image 2" loading="lazy" />
+    </CarouselItem>
+  </CarouselContent>
+</Carousel>
+// Thumbnails: buttons with role="tab", aria-selected, api.scrollTo(i)`,
+        },
+        {
+          title: "Hero",
+          preview: <CarouselHeroPreview />,
+          code: `<Carousel opts={{ loop: true }} ariaLabel="Featured stories">
+  <CarouselContent>
+    <CarouselItem>
+      <h3>Design beyond defaults</h3>
+      <p>A carousel that feels inevitable.</p>
+      <Button>Explore components</Button>
+    </CarouselItem>
+  </CarouselContent>
+  <CarouselPrevious />
+  <CarouselNext />
+  <CarouselDots />
 </Carousel>`,
         },
         {
@@ -188,6 +274,50 @@ export function Example() {
           name: "CarouselPrevious / CarouselNext",
           type: "Component",
           description: "Navigation buttons. Disabled automatically at bounds.",
+        },
+        {
+          name: "CarouselDots",
+          type: "Component",
+          description: "Accessible pill pagination (tablist). 44px touch targets, aria-selected, auto-expanding active dot.",
+        },
+        {
+          name: "CarouselCounter",
+          type: "Component",
+          description: "Numbers pagination with aria-live announcement (Slide X of Y).",
+        },
+        {
+          name: "CarouselProgress",
+          type: "Component",
+          description: "Linear progressbar pagination with role=progressbar and aria-valuenow.",
+        },
+        {
+          name: "CarouselPlayButton",
+          type: "Component",
+          description: "Visible play/pause toggle for autoplay. Renders only when autoplay is enabled.",
+        },
+        {
+          name: "autoplay",
+          type: "boolean",
+          default: "false",
+          description: "Auto-advance slides. Off by default; disabled under prefers-reduced-motion.",
+        },
+        {
+          name: "autoplayInterval",
+          type: "number",
+          default: "5000",
+          description: "Delay between slides in ms. Use >= 5000 image-only, >= 7000 text-heavy.",
+        },
+        {
+          name: "pauseOnHover / pauseOnFocus",
+          type: "boolean",
+          default: "true",
+          description: "Pause autoplay while hovered or focused (WCAG requirement).",
+        },
+        {
+          name: "ariaLabel",
+          type: "string",
+          default: '"Carousel"',
+          description: "Accessible label for the carousel region. Slides auto-label as Slide X of Y.",
         },
         {
           name: "orientation",
