@@ -8,6 +8,7 @@ import {
   BubblePopoverPreview,
   BubbleReactionsPreview,
   BubbleRtlPreview,
+  BubbleTailsPreview,
   BubbleTooltipPreview,
   BubbleVariantsPreview,
 } from "@/components/docs/previews/bubble-preview";
@@ -43,6 +44,7 @@ export async function BubbleDocs() {
           <p className="text-sm leading-6 text-muted-foreground">
             Bubble is intentionally scoped to the bubble surface. Place avatars, names, timestamps, metadata, and
             message-level actions outside it. Reactions overlap the bubble edge, so leave vertical space between rows.
+            Tails live at the bottom corner — pair them with top-anchored reactions to avoid overlap.
           </p>
           <pre className="overflow-x-auto rounded-lg border bg-muted/30 p-4 font-mono text-xs leading-6">
 {`Bubble
@@ -105,8 +107,8 @@ BubbleGroup
           code: `import { Bubble, BubbleContent, BubbleGroup } from "@/components/ui/bubble"
 
 // Group consecutive bubbles from the same sender.
-// Set align on each Bubble, not on the group.
-<BubbleGroup className="gap-1.5">
+// Adjoining corners collapse automatically; set align per Bubble.
+<BubbleGroup>
   <Bubble variant="secondary">
     <BubbleContent>Can you tell me what&apos;s the issue?</BubbleContent>
   </Bubble>
@@ -114,6 +116,20 @@ BubbleGroup
     <BubbleContent>It worked yesterday!</BubbleContent>
   </Bubble>
 </BubbleGroup>`,
+        },
+        {
+          title: "Tails",
+          preview: <BubbleTailsPreview />,
+          code: `import { Bubble, BubbleContent } from "@/components/ui/bubble"
+
+// A directional tail toward the sender side — skipped on
+// ghost bubbles and mid-group rows automatically.
+<Bubble variant="secondary" tail>
+  <BubbleContent>Hey there! Want to see chat bubbles?</BubbleContent>
+</Bubble>
+<Bubble align="end" tail>
+  <BubbleContent>Sure. Hit me with your best demo.</BubbleContent>
+</Bubble>`,
         },
         {
           title: "Links and Buttons",
@@ -212,6 +228,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
       props={[
         { name: "variant", type: '"default" | "secondary" | "muted" | "tinted" | "outline" | "ghost" | "destructive"', default: '"default"', description: "Visual treatment. Ghost is unframed and full-width." },
         { name: "align", type: '"start" | "end"', default: '"start"', description: "Inline alignment of the bubble. Set on Bubble, not BubbleGroup." },
+        { name: "tail", type: "boolean", default: "false", description: "Directional tail. Auto-skipped on ghost and mid-group rows." },
         { name: "render", type: "ReactElement | function", default: "—", description: "Render BubbleContent as a link, button, or custom element." },
         { name: "side", type: '"top" | "bottom"', default: '"bottom"', description: "Bubble edge the reactions anchor to (BubbleReactions)." },
         { name: "align (reactions)", type: '"start" | "end"', default: '"end"', description: "Inline alignment of the reaction row (BubbleReactions)." },

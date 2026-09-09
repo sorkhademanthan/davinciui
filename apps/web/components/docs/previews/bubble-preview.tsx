@@ -102,24 +102,47 @@ export function BubbleAlignmentPreview() {
 
 export function BubbleGroupPreview() {
   return (
-    <DemoShell>
+    <DemoShell readout="adjoining corners collapse — like a real chat app">
       <Thread>
-        <BubbleGroup className="gap-1.5">
+        <BubbleGroup>
           <Bubble variant="secondary">
             <BubbleContent>Can you tell me what&apos;s the issue?</BubbleContent>
           </Bubble>
           <Bubble variant="secondary">
             <BubbleContent>It worked yesterday. You broke it!</BubbleContent>
           </Bubble>
+          <Bubble variant="secondary">
+            <BubbleContent>Find the bug and fix it.</BubbleContent>
+          </Bubble>
         </BubbleGroup>
-        <Bubble align="end">
-          <BubbleContent>Find the bug and fix it.</BubbleContent>
-          <BubbleReactions role="img" aria-label="Reactions: eyes">
-            <span>👀</span>
-          </BubbleReactions>
+        <BubbleGroup>
+          <Bubble align="end">
+            <BubbleContent>On it — checking the registry output.</BubbleContent>
+          </Bubble>
+          <Bubble align="end">
+            <BubbleContent>Found it. Shipping the fix now.</BubbleContent>
+            <BubbleReactions role="img" aria-label="Reactions: eyes">
+              <span>👀</span>
+            </BubbleReactions>
+          </Bubble>
+        </BubbleGroup>
+      </Thread>
+    </DemoShell>
+  );
+}
+
+export function BubbleTailsPreview() {
+  return (
+    <DemoShell readout="tail points at the sender · skipped on ghost and mid-group rows">
+      <Thread>
+        <Bubble variant="secondary" tail>
+          <BubbleContent>Hey there! Want to see chat bubbles?</BubbleContent>
         </Bubble>
-        <Bubble variant="secondary">
-          <BubbleContent>Want me to diff yesterday&apos;s you against today&apos;s you?</BubbleContent>
+        <Bubble align="end" tail>
+          <BubbleContent>Sure. Hit me with your best demo.</BubbleContent>
+        </Bubble>
+        <Bubble variant="outline" tail>
+          <BubbleContent>Outlined tails carry the surface color.</BubbleContent>
         </Bubble>
       </Thread>
     </DemoShell>

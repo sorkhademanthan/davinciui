@@ -1,126 +1,169 @@
 "use client";
 
-import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator, BreadcrumbEllipsis } from "@workspace/ui/components/breadcrumb";
-import { ChevronRight } from "lucide-react";
+import * as React from "react";
+import { ChevronDown, Dot } from "lucide-react";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+} from "@workspace/ui/components/breadcrumb";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@workspace/ui/components/dropdown-menu";
+
+function DemoShell({ children, readout }: { children: React.ReactNode; readout?: string }) {
+  return (
+    <div className="flex min-h-[240px] w-full flex-col items-center justify-center gap-4 overflow-auto bg-background p-6">
+      <div className="flex w-full items-center justify-center">{children}</div>
+      {readout !== undefined && (
+        <p className="font-mono text-xs text-muted-foreground" aria-live="polite">
+          {readout}
+        </p>
+      )}
+    </div>
+  );
+}
 
 export function BreadcrumbPreview() {
   return (
-    <div className="flex h-full w-full items-center justify-center p-8">
+    <DemoShell readout="separators appear on their own — no manual rows">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink href="#">Home</BreadcrumbLink>
           </BreadcrumbItem>
-          <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>Components</BreadcrumbPage>
+            <BreadcrumbLink href="#">Components</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbItem>
+            <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-    </div>
+    </DemoShell>
   );
 }
 
 export function BreadcrumbCustomSeparatorPreview() {
   return (
-    <div className="flex h-full w-full items-center justify-center p-8">
+    <DemoShell>
       <Breadcrumb>
-        <BreadcrumbList>
+        <BreadcrumbList separator={<Dot className="size-4" />}>
           <BreadcrumbItem>
             <BreadcrumbLink href="#">Home</BreadcrumbLink>
           </BreadcrumbItem>
-          <BreadcrumbSeparator>
-            <span className="text-xs">/</span>
-          </BreadcrumbSeparator>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="#">Library</BreadcrumbLink>
+          </BreadcrumbItem>
           <BreadcrumbItem>
             <BreadcrumbPage>Custom</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-    </div>
+    </DemoShell>
   );
 }
 
 export function BreadcrumbDropdownPreview() {
   return (
-    <div className="flex h-full w-full items-center justify-center p-8">
+    <DemoShell readout="menus compose inside any item">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink href="#">Home</BreadcrumbLink>
           </BreadcrumbItem>
-          <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href="#">Docs</BreadcrumbLink>
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex items-center gap-1 rounded-sm transition-colors outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/40">
+                Components <ChevronDown className="size-3.5" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start">
+                <DropdownMenuItem>Documentation</DropdownMenuItem>
+                <DropdownMenuItem>Themes</DropdownMenuItem>
+                <DropdownMenuItem>GitHub</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </BreadcrumbItem>
-          <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>Dropdown</BreadcrumbPage>
+            <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-    </div>
+    </DemoShell>
   );
 }
 
+const DEEP_TRAIL = ["Home", "Workspace", "Projects", "DavinciUI", "Components", "Breadcrumb"];
+
 export function BreadcrumbCollapsedPreview() {
   return (
-    <div className="flex h-full w-full items-center justify-center p-8">
+    <DemoShell readout="maxItems collapses the middle — click … to expand">
       <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="#">Home</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbEllipsis />
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>Collapsed</BreadcrumbPage>
-          </BreadcrumbItem>
+        <BreadcrumbList maxItems={3}>
+          {DEEP_TRAIL.map((label, i) =>
+            i === DEEP_TRAIL.length - 1 ? (
+              <BreadcrumbItem key={label}>
+                <BreadcrumbPage>{label}</BreadcrumbPage>
+              </BreadcrumbItem>
+            ) : (
+              <BreadcrumbItem key={label}>
+                <BreadcrumbLink href="#">{label}</BreadcrumbLink>
+              </BreadcrumbItem>
+            )
+          )}
         </BreadcrumbList>
       </Breadcrumb>
-    </div>
+    </DemoShell>
   );
 }
 
 export function BreadcrumbLinkComponentPreview() {
   return (
-    <div className="flex h-full w-full items-center justify-center p-8">
+    <DemoShell readout="asChild adopts your router link">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/docs">Docs Link</BreadcrumbLink>
+            <BreadcrumbLink asChild>
+              <a href="#">Home</a>
+            </BreadcrumbLink>
           </BreadcrumbItem>
-          <BreadcrumbSeparator />
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <a href="/docs/components/breadcrumb">As Child</a>
+              <a href="#">Components</a>
             </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbItem>
+            <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-    </div>
+    </DemoShell>
   );
 }
 
 export function BreadcrumbRtlPreview() {
   return (
-    <div className="flex h-full w-full items-center justify-center p-8" dir="rtl">
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbPage>RTL</BreadcrumbPage>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator>
-            <ChevronRight className="size-3.5 rotate-180" />
-          </BreadcrumbSeparator>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="#">Home</BreadcrumbLink>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
-    </div>
+    <DemoShell>
+      <div dir="rtl">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="#">الرئيسية</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="#">المكونات</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbItem>
+              <BreadcrumbPage>مسار التنقل</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+      </div>
+    </DemoShell>
   );
 }
