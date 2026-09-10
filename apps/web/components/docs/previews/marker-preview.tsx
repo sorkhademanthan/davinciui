@@ -1,8 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { BookOpenCheck, FileText, GitBranch, RotateCcw, Search } from "lucide-react";
-import { Marker, MarkerContent, MarkerIcon } from "@workspace/ui/components/marker";
+import { BookOpenCheck, Check, FileText, GitBranch, RotateCcw, Search, TriangleAlert } from "lucide-react";
+import { Marker, MarkerContent, MarkerDot, MarkerIcon, MarkerTime } from "@workspace/ui/components/marker";
 import { Spinner } from "@workspace/ui/components/spinner";
 
 function DemoShell({ children, readout }: { children: React.ReactNode; readout?: string }) {
@@ -185,6 +185,97 @@ export function MarkerLinksPreview() {
             <RotateCcw />
           </MarkerIcon>
           <MarkerContent className="underline underline-offset-4">Revert this change</MarkerContent>
+        </Marker>
+      </div>
+    </DemoShell>
+  );
+}
+
+export function MarkerTonesPreview() {
+  return (
+    <DemoShell readout="neutral · success · warning · error · info">
+      <div className="flex flex-col gap-2">
+        <Marker>
+          <MarkerIcon>
+            <GitBranch />
+          </MarkerIcon>
+          <MarkerContent>Switched to a new branch</MarkerContent>
+        </Marker>
+        <Marker tone="success">
+          <MarkerIcon>
+            <Check />
+          </MarkerIcon>
+          <MarkerContent>Tests passed in 12s</MarkerContent>
+        </Marker>
+        <Marker tone="warning">
+          <MarkerIcon>
+            <TriangleAlert />
+          </MarkerIcon>
+          <MarkerContent>2 snapshots need review</MarkerContent>
+        </Marker>
+        <Marker tone="error">
+          <MarkerIcon>
+            <TriangleAlert />
+          </MarkerIcon>
+          <MarkerContent>Build failed on step 4</MarkerContent>
+        </Marker>
+        <Marker tone="info">
+          <MarkerIcon>
+            <Search />
+          </MarkerIcon>
+          <MarkerContent>Explored 4 related files</MarkerContent>
+        </Marker>
+      </div>
+    </DemoShell>
+  );
+}
+
+export function MarkerLivePreview() {
+  return (
+    <DemoShell readout='live dot + role="status" for streaming work'>
+      <div className="flex flex-col gap-2">
+        <Marker tone="info" role="status">
+          <MarkerDot live tone="info" />
+          <MarkerContent className="animate-pulse">Thinking…</MarkerContent>
+        </Marker>
+        <Marker tone="success" role="status">
+          <MarkerDot tone="success" />
+          <MarkerContent>Compacted 38 messages</MarkerContent>
+        </Marker>
+        <Marker role="status">
+          <MarkerIcon>
+            <Spinner className="size-3.5" />
+          </MarkerIcon>
+          <MarkerContent>Running tests</MarkerContent>
+        </Marker>
+      </div>
+    </DemoShell>
+  );
+}
+
+export function MarkerTimestampsPreview() {
+  return (
+    <DemoShell readout="mono timestamps dock at the row edge">
+      <div className="flex flex-col gap-2">
+        <Marker>
+          <MarkerIcon>
+            <GitBranch />
+          </MarkerIcon>
+          <MarkerContent>Switched to release-candidate</MarkerContent>
+          <MarkerTime>09:41</MarkerTime>
+        </Marker>
+        <Marker tone="success">
+          <MarkerIcon>
+            <Check />
+          </MarkerIcon>
+          <MarkerContent>Deployed to preview</MarkerContent>
+          <MarkerTime>09:42</MarkerTime>
+        </Marker>
+        <Marker variant="separator">
+          <MarkerContent>Conversation compacted</MarkerContent>
+        </Marker>
+        <Marker size="sm">
+          <MarkerContent>Worked for 42s · 38 messages</MarkerContent>
         </Marker>
       </div>
     </DemoShell>

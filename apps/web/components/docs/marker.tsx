@@ -4,14 +4,17 @@ import {
   MarkerBorderPreview,
   MarkerIconPreview,
   MarkerLinksPreview,
+  MarkerLivePreview,
   MarkerSeparatorPreview,
   MarkerShimmerPreview,
   MarkerStatusPreview,
+  MarkerTimestampsPreview,
+  MarkerTonesPreview,
   MarkerVariantsPreview,
 } from "@/components/docs/previews/marker-preview";
 import { readComponentSource } from "@/lib/source-code";
 
-const importCode = `import { Marker, MarkerContent, MarkerIcon } from "@/components/ui/marker"`;
+const importCode = `import { Marker, MarkerContent, MarkerDot, MarkerIcon, MarkerTime } from "@/components/ui/marker"`;
 const defaultCode = `<Marker>
   <MarkerIcon>
     <CheckIcon />
@@ -26,7 +29,7 @@ export async function MarkerDocs() {
   return (
     <DocsPageLayout
       title="Marker"
-      description="Inline status, system notes, bordered rows, and labeled separators for conversations. Compose with Message in a thread."
+      description="Inline status, system notes, bordered rows, and labeled separators for conversations — with tones, live dots, and timestamps. Compose with Message in a thread."
       preview={<MarkerBasicPreview />}
       previewCode={defaultCode}
       installPackageName="marker"
@@ -139,6 +142,44 @@ import { Spinner } from "@/components/ui/spinner"
 </Marker>`,
         },
         {
+          title: "Tones",
+          preview: <MarkerTonesPreview />,
+          code: `import { Marker, MarkerContent, MarkerIcon } from "@/components/ui/marker"
+
+// Tone tints the icon chip; text stays calm for thread rhythm.
+// Icons inherit the marker tone automatically.
+<Marker tone="success">
+  <MarkerIcon>
+    <CheckIcon />
+  </MarkerIcon>
+  <MarkerContent>Tests passed in 12s</MarkerContent>
+</Marker>`,
+        },
+        {
+          title: "Live",
+          preview: <MarkerLivePreview />,
+          code: `import { Marker, MarkerContent, MarkerDot } from "@/components/ui/marker"
+
+// Pinging dot + role="status" for streaming work.
+<Marker tone="info" role="status">
+  <MarkerDot live tone="info" />
+  <MarkerContent>Thinking…</MarkerContent>
+</Marker>`,
+        },
+        {
+          title: "Timestamps",
+          preview: <MarkerTimestampsPreview />,
+          code: `import { Marker, MarkerContent, MarkerIcon, MarkerTime } from "@/components/ui/marker"
+
+<Marker>
+  <MarkerIcon>
+    <GitBranchIcon />
+  </MarkerIcon>
+  <MarkerContent>Switched to release-candidate</MarkerContent>
+  <MarkerTime>09:41</MarkerTime>
+</Marker>`,
+        },
+        {
           title: "Links and Buttons",
           preview: <MarkerLinksPreview />,
           code: `import { Marker, MarkerContent } from "@/components/ui/marker"
@@ -151,8 +192,12 @@ import { Spinner } from "@/components/ui/spinner"
         },
       ]}
       props={[
-        { name: "variant", type: '"default" | "border" | "separator"', default: '"default"', description: "Inline marker, bordered row, or labeled separator." },
-        { name: "render", type: "ReactElement | function", default: "—", description: "Render as a link, button, or custom element." },
+        { name: "variant", type: '"default" | "border" | "separator"', default: '"default"', description: "Inline marker, bordered row, or labeled separator with gradient-fade lines." },
+        { name: "tone", type: '"neutral" | "success" | "warning" | "error" | "info"', default: '"neutral"', description: "Semantic tone — tints the icon chip and dot; inherited by MarkerIcon and MarkerDot." },
+        { name: "size", type: '"default" | "sm"', default: '"default"', description: "Row density." },
+        { name: "MarkerDot · live", type: "boolean", default: "false", description: "Pinging live indicator for streaming work." },
+        { name: "MarkerTime", type: "time element", description: "Mono tabular timestamp docked at the row edge." },
+        { name: "render", type: "ReactElement | function", default: "—", description: "Render as a link, button, or custom element with hover treatment." },
         { name: "role", type: '"status"', default: "—", description: "Announce streaming markers as live status updates." },
         { name: "aria-label", type: "string", default: "—", description: "Label icon-only markers so they never announce empty." },
         { name: "className", type: "string", description: "Additional classes on any part." },
