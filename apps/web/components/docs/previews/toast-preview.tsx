@@ -19,14 +19,20 @@ export function ToastTypesPreview() {
       <Button variant="outline" onClick={() => toast("Default", { type: "default" })}>
         Default
       </Button>
-      <Button variant="outline" onClick={() => toast("Success!", { type: "success" })}>
+      <Button variant="outline" onClick={() => toast.success("Deployed to production")}>
         Success
       </Button>
-      <Button variant="outline" onClick={() => toast("Error!", { type: "error" })}>
+      <Button variant="outline" onClick={() => toast.error("Build failed on step 4 of 9")}>
         Error
       </Button>
-      <Button variant="outline" onClick={() => toast("Info", { type: "info" })}>
+      <Button variant="outline" onClick={() => toast.warning("2 snapshots need review")}>
+        Warning
+      </Button>
+      <Button variant="outline" onClick={() => toast.info("Syncing 38 messages…")}>
         Info
+      </Button>
+      <Button variant="outline" onClick={() => toast.loading("Uploading…")}>
+        Loading
       </Button>
     </div>
   );
@@ -38,9 +44,9 @@ export function ToastActionPreview() {
       <Toaster />
       <Button
         onClick={() =>
-          toast("Action required", {
-            description: "Click action to undo.",
-            action: <Button size="sm" onClick={() => toast("Undone", { type: "success" })}>Undo</Button>,
+          toast("Message deleted", {
+            description: "You have 8 seconds to change your mind.",
+            action: { label: "Undo", onClick: () => toast.success("Message restored") },
           })
         }
       >
@@ -56,11 +62,53 @@ export function ToastPromisePreview() {
       <Toaster />
       <Button
         onClick={() => {
-          const p = new Promise((res) => setTimeout(res, 1000));
-          toastPromise(p, { loading: "Loading...", success: "Success!", error: "Error!" });
+          const p = new Promise<string>((resolve, reject) =>
+            setTimeout(() => (Math.random() > 0.4 ? resolve("acme-inc") : reject(new Error("quota exceeded"))), 1400)
+          );
+          toastPromise(p, {
+            loading: "Deploying preview…",
+            success: (slug) => `Live at ${slug}.vercel.app`,
+            error: (err) => `Deploy failed — ${(err as Error).message}`,
+          });
         }}
       >
         Promise
+      </Button>
+    </div>
+  );
+}
+
+export function ToastPersistentPreview() {
+  return (
+    <div className="flex h-full w-full items-center justify-center p-8">
+      <Toaster />
+      <Button
+        variant="outline"
+        onClick={() =>
+          toast.error("Payment failed", {
+            description: "Your card was declined. Update billing to retry.",
+            duration: Number.POSITIVE_INFINITY,
+            action: { label: "Update billing", onClick: () => toast.info("Opening billing…") },
+          })
+        }
+      >
+        Persistent error
+      </Button>
+    </div>
+  );
+}
+
+export function ToastStackPreview() {
+  return (
+    <div className="flex h-full w-full items-center justify-center p-8">
+      <Toaster />
+      <Button
+        variant="outline"
+        onClick={() => {
+          for (let i = 1; i <= 8; i++) toast(`Burst ${i}`, { description: "Capped at five, oldest drops." });
+        }}
+      >
+        Fire 8 at once
       </Button>
     </div>
   );

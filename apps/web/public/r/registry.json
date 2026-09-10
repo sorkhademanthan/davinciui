@@ -61,6 +61,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "button",
+      "type": "registry:ui"
+    },
+    {
       "name": "calendar",
       "type": "registry:ui"
     },
@@ -169,14 +173,21 @@
       "type": "registry:ui"
     },
     {
+      "name": "form",
+      "type": "registry:ui"
+    },
+    {
       "name": "github-calendar",
       "type": "registry:ui"
     },
     {
+<<<<<<< HEAD
       "name": "glitch-liquid-text",
       "type": "registry:ui"
     },
     {
+=======
+>>>>>>> 8f041fd (feat: rebuild toast engine with single-flight rendering)
       "name": "gradient-hero-01",
       "type": "registry:block"
     },
@@ -210,6 +221,10 @@
     },
     {
       "name": "infinite-image-field",
+      "type": "registry:ui"
+    },
+    {
+      "name": "input",
       "type": "registry:ui"
     },
     {
@@ -305,6 +320,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "pagination",
+      "type": "registry:ui"
+    },
+    {
       "name": "particle-galaxy",
       "type": "registry:ui"
     },
@@ -333,11 +352,19 @@
       "type": "registry:ui"
     },
     {
+      "name": "progress",
+      "type": "registry:ui"
+    },
+    {
       "name": "pulsating-button",
       "type": "registry:ui"
     },
     {
       "name": "questionnaire",
+      "type": "registry:ui"
+    },
+    {
+      "name": "radio",
       "type": "registry:ui"
     },
     {
@@ -369,6 +396,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "select",
+      "type": "registry:ui"
+    },
+    {
       "name": "separator",
       "type": "registry:ui"
     },
@@ -386,6 +417,10 @@
     },
     {
       "name": "showcase-card",
+      "type": "registry:ui"
+    },
+    {
+      "name": "sidebar",
       "type": "registry:ui"
     },
     {
@@ -430,6 +465,10 @@
     },
     {
       "name": "text-morph",
+      "type": "registry:ui"
+    },
+    {
+      "name": "toast",
       "type": "registry:ui"
     },
     {
