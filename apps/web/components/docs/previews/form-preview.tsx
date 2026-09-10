@@ -7,7 +7,7 @@ import { Button } from "@workspace/ui/components/button";
 export function FormPreview() {
   return (
     <div className="flex h-full w-full items-center justify-center p-8">
-      <Form className="w-full max-w-sm border rounded-lg p-6">
+      <Form className="w-full max-w-sm border rounded-lg p-6" onSubmit={(e) => e.preventDefault()}>
         <FormItem>
           <FormLabel>Email</FormLabel>
           <FormControl>
@@ -72,11 +72,11 @@ export function FormInvalidPreview() {
 export function FormInlinePreview() {
   return (
     <div className="flex h-full w-full items-center justify-center p-8">
-      <Form className="flex gap-2 max-w-sm w-full">
+      <Form className="flex gap-2 max-w-sm w-full" onSubmit={(e) => e.preventDefault()}>
         <FormControl className="flex-1">
           <Input placeholder="Inline" />
         </FormControl>
-        <Button>Go</Button>
+        <Button type="submit">Go</Button>
       </Form>
     </div>
   );

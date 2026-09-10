@@ -10,7 +10,7 @@ import {
 import { readComponentSource } from "@/lib/source-code";
 
 const importCode = `import { Form, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from "@/components/ui/form"`;
-const defaultCode = `<Form>
+const defaultCode = `<Form onSubmit={(e) => e.preventDefault()}>
   <FormItem>
     <FormLabel>Email</FormLabel>
     <FormControl>
@@ -26,7 +26,7 @@ export async function FormDocs() {
   return (
     <DocsPageLayout
       title="Form"
-      description="Building forms with validation and composition."
+      description="Accessible form composition built on the Field system — auto-wired ids, invalid states, and alert-announced errors with zero dependencies."
       preview={<FormPreview />}
       previewCode={defaultCode}
       installPackageName="form"
@@ -45,11 +45,11 @@ export async function FormDocs() {
       ]}
       props={[
         { name: "Form", type: "Component", description: "Root form element." },
-        { name: "FormItem", type: "Component", description: "Item wrapper with label/control/message." },
-        { name: "FormLabel", type: "Component", description: "Label for the field." },
-        { name: "FormControl", type: "Component", description: "Control container." },
-        { name: "FormMessage", type: "Component", description: "Validation message." },
-        { name: "FormDescription", type: "Component", description: "Helper description." },
+        { name: "FormItem", type: "Component", description: "Item wrapper with label/control/message. Prop: invalid — shared with the message." },
+        { name: "FormLabel", type: "Component", description: "Label; htmlFor auto-links to the control." },
+        { name: "FormControl", type: "Component", description: "Control container; auto-injects id, aria-invalid, and aria-describedby into its child." },
+        { name: "FormMessage", type: "Component", description: "Validation message with role=alert and error icon." },
+        { name: "FormDescription", type: "Component", description: "Helper description with a stable id for aria-describedby." },
         { name: "className", type: "string", description: "Additional CSS classes." },
       ]}
     />
