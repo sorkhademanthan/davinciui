@@ -30,19 +30,22 @@ export function RadioDescriptionPreview() {
 export function RadioChoiceCardPreview() {
   return (
     <div className="flex h-full w-full items-center justify-center p-8">
-      <RadioGroup className="grid gap-3 max-w-sm w-full">
-        <label className="flex items-center gap-3 rounded-lg border p-3 has-[input:checked]:border-primary has-[input:checked]:bg-primary/5 cursor-pointer">
-          <input type="radio" name="choice" defaultChecked className="sr-only peer" />
-          <span className="size-4 rounded-full border flex items-center justify-center peer-checked:bg-primary peer-checked:border-primary">
-            <span className="size-2 rounded-full bg-white opacity-0 peer-checked:opacity-100" />
-          </span>
-          Choice Card A
-        </label>
-        <label className="flex items-center gap-3 rounded-lg border p-3 cursor-pointer">
-          <input type="radio" name="choice" className="sr-only peer" />
-          <span className="size-4 rounded-full border" />
-          Choice Card B
-        </label>
+      <RadioGroup className="grid gap-3 max-w-sm w-full" defaultValue="hobby">
+        <Radio
+          name="plan"
+          value="Hobby"
+          defaultChecked
+          className="rounded-xl border border-input p-3.5 transition-all duration-150 ease-out hover:border-foreground/30 has-[input:checked]:border-primary has-[input:checked]:bg-primary/[0.04] has-[input:checked]:shadow-xs motion-reduce:transition-none"
+        >
+          <span className="ms-auto text-xs font-normal text-muted-foreground">$0</span>
+        </Radio>
+        <Radio
+          name="plan"
+          value="Pro"
+          className="rounded-xl border border-input p-3.5 transition-all duration-150 ease-out hover:border-foreground/30 has-[input:checked]:border-primary has-[input:checked]:bg-primary/[0.04] has-[input:checked]:shadow-xs motion-reduce:transition-none"
+        >
+          <span className="ms-auto text-xs font-normal text-muted-foreground">$20/mo</span>
+        </Radio>
       </RadioGroup>
     </div>
   );

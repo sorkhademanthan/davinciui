@@ -8,30 +8,60 @@ export interface RadioGroupProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 function RadioGroup({ className, invalid, ...props }: RadioGroupProps) {
-  return <div data-slot="radio-group" role="radiogroup" aria-invalid={invalid} className={cn("grid gap-2", className)} {...props} />;
+  return (
+    <div
+      data-slot="radio-group"
+      role="radiogroup"
+      aria-invalid={invalid || undefined}
+      data-invalid={invalid || undefined}
+      className={cn("grid gap-2", className)}
+      {...props}
+    />
+  );
 }
 
 export interface RadioProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "type"> {
   invalid?: boolean;
 }
 
-function Radio({ className, invalid, ...props }: RadioProps) {
+function Radio({ className, invalid, children, ...props }: RadioProps) {
   return (
     <label
       data-slot="radio"
+      data-invalid={invalid || undefined}
       className={cn(
-        "flex items-center gap-2 text-sm font-medium has-[input:disabled]:opacity-50 aria-invalid:text-destructive",
-        invalid && "text-destructive",
+        "flex cursor-pointer items-center gap-2 text-sm font-medium transition-colors duration-150 ease-out select-none motion-reduce:transition-none",
+        "has-[input:disabled]:cursor-not-allowed has-[input:disabled]:opacity-50",
+        "has-[input:focus-visible]:outline-none",
+        "has-[input:not(:checked)]:hover:text-foreground",
+        invalid ? "text-destructive" : "has-[input:checked]:text-foreground",
         className
       )}
-      aria-invalid={invalid}
+      aria-invalid={invalid || undefined}
     >
-      <span className={cn("relative flex size-4 shrink-0 items-center justify-center rounded-full border border-input shadow-xs/5 has-[input:checked]:border-primary has-[input:checked]:bg-primary has-[input:disabled]:opacity-50", invalid && "border-destructive")}>
+      <span
+        data-slot="radio-dot"
+        className={cn(
+          "relative flex size-4 shrink-0 items-center justify-center rounded-full border shadow-xs/5",
+          "bg-background transition-[border-color,box-shadow,background-color] duration-150 ease-out motion-reduce:transition-none",
+          invalid
+            ? "border-destructive/60"
+            : "border-input has-[input:checked]:border-primary has-[input:checked]:bg-primary",
+          // Keyboard focus halo — the sr-only input can't show one itself.
+          "has-[input:focus-visible]:border-ring has-[input:focus-visible:ring-[3px] has-[input:focus-visible]:ring-ring/30",
+          invalid &&
+            "has-[input:focus-visible]:border-destructive has-[input:focus-visible]:ring-destructive/20",
+          "has-[input:disabled]:shadow-none"
+        )}
+      >
         <input type="radio" className="peer sr-only" {...props} />
-        <span className="size-2 rounded-full bg-primary-foreground opacity-0 peer-checked:opacity-100 transition-opacity" />
+        <span
+          aria-hidden
+          className="size-2 scale-50 rounded-full bg-primary-foreground opacity-0 transition-all duration-150 ease-out peer-checked:scale-100 peer-checked:opacity-100 motion-reduce:transition-none"
+        />
       </span>
       <span>{props.value as string}</span>
-      {props.children}
+      {children}
     </label>
   );
 }
