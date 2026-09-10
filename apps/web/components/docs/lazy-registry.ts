@@ -258,6 +258,10 @@ const docsImportMap: Record<
     import("@/components/docs/gsap-text").then((m) => ({
       default: m.GSAPTextDocs,
     })),
+  "glitch-liquid-text": () =>
+    import("@/components/docs/glitch-liquid-text").then((m) => ({
+      default: m.GlitchLiquidTextDocs,
+    })),
   "shake-text": () =>
     import("@/components/docs/shake-text").then((m) => ({
       default: m.ShakeTextDocs,

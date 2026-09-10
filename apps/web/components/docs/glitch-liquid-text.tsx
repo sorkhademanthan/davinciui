@@ -1,0 +1,148 @@
+import { GlitchLiquidText } from "@workspace/ui/components/glitch-liquid-text"
+import { DocsPageLayout } from "@/components/docs-page-layout"
+import { readComponentSource } from "@/lib/source-code"
+import { MousePointer } from "lucide-react"
+
+const usageCode = `import { GlitchLiquidText } from "@/components/ui/glitch-liquid-text"
+
+<GlitchLiquidText
+  text="DaVinci UI"
+  fontFamily="Anton"
+  fontSize={250}
+  backgroundColor="#141414"
+  textColor="#f5f5f5"
+  distortionStrength={0.3}
+  distortionRadius={0.18}
+  chromaticAberration={0.012}
+  noiseStrength={0.07}
+  className="h-[720px] w-full"
+/>`
+
+const defaultCode = `import { GlitchLiquidText } from "@/components/ui/glitch-liquid-text"
+
+<GlitchLiquidText text="DaVinci UI" className="h-[720px] w-full" />`
+
+const multilineCode = `<GlitchLiquidText
+  text={"LIQUID\\nMEMBRANE"}
+  fontSize={220}
+  lineHeight={0.95}
+  distortionStrength={0.42}
+  liquidStrength={1.1}
+  className="h-[480px] w-full"
+/>`
+
+const monoCode = `<GlitchLiquidText
+  text="SIGNAL/NOISE"
+  fontFamily="monospace"
+  fontSize={120}
+  backgroundColor="#0a0a0f"
+  textColor="#c8ff4d"
+  chromaticAberration={0.02}
+  glitchStrength={0.9}
+  lightIntensity={0.6}
+  className="h-[420px] w-full"
+/>`
+
+function HoverHint() {
+    return (
+        <span className="pointer-events-none absolute bottom-5 left-0 right-0 flex items-center justify-center gap-1.5 text-xs font-medium text-muted-foreground/60 select-none">
+            <MousePointer className="w-3 h-3" />
+            Move your cursor across the type — velocity drags the membrane
+        </span>
+    )
+}
+
+export async function GlitchLiquidTextDocs() {
+    const sourceCode = (await readComponentSource("glitch-liquid-text")) || "// Unable to load source code"
+
+    return (
+        <DocsPageLayout
+            title="Glitch Liquid Text"
+            description="GPU-rendered interactive typography printed on a thin liquid membrane. The cursor stretches glyphs with viscous fluid distortion, velocity-driven smear, localized RGB channel separation, subtle glitch slices, and cinematic light rays — while untouched type stays razor sharp."
+            preview={
+                <div className="relative h-full min-h-[560px] w-full">
+                    <GlitchLiquidText
+                        text="DaVinci UI"
+                        fontFamily="Anton"
+                        fontSize={250}
+                        backgroundColor="#141414"
+                        textColor="#f5f5f5"
+                        className="h-full w-full"
+                    />
+                    <HoverHint />
+                </div>
+            }
+            previewCode={defaultCode}
+            fullWidthPreview
+            installPackageName="glitch-liquid-text"
+            installSourceCode={sourceCode}
+            installSourceFilename="components/ui/glitch-liquid-text.tsx"
+            usageCode={usageCode}
+            examples={[
+                {
+                    title: "Multiline Membrane",
+                    preview: (
+                        <GlitchLiquidText
+                            text={"LIQUID\nMEMBRANE"}
+                            fontFamily="Anton"
+                            fontSize={220}
+                            lineHeight={0.95}
+                            distortionStrength={0.42}
+                            liquidStrength={1.1}
+                            className="h-[480px] w-full"
+                        />
+                    ),
+                    code: multilineCode,
+                },
+                {
+                    title: "Signal Green",
+                    preview: (
+                        <GlitchLiquidText
+                            text="SIGNAL/NOISE"
+                            fontFamily="monospace"
+                            fontSize={120}
+                            backgroundColor="#0a0a0f"
+                            textColor="#c8ff4d"
+                            chromaticAberration={0.02}
+                            glitchStrength={0.9}
+                            lightIntensity={0.6}
+                            className="h-[420px] w-full"
+                        />
+                    ),
+                    code: monoCode,
+                },
+            ]}
+            props={[
+                { name: "text", type: "string", default: '"DaVinci UI"', description: "Text rendered into the GPU texture. Supports multiline via \\n." },
+                { name: "fontFamily", type: "string", default: '"Anton"', description: "Font family baked into the text texture. Ensure the font is loaded before mount for crisp results." },
+                { name: "fontSize", type: "number", default: "250", description: "Base type size in CSS px before contain-fit scaling." },
+                { name: "fontWeight", type: "number | string", default: "400", description: "Font weight baked into the texture." },
+                { name: "lineHeight", type: "number", default: "1", description: "Line-height multiplier for multiline text." },
+                { name: "letterSpacing", type: "number", default: "0", description: "Tracking in CSS px between characters." },
+                { name: "textColor", type: "string", default: '"#f5f5f5"', description: "Glyph color applied in the shader composite." },
+                { name: "backgroundColor", type: "string", default: '"#141414"', description: "Canvas clear color and shader background." },
+                { name: "distortionStrength", type: "number", default: "0.3", description: "Peak liquid displacement around the cursor." },
+                { name: "distortionRadius", type: "number", default: "0.18", description: "Interaction field radius in UV units." },
+                { name: "distortionDecay", type: "number", default: "3", description: "Viscous relaxation rate once the cursor leaves." },
+                { name: "noiseStrength", type: "number", default: "0.07", description: "Amplitude of the animated FBM ripple inside disturbed areas." },
+                { name: "noiseScale", type: "number", default: "2.4", description: "Spatial frequency of the liquid noise field." },
+                { name: "noiseSpeed", type: "number", default: "0.35", description: "Temporal evolution speed of the noise." },
+                { name: "chromaticAberration", type: "number", default: "0.012", description: "Peak RGB channel separation at distorted edges." },
+                { name: "glitchStrength", type: "number", default: "0.4", description: "Intensity of sparse horizontal glitch slices (secondary effect)." },
+                { name: "liquidStrength", type: "number", default: "0.65", description: "Tangential swirl component — higher feels more fluid, less lens-like." },
+                { name: "velocityInfluence", type: "number", default: "0.05", description: "How strongly cursor speed smears the type along motion." },
+                { name: "lightIntensity", type: "number", default: "0.35", description: "Directional light-ray bloom gathered from disturbed glyph edges." },
+                { name: "grainStrength", type: "number", default: "0.025", description: "Fine monochromatic cinematic grain." },
+                { name: "cursorEnabled", type: "boolean", default: "true", description: "Show the difference-blend ring + dot cursor while hovering." },
+                { name: "cursorSize", type: "number", default: "48", description: "Outer ring diameter in px." },
+                { name: "cursorColor", type: "string", default: '"#ffffff"', description: "Custom cursor color (rendered with difference blending)." },
+                { name: "interactive", type: "boolean", default: "true", description: "Enable pointer interaction. Disable for a static render." },
+                { name: "autoAnimate", type: "boolean", default: "true", description: "Low-energy wandering pointer keeps the membrane alive at idle." },
+                { name: "fit", type: '"contain" | "cover" | "fixed"', default: '"contain"', description: "How the text texture maps into the container." },
+                { name: "as", type: '"h1" | "h2" | "h3" | "p" | "div" | "span"', default: '"div"', description: "Semantic element for the screen-reader text node." },
+                { name: "ariaLabel", type: "string", description: "Accessible label override for the canvas region text." },
+                { name: "className", type: "string", description: "Additional classes. The container needs an explicit height (defaults to h-[560px])." },
+            ]}
+        />
+    )
+}
