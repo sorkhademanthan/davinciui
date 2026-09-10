@@ -173,6 +173,14 @@
       "type": "registry:ui"
     },
     {
+      "name": "glitch-liquid-text",
+      "type": "registry:ui"
+    },
+    {
+      "name": "gradient-hero-01",
+      "type": "registry:block"
+    },
+    {
       "name": "gsap-text",
       "type": "registry:ui"
     },
@@ -313,6 +321,14 @@
       "type": "registry:ui"
     },
     {
+      "name": "pricing-01",
+      "type": "registry:block"
+    },
+    {
+      "name": "pricing-02",
+      "type": "registry:block"
+    },
+    {
       "name": "prism-gradient",
       "type": "registry:ui"
     },
@@ -431,18 +447,6 @@
     {
       "name": "wheel-carousel",
       "type": "registry:ui"
-    },
-    {
-      "name": "gradient-hero-01",
-      "type": "registry:block"
-    },
-    {
-      "name": "pricing-01",
-      "type": "registry:block"
-    },
-    {
-      "name": "pricing-02",
-      "type": "registry:block"
     }
   ]
 }

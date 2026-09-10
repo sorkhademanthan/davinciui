@@ -153,6 +153,14 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "gsap-text",
     addedAt: "2026-09-03",
   },
+  "glitch-liquid-text": {
+    title: "Glitch Liquid Text",
+    description:
+      "GPU-rendered interactive typography on a liquid membrane — cursor-driven fluid distortion with chromatic glitch edges, light rays, and a magnetic custom cursor.",
+    category: "Text Animations",
+    slug: "glitch-liquid-text",
+    addedAt: "2026-09-10",
+  },
   "button": {
     title: "Button",
     description:
