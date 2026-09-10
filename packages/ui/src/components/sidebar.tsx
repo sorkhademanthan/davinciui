@@ -29,6 +29,7 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import { cn } from "@workspace/ui/lib/utils";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip";
 import {
   EASE_DRAWER,
   EASE_OUT,
@@ -149,33 +150,9 @@ function useIsMobile() {
   return useSyncExternalStore(subscribeToMobileQuery, getMobileSnapshot, getServerMobileSnapshot);
 }
 
-// Lightweight shared-layout wrapper — retains the animated pill contract
-// from the reference without pulling an extra registry dependency.
-type SharedLayoutBgProps = {
-  as?: "div" | "ul" | "nav";
-  children?: ReactNode;
-  className?: string;
-  pillClassName?: string;
-  pillContainerClassName?: string;
-} & HTMLAttributes<HTMLElement>;
-
-const SharedLayoutBg = forwardRef<HTMLElement, SharedLayoutBgProps>(function SharedLayoutBg(
-  { as = "div", children, className, pillClassName: _pill, pillContainerClassName: _pillC, ...props },
-  ref,
-) {
-  if (as === "ul") {
-    return (
-      <ul ref={ref as React.Ref<HTMLUListElement>} className={className} {...(props as HTMLAttributes<HTMLUListElement>)}>
-        {children}
-      </ul>
-    );
-  }
-  return (
-    <div ref={ref as React.Ref<HTMLDivElement>} className={className} {...props}>
-      {children}
-    </div>
-  );
-});
+// ─────────────────────────────────────────────────────────────
+// Contexts
+// ─────────────────────────────────────────────────────────────
 
 interface AnimatedSidebarContextValue {
   isMobile: boolean;
@@ -226,6 +203,25 @@ export interface AnimatedSidebarProviderProps extends HTMLAttributes<HTMLDivElem
   defaultOpenMobile?: boolean;
   onOpenMobileChange?: (open: boolean) => void;
   style?: SidebarProviderStyle;
+  /**
+   * Persist desktop open state in a cookie (shadcn-compatible
+   * `sidebar_state`, 7 days). Off by default — opt in per app.
+   */
+  persistKey?: string;
+}
+
+const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
+
+function readPersistedOpen(key: string | undefined, fallback: boolean): boolean {
+  if (!key || typeof document === "undefined") return fallback;
+  const match = document.cookie.match(new RegExp(`(?:^|; )${key}=([^;]*)`));
+  if (!match) return fallback;
+  return match[1] === "true";
+}
+
+function writePersistedOpen(key: string | undefined, open: boolean) {
+  if (!key || typeof document === "undefined") return;
+  document.cookie = `${key}=${open}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
 }
 
 export function AnimatedSidebarProvider({
@@ -238,9 +234,10 @@ export function AnimatedSidebarProvider({
   onOpenMobileChange,
   className,
   style,
+  persistKey,
   ...props
 }: AnimatedSidebarProviderProps) {
-  const [internalOpen, setInternalOpen] = useState(defaultOpen);
+  const [internalOpen, setInternalOpen] = useState(() => readPersistedOpen(persistKey, defaultOpen));
   const [internalOpenMobile, setInternalOpenMobile] = useState(defaultOpenMobile);
   const isMobile = useIsMobile();
   const reduce = useReducedMotion() ?? false;
@@ -252,9 +249,10 @@ export function AnimatedSidebarProvider({
   const setOpen = useCallback(
     (nextOpen: boolean) => {
       if (open === undefined) setInternalOpen(nextOpen);
+      writePersistedOpen(persistKey, nextOpen);
       onOpenChange?.(nextOpen);
     },
-    [onOpenChange, open],
+    [onOpenChange, open, persistKey],
   );
 
   const setOpenMobile = useCallback(
@@ -450,16 +448,22 @@ export interface AnimatedSidebarProps extends Omit<HTMLMotionProps<"aside">, "ch
   collapsible?: SidebarCollapsible;
   ariaLabel?: string;
   panelClassName?: string;
+  /**
+   * Expand the icon rail on hover, collapse on leave (desktop only).
+   * Only applies when `collapsible="icon"`. @default false
+   */
+  expandOnHover?: boolean;
 }
 
 export const AnimatedSidebar = forwardRef<HTMLElement, AnimatedSidebarProps>(function AnimatedSidebar(
-  { side = "left", variant = "sidebar", collapsible = "icon", ariaLabel = "Sidebar", children, className, panelClassName, style, ...props },
+  { side = "left", variant = "sidebar", collapsible = "icon", ariaLabel = "Sidebar", children, className, panelClassName, style, expandOnHover = false, ...props },
   forwardedRef,
 ) {
   const context = useAnimatedSidebar();
   const collapsed = collapsible !== "none" && !context.open;
   const offcanvas = collapsed && collapsible === "offcanvas";
   const width = offcanvas ? "0px" : collapsed ? "var(--sidebar-width-icon)" : "var(--sidebar-width)";
+  const hoverExpanded = useRef(false);
 
   if (context.isMobile) {
     return (
@@ -469,15 +473,37 @@ export const AnimatedSidebar = forwardRef<HTMLElement, AnimatedSidebarProps>(fun
     );
   }
 
+  const hoverProps =
+    expandOnHover && collapsible === "icon" && !context.isMobile
+      ? {
+          onMouseEnter: (e: React.MouseEvent<HTMLElement>) => {
+            props.onMouseEnter?.(e as never);
+            if (!e.defaultPrevented && !context.open) {
+              hoverExpanded.current = true;
+              context.setOpen(true);
+            }
+          },
+          onMouseLeave: (e: React.MouseEvent<HTMLElement>) => {
+            props.onMouseLeave?.(e as never);
+            if (!e.defaultPrevented && hoverExpanded.current) {
+              hoverExpanded.current = false;
+              context.setOpen(false);
+            }
+          },
+        }
+      : {};
+
   return (
     <motion.aside
       {...props}
+      {...hoverProps}
       ref={forwardedRef}
       initial={false}
       aria-label={ariaLabel}
       data-slot="sidebar"
       data-state={collapsed ? "collapsed" : "expanded"}
       data-collapsible={collapsible}
+      data-rail={collapsible === "icon" && collapsed ? "true" : undefined}
       data-variant={variant}
       data-side={side}
       animate={{ width }}
@@ -536,7 +562,7 @@ export const AnimatedSidebarTrigger = forwardRef<HTMLButtonElement, AnimatedSide
         className,
       )}
     >
-      {children ?? <PanelLeft className="size-4" />}
+      {children ?? <PanelLeft className={cn("size-4 transition-transform duration-200 motion-reduce:transition-none", !expanded && "-scale-x-100")} />}
       <span className="sr-only">Toggle Sidebar</span>
     </button>
   );
@@ -574,6 +600,7 @@ export const AnimatedSidebarRail = forwardRef<HTMLButtonElement, AnimatedSidebar
 ) {
   const context = useAnimatedSidebar();
   const panel = useAnimatedSidebarPanel();
+  if (panel.collapsible === "none") return null;
   return (
     <button
       {...props}
@@ -667,7 +694,7 @@ export const AnimatedSidebarGroupAction = forwardRef<HTMLButtonElement, HTMLAttr
       ref={forwardedRef as React.Ref<HTMLButtonElement>}
       data-slot="sidebar-group-action"
       className={cn(
-        "absolute right-3 top-3.5 flex size-5 items-center justify-center rounded-md text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 focus-visible:ring-sidebar-ring group-data-[collapsible=icon]:hidden",
+        "absolute right-3 top-3.5 flex size-5 items-center justify-center rounded-md text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 focus-visible:ring-sidebar-ring group-data-[rail]/sidebar:hidden",
         className,
       )}
     />
@@ -676,9 +703,9 @@ export const AnimatedSidebarGroupAction = forwardRef<HTMLButtonElement, HTMLAttr
 
 export const AnimatedSidebarMenu = forwardRef<HTMLUListElement, HTMLAttributes<HTMLUListElement>>(function AnimatedSidebarMenu({ children, className, ...props }, forwardedRef) {
   return (
-    <SharedLayoutBg ref={forwardedRef as React.Ref<HTMLElement>} as="ul" data-slot="sidebar-menu" className={cn("flex w-full min-w-0 list-none flex-col gap-1", className)} {...props}>
+    <ul ref={forwardedRef} data-slot="sidebar-menu" className={cn("flex w-full min-w-0 list-none flex-col gap-1", className)} {...props}>
       {children}
-    </SharedLayoutBg>
+    </ul>
   );
 });
 
@@ -792,6 +819,8 @@ export interface AnimatedSidebarMenuButtonProps {
   rel?: string;
   onSelect?: () => void;
   className?: string;
+  /** Rail tooltip. Defaults to the text label; shown only when collapsed on desktop. */
+  tooltip?: ReactNode;
 }
 
 export function AnimatedSidebarMenuButton({
@@ -807,10 +836,14 @@ export function AnimatedSidebarMenuButton({
   rel,
   onSelect,
   className,
+  tooltip,
 }: AnimatedSidebarMenuButtonProps) {
   const context = useAnimatedSidebar();
   const panel = useAnimatedSidebarPanel();
   const textLabel = typeof children === "string" ? children : undefined;
+  const tip = tooltip ?? textLabel;
+  // True icon rail: center the glyph, drop text flow (Linear-style).
+  const railed = panel.collapsed && !context.isMobile;
   const select = (event: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>) => {
     if (disabled) {
       event.preventDefault();
@@ -830,7 +863,7 @@ export function AnimatedSidebarMenuButton({
         animate={{ opacity: panel.collapsed ? 0 : 1, x: panel.collapsed ? -4 : 0 }}
         transition={context.reduce ? REDUCED_TRANSITION : panel.collapsed ? LABEL_EXIT_TRANSITION : LABEL_ENTER_TRANSITION}
         aria-hidden={panel.collapsed}
-        className={cn("relative z-10 min-w-0 flex-1 truncate", panel.collapsed && "pointer-events-none")}
+        className={cn("relative z-10 min-w-0 flex-1 truncate", panel.collapsed && "pointer-events-none", railed && "hidden")}
       >
         {children}
       </motion.span>
@@ -841,7 +874,7 @@ export function AnimatedSidebarMenuButton({
           initial={false}
           animate={{ opacity: panel.collapsed ? 0 : 1, rotate: ariaExpanded ? 90 : 0, x: panel.collapsed ? 4 : 0 }}
           transition={context.reduce ? { duration: 0 } : SPRING_LAYOUT}
-          className="relative z-10 grid size-4 shrink-0 place-items-center text-muted-foreground"
+          className={cn("relative z-10 grid size-4 shrink-0 place-items-center text-muted-foreground", railed && "hidden")}
         >
           <ChevronRight className="size-3.5" />
         </motion.span>
@@ -852,9 +885,12 @@ export function AnimatedSidebarMenuButton({
     "relative flex h-8 w-full min-w-0 items-center gap-2.5 overflow-hidden rounded-lg px-2.5 text-left text-[13.5px] font-[450] tracking-[-0.01em] outline-none text-sidebar-foreground/75 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 focus-visible:ring-sidebar-ring",
     isActive && "text-sidebar-accent-foreground",
     disabled && "cursor-not-allowed opacity-40",
+    railed && "justify-center gap-0 px-0",
     className,
   );
-  return href ? (
+  // Native title only when no rich tooltip takes over.
+  const nativeTitle = panel.collapsed && !tip ? textLabel : undefined;
+  const element = href ? (
     <motion.a
       href={href}
       target={target}
@@ -863,7 +899,7 @@ export function AnimatedSidebarMenuButton({
       aria-expanded={ariaExpanded}
       aria-disabled={disabled || undefined}
       aria-label={panel.collapsed ? textLabel : undefined}
-      title={panel.collapsed ? textLabel : undefined}
+      title={nativeTitle}
       tabIndex={disabled ? -1 : undefined}
       onClick={select}
       whileTap={context.reduce || disabled ? undefined : { scale: 0.98 }}
@@ -879,7 +915,7 @@ export function AnimatedSidebarMenuButton({
       aria-current={isActive ? "page" : undefined}
       aria-expanded={ariaExpanded}
       aria-label={panel.collapsed ? textLabel : undefined}
-      title={panel.collapsed ? textLabel : undefined}
+      title={nativeTitle}
       onClick={select}
       whileTap={context.reduce || disabled ? undefined : { scale: 0.98 }}
       transition={SPRING_PRESS}
@@ -887,6 +923,19 @@ export function AnimatedSidebarMenuButton({
     >
       {content}
     </motion.button>
+  );
+  if (!tip) return element;
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>{element}</TooltipTrigger>
+      <TooltipContent
+        side={panel.side === "right" ? "left" : "right"}
+        align="center"
+        hidden={!(panel.collapsed && !context.isMobile)}
+      >
+        {tip}
+      </TooltipContent>
+    </Tooltip>
   );
 }
 
@@ -921,11 +970,11 @@ export function SidebarMenuButton(props: Record<string, unknown> & { isActive?: 
       </div>
     );
   }
-  // legacy tooltip -> title for collapsed rail
+  // legacy tooltip flows into the real rail tooltip
   const extra: Record<string, unknown> = {};
-  if (tooltip) (extra as { title?: string }).title = tooltip as string;
+  if (tooltip) (extra as { tooltip?: string }).tooltip = tooltip as string;
   return (
-    <AnimatedSidebarMenuButton onSelect={handleSelect} className={className} {...(rest as Omit<AnimatedSidebarMenuButtonProps, "children">)}>
+    <AnimatedSidebarMenuButton onSelect={handleSelect} className={className} {...extra} {...(rest as Omit<AnimatedSidebarMenuButtonProps, "children">)}>
       {children as ReactNode}
     </AnimatedSidebarMenuButton>
   );
@@ -965,18 +1014,27 @@ export function SidebarMenuBadge({ className, ...props }: React.HTMLAttributes<H
   );
 }
 
-export function SidebarMenuAction({ className, showOnHover: _showOnHover, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement> & { showOnHover?: boolean }) {
+export function SidebarMenuAction({ className, showOnHover = false, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement> & { showOnHover?: boolean }) {
   return (
     <button
       data-slot="sidebar-menu-action"
-      className={cn("absolute right-1 top-1.5 flex size-5 items-center justify-center rounded-md text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground", className)}
+      className={cn(
+        "absolute right-1 top-1.5 flex size-5 items-center justify-center rounded-md text-sidebar-foreground outline-none transition-all duration-150 ease-out hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 focus-visible:ring-sidebar-ring motion-reduce:transition-none",
+        "group-data-[rail]/sidebar:hidden",
+        showOnHover &&
+          "md:opacity-0 group-hover/menu-item:opacity-100 group-focus-within/menu-item:opacity-100 focus-visible:opacity-100 [@media(hover:none)]:opacity-100",
+        className
+      )}
       {...props}
     />
   );
 }
 
-export function SidebarMenuSkeleton({ className, showIcon, ...props }: React.HTMLAttributes<HTMLDivElement> & { showIcon?: boolean }) {
-  const width = `${Math.floor(Math.random() * 40) + 50}%`;
+const SKELETON_WIDTHS = ["72%", "58%", "81%", "64%", "77%"];
+
+export function SidebarMenuSkeleton({ className, showIcon, index = 0, ...props }: React.HTMLAttributes<HTMLDivElement> & { showIcon?: boolean; index?: number }) {
+  // Fixed width pattern — Math.random() in render breaks hydration.
+  const width = SKELETON_WIDTHS[index % SKELETON_WIDTHS.length];
   return (
     <div data-slot="sidebar-menu-skeleton" className={cn("flex h-8 items-center gap-2 rounded-md px-2", className)} {...props}>
       {showIcon && <div className="size-4 animate-pulse rounded bg-sidebar-accent" />}
