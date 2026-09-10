@@ -4,16 +4,24 @@ import {
   BlockEndDemo,
   BlockStartDemo,
   ButtonDemo,
+  ButtonVariantsDemo,
+  ClearableDemo,
+  CopyDemo,
   CustomInputDemo,
   DropdownDemo,
   IconDemo,
   InlineEndDemo,
   InlineStartDemo,
+  InvalidDemo,
   KbdDemo,
+  MixedDemo,
   RtlInputGroupDemo,
+  SizesDemo,
   SpinnerDemo,
   TextDemo,
   TextareaDemo,
+  UrlDemo,
+  VariantsDemo,
 } from "@/components/docs/previews/input-group-preview";
 import {
   InputGroup,
@@ -59,7 +67,7 @@ export async function InputGroupDocs() {
   return (
     <DocsPageLayout
       title="Input Group"
-      description="Compound field with dockable addons — icons, text, buttons, and hints arranged inline or stacked around an input or textarea."
+      description="Compound field with dockable addons — icons, text, buttons, and hints arranged inline or stacked around an input or textarea. Size, variant, and invalid state cascade from the group, and block + inline addons compose freely."
       preview={
         <div className="flex flex-col items-center justify-center">
           <div className="w-72">
@@ -246,6 +254,109 @@ export async function InputGroupDocs() {
 </InputGroup>`,
         },
         {
+          title: "Mixed",
+          preview: <MixedDemo />,
+          code: `import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
+
+// block + inline addons compose in one group
+<InputGroup>
+  <InputGroupAddon align="block-start">Profile handle</InputGroupAddon>
+  <InputGroupAddon align="inline-start">@</InputGroupAddon>
+  <InputGroupInput placeholder="ada" />
+  <InputGroupAddon align="inline-end">
+    <kbd>↵</kbd>
+  </InputGroupAddon>
+  <InputGroupAddon align="block-end">Shown on invoices.</InputGroupAddon>
+</InputGroup>`,
+        },
+        {
+          title: "Sizes",
+          preview: <SizesDemo />,
+          code: `import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
+
+<InputGroup size="sm">…</InputGroup>
+<InputGroup>…</InputGroup>
+<InputGroup size="lg">…</InputGroup>`,
+        },
+        {
+          title: "Variants",
+          preview: <VariantsDemo />,
+          code: `import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
+
+<InputGroup>…</InputGroup>
+<InputGroup variant="filled">…</InputGroup>
+<InputGroup variant="ghost">…</InputGroup>
+<InputGroup variant="underline">…</InputGroup>`,
+        },
+        {
+          title: "Invalid",
+          preview: <InvalidDemo />,
+          code: `import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
+
+<InputGroup invalid>
+  <InputGroupAddon align="inline-start">@</InputGroupAddon>
+  <InputGroupInput placeholder="Username" />
+</InputGroup>`,
+        },
+        {
+          title: "Buttons",
+          preview: <ButtonVariantsDemo />,
+          code: `import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group";
+
+<InputGroup>
+  <InputGroupInput placeholder="teammate@studio.co" />
+  <InputGroupAddon align="inline-end">
+    <InputGroupButton>Invite</InputGroupButton>
+    <InputGroupButton variant="ghost">Later</InputGroupButton>
+  </InputGroupAddon>
+</InputGroup>`,
+        },
+        {
+          title: "URL",
+          preview: <UrlDemo />,
+          code: `import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/components/ui/input-group";
+
+<InputGroup>
+  <InputGroupAddon align="inline-start">
+    <InputGroupText>https://</InputGroupText>
+  </InputGroupAddon>
+  <InputGroupInput placeholder="yoursite" />
+  <InputGroupAddon align="inline-end">
+    <InputGroupText>.com</InputGroupText>
+  </InputGroupAddon>
+</InputGroup>`,
+        },
+        {
+          title: "Copy",
+          preview: <CopyDemo />,
+          code: `import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group";
+
+<InputGroup>
+  <InputGroupInput defaultValue="npx …" readOnly />
+  <InputGroupAddon align="inline-end">
+    <InputGroupButton size="icon-sm" aria-label="Copy">
+      <Copy className="size-4" />
+    </InputGroupButton>
+  </InputGroupAddon>
+</InputGroup>`,
+        },
+        {
+          title: "Clearable",
+          preview: <ClearableDemo />,
+          code: `import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group";
+
+<InputGroup>
+  <InputGroupInput value={query} onChange={…} />
+  {query && (
+    <InputGroupAddon align="inline-end">
+      <InputGroupButton size="icon-xs" variant="ghost" aria-label="Clear">
+        <X className="size-4" />
+      </InputGroupButton>
+    </InputGroupAddon>
+  )}
+</InputGroup>`,
+        },
+        {
           title: "RTL",
           preview: <RtlInputGroupDemo />,
           code: `import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
@@ -261,10 +372,15 @@ export async function InputGroupDocs() {
         },
       ]}
       props={[
-        { name: "InputGroupAddon · align", type: '"inline-start" | "inline-end" | "block-start" | "block-end"', default: '"inline-start"', description: "Addon placement around the field; block addons stack full-width." },
-        { name: "InputGroupInput", type: "input element", description: "Borderless field that fills the middle row." },
-        { name: "InputGroupTextarea", type: "textarea element", description: "Resizable multiline field for taller groups." },
-        { name: "InputGroupButton", type: "button element", description: "Action button docked as an addon." },
+        { name: "InputGroup · size", type: '"sm" | "default" | "lg"', default: '"default"', description: "Height / density, inherited by the field, icons, and buttons." },
+        { name: "InputGroup · variant", type: '"default" | "filled" | "ghost" | "underline"', default: '"default"', description: "Frame treatment, matching Input." },
+        { name: "InputGroup · invalid", type: "boolean", default: "false", description: "Paints the error ring and marks the inner field invalid." },
+        { name: "InputGroupAddon · align", type: '"inline-start" | "inline-end" | "block-start" | "block-end"', default: '"inline-start"', description: "Addon placement; block + inline addons compose in one group." },
+        { name: "InputGroupInput · invalid", type: "boolean", default: "false", description: "Shorthand for aria-invalid on the field." },
+        { name: "InputGroupTextarea · invalid", type: "boolean", default: "false", description: "Shorthand for aria-invalid on the field." },
+        { name: "InputGroupText", type: "span element", description: "Static muted text (prefixes, suffixes, units) docked as an addon." },
+        { name: "InputGroupButton · size", type: '"xs" | "sm" | "icon-xs" | "icon-sm"', default: '"xs"', description: "Docked button density; icon sizes render square buttons." },
+        { name: "InputGroupButton · variant", type: '"default" | "secondary" | "outline" | "ghost" | "destructive"', default: '"default"', description: "Docked button treatment." },
       ]}
     />
   );
