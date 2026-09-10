@@ -16,7 +16,7 @@ import {
 } from "@workspace/ui/components/field";
 import { Input } from "@workspace/ui/components/input";
 import { Textarea } from "@workspace/ui/components/textarea";
-import { Select } from "@workspace/ui/components/select";
+import { NativeSelect, NativeSelectOption } from "@workspace/ui/components/native-select";
 import { Checkbox } from "@workspace/ui/components/checkbox";
 import { RadioGroup, Radio } from "@workspace/ui/components/radio";
 import { Switch } from "@workspace/ui/components/switch";
@@ -192,11 +192,11 @@ export function SelectFieldDemo() {
     <DemoShell>
       <Field>
         <FieldLabel htmlFor="sel-role">Role</FieldLabel>
-        <Select id="sel-role" defaultValue="engineer">
-          <option value="engineer">Engineer</option>
-          <option value="designer">Designer</option>
-          <option value="founder">Founder</option>
-        </Select>
+        <NativeSelect id="sel-role" defaultValue="engineer">
+          <NativeSelectOption value="engineer">Engineer</NativeSelectOption>
+          <NativeSelectOption value="designer">Designer</NativeSelectOption>
+          <NativeSelectOption value="founder">Founder</NativeSelectOption>
+        </NativeSelect>
         <FieldDescription>Controls default permissions.</FieldDescription>
       </Field>
     </DemoShell>

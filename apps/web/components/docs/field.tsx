@@ -195,14 +195,14 @@ import { Textarea } from "@/components/ui/textarea";
           title: "Select",
           preview: <SelectFieldDemo />,
           code: `import { Field, FieldLabel, FieldDescription } from "@/components/ui/field";
-import { Select } from "@/components/ui/select";
+import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select";
 
 <Field>
   <FieldLabel htmlFor="role">Role</FieldLabel>
-  <Select id="role" defaultValue="engineer">
-    <option value="engineer">Engineer</option>
-    <option value="designer">Designer</option>
-  </Select>
+  <NativeSelect id="role" defaultValue="engineer">
+    <NativeSelectOption value="engineer">Engineer</NativeSelectOption>
+    <NativeSelectOption value="designer">Designer</NativeSelectOption>
+  </NativeSelect>
   <FieldDescription>Controls default permissions.</FieldDescription>
 </Field>`,
         },

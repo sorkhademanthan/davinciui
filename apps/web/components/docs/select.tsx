@@ -1,20 +1,27 @@
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import {
-  SelectPreview,
-  SelectCompositionPreview,
   SelectAlignPreview,
-  SelectGroupsPreview,
-  SelectScrollablePreview,
+  SelectCompositionPreview,
+  SelectControlledPreview,
   SelectDisabledPreview,
+  SelectGroupsPreview,
   SelectInvalidPreview,
+  SelectPreview,
   SelectRtlPreview,
+  SelectScrollablePreview,
+  SelectSizesPreview,
 } from "@/components/docs/previews/select-preview";
 import { readComponentSource } from "@/lib/source-code";
 
-const importCode = `import { Select, SelectItem, SelectGroup } from "@/components/ui/select"`;
-const defaultCode = `<Select>
-  <option value="apple">Apple</option>
-  <option value="banana">Banana</option>
+const importCode = `import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"`;
+const defaultCode = `<Select defaultValue="apple">
+  <SelectTrigger>
+    <SelectValue placeholder="Pick a fruit" />
+  </SelectTrigger>
+  <SelectContent>
+    <SelectItem value="apple">Apple</SelectItem>
+    <SelectItem value="banana">Banana</SelectItem>
+  </SelectContent>
 </Select>`;
 
 export async function SelectDocs() {
@@ -23,30 +30,62 @@ export async function SelectDocs() {
   return (
     <DocsPageLayout
       title="Select"
-      description="Displays a list of options for the user to pick from — triggered by a button."
+      description="A custom dropdown with grouped items, check indicators, scroll buttons, typeahead, and full keyboard support — for when NativeSelect isn't enough."
       preview={<SelectPreview />}
       previewCode={defaultCode}
       installPackageName="select"
-      installDependencies=""
+      installDependencies="@base-ui/react"
       installSourceCode={sourceCode}
       installSourceFilename="components/ui/select.tsx"
       importCode={importCode}
       usageCode={defaultCode}
       examples={[
-        { title: "Composition", preview: <SelectCompositionPreview />, code: `<Select>\n  <option>Option</option>\n</Select>` },
-        { title: "Align Item With Trigger", preview: <SelectAlignPreview />, code: `<Select>\n  <option>Align Center</option>\n</Select>` },
-        { title: "Groups", preview: <SelectGroupsPreview />, code: `<Select>\n  <optgroup label="Fruits">\n    <option>Apple</option>\n  </optgroup>\n</Select>` },
-        { title: "Scrollable", preview: <SelectScrollablePreview />, code: `<Select>\n  {Array.from({length:20}).map(i=> <option>Item {i}</option>)}\n</Select>` },
-        { title: "Disabled", preview: <SelectDisabledPreview />, code: `<Select disabled>\n  <option>Disabled</option>\n</Select>` },
-        { title: "Invalid", preview: <SelectInvalidPreview />, code: `<Select invalid>\n  <option>Invalid</option>\n</Select>` },
-        { title: "RTL", preview: <SelectRtlPreview />, code: `<div dir="rtl">\n  <Select><option>تفاحة</option></Select>\n</div>` },
+        { title: "Composition", preview: <SelectCompositionPreview />, code: defaultCode },
+        {
+          title: "Groups",
+          preview: <SelectGroupsPreview />,
+          code: `<SelectContent>\n  <SelectGroup>\n    <SelectGroupLabel>Fruits</SelectGroupLabel>\n    <SelectItem value="apple">Apple</SelectItem>\n  </SelectGroup>\n  <SelectSeparator />\n</SelectContent>`,
+        },
+        {
+          title: "Scrollable",
+          preview: <SelectScrollablePreview />,
+          code: `<SelectContent>\n  {/* 20 items — chevron buttons appear at the edges */}\n  <SelectItem value="0">Item 1</SelectItem>\n</SelectContent>`,
+        },
+        {
+          title: "Controlled",
+          preview: <SelectControlledPreview />,
+          code: `const [value, setValue] = useState("designer")\n<Select value={value} onValueChange={(v) => setValue(v as string)}>\n  <SelectTrigger>\n    <SelectValue placeholder="Pick a role" />\n  </SelectTrigger>\n</Select>`,
+        },
+        {
+          title: "Sizes",
+          preview: <SelectSizesPreview />,
+          code: `<SelectTrigger size="sm">\n  <SelectValue />\n</SelectTrigger>`,
+        },
+        {
+          title: "Invalid",
+          preview: <SelectInvalidPreview />,
+          code: `<SelectTrigger invalid>\n  <SelectValue placeholder="Required field…" />\n</SelectTrigger>`,
+        },
+        {
+          title: "Disabled",
+          preview: <SelectDisabledPreview />,
+          code: `<Select disabled>\n  <SelectTrigger>\n    <SelectValue />\n  </SelectTrigger>\n</Select>`,
+        },
+        {
+          title: "Align",
+          preview: <SelectAlignPreview />,
+          code: `<SelectContent align="start">…</SelectContent>\n<SelectContent align="end">…</SelectContent>`,
+        },
+        { title: "RTL", preview: <SelectRtlPreview />, code: `<div dir="rtl">\n  <Select>…</Select>\n</div>` },
       ]}
       props={[
-        { name: "Select", type: "Component", description: "Root select element." },
-        { name: "SelectItem", type: "Component", description: "Individual option." },
-        { name: "SelectGroup", type: "Component", description: "Group of options (optgroup)." },
-        { name: "disabled", type: "boolean", default: "false", description: "Disables the select." },
-        { name: "invalid", type: "boolean", default: "false", description: "Marks as invalid." },
+        { name: "SelectTrigger · size", type: '"sm" | "default"', default: '"default"', description: "Trigger density." },
+        { name: "SelectTrigger · invalid", type: "boolean", default: "false", description: "Destructive ring on the trigger." },
+        { name: "SelectValue · placeholder", type: "ReactNode", description: "Gray hint when nothing is selected." },
+        { name: "SelectContent", type: "Component", description: "Animated portal panel with edge scroll buttons. Props: align, side, sideOffset." },
+        { name: "SelectItem", type: "Component", description: "Option with check indicator, typeahead, and disabled support." },
+        { name: "SelectGroup / Label / Separator", type: "Component", description: "Section structure inside the panel." },
+        { name: "value / onValueChange", type: "string / fn", description: "Controlled selection." },
         { name: "className", type: "string", description: "Additional CSS classes." },
       ]}
     />
