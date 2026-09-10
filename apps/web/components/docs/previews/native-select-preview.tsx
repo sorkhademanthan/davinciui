@@ -6,7 +6,7 @@ import {
   NativeSelectGroup,
   NativeSelectOption,
 } from "@workspace/ui/components/native-select";
-import { Select } from "@workspace/ui/components/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@workspace/ui/components/select";
 
 function DemoShell({ children, readout }: { children: React.ReactNode; readout?: string }) {
   return (
@@ -27,7 +27,7 @@ export function SimpleNativeSelectDemo() {
   const [value, setValue] = React.useState("");
   return (
     <DemoShell readout={value || "—"}>
-      <NativeSelect value={value} onChange={(e) => setValue(e.target.value)}>
+      <NativeSelect required value={value} onChange={(e) => setValue(e.target.value)} className="max-w-72">
         <NativeSelectOption value="" disabled hidden>
           Choose a role…
         </NativeSelectOption>
@@ -45,7 +45,7 @@ export function WithGroupsDemo() {
   const [value, setValue] = React.useState("react");
   return (
     <DemoShell readout={value}>
-      <NativeSelect value={value} onChange={(e) => setValue(e.target.value)}>
+      <NativeSelect value={value} onChange={(e) => setValue(e.target.value)} className="max-w-72">
         <NativeSelectGroup label="React ecosystem">
           <NativeSelectOption value="react">React</NativeSelectOption>
           <NativeSelectOption value="next">Next.js</NativeSelectOption>
@@ -63,7 +63,7 @@ export function GroupsDemo() {
   const [value, setValue] = React.useState("");
   return (
     <DemoShell readout={value || "—"}>
-      <NativeSelect value={value} onChange={(e) => setValue(e.target.value)}>
+      <NativeSelect required value={value} onChange={(e) => setValue(e.target.value)} className="max-w-72">
         <NativeSelectOption value="" disabled hidden>
           Pick a stack…
         </NativeSelectOption>
@@ -82,10 +82,23 @@ export function GroupsDemo() {
   );
 }
 
+export function MultipleNativeSelectDemo() {
+  return (
+    <DemoShell readout="listbox mode — chevron hides itself">
+      <NativeSelect multiple defaultValue={["react", "go"]} aria-label="Frameworks" className="max-w-72">
+        <NativeSelectOption value="react">React</NativeSelectOption>
+        <NativeSelectOption value="vue">Vue</NativeSelectOption>
+        <NativeSelectOption value="node">Node</NativeSelectOption>
+        <NativeSelectOption value="go">Go</NativeSelectOption>
+      </NativeSelect>
+    </DemoShell>
+  );
+}
+
 export function DisabledNativeSelectDemo() {
   return (
     <DemoShell readout="Entire control disabled">
-      <NativeSelect disabled defaultValue="react">
+      <NativeSelect disabled defaultValue="react" className="max-w-72">
         <NativeSelectOption value="react">React</NativeSelectOption>
         <NativeSelectOption value="vue">Vue</NativeSelectOption>
       </NativeSelect>
@@ -97,8 +110,8 @@ export function InvalidNativeSelectDemo() {
   const [value, setValue] = React.useState("");
   return (
     <DemoShell>
-      <div className="flex flex-col items-center gap-2">
-        <NativeSelect invalid value={value} onChange={(e) => setValue(e.target.value)}>
+      <div className="flex w-full max-w-72 flex-col items-stretch gap-2">
+        <NativeSelect invalid required value={value} onChange={(e) => setValue(e.target.value)}>
           <NativeSelectOption value="" disabled hidden>
             Required field…
           </NativeSelectOption>
@@ -116,14 +129,19 @@ export function InvalidNativeSelectDemo() {
 export function VsSelectDemo() {
   return (
     <DemoShell readout="Left: native (OS picker, zero JS) · Right: custom (full styling)">
-      <div className="flex flex-col items-center gap-3 sm:flex-row">
-        <NativeSelect defaultValue="react" aria-label="Native select">
+      <div className="flex w-full max-w-xl flex-col items-stretch gap-3 sm:flex-row">
+        <NativeSelect defaultValue="react" aria-label="Native select" className="flex-1">
           <NativeSelectOption value="react">React</NativeSelectOption>
           <NativeSelectOption value="vue">Vue</NativeSelectOption>
         </NativeSelect>
-        <Select defaultValue="react" aria-label="Custom select" className="w-72">
-          <option value="react">React</option>
-          <option value="vue">Vue</option>
+        <Select defaultValue="react" aria-label="Custom select">
+          <SelectTrigger className="w-72 max-w-full">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="react">React</SelectItem>
+            <SelectItem value="vue">Vue</SelectItem>
+          </SelectContent>
         </Select>
       </div>
     </DemoShell>
@@ -136,7 +154,7 @@ export function RtlNativeSelectDemo() {
   const [value, setValue] = React.useState("");
   return (
     <DemoShell>
-      <div dir="rtl">
+      <div dir="rtl" className="w-full max-w-72">
         <NativeSelect value={value} onChange={(e) => setValue(e.target.value)}>
           <NativeSelectOption value="" disabled hidden>
             اختر الدور…

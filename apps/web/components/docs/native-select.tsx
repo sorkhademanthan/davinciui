@@ -3,6 +3,7 @@ import {
   DisabledNativeSelectDemo,
   GroupsDemo,
   InvalidNativeSelectDemo,
+  MultipleNativeSelectDemo,
   RtlNativeSelectDemo,
   SimpleNativeSelectDemo,
   VsSelectDemo,
@@ -45,9 +46,9 @@ export async function NativeSelectDocs() {
   return (
     <DocsPageLayout
       title="Native Select"
-      description="A styled native select with grouped options, invalid and disabled states, and RTL — the OS picker on mobile, zero JavaScript."
+      description="A styled native select with grouped options, placeholder graying, listbox mode, invalid and disabled states, and RTL — the OS picker on mobile, zero JavaScript."
       preview={
-        <div className="flex flex-col items-center justify-center">
+        <div className="flex w-full max-w-72 flex-col items-center justify-center">
           <NativeSelect defaultValue="react">
             <option value="react">React</option>
             <option value="vue">Vue</option>
@@ -100,6 +101,17 @@ const [value, setValue] = React.useState("");
 </NativeSelectGroup>`,
         },
         {
+          title: "Multiple",
+          preview: <MultipleNativeSelectDemo />,
+          code: `import { NativeSelect } from "@/components/ui/native-select"
+
+// Listbox mode stretches naturally; the chevron hides itself.
+<NativeSelect multiple defaultValue={["react", "go"]} aria-label="Frameworks">
+  <option value="react">React</option>
+  <option value="vue">Vue</option>
+</NativeSelect>`,
+        },
+        {
           title: "Disabled",
           preview: <DisabledNativeSelectDemo />,
           code: `import { NativeSelect } from "@/components/ui/native-select"
@@ -137,10 +149,12 @@ import { Select } from "@/components/ui/select";
         },
       ]}
       props={[
-        { name: "invalid", type: "boolean", default: "false", description: "Error state with aria-invalid and destructive ring." },
+        { name: "invalid", type: "boolean", default: "false", description: "Error state with destructive ring. Also honors aria-invalid." },
+        { name: "required", type: "boolean", default: "false", description: "Native required — grays the placeholder until a value is picked." },
+        { name: "multiple", type: "boolean", default: "false", description: "Listbox mode. Stretches to fit; the chevron hides itself." },
         { name: "NativeSelectGroup", type: "optgroup element", description: "Labeled option group; supports native disabled." },
         { name: "NativeSelectOption", type: "option element", description: "Option with native disabled + hidden placeholder support." },
-        { name: "className", type: "string", description: "Extra classes for the wrapper." },
+        { name: "className", type: "string", description: "Extra classes for the wrapper. Constrain width with max-w-*." },
       ]}
     />
   );
