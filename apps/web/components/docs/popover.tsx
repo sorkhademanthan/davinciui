@@ -1,14 +1,19 @@
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import {
-  PopoverPreview,
-  PopoverBasicPreview,
   PopoverAlignPreview,
+  PopoverArrowPreview,
+  PopoverBasicPreview,
+  PopoverCompactPreview,
   PopoverFormPreview,
+  PopoverHeaderPreview,
+  PopoverPreview,
   PopoverRtlPreview,
+  PopoverSidesPreview,
+  PopoverWidePreview,
 } from "@/components/docs/previews/popover-preview";
 import { readComponentSource } from "@/lib/source-code";
 
-const importCode = `import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"`;
+const importCode = `import { Popover, PopoverContent, PopoverDescription, PopoverHeader, PopoverTitle, PopoverTrigger } from "@/components/ui/popover"`;
 
 const defaultCode = `<Popover>
   <PopoverTrigger>Open</PopoverTrigger>
@@ -21,7 +26,7 @@ export async function PopoverDocs() {
   return (
     <DocsPageLayout
       title="Popover"
-      description="Displays rich content in a portal, triggered by a button."
+      description="Rich content in a portal, triggered by a button — compact hints, structured panels, and wide cards with an optional anchor arrow."
       preview={<PopoverPreview />}
       previewCode={defaultCode}
       installPackageName="popover"
@@ -51,6 +56,31 @@ export async function PopoverDocs() {
       }
       examples={[
         { title: "Basic", preview: <PopoverBasicPreview />, code: `<Popover>\n  <PopoverTrigger>Basic</PopoverTrigger>\n  <PopoverContent>Place content here.</PopoverContent>\n</Popover>` },
+        {
+          title: "Compact",
+          preview: <PopoverCompactPreview />,
+          code: `<PopoverContent variant="compact">\n  Billable · $48.20\n</PopoverContent>`,
+        },
+        {
+          title: "Wide",
+          preview: <PopoverWidePreview />,
+          code: `<PopoverContent variant="wide">\n  <PopoverHeader>\n    <PopoverTitle>Ada Lovelace</PopoverTitle>\n    <PopoverDescription>Analytical engines</PopoverDescription>\n  </PopoverHeader>\n</PopoverContent>`,
+        },
+        {
+          title: "Header",
+          preview: <PopoverHeaderPreview />,
+          code: `<PopoverContent>\n  <PopoverHeader>\n    <PopoverTitle>Notifications</PopoverTitle>\n    <PopoverDescription>Choose what pings you.</PopoverDescription>\n  </PopoverHeader>\n</PopoverContent>`,
+        },
+        {
+          title: "Sides",
+          preview: <PopoverSidesPreview />,
+          code: `<PopoverContent side="top" showArrow>Side: top</PopoverContent>\n<PopoverContent side="right" showArrow>Side: right</PopoverContent>`,
+        },
+        {
+          title: "Arrow",
+          preview: <PopoverArrowPreview />,
+          code: `<PopoverContent showArrow>\n  <PopoverHeader>\n    <PopoverTitle>Anchored note</PopoverTitle>\n  </PopoverHeader>\n</PopoverContent>`,
+        },
         { title: "Align", preview: <PopoverAlignPreview />, code: `<PopoverContent align="start">Align start</PopoverContent>\n<PopoverContent align="center">Align center</PopoverContent>\n<PopoverContent align="end">Align end</PopoverContent>` },
         { title: "With Form", preview: <PopoverFormPreview />, code: `<PopoverContent className="w-80">\n  <Label>Project name</Label>\n  <Input placeholder="My project" />\n</PopoverContent>` },
         { title: "RTL", preview: <PopoverRtlPreview />, code: `<div dir="rtl">\n  <Popover>\n    <PopoverTrigger>فتح</PopoverTrigger>\n  </Popover>\n</div>` },
@@ -58,9 +88,12 @@ export async function PopoverDocs() {
       props={[
         { name: "Popover", type: "Component", description: "Root. Controls open state." },
         { name: "PopoverTrigger", type: "Component", description: "Button that anchors the popover. Supports asChild." },
+        { name: "PopoverContent · variant", type: '"default" | "compact" | "wide"', default: '"default"', description: "Panel density for hints, panels, and rich cards." },
+        { name: "PopoverHeader / Title / Description", type: "Component", description: "Structured heading block for panels." },
+        { name: "showArrow", type: "boolean", default: "false", description: "Caret pointing back at the trigger." },
         { name: "PopoverContent", type: "Component", description: "Popup content. Props: align, side, sideOffset, showArrow." },
         { name: "align", type: '"start" | "center" | "end"', default: '"center"', description: "Alignment relative to trigger." },
-        { name: "side", type: '"top" | "right" | "bottom" | "left"', default: '"bottom"', description: "Side of trigger." },
+        { name: "side", type: '"top" | "right" | "bottom" | "left"', default: '"bottom"', description: "Side of trigger, with matching entrance motion." },
         { name: "className", type: "string", description: "Additional CSS classes." },
       ]}
     />

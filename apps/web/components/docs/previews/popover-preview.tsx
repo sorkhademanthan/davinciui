@@ -3,7 +3,14 @@
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
 import { Label } from "@workspace/ui/components/label";
-import { Popover, PopoverContent, PopoverTrigger } from "@workspace/ui/components/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverDescription,
+  PopoverHeader,
+  PopoverTitle,
+  PopoverTrigger,
+} from "@workspace/ui/components/popover";
 
 export function PopoverPreview() {
   return (
@@ -131,6 +138,122 @@ export function PopoverRtlPreview() {
         </PopoverTrigger>
         <PopoverContent className="w-64">
           <p className="text-sm">محتوى البوبوفر مع دعم RTL.</p>
+        </PopoverContent>
+      </Popover>
+    </div>
+  );
+}
+
+export function PopoverCompactPreview() {
+  return (
+    <div className="flex h-full w-full items-center justify-center p-8">
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button variant="outline" size="sm">
+            Hint
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent variant="compact">
+          <p>
+            Billable · <span className="font-medium text-foreground">$48.20</span>
+          </p>
+        </PopoverContent>
+      </Popover>
+    </div>
+  );
+}
+
+export function PopoverWidePreview() {
+  return (
+    <div className="flex h-full w-full items-center justify-center p-8">
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button variant="outline">View profile</Button>
+        </PopoverTrigger>
+        <PopoverContent variant="wide">
+          <div className="flex items-start gap-4">
+            <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-foreground text-lg font-semibold text-background">
+              A
+            </div>
+            <div className="min-w-0 flex-1">
+              <PopoverHeader>
+                <PopoverTitle>Ada Lovelace</PopoverTitle>
+                <PopoverDescription>Analytical engines · London</PopoverDescription>
+              </PopoverHeader>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                First programmer. Writes notes that compile a century later. Currently reviewing your pull
+                request line by line.
+              </p>
+              <div className="mt-4 flex gap-2">
+                <Button size="sm">Follow</Button>
+                <Button size="sm" variant="outline">
+                  Message
+                </Button>
+              </div>
+            </div>
+          </div>
+        </PopoverContent>
+      </Popover>
+    </div>
+  );
+}
+
+export function PopoverHeaderPreview() {
+  return (
+    <div className="flex h-full w-full items-center justify-center p-8">
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button variant="outline">Structured</Button>
+        </PopoverTrigger>
+        <PopoverContent>
+          <div className="grid gap-4">
+            <PopoverHeader>
+              <PopoverTitle>Notifications</PopoverTitle>
+              <PopoverDescription>Choose what pings you and where.</PopoverDescription>
+            </PopoverHeader>
+            <div className="grid gap-2">
+              <Label htmlFor="pop-email">Email digest</Label>
+              <Input id="pop-email" defaultValue="daily" className="h-8" />
+            </div>
+          </div>
+        </PopoverContent>
+      </Popover>
+    </div>
+  );
+}
+
+export function PopoverSidesPreview() {
+  const sides = ["top", "right", "bottom", "left"] as const;
+  return (
+    <div className="flex h-full w-full items-center justify-center gap-2 p-8">
+      {sides.map((side) => (
+        <Popover key={side}>
+          <PopoverTrigger asChild>
+            <Button variant="outline" size="sm" className="capitalize">
+              {side}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-44 p-3" side={side} showArrow>
+            <p className="text-sm capitalize">Side: {side}</p>
+          </PopoverContent>
+        </Popover>
+      ))}
+    </div>
+  );
+}
+
+export function PopoverArrowPreview() {
+  return (
+    <div className="flex h-full w-full items-center justify-center p-8">
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button variant="outline">With arrow</Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-64" showArrow>
+          <PopoverHeader>
+            <PopoverTitle>Anchored note</PopoverTitle>
+            <PopoverDescription>The caret points back at the trigger.</PopoverDescription>
+          </PopoverHeader>
         </PopoverContent>
       </Popover>
     </div>
