@@ -9,20 +9,24 @@ import { cn } from "@workspace/ui/lib/utils"
 /*  through `asChild` (no extra DOM, no Slot breakage).                */
 /*                                                                     */
 /*  --bx / --by are set on mousemove (see Button below) and drive a    */
-/*  cursor-tracked radial highlight. The diagonal sweep runs on hover.  */
+/*  cursor-tracked radial highlight. The diagonal sweep is reserved     */
+/*  for the gradient signature CTA only — one shimmer per interface,   */
+/*  never a wash over every button.                                    */
 /* ------------------------------------------------------------------ */
 const sheen =
-  "after:content-[''] after:absolute after:inset-0 after:-translate-x-[160%] after:skew-x-[-20deg] after:bg-gradient-to-r after:from-transparent after:via-white/25 after:to-transparent hover:after:translate-x-[160%] after:transition-transform after:duration-700 after:ease-[cubic-bezier(0.23,1,0.32,1)] after:pointer-events-none"
+  "after:content-[''] after:absolute after:inset-0 after:-translate-x-[160%] after:skew-x-[-20deg] after:bg-gradient-to-r after:from-transparent after:via-white/15 after:to-transparent hover:after:translate-x-[160%] after:transition-transform after:duration-500 after:ease-[cubic-bezier(0.23,1,0.32,1)] after:pointer-events-none"
 
 const spotlight =
-  "before:content-[''] before:absolute before:inset-0 before:opacity-0 hover:before:opacity-100 focus-visible:before:opacity-100 before:transition-opacity before:duration-300 before:pointer-events-none before:bg-[radial-gradient(140px_circle_at_var(--bx,50%)_var(--by,50%),rgba(255,255,255,0.28),transparent_70%)]"
+  "before:content-[''] before:absolute before:inset-0 before:opacity-0 hover:before:opacity-100 focus-visible:before:opacity-100 before:transition-opacity before:duration-200 before:pointer-events-none before:bg-[radial-gradient(120px_circle_at_var(--bx,50%)_var(--by,50%),rgba(255,255,255,0.16),transparent_70%)]"
 
 const buttonVariants = cva(
   cn(
     "group/button relative isolate inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 overflow-hidden whitespace-nowrap rounded-[10px] text-sm font-medium tracking-[-0.01em] select-none",
     "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
-    // spring-like press physics — compress, don't sink (no layout shift)
-    "transition-[transform,background-color,border-color,color,box-shadow,opacity] duration-150 ease-[cubic-bezier(0.34,1.4,0.64,1)]",
+    // Calm, physical motion — decelerate, never overshoot. (A spring
+    // ease on colors makes backgrounds shimmer, so transform gets the
+    // snappy curve only via the press state below.)
+    "transition-[transform,background-color,border-color,color,box-shadow,opacity] duration-150 ease-[cubic-bezier(0.22,1,0.36,1)]",
     "active:scale-[0.97] active:duration-75",
     // refined focus ring (2px + offset, not shadcn's 3px blur)
     "outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
@@ -43,7 +47,6 @@ const buttonVariants = cva(
           "ring-1 ring-inset ring-black/10 dark:ring-white/15",
           "hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.22),inset_0_-1px_0_0_rgba(0,0,0,0.16),0_1px_2px_rgba(0,0,0,0.2),0_10px_24px_-8px_rgba(0,0,0,0.45)] hover:-translate-y-px hover:brightness-[1.06]",
           "active:translate-y-0 active:brightness-95 active:shadow-[inset_0_2px_6px_rgba(0,0,0,0.28)]",
-          sheen,
           spotlight,
         ),
         destructive: cn(
@@ -53,7 +56,6 @@ const buttonVariants = cva(
           "hover:-translate-y-px hover:brightness-[1.07] focus-visible:ring-destructive/40",
           "active:translate-y-0 active:brightness-95 active:shadow-[inset_0_2px_6px_rgba(0,0,0,0.3)]",
           "dark:bg-destructive/80",
-          sheen,
           spotlight,
         ),
         /* Secondary — soft tonal surface with hairline ring. */
@@ -72,9 +74,9 @@ const buttonVariants = cva(
           "active:bg-accent/80 active:shadow-none dark:hover:bg-input/40",
         ),
         ghost:
-          "text-foreground hover:bg-accent hover:text-accent-foreground active:bg-accent/70 dark:hover:bg-accent/40",
+          "text-foreground hover:bg-accent hover:text-accent-foreground hover:ring-1 hover:ring-inset hover:ring-foreground/10 active:bg-accent/70 dark:hover:bg-accent/60",
         link: "rounded-none text-primary underline-offset-4 decoration-primary/30 hover:underline hover:decoration-primary active:text-primary/80 overflow-visible",
-        /* Success — emerald solid with depth + sheen. */
+        /* Success — emerald solid with depth. */
         success: cn(
           "bg-emerald-600 bg-[linear-gradient(180deg,rgba(255,255,255,0.18),rgba(255,255,255,0)_45%)] text-white",
           "shadow-[inset_0_1px_0_0_rgba(255,255,255,0.25),inset_0_-1px_0_0_rgba(0,0,0,0.2),0_1px_2px_rgba(0,0,0,0.2),0_6px_16px_-6px_rgba(16,185,129,0.6)]",
@@ -82,7 +84,6 @@ const buttonVariants = cva(
           "hover:-translate-y-px hover:brightness-[1.06]",
           "active:translate-y-0 active:brightness-95",
           "dark:bg-emerald-500 dark:text-emerald-950",
-          sheen,
           spotlight,
         ),
         /* Gradient — signature premium CTA (violet → blue). */

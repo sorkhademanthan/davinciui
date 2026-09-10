@@ -131,6 +131,7 @@ export async function HoverCardDocs() {
         { name: "side", type: '"top" | "right" | "bottom" | "left"', default: '"top"', description: "Panel side relative to the trigger." },
         { name: "align", type: '"start" | "center" | "end"', default: '"center"', description: "Panel alignment along the side." },
         { name: "sideOffset", type: "number", default: "8", description: "Gap between trigger and panel in px." },
+        { name: "showArrow", type: "boolean", default: "true", description: "Connector arrow pointing at the trigger." },
         { name: "dir", type: '"ltr" | "rtl"', default: '"ltr"', description: "Text direction." },
         { name: "className", type: "string", description: "Extra classes for the wrapper." },
       ]}
