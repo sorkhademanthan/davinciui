@@ -1,10 +1,14 @@
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import {
-  PaginationPreview,
-  PaginationSimplePreview,
+  PaginationCompactPreview,
+  PaginationFirstLastPreview,
   PaginationIconsOnlyPreview,
-  PaginationNextJsPreview,
+  PaginationPillPreview,
+  PaginationPreview,
   PaginationRtlPreview,
+  PaginationSimplePreview,
+  PaginationSizesPreview,
+  PaginationTreatmentsPreview,
 } from "@/components/docs/previews/pagination-preview";
 import { readComponentSource } from "@/lib/source-code";
 
@@ -12,10 +16,19 @@ const importCode = `import { Pagination, PaginationContent, PaginationItem, Pagi
 const defaultCode = `<Pagination>
   <PaginationContent>
     <PaginationItem>
-      <PaginationLink href="#">1</PaginationLink>
+      <PaginationPrevious />
     </PaginationItem>
     <PaginationItem>
-      <PaginationLink href="#" isActive>2</PaginationLink>
+      <PaginationLink>1</PaginationLink>
+    </PaginationItem>
+    <PaginationItem>
+      <PaginationLink isActive>2</PaginationLink>
+    </PaginationItem>
+    <PaginationItem>
+      <PaginationEllipsis />
+    </PaginationItem>
+    <PaginationItem>
+      <PaginationNext />
     </PaginationItem>
   </PaginationContent>
 </Pagination>`;
@@ -26,7 +39,7 @@ export async function PaginationDocs() {
   return (
     <DocsPageLayout
       title="Pagination"
-      description="Pagination with page navigation, next and previous links."
+      description="Page navigation with numbered links, first/last jumps, pill and compact layouts, and three active treatments — wired to state or real URLs."
       preview={<PaginationPreview />}
       previewCode={defaultCode}
       installPackageName="pagination"
@@ -36,20 +49,46 @@ export async function PaginationDocs() {
       importCode={importCode}
       usageCode={defaultCode}
       examples={[
-        { title: "Composition", preview: <PaginationPreview />, code: defaultCode },
+        { title: "Interactive", preview: <PaginationPreview />, code: defaultCode },
+        {
+          title: "Treatments",
+          preview: <PaginationTreatmentsPreview />,
+          code: `<PaginationLink variant="solid" isActive>2</PaginationLink>\n<PaginationLink variant="ghost" isActive>2</PaginationLink>`,
+        },
+        {
+          title: "Pill",
+          preview: <PaginationPillPreview />,
+          code: `<Pagination variant="pill">\n  <PaginationContent>…</PaginationContent>\n</Pagination>`,
+        },
+        {
+          title: "First / Last",
+          preview: <PaginationFirstLastPreview />,
+          code: `<PaginationFirst onClick={() => setPage(1)} />\n<PaginationLast onClick={() => setPage(total)} />`,
+        },
+        {
+          title: "Compact",
+          preview: <PaginationCompactPreview />,
+          code: `<PaginationPrevious />\n<span>{page} / {total}</span>\n<PaginationNext />`,
+        },
+        {
+          title: "Sizes",
+          preview: <PaginationSizesPreview />,
+          code: `<PaginationLink size="icon-sm">1</PaginationLink>`,
+        },
         { title: "Simple", preview: <PaginationSimplePreview />, code: `<Pagination><PaginationLink>1</PaginationLink></Pagination>` },
-        { title: "Icons Only", preview: <PaginationIconsOnlyPreview />, code: `<PaginationPrevious /><PaginationNext />` },
-        { title: "Next.js", preview: <PaginationNextJsPreview />, code: `<PaginationLink href="/docs" asChild><Link href="/docs">Docs</Link></PaginationLink>` },
+        { title: "Icons Only", preview: <PaginationIconsOnlyPreview />, code: `<PaginationPrevious showText={false} />\n<PaginationNext showText={false} />` },
         { title: "RTL", preview: <PaginationRtlPreview />, code: `<div dir="rtl">\n  <Pagination>...</Pagination>\n</div>` },
       ]}
       props={[
-        { name: "Pagination", type: "Component", description: "Root nav container." },
-        { name: "PaginationContent", type: "Component", description: "List container." },
-        { name: "PaginationItem", type: "Component", description: "List item." },
-        { name: "PaginationLink", type: "Component", description: "Page link (isActive, asChild)." },
-        { name: "PaginationPrevious", type: "Component", description: "Previous page link." },
-        { name: "PaginationNext", type: "Component", description: "Next page link." },
-        { name: "PaginationEllipsis", type: "Component", description: "Ellipsis indicator." },
+        { name: "Pagination · variant", type: '"default" | "pill"', default: '"default"', description: "Pill renders a floating bordered bar." },
+        { name: "PaginationLink · variant", type: '"outline" | "solid" | "ghost"', default: '"outline"', description: "Active-page treatment: ring, filled, or tonal." },
+        { name: "PaginationLink · isActive", type: "boolean", default: "false", description: "Current page with aria-current." },
+        { name: "PaginationLink · size", type: "Button sizes", default: '"icon"', description: "icon-sm/icon for compact rows." },
+        { name: "PaginationPrevious · text", type: "string", default: '"Previous"', description: "Label, collapsed on small screens." },
+        { name: "PaginationNext · text", type: "string", default: '"Next"', description: "Label, collapsed on small screens." },
+        { name: "showText", type: "boolean", default: "true", description: "Render the Previous/Next label." },
+        { name: "PaginationFirst / Last", type: "Component", description: "Jump to the first/last page." },
+        { name: "PaginationEllipsis", type: "Component", description: "Skipped-range indicator, aria-hidden." },
         { name: "className", type: "string", description: "Additional CSS classes." },
       ]}
     />
