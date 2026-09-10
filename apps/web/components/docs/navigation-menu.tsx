@@ -1,6 +1,11 @@
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import {
+  NavigationMenuActivePreview,
+  NavigationMenuPillPreview,
   NavigationMenuPreview,
+  NavigationMenuSizesPreview,
+  NavigationMenuSolidPreview,
+  NavigationMenuUnderlinePreview,
   NavigationMenuWithIconPreview,
   NavigationMenuLinkPreview,
   NavigationMenuRtlPreview,
@@ -39,7 +44,7 @@ export async function NavigationMenuDocs() {
   return (
     <DocsPageLayout
       title="Navigation Menu"
-      description="A collection of links for navigating websites."
+      description="A collection of links for navigating websites — bare bar or floating pill, ghost / solid / underline triggers, mega-menu content with directional motion."
       preview={<NavigationMenuPreview />}
       previewCode={defaultCode}
       installPackageName="navigation-menu"
@@ -73,6 +78,31 @@ export async function NavigationMenuDocs() {
       examples={[
         { title: "Default", preview: <NavigationMenuPreview />, code: defaultCode },
         {
+          title: "Pill Bar",
+          preview: <NavigationMenuPillPreview />,
+          code: `<NavigationMenu variant="pill">\n  <NavigationMenuList>\n    <NavigationMenuItem>\n      <NavigationMenuTrigger>Product</NavigationMenuTrigger>\n      <NavigationMenuContent>…</NavigationMenuContent>\n    </NavigationMenuItem>\n  </NavigationMenuList>\n</NavigationMenu>`,
+        },
+        {
+          title: "Solid Triggers",
+          preview: <NavigationMenuSolidPreview />,
+          code: `<NavigationMenuTrigger variant="solid">Product</NavigationMenuTrigger>\n<NavigationMenuLink href="/docs" className={navigationMenuTriggerStyle({ variant: "solid" })}>\n  Docs\n</NavigationMenuLink>`,
+        },
+        {
+          title: "Underline Triggers",
+          preview: <NavigationMenuUnderlinePreview />,
+          code: `<NavigationMenuTrigger variant="underline">Product</NavigationMenuTrigger>`,
+        },
+        {
+          title: "Sizes",
+          preview: <NavigationMenuSizesPreview />,
+          code: `<NavigationMenuTrigger size="sm">Small trigger</NavigationMenuTrigger>`,
+        },
+        {
+          title: "Active Link",
+          preview: <NavigationMenuActivePreview />,
+          code: `<NavigationMenuLink href="/docs/components/navigation-menu" active className={navigationMenuTriggerStyle()}>\n  Navigation Menu\n</NavigationMenuLink>`,
+        },
+        {
           title: "With Icon",
           preview: <NavigationMenuWithIconPreview />,
           code: `<NavigationMenuTrigger>\n  <BookOpen className="mr-1.5 size-4" />\n  Docs\n</NavigationMenuTrigger>`,
@@ -89,13 +119,16 @@ export async function NavigationMenuDocs() {
         },
       ]}
       props={[
-        { name: "NavigationMenu", type: "Component", description: "Root nav element. Wraps List + Viewport." },
+        { name: "NavigationMenu · variant", type: '"default" | "pill"', default: '"default"', description: "Pill renders a floating frosted bar." },
         { name: "NavigationMenuList", type: "Component", description: "Flex list of items." },
         { name: "NavigationMenuItem", type: "Component", description: "Single item. Wraps Trigger + Content or Link." },
-        { name: "NavigationMenuTrigger", type: "Component", description: "Button that opens Content. Shows chevron." },
-        { name: "NavigationMenuContent", type: "Component", description: "Popup content for an item." },
+        { name: "NavigationMenuTrigger · variant", type: '"default" | "solid" | "underline"', default: '"default"', description: "Ghost wash, inverted pill, or Stripe-style underline." },
+        { name: "NavigationMenuTrigger · size", type: '"default" | "sm"', default: '"default"', description: "Comfortable or compact density." },
+        { name: "NavigationMenuContent", type: "Component", description: "Popup content with fade, zoom, and rise motion." },
+        { name: "NavigationMenuLink · active", type: "boolean", default: "false", description: "Current-page state with aria-current." },
         { name: "NavigationMenuLink", type: "Component", description: "Link. Supports render prop for Next.js Link." },
-        { name: "navigationMenuTriggerStyle", type: "cva", description: "Shared trigger/link styles for consistent sizing." },
+        { name: "navigationMenuTriggerStyle", type: "cva", description: "Shared trigger/link styles with variant + size." },
+        { name: "orientation", type: '"horizontal" | "vertical"', default: '"horizontal"', description: "Menu orientation via Base UI." },
         { name: "className", type: "string", description: "Additional CSS classes." },
       ]}
     />

@@ -25,6 +25,7 @@ function ListItem({
     <li>
       <NavigationMenuLink
         href={href}
+        onClick={preventNav}
         className="block select-none rounded-lg p-3 no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
       >
         <div className="text-sm font-medium leading-none">{title}</div>
@@ -32,6 +33,10 @@ function ListItem({
       </NavigationMenuLink>
     </li>
   );
+}
+
+function preventNav(e: React.MouseEvent) {
+  e.preventDefault();
 }
 
 export function NavigationMenuPreview() {
@@ -46,6 +51,7 @@ export function NavigationMenuPreview() {
                 <li className="row-span-3">
                   <NavigationMenuLink
                     href="/"
+                    onClick={preventNav}
                     className="flex h-full w-full select-none flex-col justify-end rounded-lg bg-gradient-to-b from-muted/40 to-muted p-6 no-underline outline-none focus:shadow-md"
                   >
                     <div className="mb-2 flex size-8 items-center justify-center rounded-md bg-foreground text-background">
@@ -89,7 +95,7 @@ export function NavigationMenuPreview() {
           </NavigationMenuItem>
 
           <NavigationMenuItem>
-            <NavigationMenuLink href="/docs" className={navigationMenuTriggerStyle()}>
+            <NavigationMenuLink href="/docs" onClick={preventNav} className={navigationMenuTriggerStyle()}>
               Docs
             </NavigationMenuLink>
           </NavigationMenuItem>
@@ -139,7 +145,7 @@ export function NavigationMenuWithIconPreview() {
           </NavigationMenuItem>
 
           <NavigationMenuItem>
-            <NavigationMenuLink href="/docs" className={navigationMenuTriggerStyle()}>
+            <NavigationMenuLink href="/docs" onClick={preventNav} className={navigationMenuTriggerStyle()}>
               <LifeBuoy className="mr-1.5 size-4" />
               Support
             </NavigationMenuLink>
@@ -158,6 +164,7 @@ export function NavigationMenuLinkPreview() {
           <NavigationMenuItem>
             <NavigationMenuLink
               render={<Link href="/docs" />}
+              onClick={preventNav}
               className={navigationMenuTriggerStyle()}
             >
               Documentation
@@ -166,6 +173,7 @@ export function NavigationMenuLinkPreview() {
           <NavigationMenuItem>
             <NavigationMenuLink
               render={<Link href="/docs/components/navigation-menu" />}
+              onClick={preventNav}
               className={navigationMenuTriggerStyle()}
             >
               Navigation Menu
@@ -208,8 +216,208 @@ export function NavigationMenuRtlPreview() {
           </NavigationMenuItem>
 
           <NavigationMenuItem>
-            <NavigationMenuLink href="/docs" className={navigationMenuTriggerStyle()}>
+            <NavigationMenuLink href="/docs" onClick={preventNav} className={navigationMenuTriggerStyle()}>
               الوثائق
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+        </NavigationMenuList>
+      </NavigationMenu>
+    </div>
+  );
+}
+
+export function NavigationMenuPillPreview() {
+  return (
+    <div className="flex h-full w-full items-start justify-center p-8 pt-10">
+      <NavigationMenu variant="pill">
+        <NavigationMenuList>
+          <NavigationMenuItem>
+            <NavigationMenuTrigger>Product</NavigationMenuTrigger>
+            <NavigationMenuContent>
+              <ul className="grid w-[300px] gap-1 p-2">
+                <ListItem href="/docs" title="Overview">
+                  Everything the platform can do.
+                </ListItem>
+                <ListItem href="/docs/components" title="Changelog">
+                  What shipped this week.
+                </ListItem>
+              </ul>
+            </NavigationMenuContent>
+          </NavigationMenuItem>
+
+          <NavigationMenuItem>
+            <NavigationMenuTrigger>Pricing</NavigationMenuTrigger>
+            <NavigationMenuContent>
+              <ul className="grid w-[260px] gap-1 p-2">
+                <ListItem href="/docs" title="Plans">
+                  Start free, scale when ready.
+                </ListItem>
+              </ul>
+            </NavigationMenuContent>
+          </NavigationMenuItem>
+
+          <NavigationMenuItem>
+            <NavigationMenuLink href="/docs" onClick={preventNav} className={navigationMenuTriggerStyle()}>
+              Docs
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+        </NavigationMenuList>
+      </NavigationMenu>
+    </div>
+  );
+}
+
+export function NavigationMenuSolidPreview() {
+  return (
+    <div className="flex h-full w-full items-start justify-center p-8 pt-10">
+      <NavigationMenu>
+        <NavigationMenuList>
+          <NavigationMenuItem>
+            <NavigationMenuTrigger variant="solid">Product</NavigationMenuTrigger>
+            <NavigationMenuContent>
+              <ul className="grid w-[300px] gap-1 p-2">
+                <ListItem href="/docs" title="Overview">
+                  Everything the platform can do.
+                </ListItem>
+                <ListItem href="/docs/components" title="Changelog">
+                  What shipped this week.
+                </ListItem>
+              </ul>
+            </NavigationMenuContent>
+          </NavigationMenuItem>
+
+          <NavigationMenuItem>
+            <NavigationMenuTrigger variant="solid">Company</NavigationMenuTrigger>
+            <NavigationMenuContent>
+              <ul className="grid w-[260px] gap-1 p-2">
+                <ListItem href="/docs" title="About">
+                  The team behind the work.
+                </ListItem>
+              </ul>
+            </NavigationMenuContent>
+          </NavigationMenuItem>
+
+          <NavigationMenuItem>
+            <NavigationMenuLink href="/docs" onClick={preventNav} className={navigationMenuTriggerStyle({ variant: "solid" })}>
+              Docs
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+        </NavigationMenuList>
+      </NavigationMenu>
+    </div>
+  );
+}
+
+export function NavigationMenuUnderlinePreview() {
+  return (
+    <div className="flex h-full w-full items-start justify-center p-8 pt-10">
+      <NavigationMenu>
+        <NavigationMenuList>
+          <NavigationMenuItem>
+            <NavigationMenuTrigger variant="underline">Product</NavigationMenuTrigger>
+            <NavigationMenuContent>
+              <ul className="grid w-[300px] gap-1 p-2">
+                <ListItem href="/docs" title="Overview">
+                  Everything the platform can do.
+                </ListItem>
+                <ListItem href="/docs/components" title="Changelog">
+                  What shipped this week.
+                </ListItem>
+              </ul>
+            </NavigationMenuContent>
+          </NavigationMenuItem>
+
+          <NavigationMenuItem>
+            <NavigationMenuTrigger variant="underline">Pricing</NavigationMenuTrigger>
+            <NavigationMenuContent>
+              <ul className="grid w-[260px] gap-1 p-2">
+                <ListItem href="/docs" title="Plans">
+                  Start free, scale when ready.
+                </ListItem>
+              </ul>
+            </NavigationMenuContent>
+          </NavigationMenuItem>
+
+          <NavigationMenuItem>
+            <NavigationMenuLink href="/docs" onClick={preventNav} className={navigationMenuTriggerStyle({ variant: "underline" })}>
+              Docs
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+        </NavigationMenuList>
+      </NavigationMenu>
+    </div>
+  );
+}
+
+export function NavigationMenuSizesPreview() {
+  return (
+    <div className="flex h-full w-full flex-col items-center justify-start gap-10 p-8 pt-10">
+      <NavigationMenu>
+        <NavigationMenuList>
+          <NavigationMenuItem>
+            <NavigationMenuTrigger size="sm">Small trigger</NavigationMenuTrigger>
+            <NavigationMenuContent>
+              <ul className="grid w-[260px] gap-1 p-2">
+                <ListItem href="/docs" title="Compact">
+                  Dense bars and toolbars.
+                </ListItem>
+              </ul>
+            </NavigationMenuContent>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <NavigationMenuLink href="/docs" onClick={preventNav} className={navigationMenuTriggerStyle({ size: "sm" })}>
+              Small link
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+        </NavigationMenuList>
+      </NavigationMenu>
+
+      <NavigationMenu>
+        <NavigationMenuList>
+          <NavigationMenuItem>
+            <NavigationMenuTrigger>Default trigger</NavigationMenuTrigger>
+            <NavigationMenuContent>
+              <ul className="grid w-[260px] gap-1 p-2">
+                <ListItem href="/docs" title="Comfortable">
+                  Marketing headers.
+                </ListItem>
+              </ul>
+            </NavigationMenuContent>
+          </NavigationMenuItem>
+        </NavigationMenuList>
+      </NavigationMenu>
+    </div>
+  );
+}
+
+export function NavigationMenuActivePreview() {
+  return (
+    <div className="flex h-full w-full items-start justify-center p-8 pt-10">
+      <NavigationMenu>
+        <NavigationMenuList>
+          <NavigationMenuItem>
+            <NavigationMenuTrigger>Product</NavigationMenuTrigger>
+            <NavigationMenuContent>
+              <ul className="grid w-[300px] gap-1 p-2">
+                <ListItem href="/docs" title="Overview">
+                  Everything the platform can do.
+                </ListItem>
+                <ListItem href="/docs/components" title="Changelog">
+                  What shipped this week.
+                </ListItem>
+              </ul>
+            </NavigationMenuContent>
+          </NavigationMenuItem>
+
+          <NavigationMenuItem>
+            <NavigationMenuLink href="/docs/components/navigation-menu" onClick={preventNav} active className={navigationMenuTriggerStyle()}>
+              Navigation Menu
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+
+          <NavigationMenuItem>
+            <NavigationMenuLink href="/docs" onClick={preventNav} className={navigationMenuTriggerStyle()}>
+              Docs
             </NavigationMenuLink>
           </NavigationMenuItem>
         </NavigationMenuList>
