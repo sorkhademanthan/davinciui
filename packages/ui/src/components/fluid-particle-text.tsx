@@ -2041,6 +2041,11 @@ export function FluidParticleText(props: FluidParticleTextProps) {
         ref={canvasRef}
         aria-hidden="true"
         className="absolute inset-0 block h-full w-full"
+        style={
+          outline
+            ? { filter: "drop-shadow(0 0 1px rgba(0, 0, 0, 0.65))" }
+            : undefined
+        }
       />
     </div>
   );

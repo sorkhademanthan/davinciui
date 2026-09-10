@@ -14,6 +14,9 @@ export const Demo = () => {
         <FluidParticleText
             preset="reference404"
             text="404"
+            outline
+            strokeWidth={2.25}
+            fillOpacity={1}
             className="h-full w-full"
         />
     );
@@ -34,6 +37,9 @@ export async function FluidParticleTextDocs() {
             preset="reference404"
             text="404"
             fontFamily={archivoNarrow.style.fontFamily}
+            outline
+            strokeWidth={2.25}
+            fillOpacity={1}
             className="h-full w-full"
           />
         }
