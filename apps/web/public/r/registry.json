@@ -185,13 +185,10 @@
       "type": "registry:ui"
     },
     {
-<<<<<<< HEAD
       "name": "glitch-liquid-text",
       "type": "registry:ui"
     },
     {
-=======
->>>>>>> 8f041fd (feat: rebuild toast engine with single-flight rendering)
       "name": "gradient-hero-01",
       "type": "registry:block"
     },
