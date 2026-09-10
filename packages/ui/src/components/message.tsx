@@ -18,7 +18,7 @@ const MessageContext = React.createContext<MessageContextValue>({
 });
 
 export interface MessageProps extends React.HTMLAttributes<HTMLDivElement> {
-  /** Row alignment in the conversation. @default "start" */
+  /** Row alignment. End mirrors the row and docks bubbles, header, footer, and actions to the right. @default "start" */
   align?: MessageAlign;
 }
 
@@ -52,7 +52,11 @@ function Message({ align = "start", className, children, ...props }: MessageProp
       <div
         data-slot="message"
         data-align={align}
-        className={cn("flex w-full gap-2", align === "end" && "flex-row-reverse", className)}
+        className={cn(
+          "group/message flex w-full scroll-mt-4 gap-2",
+          align === "end" && "flex-row-reverse",
+          className
+        )}
         {...props}
       >
         {children}
@@ -80,20 +84,32 @@ function MessageAvatar({ className, ...props }: React.HTMLAttributes<HTMLDivElem
 }
 
 function MessageContent({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  const { align } = React.useContext(MessageContext);
   return (
     <div
       data-slot="message-content"
-      className={cn("flex min-w-0 flex-1 flex-col gap-1", className)}
+      className={cn(
+        "flex min-w-0 flex-1 flex-col gap-1",
+        // End rows dock their surfaces to the right: bubbles (and grouped
+        // bubbles) justify to the end, anything else hugs the edge.
+        align === "end" && "items-end [&_[data-slot=bubble]]:justify-end",
+        className
+      )}
       {...props}
     />
   );
 }
 
 function MessageHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  const { align } = React.useContext(MessageContext);
   return (
     <div
       data-slot="message-header"
-      className={cn("self-start text-xs font-medium text-muted-foreground", className)}
+      className={cn(
+        "flex items-center gap-1.5 text-xs font-medium text-muted-foreground select-none",
+        align === "end" ? "self-end text-end" : "self-start",
+        className
+      )}
       {...props}
     />
   );
@@ -106,7 +122,7 @@ function MessageFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElem
       ref={setFooterNode}
       data-slot="message-footer"
       className={cn(
-        "flex items-center gap-1 text-xs text-muted-foreground",
+        "flex min-h-6 items-center gap-1 text-xs text-muted-foreground empty:hidden",
         align === "end" ? "justify-end text-end" : "justify-start",
         className
       )}
@@ -115,6 +131,39 @@ function MessageFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElem
   );
 }
 
-export { Message, MessageGroup, MessageAvatar, MessageContent, MessageHeader, MessageFooter };
+function MessageActions({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  const { align } = React.useContext(MessageContext);
+  return (
+    <div
+      data-slot="message-actions"
+      className={cn(
+        "flex items-center gap-0.5",
+        align === "end" ? "justify-end" : "justify-start",
+        // Hover-reveal like premium chat apps: visible on row hover,
+        // keyboard focus, touch devices, and reduced-motion-safe.
+        "opacity-0 transition-opacity duration-150 ease-out motion-reduce:transition-none",
+        "group-hover/message:opacity-100 group-focus-within/message:opacity-100 focus-within:opacity-100",
+        "[@media(hover:none)]:opacity-100",
+        className
+      )}
+      {...props}
+    />
+  );
+}
+
+function MessageTime({ className, ...props }: React.TimeHTMLAttributes<HTMLElement>) {
+  return (
+    <time
+      data-slot="message-time"
+      className={cn(
+        "shrink-0 font-mono text-[11px] tabular-nums text-muted-foreground/70 select-none",
+        className
+      )}
+      {...props}
+    />
+  );
+}
+
+export { Message, MessageGroup, MessageAvatar, MessageContent, MessageHeader, MessageFooter, MessageActions, MessageTime };
 
 export default Message;

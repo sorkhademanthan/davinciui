@@ -1,6 +1,7 @@
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import {
   MessageScrollerBasicPreview,
+  MessageScrollerFollowingPreview,
   MessageScrollerHistoryPreview,
   MessageScrollerJumpPreview,
   MessageScrollerOpenPreview,
@@ -156,6 +157,15 @@ scrollToMessage("msg-42", { align: "start", behavior: "smooth" })`,
 const { currentAnchorId, visibleMessageIds } = useMessageScrollerVisibility()`,
         },
         {
+          title: "Following the Live Edge",
+          preview: <MessageScrollerFollowingPreview />,
+          code: `import { useMessageScrollerFollowing } from "@/components/ui/message-scroller"
+
+// True while streamed output is pinning to the edge.
+// Style with data-following or render a LIVE badge.
+const following = useMessageScrollerFollowing()`,
+        },
+        {
           title: "Reading Scroll State",
           preview: <MessageScrollerScrollStatePreview />,
           code: `import { useMessageScrollerScrollable } from "@/components/ui/message-scroller"
@@ -175,7 +185,12 @@ const { start, end } = useMessageScrollerScrollable()`,
         { name: "scrollAnchor", type: "boolean", default: "false", description: "Turn boundary that can anchor newly appended turns." },
         { name: "preserveScrollOnPrepend", type: "boolean", default: "true", description: "Keep the visible row stable when history prepends." },
         { name: "direction", type: '"start" | "end"', default: '"end"', description: "Transcript edge the button scrolls toward." },
+        { name: "behavior", type: "ScrollBehavior", default: '"smooth" (button) / "auto" (commands)', description: "Native scroll behavior. Forced to auto under prefers-reduced-motion." },
         { name: "scrollToMessage", type: "(id, options?) => boolean", default: "—", description: "Jump to a mounted id; queues pre-mount targets." },
+        { name: "useMessageScrollerFollowing", type: "() => boolean", default: "—", description: "Live-edge follow state for badges. Mirrored as data-following." },
+        { name: "data-scrollable", type: '"start" | "end" | "start end"', default: "—", description: "Edges the viewport can scroll toward, on frame + viewport." },
+        { name: "data-autoscrolling", type: "present while scrolling", default: "—", description: "Set during programmatic scrolls to the latest message." },
+        { name: "data-following", type: "present while following", default: "—", description: "Set while streamed output is pinning to the live edge." },
       ]}
     />
   );

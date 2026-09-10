@@ -6,7 +6,9 @@ import {
   MessageBasicPreview,
   MessageGroupPreview,
   MessageHeaderFooterPreview,
+  MessageHoverActionsPreview,
   MessageStatusPreview,
+  MessageTimestampsPreview,
 } from "@/components/docs/previews/message-preview";
 import { readComponentSource } from "@/lib/source-code";
 
@@ -34,7 +36,7 @@ export async function MessageDocs() {
   return (
     <DocsPageLayout
       title="Message"
-      description="A conversation row with avatar, alignment, header, and footer around your message surface. Compose with Bubble, Attachment, and MessageScroller."
+      description="A conversation row with avatar, alignment, header, footer, hover-reveal actions, and timestamps around your message surface. Compose with Bubble, Attachment, and MessageScroller."
       preview={<MessageBasicPreview />}
       previewCode={defaultCode}
       installPackageName="message"
@@ -47,7 +49,11 @@ export async function MessageDocs() {
           <p className="text-sm leading-6 text-muted-foreground">
             Message owns the row layout only — render the visible surface inside it with{" "}
             <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px]">Bubble</code>, and wrap the thread
-            in <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px]">MessageScroller</code>. The avatar
+            in <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px]">MessageScroller</code>.{" "}
+            <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px]">align=&quot;end&quot;</code> mirrors
+            the whole row and docks bubbles, header, footer, and actions to the right — no{" "}
+            <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px]">align</code> needed on{" "}
+            <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px]">Bubble</code>. The avatar
             is measured against the footer and lifted to stay aligned with the surface, at any footer height.
           </p>
           <pre className="overflow-x-auto rounded-lg border bg-muted/30 p-4 font-mono text-xs leading-6">
@@ -56,7 +62,8 @@ export async function MessageDocs() {
 └── MessageContent
     ├── MessageHeader
     ├── Bubble
-    └── MessageFooter
+    ├── MessageFooter
+    └── MessageActions
 
 MessageGroup
 ├── Message
@@ -70,7 +77,7 @@ MessageGroup
           preview: <MessageAvatarPreview />,
           code: `import { Message, MessageAvatar } from "@/components/ui/message"
 
-// align="end" mirrors the whole row for sender messages.
+// align="end" mirrors the row and docks the bubble right.
 <Message>
   <MessageAvatar>
     <Avatar>
@@ -113,6 +120,43 @@ MessageGroup
     <MessageHeader>Olivia</MessageHeader>
     <Bubble>{/* … */}</Bubble>
     <MessageFooter>Read · Yesterday</MessageFooter>
+  </MessageContent>
+</Message>`,
+        },
+        {
+          title: "Hover Actions",
+          preview: <MessageHoverActionsPreview />,
+          code: `import { Message, MessageActions } from "@/components/ui/message"
+
+// Actions reveal on row hover, stay visible for
+// keyboard focus and touch devices.
+<Message>
+  <MessageAvatar>{/* … */}</MessageAvatar>
+  <MessageContent>
+    <Bubble>{/* … */}</Bubble>
+    <MessageActions>
+      <button type="button" aria-label="Copy message">
+        <CopyIcon />
+      </button>
+      <button type="button" aria-label="Retry request">
+        <RefreshCcwIcon />
+      </button>
+    </MessageActions>
+  </MessageContent>
+</Message>`,
+        },
+        {
+          title: "Timestamps",
+          preview: <MessageTimestampsPreview />,
+          code: `import { Message, MessageFooter, MessageHeader, MessageTime } from "@/components/ui/message"
+
+<Message>
+  <MessageAvatar>{/* … */}</MessageAvatar>
+  <MessageContent>
+    <MessageHeader>
+      Olivia <MessageTime>09:41</MessageTime>
+    </MessageHeader>
+    <Bubble>{/* … */}</Bubble>
   </MessageContent>
 </Message>`,
         },
@@ -161,7 +205,9 @@ import { Attachment } from "@/components/ui/attachment"
         },
       ]}
       props={[
-        { name: "align", type: '"start" | "end"', default: '"start"', description: "Row alignment. End mirrors avatar, content, and footer." },
+        { name: "align", type: '"start" | "end"', default: '"start"', description: "Row alignment. End mirrors the row and docks bubbles, header, footer, and actions right." },
+        { name: "MessageActions", type: "div element", description: "Hover-reveal action row. Visible on hover, keyboard focus, and touch." },
+        { name: "MessageTime", type: "time element", description: "Mono tabular timestamp for headers and footers." },
         { name: "aria-label", type: "string", default: "—", description: "Required on icon-only footer actions and textless triggers." },
         { name: "role", type: '"status"', default: "—", description: "Announce in-progress rows as live status updates." },
         { name: "className", type: "string", description: "Additional classes on any part." },

@@ -112,7 +112,7 @@ function emit(store: ScrollerStore) {
 }
 
 function setAttrs(store: ScrollerStore) {
-  const { viewportEl, rootEl, atStart, atEnd, autoscrolling } = store;
+  const { viewportEl, rootEl, atStart, atEnd, autoscrolling, following } = store;
   const scrollable = atStart && atEnd ? null : [atStart ? "start" : null, atEnd ? "end" : null].filter(Boolean).join(" ");
   for (const el of [viewportEl, rootEl]) {
     if (!el) continue;
@@ -120,25 +120,27 @@ function setAttrs(store: ScrollerStore) {
     else el.removeAttribute("data-scrollable");
     if (autoscrolling) el.setAttribute("data-autoscrolling", "");
     else el.removeAttribute("data-autoscrolling");
+    if (following) el.setAttribute("data-following", "");
+    else el.removeAttribute("data-following");
   }
 }
 
-function metrics(store: ScrollerStore) {
-  const vp = store.viewportEl!;
-  const t = store.opts.scrollEdgeThreshold;
+function metrics(vp: HTMLDivElement, threshold: number) {
   return {
-    atStart: vp.scrollTop <= t,
-    atEnd: vp.scrollHeight - vp.scrollTop - vp.clientHeight <= t,
+    atStart: vp.scrollTop <= threshold,
+    atEnd: vp.scrollHeight - vp.scrollTop - vp.clientHeight <= threshold,
   };
 }
 
 function refreshScrollable(store: ScrollerStore) {
   if (!store.viewportEl) return;
-  const { atStart, atEnd } = metrics(store);
+  const { atStart, atEnd } = metrics(store.viewportEl, store.opts.scrollEdgeThreshold);
   if (atStart === store.atStart && atEnd === store.atEnd) return;
   store.atStart = atStart;
   store.atEnd = atEnd;
-  store.following = store.opts.autoScroll && atEnd;
+  // Stay engaged while a programmatic return-to-edge is in flight so
+  // streamed output keeps pinning until the reader actually arrives.
+  store.following = store.opts.autoScroll && (atEnd || store.autoscrolling);
   setAttrs(store);
   emit(store);
 }
@@ -154,24 +156,34 @@ function updateSpacer(store: ScrollerStore) {
   spacerEl.style.height = `${Math.max(0, Math.ceil(need))}px`;
 }
 
-function itemTop(store: ScrollerStore, el: HTMLElement): number {
-  const vp = store.viewportEl!;
+function itemTop(store: ScrollerStore, el: HTMLElement): number | null {
+  const vp = store.viewportEl;
+  // The viewport ref can be momentarily unset while rows mount in the same
+  // commit (child layout effects run before ancestor ref attachment).
+  if (!vp) return null;
   const r = el.getBoundingClientRect();
   const v = vp.getBoundingClientRect();
   return vp.scrollTop + (r.top - v.top);
 }
 
+function prefersReducedMotion(): boolean {
+  return typeof window !== "undefined" && typeof window.matchMedia === "function"
+    ? window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    : false;
+}
+
 function scrollViewportTo(store: ScrollerStore, top: number, behavior: ScrollBehavior) {
   const vp = store.viewportEl;
   if (!vp) return false;
-  vp.scrollTo({ top: Math.max(0, Math.round(top)), behavior });
+  vp.scrollTo({ top: Math.max(0, Math.round(top)), behavior: prefersReducedMotion() ? "auto" : behavior });
   return true;
 }
 
 function anchorItem(store: ScrollerStore, id: string, behavior: ScrollBehavior = "auto") {
   const entry = store.items.get(id);
-  if (!entry) return false;
+  if (!entry || !store.viewportEl) return false;
   const top = itemTop(store, entry.el);
+  if (top == null) return false;
   store.lastAnchorTop = top;
   updateSpacer(store);
   return scrollViewportTo(store, top - store.opts.scrollPreviousItemPeek, behavior);
@@ -269,11 +281,17 @@ function MessageScrollerProvider({
 
 function MessageScroller({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   const store = useStore();
+  // Stable identity: inline ref callbacks would detach to null on every
+  // re-render, opening a window where rows measure against nothing.
+  const setRootRef = React.useCallback(
+    (node: HTMLDivElement | null) => {
+      store.rootEl = node;
+    },
+    [store]
+  );
   return (
     <div
-      ref={(node) => {
-        store.rootEl = node;
-      }}
+      ref={setRootRef}
       data-slot="message-scroller"
       className={cn("relative flex min-h-0 flex-1 flex-col overflow-hidden", className)}
       {...props}
@@ -298,6 +316,12 @@ function MessageScrollerViewport({
   ...props
 }: MessageScrollerViewportProps) {
   const store = useStore();
+  const setViewportRef = React.useCallback(
+    (node: HTMLDivElement | null) => {
+      store.viewportEl = node;
+    },
+    [store]
+  );
 
   React.useEffect(() => {
     const vp = store.viewportEl;
@@ -320,7 +344,7 @@ function MessageScrollerViewport({
       const grew = next - lastHeight;
       lastHeight = next;
       if (grew <= 0) return;
-      if (store.opts.autoScroll && store.following) {
+      if (store.opts.autoScroll && (store.following || store.autoscrolling)) {
         markAutoscrolling(store);
         scrollViewportTo(store, store.viewportEl.scrollHeight, "auto");
       }
@@ -363,9 +387,7 @@ function MessageScrollerViewport({
 
   return (
     <div
-      ref={(node) => {
-        store.viewportEl = node;
-      }}
+      ref={setViewportRef}
       data-slot="message-scroller-viewport"
       role={props.role ?? "region"}
       aria-label={props["aria-label"] ?? "Messages"}
@@ -395,11 +417,21 @@ export interface MessageScrollerContentProps extends React.HTMLAttributes<HTMLDi
 
 function MessageScrollerContent({ spacerClassName, className, children, ...props }: MessageScrollerContentProps) {
   const store = useStore();
+  const setContentRef = React.useCallback(
+    (node: HTMLDivElement | null) => {
+      store.contentEl = node;
+    },
+    [store]
+  );
+  const setSpacerRef = React.useCallback(
+    (node: HTMLDivElement | null) => {
+      store.spacerEl = node;
+    },
+    [store]
+  );
   return (
     <div
-      ref={(node) => {
-        store.contentEl = node;
-      }}
+      ref={setContentRef}
       data-slot="message-scroller-content"
       role={props.role ?? "log"}
       aria-relevant={props["aria-relevant"] ?? "additions"}
@@ -408,9 +440,7 @@ function MessageScrollerContent({ spacerClassName, className, children, ...props
     >
       {children}
       <div
-        ref={(node) => {
-          store.spacerEl = node;
-        }}
+        ref={setSpacerRef}
         data-slot="message-scroller-spacer"
         aria-hidden
         style={{ height: 0 }}
@@ -443,6 +473,8 @@ function MessageScrollerItem({ messageId, scrollAnchor = false, className, child
       if (!store.order.includes(messageId)) store.order.push(messageId);
     }
 
+    let raf = 0;
+
     // Queued jump target just mounted.
     if (messageId && store.pendingTarget?.id === messageId) {
       const t = store.pendingTarget;
@@ -461,15 +493,40 @@ function MessageScrollerItem({ messageId, scrollAnchor = false, className, child
       // reader is already following the thread.
       const isLast = store.order[store.order.length - 1] === messageId;
       if (isLast && (store.following || store.atEnd)) {
-        anchorItem(store, messageId, "auto");
+        if (!anchorItem(store, messageId, "auto") && !store.viewportEl) {
+          // Viewport ref hasn't landed yet this commit — retry next frame
+          // instead of dropping the anchor.
+          raf = requestAnimationFrame(() => {
+            if (store.order[store.order.length - 1] === messageId && (store.following || store.atEnd)) {
+              anchorItem(store, messageId, "auto");
+              refreshScrollable(store);
+            }
+          });
+        }
         refreshScrollable(store);
       }
     }
 
     attachVisibility(store);
 
+    // Items mounting after the observer exists (streamed replies) join it;
+    // otherwise visibility tracking goes stale mid-thread.
+    if (messageId && store.io && el) {
+      try {
+        store.io.observe(el);
+      } catch {
+        /* already observed */
+      }
+    }
+
     return () => {
+      cancelAnimationFrame(raf);
       if (messageId) {
+        try {
+          store.io?.unobserve(el);
+        } catch {
+          /* already removed */
+        }
         store.items.delete(messageId);
         store.order = store.order.filter((oid) => oid !== messageId);
       }
@@ -528,7 +585,7 @@ function MessageScrollerButton({ direction = "end", behavior = "smooth", render,
     tabIndex: canScroll ? 0 : -1,
     "aria-label": props["aria-label"] ?? (direction === "end" ? "Scroll to latest" : "Scroll to start"),
     className: cn(
-      "absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 items-center gap-1.5 rounded-full border bg-background px-3 py-1.5 text-xs font-medium shadow-md transition-opacity outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring/40 data-[active=false]:pointer-events-none data-[active=false]:opacity-0",
+      "absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 items-center gap-1.5 rounded-full border bg-background/90 px-3 py-1.5 text-xs font-medium shadow-lg backdrop-blur outline-none transition-all duration-200 ease-out hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring/40 active:scale-95 motion-reduce:transition-none data-[active=false]:pointer-events-none data-[active=false]:translate-y-1 data-[active=false]:scale-95 data-[active=false]:opacity-0",
       className
     ),
     onClick: (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -589,6 +646,10 @@ function scrollToId(
   const vp = store.viewportEl;
   const margin = opts.scrollMargin ?? store.opts.scrollMargin;
   const top = itemTop(store, entry.el);
+  if (top == null) {
+    store.pendingTarget = { id, ...opts };
+    return false;
+  }
   const height = entry.el.getBoundingClientRect().height;
   let dest = top;
   if (opts.align === "end") dest = top + height - vp.clientHeight + margin;
@@ -660,6 +721,17 @@ function useMessageScrollerScrollable(): ScrollableState {
   return { start: store.atStart === false, end: store.atEnd === false };
 }
 
+function useMessageScrollerFollowing(): boolean {
+  const store = useStore();
+  const snapshot = React.useSyncExternalStore(
+    (cb) => subscribeVisible(store, cb),
+    () => store.version,
+    () => store.version
+  );
+  void snapshot;
+  return store.following;
+}
+
 // Visibility engine (pay-for-what-you-use: only while subscribed).
 function attachVisibility(store: ScrollerStore) {
   if (store.io || store.visibilitySubs <= 0 || !store.viewportEl) return;
@@ -688,7 +760,9 @@ function attachVisibility(store: ScrollerStore) {
       for (const oid of store.order) {
         const item = store.items.get(oid);
         if (!item?.anchor) continue;
-        if (itemTop(store, item.el) <= line) current = oid;
+        const top = itemTop(store, item.el);
+        if (top == null) continue;
+        if (top <= line) current = oid;
         else break;
       }
       store.visibility = { currentAnchorId: current, visibleMessageIds: ordered };
@@ -742,6 +816,7 @@ export {
   MessageScrollerItem,
   MessageScrollerButton,
   useMessageScroller,
+  useMessageScrollerFollowing,
   useMessageScrollerScrollable,
   useMessageScrollerVisibility,
 };

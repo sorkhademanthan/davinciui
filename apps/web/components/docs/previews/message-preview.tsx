@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Check, Copy, Download, FileText, RefreshCcw, X } from "lucide-react";
+import { Check, CheckCheck, Copy, Download, FileText, Pencil, RefreshCcw, X } from "lucide-react";
 import { Avatar, AvatarFallback } from "@workspace/ui/components/avatar";
 import { Bubble, BubbleContent, BubbleReactions } from "@workspace/ui/components/bubble";
 import {
@@ -15,11 +15,13 @@ import {
 } from "@workspace/ui/components/attachment";
 import {
   Message,
+  MessageActions,
   MessageAvatar,
   MessageContent,
   MessageFooter,
   MessageGroup,
   MessageHeader,
+  MessageTime,
 } from "@workspace/ui/components/message";
 import { Spinner } from "@workspace/ui/components/spinner";
 
@@ -296,6 +298,103 @@ export function MessageStatusPreview() {
               <Spinner className="size-4" />
               <span className="animate-pulse">Checking the logs…</span>
             </div>
+          </MessageContent>
+        </Message>
+      </div>
+    </DemoShell>
+  );
+}
+
+function ActionButton({
+  label,
+  onClick,
+  children,
+}: {
+  label: string;
+  onClick?: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      onClick={onClick}
+      className="flex size-6 items-center justify-center rounded-md text-muted-foreground outline-none transition-colors duration-150 hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring/40 motion-reduce:transition-none"
+    >
+      {children}
+    </button>
+  );
+}
+
+export function MessageHoverActionsPreview() {
+  const [copied, setCopied] = React.useState(false);
+  return (
+    <DemoShell readout={copied ? "copied to clipboard" : "hover the row — actions reveal, stay for keyboard and touch"}>
+      <div className="flex flex-col gap-4">
+        <Message>
+          <MessageAvatar>
+            <Person initials="R" />
+          </MessageAvatar>
+          <MessageContent>
+            <Bubble variant="secondary">
+              <BubbleContent>The install failure is coming from the workspace package.</BubbleContent>
+            </Bubble>
+            <MessageActions>
+              <ActionButton label="Copy message" onClick={() => setCopied(true)}>
+                {copied ? <Check className="size-3.5" /> : <Copy className="size-3.5" />}
+              </ActionButton>
+              <ActionButton label="Retry request">
+                <RefreshCcw className="size-3.5" />
+              </ActionButton>
+            </MessageActions>
+          </MessageContent>
+        </Message>
+        <Message align="end">
+          <MessageContent>
+            <Bubble>
+              <BubbleContent>Deploying to prod real quick.</BubbleContent>
+            </Bubble>
+            <MessageActions>
+              <ActionButton label="Edit message">
+                <Pencil className="size-3.5" />
+              </ActionButton>
+              <ActionButton label="Copy message">
+                <Copy className="size-3.5" />
+              </ActionButton>
+            </MessageActions>
+          </MessageContent>
+        </Message>
+      </div>
+    </DemoShell>
+  );
+}
+
+export function MessageTimestampsPreview() {
+  return (
+    <DemoShell readout="headers pair names with time · footers pair ticks with time">
+      <div className="flex flex-col gap-4">
+        <Message>
+          <MessageAvatar>
+            <Person initials="O" />
+          </MessageAvatar>
+          <MessageContent>
+            <MessageHeader>
+              Olivia <MessageTime>09:41</MessageTime>
+            </MessageHeader>
+            <Bubble variant="secondary">
+              <BubbleContent>Send the report to the team when it lands.</BubbleContent>
+            </Bubble>
+          </MessageContent>
+        </Message>
+        <Message align="end">
+          <MessageContent>
+            <Bubble>
+              <BubbleContent>It&apos;s a one-line change.</BubbleContent>
+            </Bubble>
+            <MessageFooter>
+              <CheckCheck className="size-3.5 text-sky-500" aria-label="Read" />
+              <MessageTime>09:42</MessageTime>
+            </MessageFooter>
           </MessageContent>
         </Message>
       </div>

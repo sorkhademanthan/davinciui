@@ -10,6 +10,7 @@ import {
   MessageScrollerProvider,
   MessageScrollerViewport,
   useMessageScroller,
+  useMessageScrollerFollowing,
   useMessageScrollerScrollable,
   useMessageScrollerVisibility,
   type MessageScrollerPosition,
@@ -414,6 +415,52 @@ function ScrollStatusFooter() {
     <p className="shrink-0 border-t bg-background px-4 py-2.5 text-center font-mono text-[11px] text-muted-foreground" aria-live="polite">
       {!start && !end ? "All messages fit in the viewport." : !start ? "At the first message — scroll down for more." : !end ? "At the latest message." : "Mid-thread — both directions available."}
     </p>
+  );
+}
+
+function FollowingBadge() {
+  const following = useMessageScrollerFollowing();
+  return (
+    <div className="flex shrink-0 items-center justify-between border-t bg-background px-4 py-2.5" aria-live="polite">
+      <span className="font-mono text-[11px] text-muted-foreground">live edge</span>
+      {following ? (
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-1 text-[11px] font-medium text-emerald-600 dark:text-emerald-400">
+          <span className="relative flex size-1.5">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-60 motion-reduce:animate-none" />
+            <span className="relative inline-flex size-1.5 rounded-full bg-emerald-500" />
+          </span>
+          LIVE
+        </span>
+      ) : (
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
+          paused — scroll down to resume
+        </span>
+      )}
+    </div>
+  );
+}
+
+export function MessageScrollerFollowingPreview() {
+  const chat = useScriptedChat(SEED);
+  return (
+    <Frame readout="scroll up to pause · Jump to latest resumes">
+      <MessageScrollerProvider autoScroll>
+        <MessageScroller>
+          <MessageScrollerViewport>
+            <MessageScrollerContent>
+              {chat.messages.map((m) => (
+                <MessageScrollerItem key={m.id} messageId={m.id} scrollAnchor={m.role === "user"}>
+                  <ChatRow message={m} />
+                </MessageScrollerItem>
+              ))}
+            </MessageScrollerContent>
+          </MessageScrollerViewport>
+          <MessageScrollerButton />
+        </MessageScroller>
+        <FollowingBadge />
+        <Composer {...chat} />
+      </MessageScrollerProvider>
+    </Frame>
   );
 }
 
