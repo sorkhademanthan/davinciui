@@ -119,6 +119,14 @@ export const components: Record<string, ComponentMetadata> = {
     previewVideo:
       "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/text-animations/lettercascade.webm",
   },
+  "fluid-particle-text": {
+    title: "Fluid Particle Text",
+    description:
+      "Interactive particle typography sampled from rasterized text — solid at rest, liquid around your cursor.",
+    category: "Text Animations",
+    slug: "fluid-particle-text",
+    addedAt: "2026-09-10",
+  },
   "text-morph": {
     title: "Text Morph",
     description:

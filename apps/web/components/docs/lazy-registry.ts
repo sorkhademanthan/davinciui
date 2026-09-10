@@ -242,6 +242,10 @@ const docsImportMap: Record<
     import("@/components/docs/letter-cascade").then((m) => ({
       default: m.LetterCascadeDocs,
     })),
+  "fluid-particle-text": () =>
+    import("@/components/docs/fluid-particle-text").then((m) => ({
+      default: m.FluidParticleTextDocs,
+    })),
   "text-morph": () =>
     import("@/components/docs/text-morph").then((m) => ({
       default: m.TextMorphDocs,
