@@ -17,7 +17,7 @@ import { Footer } from "@/components/footer";
 
 // DavinciUI Previews for Bento
 import { MatrixRain } from "@workspace/ui/components/matrix-rain";
-import { ScrollBasedVelocity } from "@workspace/ui/components/scroll-based-velocity";
+import { TextMorph } from "@workspace/ui/components/text-morph";
 import { AnimatedGradient } from "@workspace/ui/components/animated-gradient";
 import { DitherGradient } from "@workspace/ui/components/dither-gradient";
 import {
@@ -122,7 +122,8 @@ export default function Home() {
                   with styling and animations handled.
                 </span>
                 <span className="hidden sm:inline">
-                  Effortlessly add polished, production-ready interactions to your projects,
+                  Effortlessly add polished, production-ready interactions to
+                  your projects,
                 </span>
                 <span className="hidden sm:block">
                   with the styling and animations already handled.
@@ -168,9 +169,7 @@ export default function Home() {
                     <MatrixRain speed={30} fontSize={10} variant="cyan" />
                   </div>
                 </div>
-                <div className={showcaseLabelClass}>
-                  Matrix rain
-                </div>
+                <div className={showcaseLabelClass}>Matrix rain</div>
               </motion.div>
 
               {/* Card 2: 2x1 Dark */}
@@ -181,23 +180,14 @@ export default function Home() {
                 <div
                   className={`${showcasePreviewClass} flex flex-col items-center justify-center pt-8`}
                 >
-                  <div
-                    className="relative flex h-24 w-full min-w-0 overflow-hidden"
-                    style={{
-                      maskImage:
-                        "linear-gradient(to right, transparent, black 10%, black 90%, transparent)",
-                    }}
-                  >
-                    <ScrollBasedVelocity
-                      text="DAVINCIUI"
-                      default_velocity={3}
-                      className="font-sans text-4xl font-black tracking-tighter text-zinc-800 dark:text-white sm:text-6xl md:text-8xl"
+                  <div className="relative flex h-24 w-full min-w-0 items-center justify-center overflow-hidden px-6">
+                    <TextMorph
+                      words={["DESIGN", "ANIMATE", "DELIGHT"]}
+                      className="font-sans text-4xl font-black tracking-tighter text-zinc-800 dark:text-white sm:text-6xl"
                     />
                   </div>
                 </div>
-                <div className={showcaseLabelClass}>
-                  Scroll velocity
-                </div>
+                <div className={showcaseLabelClass}>Text morph</div>
               </motion.div>
 
               {/* Card 3: 1x2 White */}
@@ -208,9 +198,7 @@ export default function Home() {
                 <div className={showcasePreviewClass}>
                   <InfiniteIconField />
                 </div>
-                <div className={showcaseLabelClass}>
-                  Infinite icon field
-                </div>
+                <div className={showcaseLabelClass}>Infinite icon field</div>
               </motion.div>
 
               {/* Card 4: 2x1 White */}
@@ -255,9 +243,7 @@ export default function Home() {
                     />
                   </div>
                 </div>
-                <div className={showcaseLabelClass}>
-                  Dither gradient
-                </div>
+                <div className={showcaseLabelClass}>Dither gradient</div>
               </motion.div>
 
               {/* Card 6: 1x1 Dark */}
@@ -272,9 +258,7 @@ export default function Home() {
                     <AnimatedGradient config={{ preset: "Aurora" }} />
                   </div>
                 </div>
-                <div className={showcaseLabelClass}>
-                  Animated gradient
-                </div>
+                <div className={showcaseLabelClass}>Animated gradient</div>
               </motion.div>
 
               {/* Card 7: 3x1 Magnetic Dock */}
@@ -319,9 +303,7 @@ export default function Home() {
                     />
                   </div>
                 </div>
-                <div className={showcaseLabelClass}>
-                  Magnetic dock
-                </div>
+                <div className={showcaseLabelClass}>Magnetic dock</div>
               </motion.div>
             </motion.div>
           </LandingContent>

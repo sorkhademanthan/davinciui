@@ -1,6 +1,6 @@
-import Link from "next/link"
-import { ArrowRight, Terminal } from "lucide-react"
-import { components } from "@/registry"
+import Link from "next/link";
+import { ArrowRight, Terminal } from "lucide-react";
+import { components } from "@/registry";
 
 const CATEGORIES = [
   {
@@ -23,17 +23,34 @@ const CATEGORIES = [
     href: "/docs/premium/visual-effects",
     desc: "Ripple, trail and magnetic effects.",
   },
-] as const
+] as const;
 
 const QUICK_LINKS = [
-  { title: "Installation", href: "/docs/installation", desc: "Add to any Next.js / Vite project." },
-  { title: "Configuration", href: "/docs/configuration", desc: "The components.json file explained." },
-  { title: "Theming", href: "/docs/theming", desc: "CSS variables and dark mode." },
-  { title: "CLI", href: "/docs/cli", desc: "shadcn CLI for registry installs." },
-] as const
+  {
+    title: "Installation",
+    href: "/docs/installation",
+    desc: "Add to any Next.js / Vite project.",
+  },
+  {
+    title: "Configuration",
+    href: "/docs/configuration",
+    desc: "The components.json file explained.",
+  },
+  {
+    title: "Theming",
+    href: "/docs/theming",
+    desc: "CSS variables and dark mode.",
+  },
+  {
+    title: "CLI",
+    href: "/docs/cli",
+    desc: "shadcn CLI for registry installs.",
+  },
+] as const;
 
 function getCount(category: string) {
-  return Object.values(components).filter((c) => c.category === category).length
+  return Object.values(components).filter((c) => c.category === category)
+    .length;
 }
 
 export default function DocsPage() {
@@ -42,15 +59,17 @@ export default function DocsPage() {
       {/* Header — shadcn style: tight, typographic */}
       <div className="space-y-4">
         <p className="text-sm font-medium text-muted-foreground">Docs</p>
-        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">Introduction</h1>
+        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+          Introduction
+        </h1>
         <p className="text-[15px] leading-7 text-muted-foreground">
-          DavinciUI is a collection of beautifully crafted, open-code components. Copy, paste,
-          customize — built with Tailwind CSS and Framer Motion. Works with Next.js, Vite and any
-          React framework.
+          DavinciUI is a collection of beautifully crafted, open-code
+          components. Copy, paste, customize — built with Tailwind CSS and
+          Framer Motion. Works with Next.js, Vite and any React framework.
         </p>
         <p className="text-sm leading-6 text-muted-foreground">
-          This is not a component library you install from npm. It&apos;s how you build your own.
-          You own the code.
+          This is not a component library you install from npm. It&apos;s how
+          you build your own. You own the code.
         </p>
       </div>
 
@@ -74,26 +93,37 @@ export default function DocsPage() {
       <div className="mt-10">
         <h2 className="text-sm font-semibold tracking-tight">Installation</h2>
         <p className="mt-1 text-sm leading-6 text-muted-foreground">
-          Use the <span className="font-mono text-foreground">shadcn</span> CLI. Pick a component
-          and add it directly to your project.
+          Use the <span className="font-mono text-foreground">shadcn</span> CLI.
+          Pick a component and add it directly to your project.
         </p>
         <div className="mt-3 overflow-hidden rounded-lg border bg-zinc-950">
           <div className="flex items-center justify-between border-b border-white/10 px-4 py-2">
             <span className="inline-flex items-center gap-1.5 text-xs font-medium text-zinc-400">
               <Terminal className="size-3.5" /> pnpm
             </span>
-            <span className="text-[11px] font-mono text-zinc-500">shadcn CLI</span>
+            <span className="text-[11px] font-mono text-zinc-500">
+              shadcn CLI
+            </span>
           </div>
           <pre className="overflow-x-auto p-4 text-sm">
             <code className="font-mono">
               <span className="text-violet-400">pnpm</span>{" "}
-              <span className="text-zinc-100">dlx shadcn@latest add @davinciui/kinetic-text-reveal</span>
+              <span className="text-zinc-100">
+                dlx shadcn@latest add @davinciui/text-morph
+              </span>
             </code>
           </pre>
         </div>
         <p className="mt-2 text-xs text-muted-foreground">
-          Replace <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs">kinetic-text-reveal</code> with any
-          component slug. See <Link href="/docs/cli" className="underline underline-offset-4">CLI docs</Link>.
+          Replace{" "}
+          <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs">
+            text-morph
+          </code>{" "}
+          with any component slug. See{" "}
+          <Link href="/docs/cli" className="underline underline-offset-4">
+            CLI docs
+          </Link>
+          .
         </p>
       </div>
 
@@ -132,7 +162,7 @@ export default function DocsPage() {
         </div>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           {CATEGORIES.map((cat) => {
-            const count = getCount(cat.title)
+            const count = getCount(cat.title);
             return (
               <Link
                 key={cat.title}
@@ -147,9 +177,11 @@ export default function DocsPage() {
                     {count}
                   </span>
                 </div>
-                <p className="mt-1 text-sm leading-6 text-muted-foreground">{cat.desc}</p>
+                <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                  {cat.desc}
+                </p>
               </Link>
-            )
+            );
           })}
         </div>
       </div>
@@ -165,7 +197,9 @@ export default function DocsPage() {
               className="flex flex-col rounded-lg border p-4 transition-colors hover:bg-muted/50"
             >
               <span className="text-sm font-medium">{link.title}</span>
-              <span className="mt-1 text-sm text-muted-foreground">{link.desc}</span>
+              <span className="mt-1 text-sm text-muted-foreground">
+                {link.desc}
+              </span>
             </Link>
           ))}
         </div>
@@ -198,9 +232,12 @@ export default function DocsPage() {
       </div>
 
       <p className="mt-8 text-xs text-muted-foreground">
-        Press <kbd className="rounded border bg-muted px-1.5 py-0.5 font-mono text-[11px]">⌘K</kbd> to search
-        anything.
+        Press{" "}
+        <kbd className="rounded border bg-muted px-1.5 py-0.5 font-mono text-[11px]">
+          ⌘K
+        </kbd>{" "}
+        to search anything.
       </p>
     </div>
-  )
+  );
 }
