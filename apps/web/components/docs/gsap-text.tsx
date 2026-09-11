@@ -11,6 +11,7 @@ const defaultCode = `import { KineticText } from "@/components/ui/gsap-text"
 <KineticText
   text="DAVINCIUI"
   htmlTag="h1"
+  textClassName="scale-x-[1.04]"
   direction="both"
   layerCount={10}
   distance={300}

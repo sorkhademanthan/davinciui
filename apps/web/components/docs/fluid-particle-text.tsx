@@ -1,7 +1,7 @@
 import React from "react";
 import { Archivo_Narrow } from "next/font/google";
-import { FluidParticleText } from "@workspace/ui/components/fluid-particle-text";
 import { DocsPageLayout } from "@/components/docs-page-layout";
+import { FluidParticleTextPreview } from "@/components/docs/previews/fluid-particle-text-preview";
 import { readComponentSource } from "@/lib/source-code";
 
 /* Reference typeface (confirmed from the published reference page). */
@@ -12,8 +12,8 @@ const defaultCode = `import { FluidParticleText } from "@/components/ui/fluid-pa
 export const Demo = () => {
     return (
         <FluidParticleText
-            preset="reference404"
-            text="404"
+            preset="showcase"
+            text="FLOW"
             outline
             strokeWidth={2.25}
             fillOpacity={1}
@@ -33,14 +33,8 @@ export async function FluidParticleTextDocs() {
         title="Fluid Particle Text"
         description="Interactive particle typography sampled from rasterized text. A dense sheet of material at rest, advected along your cursor trajectory with pressure, shear and topology coherence, then sprung home."
         preview={
-          <FluidParticleText
-            preset="reference404"
-            text="404"
+          <FluidParticleTextPreview
             fontFamily={archivoNarrow.style.fontFamily}
-            outline
-            strokeWidth={2.25}
-            fillOpacity={1}
-            className="h-full w-full"
           />
         }
         previewCode={defaultCode}
@@ -106,9 +100,9 @@ export async function FluidParticleTextDocs() {
           },
           {
             name: "preset",
-            type: '"default" | "reference404"',
+            type: '"default" | "showcase" | "reference404"',
             description:
-              "Named preset. reference404 locks the 404 comparison fixture; explicit props always win.",
+              "Named tuning preset. showcase powers the FLOW demo; explicit props always win.",
           },
           {
             name: "particleSpacing",
