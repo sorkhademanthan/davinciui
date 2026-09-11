@@ -10,7 +10,7 @@ import { cn } from "@workspace/ui/lib/utils";
 export type FluidParticleFitMode = "off" | "fit" | "fill";
 export type FluidParticleQuality = "low" | "medium" | "high" | "ultra";
 export type FluidParticleShape = "circle" | "square";
-export type FluidParticlePresetName = "default" | "reference404";
+export type FluidParticlePresetName = "default" | "showcase" | "reference404";
 
 export interface FluidParticleTextProps extends Omit<
   React.HTMLAttributes<HTMLDivElement>,
@@ -150,12 +150,11 @@ export const FLUID_PARTICLE_DEFAULTS = {
 } as const;
 
 /**
- * REFERENCE_404 — locked fixture for visual comparison against the published
- * reference (Archivo Narrow 700, viewport-filling white stage, black text).
- * Calibrated against the reference interaction rather than generic defaults.
+ * Showcase fixture: a dense, viewport-filling word with the most expressive
+ * trajectory-advection settings and a bounded particle budget.
  */
-export const FLUID_PARTICLE_REFERENCE_404 = {
-  text: "404",
+export const FLUID_PARTICLE_SHOWCASE = {
+  text: "FLOW",
   fontFamily: `"Archivo Narrow", "Arial Narrow", sans-serif`,
   fontWeight: 700,
   fontStyle: "normal",
@@ -166,7 +165,7 @@ export const FLUID_PARTICLE_REFERENCE_404 = {
   particleSize: 1.35,
   particleShape: "square",
   alphaThreshold: 100,
-  maxParticles: 120000,
+  maxParticles: 80000,
   maxDpr: 2,
   pointerFollow: 12,
   velocityFollow: 10,
@@ -188,7 +187,14 @@ export const FLUID_PARTICLE_REFERENCE_404 = {
   background: "#ffffff",
 } as const;
 
-/** Back-compat alias for the reference fixture. */
+/** Backwards-compatible fixture for existing reference404 consumers. */
+export const FLUID_PARTICLE_REFERENCE_404 = {
+  ...FLUID_PARTICLE_SHOWCASE,
+  text: "404",
+  maxParticles: 120000,
+} as const;
+
+/** Back-compat alias for the original reference fixture. */
 export const REFERENCE_404 = FLUID_PARTICLE_REFERENCE_404;
 
 /** Good general-purpose settings for library users. */
@@ -212,6 +218,10 @@ export const FLUID_PARTICLE_PRESETS: Record<
   Record<string, number | string>
 > = {
   default: FLUID_PARTICLE_PRESET_DEFAULT as unknown as Record<
+    string,
+    number | string
+  >,
+  showcase: FLUID_PARTICLE_SHOWCASE as unknown as Record<
     string,
     number | string
   >,
@@ -242,8 +252,8 @@ export const FLUID_PARTICLE_PRESETS: Record<
  *   rows survive as fine parallel filaments (soft, never cloth springs).
  * - POINTER_SMOOTHING / VELOCITY_SMOOTHING: exponential follow rates
  *   (1/s) decoupling the sim from irregular browser pointer events.
- * - SIM_DT: fixed physics step via accumulator; rendering interpolates
- *   between previous/current positions for high-refresh smoothness.
+ * - Frame-rate-aware integration advances once per paint. The delta is
+ *   capped after stalls so input stays responsive without unstable catch-up.
  */
 const PRESSURE_GAIN = 1600;
 const CORE_PRESSURE_GAIN = 1600;
@@ -261,8 +271,7 @@ const TRAIL_MAX = 24;
 const TRAIL_MIN_SPEED = 40; // px/s below which no new trail samples are pushed
 const TRAIL_MIN_DIST = 2; // device px between trail samples
 const VISCOSITY_CELL = 0.18;
-const SIM_DT = 1 / 120;
-const MAX_STEPS = 6;
+const MAX_FRAME_DT = 1 / 30;
 const GAUSSIAN_SIGMA = 0.5;
 const CORE_GAUSSIAN_SIGMA = 0.22;
 const GAUSSIAN_CUTOFF = 3;
@@ -537,13 +546,12 @@ export function FluidParticleText(props: FluidParticleTextProps) {
     let dpr = 1;
 
     /* Particle state (allocated once at maxParticles, reused on rebuild).
-       prev/rpos support fixed-step simulation with interpolated rendering.
+       rpos is the packed position buffer uploaded to WebGL.
        row/col retain raster topology; nbr* holds neighbor particle indices
        (-1 when the neighbor cell is empty) for soft coherence. */
     const cap = Math.max(1024, propsRef.current.maxParticles);
     const home = new Float32Array(cap * 2);
     const pos = new Float32Array(cap * 2);
-    const prev = new Float32Array(cap * 2);
     const rpos = new Float32Array(cap * 2);
     const vel = new Float32Array(cap * 2);
     const velSnap = new Float32Array(cap * 2);
@@ -553,7 +561,6 @@ export function FluidParticleText(props: FluidParticleTextProps) {
     const nbrD = new Int32Array(cap).fill(-1);
     let count = 0;
     let acceptedGap = 1;
-    let accumulator = 0;
 
     /* Perf probes (EMA, written to dataset ~1/s for measurement). */
     let emaSim = 0;
@@ -839,8 +846,6 @@ export function FluidParticleText(props: FluidParticleTextProps) {
       for (let i = 0; i < n; i++) {
         pos[i * 2] = home[i * 2]!;
         pos[i * 2 + 1] = home[i * 2 + 1]!;
-        prev[i * 2] = home[i * 2]!;
-        prev[i * 2 + 1] = home[i * 2 + 1]!;
         rpos[i * 2] = home[i * 2]!;
         rpos[i * 2 + 1] = home[i * 2 + 1]!;
         vel[i * 2] = 0;
@@ -884,8 +889,6 @@ export function FluidParticleText(props: FluidParticleTextProps) {
         home[i * 2 + 1]! += oy;
         pos[i * 2]! += ox;
         pos[i * 2 + 1]! += oy;
-        prev[i * 2]! += ox;
-        prev[i * 2 + 1]! += oy;
         rpos[i * 2]! += ox;
         rpos[i * 2 + 1]! += oy;
       }
@@ -1381,7 +1384,6 @@ export function FluidParticleText(props: FluidParticleTextProps) {
     function snapToHomes() {
       const n2 = count * 2;
       pos.set(home.subarray(0, n2), 0);
-      prev.set(home.subarray(0, n2), 0);
       rpos.set(home.subarray(0, n2), 0);
       vel.fill(0, 0, n2);
       velSnap.fill(0, 0, n2);
@@ -1586,15 +1588,14 @@ export function FluidParticleText(props: FluidParticleTextProps) {
       /* Snapshot neighbor velocities once per frame (order independence). */
       velSnap.set(vel.subarray(0, count * 2));
 
-      /* Accumulator-based fixed steps; snapshot prev once per frame. */
+      /* Advance once per paint. The old 120 Hz accumulator ran two full
+         particle passes on a typical 60 Hz display, delaying pointer input
+         in dense previews. All forces use seconds, so a capped frame delta
+         preserves the motion while avoiding redundant main-thread work. */
       const t0 = performance.now();
-      prev.set(pos.subarray(0, count * 2));
-      accumulator = Math.min(accumulator + dt, SIM_DT * MAX_STEPS);
-      let maxV = 0;
-      let maxDsp = 0;
-      let steps = 0;
+      const stepDt = Math.min(dt, MAX_FRAME_DT);
       const sp: SimParams = {
-        h: SIM_DT,
+        h: stepDt,
         twoSigmaSq,
         coreTwoSigmaSq,
         cut2,
@@ -1638,22 +1639,12 @@ export function FluidParticleText(props: FluidParticleTextProps) {
         pathMaxX,
         pathMaxY,
       };
-      while (accumulator >= SIM_DT && steps < MAX_STEPS) {
-        sp.dampF = Math.exp(-damp * SIM_DT);
-        const r = simulate(sp);
-        maxV = r.maxV;
-        maxDsp = r.maxDsp;
-        accumulator -= SIM_DT;
-        steps++;
-      }
+      sp.dampF = Math.exp(-damp * stepDt);
+      const { maxV, maxDsp } = simulate(sp);
       const t1 = performance.now();
 
-      /* Interpolate rendering between previous/current for smoothness. */
-      const alpha = clamp(accumulator / SIM_DT, 0, 1);
-      const n2 = count * 2;
-      for (let i = 0; i < n2; i++) {
-        rpos[i] = prev[i]! + (pos[i]! - prev[i]!) * alpha;
-      }
+      /* Draw the current simulation state rather than one fixed step behind. */
+      rpos.set(pos.subarray(0, count * 2), 0);
       uploadAndDraw();
       const t2 = performance.now();
 
@@ -1681,7 +1672,6 @@ export function FluidParticleText(props: FluidParticleTextProps) {
         snapToHomes();
         running = false;
         sleeping = true;
-        accumulator = 0;
         return;
       }
     }
@@ -1743,7 +1733,6 @@ export function FluidParticleText(props: FluidParticleTextProps) {
       trHead = 0;
       for (let s = 0; s < TRAIL_MAX; s++) trAge[s] = 999;
       pointer.snap = true;
-      accumulator = 0;
 
       const mask = rasterize();
       if (mask) {

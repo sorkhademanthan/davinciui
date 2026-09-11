@@ -344,7 +344,10 @@ export function KineticText({
     resolvedHtmlTag,
     {
       ref: textRef,
-      className: cn("kinetic-text", textClassName),
+      className: cn(
+        "kinetic-text origin-center scale-x-[1.01]",
+        textClassName,
+      ),
       style: { ...textStyles, position: "relative", zIndex: 100 },
     },
     resolvedText,
