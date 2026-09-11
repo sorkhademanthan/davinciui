@@ -9,7 +9,7 @@ import { readComponentSource } from "@/lib/source-code";
 const basicUsageCode = `import { TextMorph } from "@/components/ui/text-morph"
 
 <TextMorph
-  words={["IMAGINE", "REFINE", "RELEASE"]}
+  words={["DESIGN", "ANIMATE", "DELIGHT"]}
   className="text-4xl font-bold tracking-tight md:text-5xl"
 />`;
 
@@ -35,7 +35,7 @@ export async function TextMorphDocs() {
         {
           name: "words",
           type: "string[]",
-          default: '["IMAGINE", "REFINE", "RELEASE"]',
+          default: '["DESIGN", "ANIMATE", "DELIGHT"]',
           description:
             "Text, numbers, prices, or short phrases displayed by the morph sequence.",
         },
