@@ -146,10 +146,6 @@ const docsImportMap: Record<
     import("@/components/docs/hover-transition").then((m) => ({
       default: m.HoverTransitionDocs,
     })),
-  "scroll-based-velocity": () =>
-    import("@/components/docs/scroll-based-velocity").then((m) => ({
-      default: m.ScrollBasedVelocityDocs,
-    })),
   "circuit-board": () =>
     import("@/components/docs/circuit-board").then((m) => ({
       default: m.CircuitBoardDocs,
@@ -238,10 +234,6 @@ const docsImportMap: Record<
     import("@/components/docs/scroll-tilted-grid").then((m) => ({
       default: m.ScrollTiltedGridDocs,
     })),
-  "letter-cascade": () =>
-    import("@/components/docs/letter-cascade").then((m) => ({
-      default: m.LetterCascadeDocs,
-    })),
   "fluid-particle-text": () =>
     import("@/components/docs/fluid-particle-text").then((m) => ({
       default: m.FluidParticleTextDocs,
@@ -250,13 +242,13 @@ const docsImportMap: Record<
     import("@/components/docs/text-morph").then((m) => ({
       default: m.TextMorphDocs,
     })),
+  "encrypted-text": () =>
+    import("@/components/docs/encrypted-text").then((m) => ({
+      default: m.EncryptedTextDocs,
+    })),
   "flipping-word-swap": () =>
     import("@/components/docs/flipping-word-swap").then((m) => ({
       default: m.FlippingWordSwapDocs,
-    })),
-  "kinetic-text-reveal": () =>
-    import("@/components/docs/kinetic-text-reveal").then((m) => ({
-      default: m.KineticTextRevealDocs,
     })),
   "gsap-text": () =>
     import("@/components/docs/gsap-text").then((m) => ({
@@ -270,11 +262,11 @@ const docsImportMap: Record<
     import("@/components/docs/shake-text").then((m) => ({
       default: m.ShakeTextDocs,
     })),
-  "calendar": () =>
+  calendar: () =>
     import("@/components/docs/calendar").then((m) => ({
       default: m.CalendarDocs,
     })),
-  "combobox": () =>
+  combobox: () =>
     import("@/components/docs/combobox").then((m) => ({
       default: m.ComboboxDocs,
     })),
@@ -282,7 +274,7 @@ const docsImportMap: Record<
     import("@/components/docs/date-picker").then((m) => ({
       default: m.DatePickerDocs,
     })),
-  "field": () =>
+  field: () =>
     import("@/components/docs/field").then((m) => ({
       default: m.FieldDocs,
     })),
@@ -298,7 +290,7 @@ const docsImportMap: Record<
     import("@/components/docs/native-select").then((m) => ({
       default: m.NativeSelectDocs,
     })),
-  "slider": () =>
+  slider: () =>
     import("@/components/docs/slider").then((m) => ({
       default: m.SliderDocs,
     })),
@@ -310,7 +302,7 @@ const docsImportMap: Record<
     import("@/components/docs/hover-card").then((m) => ({
       default: m.HoverCardDocs,
     })),
-  "sheet": () =>
+  sheet: () =>
     import("@/components/docs/sheet").then((m) => ({
       default: m.SheetDocs,
     })),
