@@ -149,6 +149,14 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "glitch-liquid-text",
     addedAt: "2026-09-10",
   },
+  "shader-text": {
+    title: "Shader Text",
+    description:
+      "WebGL fragment shaders clipped inside text glyphs via a dynamic SVG mask — twelve animated presets with fluid gradient and noise typography.",
+    category: "Text Animations",
+    slug: "shader-text",
+    addedAt: "2026-09-11",
+  },
   button: {
     title: "Button",
     description:
