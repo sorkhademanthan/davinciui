@@ -258,6 +258,14 @@ const docsImportMap: Record<
     import("@/components/docs/glitch-liquid-text").then((m) => ({
       default: m.GlitchLiquidTextDocs,
     })),
+  "text-video-mask": () =>
+    import("@/components/docs/text-video-mask").then((m) => ({
+      default: m.TextVideoMaskDocs,
+    })),
+  "random-text-reveal": () =>
+    import("@/components/docs/random-text-reveal").then((m) => ({
+      default: m.RandomTextRevealDocs,
+    })),
   "shake-text": () =>
     import("@/components/docs/shake-text").then((m) => ({
       default: m.ShakeTextDocs,

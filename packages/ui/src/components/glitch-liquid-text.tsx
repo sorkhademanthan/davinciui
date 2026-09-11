@@ -385,17 +385,17 @@ interface EngineSettings {
 /* ------------------------------------------------------------------ */
 
 export function GlitchLiquidText({
-  text = "DaVinci UI",
+  text = "DAVINCIUI\nCOMPONENTS",
   fontFamily = "Anton",
-  fontSize = 250,
+  fontSize = 220,
   fontWeight = 400,
-  lineHeight = 1,
+  lineHeight = 0.95,
   letterSpacing = 0,
 
   textColor = "#f5f5f5",
   backgroundColor = "#141414",
 
-  distortionStrength = 0.3,
+  distortionStrength = 0.42,
   distortionRadius = 0.18,
   distortionDecay = 3,
 
@@ -406,7 +406,7 @@ export function GlitchLiquidText({
   chromaticAberration = 0.012,
   glitchStrength = 0.4,
 
-  liquidStrength = 0.65,
+  liquidStrength = 1.1,
   velocityInfluence = 0.05,
 
   lightIntensity = 0.35,

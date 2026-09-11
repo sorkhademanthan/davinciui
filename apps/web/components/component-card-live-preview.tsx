@@ -60,6 +60,22 @@ const GlitchLiquidText = dynamic(
   { ssr: false },
 );
 
+const TextVideoMask = dynamic(
+  () =>
+    import("@workspace/ui/components/text-video-mask").then(
+      (module) => module.TextVideoMask,
+    ),
+  { ssr: false },
+);
+
+const RandomTextReveal = dynamic(
+  () =>
+    import("@workspace/ui/components/random-text-reveal").then(
+      (module) => module.RandomTextReveal,
+    ),
+  { ssr: false },
+);
+
 type ComponentCardLivePreviewProps = {
   slug:
     | "gsap-text"
@@ -68,7 +84,9 @@ type ComponentCardLivePreviewProps = {
     | "encrypted-text"
     | "flipping-word-swap"
     | "fluid-particle-text"
-    | "glitch-liquid-text";
+    | "glitch-liquid-text"
+    | "text-video-mask"
+    | "random-text-reveal";
 };
 
 export function ComponentCardLivePreview({
@@ -111,7 +129,7 @@ export function ComponentCardLivePreview({
       : slug === "fluid-particle-text"
         ? "FLOW"
         : slug === "glitch-liquid-text"
-          ? "LIQUID"
+          ? "DAVINCIUI"
           : "DAVINCIUI";
 
   return (
@@ -161,17 +179,42 @@ export function ComponentCardLivePreview({
         />
       ) : slug === "glitch-liquid-text" ? (
         <GlitchLiquidText
-          text="LIQUID"
-          fontSize={104}
+          text={"DAVINCIUI\nCOMPONENTS"}
+          fontSize={54}
           fontWeight={800}
+          lineHeight={0.95}
           backgroundColor={isDark ? "#09090b" : "#fafafa"}
           textColor={isDark ? "#f4f4f5" : "#18181b"}
           cursorEnabled={false}
-          distortionStrength={0.24}
+          distortionStrength={0.42}
+          liquidStrength={1.1}
           glitchStrength={0.3}
           grainStrength={0.012}
           className="h-full w-full"
         />
+      ) : slug === "text-video-mask" ? (
+        <TextVideoMask
+          text="DAVINCI."
+          src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+          fontSize={120}
+          backgroundColor={isDark ? "#09090b" : "#fafafa"}
+          fallbackColor={isDark ? "#f4f4f5" : "#18181b"}
+          className="h-full w-full"
+        />
+      ) : slug === "random-text-reveal" ? (
+        <div className="flex h-full w-full items-center justify-center px-6">
+          <RandomTextReveal
+            text="EVERY LETTER REVEALS ITSELF"
+            fontSize="clamp(1rem, 1.8vw, 1.35rem)"
+            fontWeight={700}
+            color={isDark ? "#f4f4f5" : "#18181b"}
+            textAlign="center"
+            maxDelay={1}
+            triggerPosition="bottom"
+            loop
+            loopDelay={2}
+          />
+        </div>
       ) : (
         <KineticText
           text="DAVINCIUI"

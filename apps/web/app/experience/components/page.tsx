@@ -29,7 +29,9 @@ function hasLiveCardPreview(
   | "encrypted-text"
   | "flipping-word-swap"
   | "fluid-particle-text"
-  | "glitch-liquid-text" {
+  | "glitch-liquid-text"
+  | "text-video-mask"
+  | "random-text-reveal" {
   return (
     slug === "gsap-text" ||
     slug === "text-morph" ||
@@ -37,7 +39,9 @@ function hasLiveCardPreview(
     slug === "encrypted-text" ||
     slug === "flipping-word-swap" ||
     slug === "fluid-particle-text" ||
-    slug === "glitch-liquid-text"
+    slug === "glitch-liquid-text" ||
+    slug === "text-video-mask" ||
+    slug === "random-text-reveal"
   )
 }
 

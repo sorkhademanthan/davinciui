@@ -157,6 +157,22 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "shader-text",
     addedAt: "2026-09-11",
   },
+  "text-video-mask": {
+    title: "Text Video Mask",
+    description:
+      "Large typography where playing video shows only inside the glyphs — one continuous footage surface revealed through the type.",
+    category: "Text Animations",
+    slug: "text-video-mask",
+    addedAt: "2026-09-11",
+  },
+  "random-text-reveal": {
+    title: "Random Text Reveal",
+    description:
+      "Per-character text reveal in shuffled order on scroll — faint glyphs resolve randomly into solid type.",
+    category: "Text Animations",
+    slug: "random-text-reveal",
+    addedAt: "2026-09-11",
+  },
   button: {
     title: "Button",
     description:

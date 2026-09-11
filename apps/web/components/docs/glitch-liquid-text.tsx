@@ -1,4 +1,3 @@
-import { GlitchLiquidText } from "@workspace/ui/components/glitch-liquid-text"
 import { DocsPageLayout } from "@/components/docs-page-layout"
 import { GlitchLiquidTextPreview } from "@/components/docs/previews/glitch-liquid-text-preview"
 import { readComponentSource } from "@/lib/source-code"
@@ -7,41 +6,26 @@ import { MousePointer } from "lucide-react"
 const usageCode = `import { GlitchLiquidText } from "@/components/ui/glitch-liquid-text"
 
 <GlitchLiquidText
-  text="DaVinci UI"
+  text={"DAVINCIUI\\nCOMPONENTS"}
   fontFamily="Anton"
-  fontSize={250}
+  fontSize={180}
+  lineHeight={0.95}
   backgroundColor="#141414"
   textColor="#f5f5f5"
-  distortionStrength={0.3}
-  distortionRadius={0.18}
-  chromaticAberration={0.012}
-  noiseStrength={0.07}
-  className="h-[720px] w-full"
+  distortionStrength={0.42}
+  liquidStrength={1.1}
+  className="h-[560px] w-full"
 />`
 
 const defaultCode = `import { GlitchLiquidText } from "@/components/ui/glitch-liquid-text"
 
-<GlitchLiquidText text="DaVinci UI" className="h-[720px] w-full" />`
-
-const multilineCode = `<GlitchLiquidText
-  text={"LIQUID\\nMEMBRANE"}
-  fontSize={220}
+<GlitchLiquidText
+  text={"DAVINCIUI\\nCOMPONENTS"}
+  fontSize={180}
   lineHeight={0.95}
   distortionStrength={0.42}
   liquidStrength={1.1}
-  className="h-[480px] w-full"
-/>`
-
-const monoCode = `<GlitchLiquidText
-  text="SIGNAL/NOISE"
-  fontFamily="monospace"
-  fontSize={120}
-  backgroundColor="#0a0a0f"
-  textColor="#c8ff4d"
-  chromaticAberration={0.02}
-  glitchStrength={0.9}
-  lightIntensity={0.6}
-  className="h-[420px] w-full"
+  className="h-[560px] w-full"
 />`
 
 function HoverHint() {
@@ -61,7 +45,7 @@ export async function GlitchLiquidTextDocs() {
             title="Glitch Liquid Text"
             description="GPU-rendered interactive typography printed on a thin liquid membrane. The cursor stretches glyphs with viscous fluid distortion, velocity-driven smear, localized RGB channel separation, subtle glitch slices, and cinematic light rays — while untouched type stays razor sharp."
             preview={
-                <div className="relative h-full min-h-[560px] w-full">
+                <div className="relative h-full min-h-[560px] w-full p-6 sm:p-10">
                     <GlitchLiquidTextPreview />
                     <HoverHint />
                 </div>
@@ -72,50 +56,16 @@ export async function GlitchLiquidTextDocs() {
             installSourceCode={sourceCode}
             installSourceFilename="components/ui/glitch-liquid-text.tsx"
             usageCode={usageCode}
-            examples={[
-                {
-                    title: "Multiline Membrane",
-                    preview: (
-                        <GlitchLiquidText
-                            text={"LIQUID\nMEMBRANE"}
-                            fontFamily="Anton"
-                            fontSize={220}
-                            lineHeight={0.95}
-                            distortionStrength={0.42}
-                            liquidStrength={1.1}
-                            className="h-[480px] w-full"
-                        />
-                    ),
-                    code: multilineCode,
-                },
-                {
-                    title: "Signal Green",
-                    preview: (
-                        <GlitchLiquidText
-                            text="SIGNAL/NOISE"
-                            fontFamily="monospace"
-                            fontSize={120}
-                            backgroundColor="#0a0a0f"
-                            textColor="#c8ff4d"
-                            chromaticAberration={0.02}
-                            glitchStrength={0.9}
-                            lightIntensity={0.6}
-                            className="h-[420px] w-full"
-                        />
-                    ),
-                    code: monoCode,
-                },
-            ]}
             props={[
-                { name: "text", type: "string", default: '"DaVinci UI"', description: "Text rendered into the GPU texture. Supports multiline via \\n." },
+                { name: "text", type: "string", default: '"DAVINCIUI\\nCOMPONENTS"', description: "Text rendered into the GPU texture. Supports multiline via \\n." },
                 { name: "fontFamily", type: "string", default: '"Anton"', description: "Font family baked into the text texture. Ensure the font is loaded before mount for crisp results." },
-                { name: "fontSize", type: "number", default: "250", description: "Base type size in CSS px before contain-fit scaling." },
+                { name: "fontSize", type: "number", default: "220", description: "Base type size in CSS px before contain-fit scaling." },
                 { name: "fontWeight", type: "number | string", default: "400", description: "Font weight baked into the texture." },
-                { name: "lineHeight", type: "number", default: "1", description: "Line-height multiplier for multiline text." },
+                { name: "lineHeight", type: "number", default: "0.95", description: "Line-height multiplier for multiline text." },
                 { name: "letterSpacing", type: "number", default: "0", description: "Tracking in CSS px between characters." },
                 { name: "textColor", type: "string", default: '"#f5f5f5"', description: "Glyph color applied in the shader composite." },
                 { name: "backgroundColor", type: "string", default: '"#141414"', description: "Canvas clear color and shader background." },
-                { name: "distortionStrength", type: "number", default: "0.3", description: "Peak liquid displacement around the cursor." },
+                { name: "distortionStrength", type: "number", default: "0.42", description: "Peak liquid displacement around the cursor." },
                 { name: "distortionRadius", type: "number", default: "0.18", description: "Interaction field radius in UV units." },
                 { name: "distortionDecay", type: "number", default: "3", description: "Viscous relaxation rate once the cursor leaves." },
                 { name: "noiseStrength", type: "number", default: "0.07", description: "Amplitude of the animated FBM ripple inside disturbed areas." },
@@ -123,7 +73,7 @@ export async function GlitchLiquidTextDocs() {
                 { name: "noiseSpeed", type: "number", default: "0.35", description: "Temporal evolution speed of the noise." },
                 { name: "chromaticAberration", type: "number", default: "0.012", description: "Peak RGB channel separation at distorted edges." },
                 { name: "glitchStrength", type: "number", default: "0.4", description: "Intensity of sparse horizontal glitch slices (secondary effect)." },
-                { name: "liquidStrength", type: "number", default: "0.65", description: "Tangential swirl component — higher feels more fluid, less lens-like." },
+                { name: "liquidStrength", type: "number", default: "1.1", description: "Tangential swirl component — higher feels more fluid, less lens-like." },
                 { name: "velocityInfluence", type: "number", default: "0.05", description: "How strongly cursor speed smears the type along motion." },
                 { name: "lightIntensity", type: "number", default: "0.35", description: "Directional light-ray bloom gathered from disturbed glyph edges." },
                 { name: "grainStrength", type: "number", default: "0.025", description: "Fine monochromatic cinematic grain." },

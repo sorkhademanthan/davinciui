@@ -9,9 +9,12 @@ export function GlitchLiquidTextPreview() {
 
   return (
     <GlitchLiquidText
-      text="DaVinci UI"
+      text={"DAVINCIUI\nCOMPONENTS"}
       fontFamily="Anton"
-      fontSize={250}
+      fontSize={180}
+      lineHeight={0.95}
+      distortionStrength={0.42}
+      liquidStrength={1.1}
       backgroundColor={isDark ? "#141414" : "#f8fafc"}
       textColor={isDark ? "#f5f5f5" : "#18181b"}
       className="h-full w-full"

@@ -365,6 +365,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "random-text-reveal",
+      "type": "registry:ui"
+    },
+    {
       "name": "ripple-transition",
       "type": "registry:ui"
     },
@@ -462,6 +466,10 @@
     },
     {
       "name": "text-morph",
+      "type": "registry:ui"
+    },
+    {
+      "name": "text-video-mask",
       "type": "registry:ui"
     },
     {
