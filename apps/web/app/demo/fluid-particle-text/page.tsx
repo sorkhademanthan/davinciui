@@ -19,8 +19,8 @@ export default function FluidParticleTextDemoPage() {
       }}
     >
       <FluidParticleText
-        preset="reference404"
-        text="404"
+        preset="showcase"
+        text="FLOW"
         fontFamily={archivoNarrow.style.fontFamily}
         className="h-full w-full"
         style={{ height: "100%", minHeight: "100vh" }}
