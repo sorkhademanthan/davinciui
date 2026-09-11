@@ -79,6 +79,7 @@ export function GSAPTextPlayground() {
       <KineticText
         text={config.text}
         htmlTag="h1"
+        textClassName="scale-x-[1.04]"
         direction={config.direction}
         layerCount={config.layerCount}
         distance={config.distance}

@@ -2,10 +2,10 @@
 
 import * as React from "react";
 import { create } from "zustand";
-import { ShakeText, type ShakeTextHandle, type ShakeTextTrigger } from "@workspace/ui/components/shake-text";
-import { cn } from "@/lib/utils";
+import { ShakeText } from "@workspace/ui/components/shake-text";
 import { usePlaygroundStore } from "@/hooks/use-playground-store";
 import {
+  PlaygroundColorPicker,
   PlaygroundInput,
   PlaygroundSectionTitle,
   PlaygroundSlider,
@@ -17,23 +17,21 @@ import {
 
 interface ShakeTextPlaygroundConfig {
   text: string;
-  trigger: ShakeTextTrigger;
   shakeIntensity: number;
   shakeDuration: number;
+  frontColor: string;
+  layerColors: [string, string, string, string];
 }
 
 const DEFAULT_CONFIG: ShakeTextPlaygroundConfig = {
-  text: "SHAKER",
-  trigger: "mount",
+  text: "DAVINCIUI",
   shakeIntensity: 1,
-  shakeDuration: 0.65,
+  shakeDuration: 1.4,
+  frontColor: "#fff8e7",
+  layerColors: ["#50adbf", "#5f845c", "#e76168", "#fdda76"],
 };
 
-const PRESETS: Array<{ name: string; config: ShakeTextPlaygroundConfig }> = [
-  { name: "Mount", config: { text: "SHAKER", trigger: "mount", shakeIntensity: 1, shakeDuration: 0.65 } },
-  { name: "Hover", config: { text: "SHAKER", trigger: "hover", shakeIntensity: 1, shakeDuration: 0.65 } },
-  { name: "Click", config: { text: "BOUNCE", trigger: "click", shakeIntensity: 1.4, shakeDuration: 0.7 } },
-];
+const PREVIEW_FONT_SIZE = "clamp(2.5rem, 7.5vw, 6.5rem)";
 
 interface ShakeTextPlaygroundStore {
   config: ShakeTextPlaygroundConfig;
@@ -52,9 +50,11 @@ function generateCode(c: ShakeTextPlaygroundConfig) {
 
 <ShakeText
   text=${JSON.stringify(c.text)}
-  trigger=${JSON.stringify(c.trigger)}
+  fontSize="${PREVIEW_FONT_SIZE}"
   shakeIntensity={${c.shakeIntensity}}
   shakeDuration={${c.shakeDuration}}
+  frontColor="${c.frontColor}"
+  layerColors={${JSON.stringify(c.layerColors)}}
 />`;
 }
 
@@ -64,7 +64,6 @@ function generateCode(c: ShakeTextPlaygroundConfig) {
 
 export function ShakeTextPlayground() {
   const config = useShakeTextPlayground((s) => s.config);
-  const shakeRef = React.useRef<ShakeTextHandle>(null);
 
   React.useEffect(() => {
     const t = window.setTimeout(() => usePlaygroundStore.getState().setCode(generateCode(config)), 180);
@@ -74,11 +73,12 @@ export function ShakeTextPlayground() {
   return (
     <div className="flex h-full min-h-[420px] w-full items-center justify-center overflow-hidden bg-[#e8e6e1] p-6 dark:bg-[#111111] lg:min-h-[520px]">
       <ShakeText
-        ref={shakeRef}
         text={config.text}
-        trigger={config.trigger}
+        fontSize={PREVIEW_FONT_SIZE}
         shakeIntensity={config.shakeIntensity}
         shakeDuration={config.shakeDuration}
+        frontColor={config.frontColor}
+        layerColors={config.layerColors}
       />
     </div>
   );
@@ -88,38 +88,20 @@ export function ShakeTextPreview() {
   return <ShakeTextPlayground />;
 }
 
-export function ShakeTextManualExample() {
-  const shakeRef = React.useRef<ShakeTextHandle>(null);
-
-  return (
-    <div className="flex min-h-[280px] w-full flex-col items-center justify-center gap-8 overflow-hidden bg-[#e8e6e1] p-6 dark:bg-[#111111]">
-      <ShakeText ref={shakeRef} text="SHAKER" trigger="manual" />
-      <button
-        type="button"
-        onClick={() => shakeRef.current?.shake()}
-        className="rounded-full bg-foreground px-5 py-2 text-sm font-semibold text-background transition-transform hover:scale-105 active:scale-95"
-      >
-        Shake it
-      </button>
-    </div>
-  );
-}
-
 // ─────────────────────────────────────────────────────────────
 // Personalize panel
 // ─────────────────────────────────────────────────────────────
-
-const TRIGGERS: Array<{ label: string; value: ShakeTextTrigger }> = [
-  { label: "Mount", value: "mount" },
-  { label: "Hover", value: "hover" },
-  { label: "Click", value: "click" },
-  { label: "Manual", value: "manual" },
-];
 
 export function ShakeTextPersonalizePanel() {
   const config = useShakeTextPlayground((s) => s.config);
   const update = useShakeTextPlayground((s) => s.updateConfig);
   const reset = useShakeTextPlayground((s) => s.resetConfig);
+
+  const updateLayerColor = (index: number, color: string) => {
+    const layerColors = [...config.layerColors] as [string, string, string, string];
+    layerColors[index] = color;
+    update({ layerColors });
+  };
 
   return (
     <div className="h-full overflow-auto bg-background [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
@@ -127,7 +109,7 @@ export function ShakeTextPersonalizePanel() {
         <header className="space-y-2">
           <h2 className="text-2xl font-bold tracking-tighter">Personalize</h2>
           <p className="text-sm leading-relaxed text-muted-foreground/90">
-            Tune the shaker — text, trigger, intensity and duration. Hover or click the stage to replay.
+            Tune the continuous layered motion, content and colors.
           </p>
         </header>
 
@@ -142,33 +124,11 @@ export function ShakeTextPersonalizePanel() {
         </div>
 
         <div>
-          <PlaygroundSectionTitle>Presets</PlaygroundSectionTitle>
-          <div className="grid grid-cols-3 gap-1.5">
-            {PRESETS.map((p) => {
-              const active = p.config.text === config.text && p.config.trigger === config.trigger;
-              return (
-                <button
-                  key={p.name}
-                  type="button"
-                  onClick={() => update({ ...p.config })}
-                  className={cn(
-                    "rounded-md border px-2 py-2 font-mono text-[10px] uppercase tracking-wide",
-                    active ? "border-foreground/25 text-foreground shadow-sm" : "border-border/70 text-muted-foreground",
-                  )}
-                >
-                  {p.name}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        <div>
           <PlaygroundSectionTitle>Content</PlaygroundSectionTitle>
           <PlaygroundInput
             value={config.text}
-            onChange={(e) => update({ text: e.target.value.slice(0, 16) || "SHAKER" })}
-            placeholder="SHAKER"
+            onChange={(e) => update({ text: e.target.value.slice(0, 16) || "DAVINCIUI" })}
+            placeholder="DAVINCIUI"
           />
         </div>
 
@@ -178,25 +138,23 @@ export function ShakeTextPersonalizePanel() {
           <PlaygroundSlider label="Duration" min={0.2} max={1.5} step={0.05} value={config.shakeDuration} unit="s" onChange={(v) => update({ shakeDuration: v })} />
         </div>
 
-        <div>
-          <PlaygroundSectionTitle>Trigger</PlaygroundSectionTitle>
-          <div className="grid grid-cols-4 gap-1.5">
-            {TRIGGERS.map((t) => (
-              <button
-                key={t.value}
-                type="button"
-                onClick={() => update({ trigger: t.value })}
-                className={cn(
-                  "rounded-md border px-2 py-2 font-mono text-[10px] uppercase tracking-wide",
-                  config.trigger === t.value
-                    ? "border-foreground/25 text-foreground shadow-sm"
-                    : "border-border/70 text-muted-foreground",
-                )}
-              >
-                {t.label}
-              </button>
-            ))}
-          </div>
+        <div className="space-y-3">
+          <PlaygroundSectionTitle>Colors</PlaygroundSectionTitle>
+          <PlaygroundColorPicker
+            label="Foreground"
+            value={config.frontColor}
+            onChange={(frontColor) => update({ frontColor })}
+            defaultColor="#fff8e7"
+          />
+          {config.layerColors.map((color, index) => (
+            <PlaygroundColorPicker
+              key={index}
+              label={`Layer ${index + 1}`}
+              value={color}
+              onChange={(value) => updateLayerColor(index, value)}
+              defaultColor={DEFAULT_CONFIG.layerColors[index]}
+            />
+          ))}
         </div>
       </div>
     </div>
