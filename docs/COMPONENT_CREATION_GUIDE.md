@@ -35,6 +35,7 @@ davinciui/
 **Location:** `packages/ui/src/components/{component-name}.tsx`
 
 ### Requirements
+
 - Add `"use client"` at the top (required for React hooks)
 - Import `cn` from `@workspace/ui/lib/utils`
 - Define a TypeScript interface for props
@@ -67,13 +68,13 @@ export function MyComponent({
   variant = "default",
 }: MyComponentProps) {
   // Implementation...
-  
+
   return (
     <div
       className={cn(
         "base-styles-here",
         variant === "secondary" && "secondary-styles",
-        className
+        className,
       )}
     >
       {text}
@@ -83,6 +84,7 @@ export function MyComponent({
 ```
 
 ### Best Practices
+
 - Use `ResizeObserver` for canvas/interactive elements
 - Cleanup intervals/observers in `useEffect` return
 - Support both controlled and uncontrolled patterns
@@ -95,6 +97,7 @@ export function MyComponent({
 **Location:** `apps/web/public/r/{component-name}.json`
 
 This file allows users to install the component via CLI:
+
 ```bash
 npx shadcn@latest add @davinciui/{component-name}
 ```
@@ -110,11 +113,13 @@ node scripts/generate-registry.js {component-name}
 ```
 
 **Example:**
+
 ```bash
-node scripts/generate-registry.js scroll-based-velocity
+node scripts/generate-registry.js text-morph
 ```
 
 This script handles all the tedious formatting rules for you:
+
 - Reads the component source file
 - Escapes all quotes and newlines correctly
 - Updates import paths (e.g., changing `@workspace/ui/lib/utils` to `@/lib/utils`)
@@ -163,6 +168,7 @@ If doing this manually, you must ensure the `content` string follows these rules
 **Location:** `apps/web/registry/index.ts`
 
 This file defines metadata used for:
+
 - SEO (title, description)
 - Sidebar navigation
 - Component categorization
@@ -172,7 +178,7 @@ This file defines metadata used for:
 ```typescript
 export const components: Record<string, ComponentMetadata> = {
   // ... existing components
-  
+
   "my-component": {
     title: "My Component",
     description: "A brief, catchy description for SEO and tooltips.",
@@ -185,13 +191,13 @@ export const components: Record<string, ComponentMetadata> = {
 
 ### Categories
 
-| Category | Use For |
-|----------|---------|
-| `"Text Animations"` | Text effects (HyperText, TextAnimate) |
-| `"Components"` | Interactive UI elements (Cards, Modals, Docks) |
-| `"Hero Backgrounds"` | Full-page background effects |
-| `"Visual Effects"` | Decorative effects (Blobs, Particles, Noise) |
-| `"ASCII Effects"` | Image-to-ASCII renderers and animated ASCII effects |
+| Category             | Use For                                             |
+| -------------------- | --------------------------------------------------- |
+| `"Text Animations"`  | Text effects (HyperText, TextAnimate)               |
+| `"Components"`       | Interactive UI elements (Cards, Modals, Docks)      |
+| `"Hero Backgrounds"` | Full-page background effects                        |
+| `"Visual Effects"`   | Decorative effects (Blobs, Particles, Noise)        |
+| `"ASCII Effects"`    | Image-to-ASCII renderers and animated ASCII effects |
 
 ---
 
@@ -208,34 +214,35 @@ export const components: Record<string, ComponentMetadata> = {
 ### Template
 
 ```tsx
-import React from "react"
-import { MyComponent } from "@workspace/ui/components/my-component"
-import { DocsPageLayout } from "@/components/docs-page-layout"
-import { readComponentSource } from "@/lib/source-code"
+import React from "react";
+import { MyComponent } from "@workspace/ui/components/my-component";
+import { DocsPageLayout } from "@/components/docs-page-layout";
+import { readComponentSource } from "@/lib/source-code";
 
 // Define example code snippets as strings
-const importCode = `import { MyComponent } from "@/components/ui/my-component"`
+const importCode = `import { MyComponent } from "@/components/ui/my-component"`;
 
 const defaultCode = `import { MyComponent } from "@/components/ui/my-component"
 
-<MyComponent text="Hello World" className="text-4xl" />`
+<MyComponent text="Hello World" className="text-4xl" />`;
 
 const variantCode = `<MyComponent
   text="Secondary Style"
   variant="secondary"
   duration={1000}
-/>`
+/>`;
 
 export async function MyComponentDocs() {
   // Load source code dynamically (from public/r/*.json)
-  const sourceCode = (await readComponentSource("my-component")) || "// Unable to load source code"
+  const sourceCode =
+    (await readComponentSource("my-component")) ||
+    "// Unable to load source code";
 
   return (
     <DocsPageLayout
       // Header
       title="My Component"
       description="A detailed description of what this component does and why developers would use it."
-      
       // Main Preview Section
       preview={
         <MyComponent
@@ -244,16 +251,13 @@ export async function MyComponentDocs() {
         />
       }
       previewCode={defaultCode}
-      
       // Installation Section
       installPackageName="my-component"
-      installDependencies="framer-motion clsx tailwind-merge"  // Space-separated list
-      installSourceCode={sourceCode}  // Dynamic source from registry JSON
-      installSourceFilename="components/ui/my-component.tsx"  // Optional: custom filename
-      
+      installDependencies="framer-motion clsx tailwind-merge" // Space-separated list
+      installSourceCode={sourceCode} // Dynamic source from registry JSON
+      installSourceFilename="components/ui/my-component.tsx" // Optional: custom filename
       // Usage Section
       usageCode={importCode}
-      
       // Examples Section
       examples={[
         {
@@ -279,7 +283,6 @@ export async function MyComponentDocs() {
           code: `<MyComponent text="Slow Animation" duration={2000} />`,
         },
       ]}
-      
       // Props Table
       props={[
         {
@@ -306,7 +309,7 @@ export async function MyComponentDocs() {
         },
       ]}
     />
-  )
+  );
 }
 ```
 
@@ -315,6 +318,7 @@ export async function MyComponentDocs() {
 This is a **very common mistake**. Every code string — `usageCode`, `previewCode`, and every `examples[].code` — **must include the import statement** at the top.
 
 **❌ Wrong — missing import in examples:**
+
 ```tsx
 const cartoonCode = `<MyComponent variant="cartoon" />`
 
@@ -322,20 +326,22 @@ usageCode={`import { MyComponent } from "@/components/ui/my-component"`}
 ```
 
 **✅ Correct — import included everywhere:**
+
 ```tsx
 const defaultCode = `import { MyComponent } from "@/components/ui/my-component"
 
-<MyComponent />`
+<MyComponent />`;
 
 const cartoonCode = `import { MyComponent } from "@/components/ui/my-component"
 
-<MyComponent variant="cartoon" />`
+<MyComponent variant="cartoon" />`;
 
 // usageCode shows the full default usage, NOT just the bare import line
-usageCode={defaultCode}
+usageCode = { defaultCode };
 ```
 
 **Rules:**
+
 - `usageCode` = the full default usage snippet (import + component JSX), **not** a bare `import` line
 - Every `examples[].code` string must start with the import statement
 - `previewCode` must also include the import statement
@@ -344,20 +350,20 @@ usageCode={defaultCode}
 
 ### Props for DocsPageLayout
 
-| Prop | Type | Required | Description |
-|------|------|----------|-------------|
-| `title` | `string` | ✅ | Component name |
-| `description` | `string` | ✅ | What the component does |
-| `preview` | `ReactNode` | ✅ | Live component preview |
-| `previewCode` | `string` | ✅ | Code for the preview (must include import) |
-| `installPackageName` | `string` | ✅ | Slug for CLI install |
-| `installDependencies` | `string` | ❌ | Space-separated npm packages |
-| `installSourceCode` | `string` | ❌ | Source code for manual install |
-| `installSourceFilename` | `string` | ❌ | Target filename |
-| `usageCode` | `string` | ✅ | Full default usage snippet (import + JSX, **not** just the import line) |
-| `examples` | `ExampleItem[]` | ❌ | Additional examples (each `code` must include import) |
-| `props` | `PropItem[]` | ❌ | Props table data |
-| `fullWidthPreview` | `boolean` | ❌ | Remove padding from preview |
+| Prop                    | Type            | Required | Description                                                             |
+| ----------------------- | --------------- | -------- | ----------------------------------------------------------------------- |
+| `title`                 | `string`        | ✅       | Component name                                                          |
+| `description`           | `string`        | ✅       | What the component does                                                 |
+| `preview`               | `ReactNode`     | ✅       | Live component preview                                                  |
+| `previewCode`           | `string`        | ✅       | Code for the preview (must include import)                              |
+| `installPackageName`    | `string`        | ✅       | Slug for CLI install                                                    |
+| `installDependencies`   | `string`        | ❌       | Space-separated npm packages                                            |
+| `installSourceCode`     | `string`        | ❌       | Source code for manual install                                          |
+| `installSourceFilename` | `string`        | ❌       | Target filename                                                         |
+| `usageCode`             | `string`        | ✅       | Full default usage snippet (import + JSX, **not** just the import line) |
+| `examples`              | `ExampleItem[]` | ❌       | Additional examples (each `code` must include import)                   |
+| `props`                 | `PropItem[]`    | ❌       | Props table data                                                        |
+| `fullWidthPreview`      | `boolean`       | ❌       | Remove padding from preview                                             |
 
 ---
 
@@ -372,7 +378,7 @@ This is **CRITICAL for performance**. Components are lazy-loaded only when visit
 ```typescript
 const docsImportMap: Record<string, () => Promise<...>> = {
   // ... existing components
-  
+
   "my-component": () =>
     import("@/components/docs/my-component").then((m) => ({
       default: m.MyComponentDocs,
@@ -381,6 +387,7 @@ const docsImportMap: Record<string, () => Promise<...>> = {
 ```
 
 ### Naming Convention
+
 - File: `my-component.tsx`
 - Export: `MyComponentDocs`
 - Key: `"my-component"`
@@ -407,10 +414,11 @@ export function MyComponentPreview() {
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <MyComponent text="Interactive Demo" variant={isActive ? "secondary" : "default"} />
-      <Button onClick={() => setIsActive(!isActive)}>
-        Toggle Variant
-      </Button>
+      <MyComponent
+        text="Interactive Demo"
+        variant={isActive ? "secondary" : "default"}
+      />
+      <Button onClick={() => setIsActive(!isActive)}>Toggle Variant</Button>
     </div>
   );
 }
@@ -478,22 +486,27 @@ open http://localhost:3000/docs/components/my-component
 ## 🔧 Common Issues & Solutions
 
 ### Issue: "Unable to load source code"
+
 **Cause:** Registry JSON missing or malformed
 **Fix:** Verify `public/r/{component-name}.json` exists and has valid JSON
 
 ### Issue: Component not in sidebar
+
 **Cause:** Missing from `registry/index.ts`
 **Fix:** Add metadata to the `components` object
 
 ### Issue: "Module not found" on docs page
+
 **Cause:** Missing from `lazy-registry.ts`
 **Fix:** Add dynamic import entry
 
 ### Issue: Preview not rendering
+
 **Cause:** Using hooks in Server Component
 **Fix:** Move interactive logic to a separate `"use client"` preview file
 
 ### Issue: Import path incorrect in install code
+
 **Cause:** Forgot to replace `@workspace/ui` in JSON
 **Fix:** Use `@/lib/utils` instead of `@workspace/ui/lib/utils`
 
@@ -546,18 +559,21 @@ User visits /docs/components/{slug}
 ## 🎨 Design Guidelines
 
 ### Component Styling
+
 - Use Tailwind CSS exclusively
 - Support both light and dark modes
 - Use CSS variables from the theme (`--foreground`, `--background`, etc.)
 - Allow full customization via `className` prop
 
 ### Animation Guidelines
+
 - Use `framer-motion` for complex animations
 - Keep animations under 300ms for UI feedback
 - Use 500-1000ms for decorative animations
 - Always respect `prefers-reduced-motion`
 
 ### Accessibility
+
 - Support keyboard navigation
 - Include proper ARIA labels
 - Ensure sufficient color contrast
@@ -568,27 +584,29 @@ User visits /docs/components/{slug}
 ## 📎 Quick Reference
 
 ### File Locations
-| Purpose | Path |
-|---------|------|
-| UI Component | `packages/ui/src/components/{name}.tsx` |
-| Registry JSON | `apps/web/public/r/{name}.json` |
-| Metadata | `apps/web/registry/index.ts` |
-| Docs Component | `apps/web/components/docs/{name}.tsx` |
-| Lazy Registry | `apps/web/components/docs/lazy-registry.ts` |
+
+| Purpose        | Path                                                   |
+| -------------- | ------------------------------------------------------ |
+| UI Component   | `packages/ui/src/components/{name}.tsx`                |
+| Registry JSON  | `apps/web/public/r/{name}.json`                        |
+| Metadata       | `apps/web/registry/index.ts`                           |
+| Docs Component | `apps/web/components/docs/{name}.tsx`                  |
+| Lazy Registry  | `apps/web/components/docs/lazy-registry.ts`            |
 | Client Preview | `apps/web/components/docs/previews/{name}-preview.tsx` |
 
 ### Import Patterns
+
 ```typescript
 // In UI component (packages/ui)
-import { cn } from "@workspace/ui/lib/utils"
+import { cn } from "@workspace/ui/lib/utils";
 
 // In docs component (apps/web)
-import { MyComponent } from "@workspace/ui/components/my-component"
-import { DocsPageLayout } from "@/components/docs-page-layout"
-import { readComponentSource } from "@/lib/source-code"
+import { MyComponent } from "@workspace/ui/components/my-component";
+import { DocsPageLayout } from "@/components/docs-page-layout";
+import { readComponentSource } from "@/lib/source-code";
 
 // In registry JSON content
-import { cn } from "@/lib/utils"  // NOTE: Different path!
+import { cn } from "@/lib/utils"; // NOTE: Different path!
 ```
 
 ---

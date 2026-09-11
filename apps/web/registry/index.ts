@@ -101,24 +101,6 @@ export const components: Record<string, ComponentMetadata> = {
     previewVideo:
       "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/component-animations/mackeyboard.webm",
   },
-  "scroll-based-velocity": {
-    title: "Velocity Scroll",
-    description: "Text that moves horizontally based on scroll speed.",
-    category: "Text Animations",
-    slug: "scroll-based-velocity",
-    previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/text-animations/scrollvelocity.webm",
-  },
-  "letter-cascade": {
-    title: "Letter Cascade",
-    description:
-      "Kinetic text animation where letters scatter outward with spring physics and blur, then elegantly reassemble.",
-    category: "Text Animations",
-    slug: "letter-cascade",
-    addedAt: "2026-02-28",
-    previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/text-animations/lettercascade.webm",
-  },
   "fluid-particle-text": {
     title: "Fluid Particle Text",
     description:
@@ -135,6 +117,14 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "text-morph",
     addedAt: "2026-08-02",
   },
+  "encrypted-text": {
+    title: "Encrypted Text",
+    description:
+      "A continuously scrambling cipher that decrypts from left to right into a readable message.",
+    category: "Text Animations",
+    slug: "encrypted-text",
+    addedAt: "2026-09-11",
+  },
   "flipping-word-swap": {
     title: "Flipping Word Swap",
     description:
@@ -142,16 +132,6 @@ export const components: Record<string, ComponentMetadata> = {
     category: "Text Animations",
     slug: "flipping-word-swap",
     addedAt: "2026-08-04",
-  },
-  "kinetic-text-reveal": {
-    title: "Kinetic Text Reveal",
-    description:
-      "Directional text reveal with soft blur and configurable word, character, or line stagger timing.",
-    category: "Text Animations",
-    slug: "kinetic-text-reveal",
-    addedAt: "2026-06-07",
-    previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/text-animations/kinetictextreveal.webm",
   },
   "gsap-text": {
     title: "GSAP Text",
@@ -169,7 +149,7 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "glitch-liquid-text",
     addedAt: "2026-09-10",
   },
-  "button": {
+  button: {
     title: "Button",
     description:
       "Versatile buttons with variants, sizes, loading states, and as-child link rendering.",
@@ -185,7 +165,7 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "button-group",
     addedAt: "2026-09-04",
   },
-  "toggle": {
+  toggle: {
     title: "Toggle",
     description:
       "Two-state pill buttons with pressed styling and size variants.",
@@ -193,7 +173,7 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "toggle",
     addedAt: "2026-09-04",
   },
-  "link": {
+  link: {
     title: "Link",
     description:
       "Typographic links with variants, underline treatments, and icon support.",
@@ -201,7 +181,7 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "link",
     addedAt: "2026-09-04",
   },
-  "input": {
+  input: {
     title: "Input",
     description:
       "Text inputs with variants, invalid states, icons, and full RTL support.",
@@ -209,7 +189,7 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "input",
     addedAt: "2026-09-04",
   },
-  "textarea": {
+  textarea: {
     title: "Textarea",
     description:
       "Multiline text inputs with auto sizing, invalid states, and RTL support.",
@@ -217,7 +197,7 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "textarea",
     addedAt: "2026-09-04",
   },
-  "select": {
+  select: {
     title: "Select",
     description:
       "Custom dropdown selects with search, grouping, and keyboard navigation.",
@@ -225,7 +205,7 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "select",
     addedAt: "2026-09-04",
   },
-  "checkbox": {
+  checkbox: {
     title: "Checkbox",
     description:
       "Checkboxes with indeterminate state, descriptions, and invalid styling.",
@@ -233,7 +213,7 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "checkbox",
     addedAt: "2026-09-04",
   },
-  "radio": {
+  radio: {
     title: "Radio",
     description:
       "Radio options with grouped layouts, descriptions, and invalid styling.",
@@ -241,15 +221,14 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "radio",
     addedAt: "2026-09-04",
   },
-  "switch": {
+  switch: {
     title: "Switch",
-    description:
-      "Toggle switches with sizes, labels, and smooth thumb motion.",
+    description: "Toggle switches with sizes, labels, and smooth thumb motion.",
     category: "Forms",
     slug: "switch",
     addedAt: "2026-09-04",
   },
-  "form": {
+  form: {
     title: "Form",
     description:
       "Validated forms with field wiring, error display, and submit handling.",
@@ -257,7 +236,7 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "form",
     addedAt: "2026-09-04",
   },
-  "alert": {
+  alert: {
     title: "Alert",
     description:
       "Callouts with five unmistakable tones, icon tiles, and action slots.",
@@ -265,7 +244,7 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "alert",
     addedAt: "2026-09-04",
   },
-  "toast": {
+  toast: {
     title: "Toast",
     description:
       "Stacked notifications with variants, actions, and auto-dismiss.",
@@ -273,7 +252,7 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "toast",
     addedAt: "2026-09-04",
   },
-  "progress": {
+  progress: {
     title: "Progress",
     description:
       "Determinate and indeterminate progress bars with sizes and tones.",
@@ -281,23 +260,21 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "progress",
     addedAt: "2026-09-04",
   },
-  "spinner": {
+  spinner: {
     title: "Spinner",
-    description:
-      "Loading spinners in five sizes with label support.",
+    description: "Loading spinners in five sizes with label support.",
     category: "Feedback",
     slug: "spinner",
     addedAt: "2026-09-04",
   },
-  "skeleton": {
+  skeleton: {
     title: "Skeleton",
-    description:
-      "Content placeholders with shimmer and configurable shapes.",
+    description: "Content placeholders with shimmer and configurable shapes.",
     category: "Feedback",
     slug: "skeleton",
     addedAt: "2026-09-04",
   },
-  "tabs": {
+  tabs: {
     title: "Tabs",
     description:
       "Tabbed interfaces with animated indicators and keyboard navigation.",
@@ -305,7 +282,7 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "tabs",
     addedAt: "2026-09-04",
   },
-  "breadcrumb": {
+  breadcrumb: {
     title: "Breadcrumb",
     description:
       "Trail hierarchies with auto separators and self-collapsing overflow.",
@@ -313,7 +290,7 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "breadcrumb",
     addedAt: "2026-09-04",
   },
-  "pagination": {
+  pagination: {
     title: "Pagination",
     description:
       "Page navigation with ranges, ellipsis, and boundary controls.",
@@ -321,7 +298,7 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "pagination",
     addedAt: "2026-09-04",
   },
-  "sidebar": {
+  sidebar: {
     title: "Sidebar",
     description:
       "App sidebars with collapsible sections, nesting, and mobile drawers.",
@@ -331,13 +308,12 @@ export const components: Record<string, ComponentMetadata> = {
   },
   "navigation-menu": {
     title: "Navigation Menu",
-    description:
-      "A collection of links for navigating websites.",
+    description: "A collection of links for navigating websites.",
     category: "Navigation",
     slug: "navigation-menu",
     addedAt: "2026-09-04",
   },
-  "dialog": {
+  dialog: {
     title: "Dialog",
     description:
       "A window overlaid on either the primary window or another dialog window, rendering the content underneath inert.",
@@ -345,23 +321,21 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "dialog",
     addedAt: "2026-09-04",
   },
-  "drawer": {
+  drawer: {
     title: "Drawer",
-    description:
-      "A drawer component for React. Built on top of Vaul.",
+    description: "A drawer component for React. Built on top of Vaul.",
     category: "Overlays",
     slug: "drawer",
     addedAt: "2026-09-04",
   },
-  "popover": {
+  popover: {
     title: "Popover",
-    description:
-      "Displays rich content in a portal, triggered by a button.",
+    description: "Displays rich content in a portal, triggered by a button.",
     category: "Overlays",
     slug: "popover",
     addedAt: "2026-09-04",
   },
-  "tooltip": {
+  tooltip: {
     title: "Tooltip",
     description:
       "A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.",
@@ -377,15 +351,14 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "dropdown-menu",
     addedAt: "2026-09-04",
   },
-  "card": {
+  card: {
     title: "Card",
-    description:
-      "Displays a card with header, content, and footer.",
+    description: "Displays a card with header, content, and footer.",
     category: "Data Display",
     slug: "card",
     addedAt: "2026-09-04",
   },
-  "badge": {
+  badge: {
     title: "Badge",
     description:
       "Pills with nine tones, three sizes, status dots, and removable chips.",
@@ -393,7 +366,7 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "badge",
     addedAt: "2026-09-04",
   },
-  "avatar": {
+  avatar: {
     title: "Avatar",
     description:
       "Identity circles with sizes, presence badges, generative fallbacks, and auto-collapsing groups.",
@@ -401,7 +374,7 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "avatar",
     addedAt: "2026-09-04",
   },
-  "accordion": {
+  accordion: {
     title: "Accordion",
     description:
       "Keyboard-navigable disclosure stacks with animated panels and card layouts.",
@@ -409,18 +382,16 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "accordion",
     addedAt: "2026-09-04",
   },
-  "carousel": {
+  carousel: {
     title: "Carousel",
-    description:
-      "A carousel with motion and swipe built using Embla.",
+    description: "A carousel with motion and swipe built using Embla.",
     category: "Layout",
     slug: "carousel",
     addedAt: "2026-09-04",
   },
-  "collapsible": {
+  collapsible: {
     title: "Collapsible",
-    description:
-      "An interactive component which expands/collapses a panel.",
+    description: "An interactive component which expands/collapses a panel.",
     category: "Layout",
     slug: "collapsible",
     addedAt: "2026-09-04",
@@ -436,12 +407,12 @@ export const components: Record<string, ComponentMetadata> = {
   "shake-text": {
     title: "Shake Text",
     description:
-      "A premium 3D layered text effect with a physical GSAP shake — five depth-stacked copies with dimensional black edges that jitter as one locked object.",
+      "A premium 3D layered text effect with four colored depth copies that move continuously behind a stable foreground.",
     category: "Text Animations",
     slug: "shake-text",
     addedAt: "2026-09-04",
   },
-  "calendar": {
+  calendar: {
     title: "Calendar",
     description:
       "A dependency-free date picker with single and range selection, Jalali and Hijri calendar systems, time selects, presets, booked dates, week numbers, and full RTL support.",
@@ -449,7 +420,7 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "calendar",
     addedAt: "2026-09-04",
   },
-  "combobox": {
+  combobox: {
     title: "Combobox",
     description:
       "An autocomplete dropdown with single and multiple selection, chips, grouped collections, custom rows, keyboard navigation, and RTL — dependency-free.",
@@ -465,7 +436,7 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "date-picker",
     addedAt: "2026-09-04",
   },
-  "field": {
+  field: {
     title: "Field",
     description:
       "Compound form primitives — labels, descriptions, errors, groups, and layouts that compose around any control with shared ids and invalid state.",
@@ -497,7 +468,7 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "native-select",
     addedAt: "2026-09-04",
   },
-  "slider": {
+  slider: {
     title: "Slider",
     description:
       "Pointer and keyboard multi-thumb slider with range fill, vertical layout, controlled values, and RTL mirroring.",
@@ -521,7 +492,7 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "hover-card",
     addedAt: "2026-09-04",
   },
-  "sheet": {
+  sheet: {
     title: "Sheet",
     description:
       "A modal side panel docked to any edge with directional motion, header/footer primitives, and RTL.",
@@ -637,8 +608,7 @@ export const components: Record<string, ComponentMetadata> = {
     category: "Premium Components",
     slug: "spiral-3d-slider",
     addedAt: "2026-08-08",
-    previewVideo:
-      "/preview-videos/component-animations/spiral3dslider.webm",
+    previewVideo: "/preview-videos/component-animations/spiral3dslider.webm",
     previewImage: "/images/spiral-3d-slider/catalog-preview.jpg",
   },
   "newsletter-bookshelf": {
@@ -758,7 +728,8 @@ export const components: Record<string, ComponentMetadata> = {
   // ASCII Effects
   "ascii-effect": {
     title: "ASCII Effect",
-    description: "Render images as responsive ASCII artwork with image, flow, and glitch variations.",
+    description:
+      "Render images as responsive ASCII artwork with image, flow, and glitch variations.",
     category: "ASCII Effects",
     slug: "ascii-effect",
     addedAt: "2026-07-21",
@@ -868,91 +839,104 @@ export const components: Record<string, ComponentMetadata> = {
   },
   "data-table": {
     title: "Data Table",
-    description: "Feature-rich data table with sorting, filtering, pagination, column visibility, row selection, and RTL support — built on TanStack Table.",
+    description:
+      "Feature-rich data table with sorting, filtering, pagination, column visibility, row selection, and RTL support — built on TanStack Table.",
     category: "Premium Components",
     slug: "data-table",
     addedAt: "2026-07-14",
   },
-  "questionnaire": {
+  questionnaire: {
     title: "Questionnaire",
-    description: "A multi-step questionnaire with single-choice, multiple-choice, freeform, and skippable questions.",
+    description:
+      "A multi-step questionnaire with single-choice, multiple-choice, freeform, and skippable questions.",
     category: "Forms",
     slug: "questionnaire",
     addedAt: "2026-09-07",
   },
-  "separator": {
+  separator: {
     title: "Separator",
-    description: "A visual divider between sections — horizontal by default, vertical inside row layouts.",
+    description:
+      "A visual divider between sections — horizontal by default, vertical inside row layouts.",
     category: "Data Display",
     slug: "separator",
     addedAt: "2026-09-07",
   },
-  "bubble": {
+  bubble: {
     title: "Bubble",
-    description: "Conversational message bubbles with variants, alignment, grouping, and edge-anchored reactions.",
+    description:
+      "Conversational message bubbles with variants, alignment, grouping, and edge-anchored reactions.",
     category: "Data Display",
     slug: "bubble",
     addedAt: "2026-09-07",
   },
   "toggle-group": {
     title: "Toggle Group",
-    description: "A set of two-state buttons for single or multiple selection with full keyboard support.",
+    description:
+      "A set of two-state buttons for single or multiple selection with full keyboard support.",
     category: "Actions",
     slug: "toggle-group",
     addedAt: "2026-09-07",
   },
-  "attachment": {
+  attachment: {
     title: "Attachment",
-    description: "File and image attachments with media, metadata, upload states, actions, and triggers.",
+    description:
+      "File and image attachments with media, metadata, upload states, actions, and triggers.",
     category: "Data Display",
     slug: "attachment",
     addedAt: "2026-09-07",
   },
-  "chart": {
+  chart: {
     title: "Chart",
-    description: "Beautiful charts built on Recharts v3 with config-driven theming, tooltips, and legends.",
+    description:
+      "Beautiful charts built on Recharts v3 with config-driven theming, tooltips, and legends.",
     category: "Data Display",
     slug: "chart",
     addedAt: "2026-09-07",
   },
-  "item": {
+  item: {
     title: "Item",
-    description: "Versatile rows with media, title, description, and actions — groupable into lists.",
+    description:
+      "Versatile rows with media, title, description, and actions — groupable into lists.",
     category: "Data Display",
     slug: "item",
     addedAt: "2026-09-07",
   },
   "message-scroller": {
     title: "Message Scroller",
-    description: "Chat scroll container with turn anchoring, live-edge follow, history preservation, and jumps.",
+    description:
+      "Chat scroll container with turn anchoring, live-edge follow, history preservation, and jumps.",
     category: "Data Display",
     slug: "message-scroller",
     addedAt: "2026-09-07",
   },
-  "empty": {
+  empty: {
     title: "Empty",
-    description: "Empty states with media, title, description, and actions for lists, search, and errors.",
+    description:
+      "Empty states with media, title, description, and actions for lists, search, and errors.",
     category: "Feedback",
     slug: "empty",
     addedAt: "2026-09-07",
   },
-  "menubar": {
+  menubar: {
     title: "Menubar",
-    description: "Horizontal bar of dropdown menus with checkbox, radio, submenu, and shortcut support.",
+    description:
+      "Horizontal bar of dropdown menus with checkbox, radio, submenu, and shortcut support.",
     category: "Navigation",
     slug: "menubar",
     addedAt: "2026-09-07",
   },
-  "message": {
+  message: {
     title: "Message",
-    description: "Conversation rows with avatar, alignment, header, and footer around any message surface.",
+    description:
+      "Conversation rows with avatar, alignment, header, and footer around any message surface.",
     category: "Data Display",
     slug: "message",
     addedAt: "2026-09-07",
   },
-  "marker": {
+  marker: {
     title: "Marker",
-    description: "Inline status, system notes, bordered rows, and labeled separators for conversations.",
+    description:
+      "Inline status, system notes, bordered rows, and labeled separators for conversations.",
     category: "Data Display",
     slug: "marker",
     addedAt: "2026-09-07",
