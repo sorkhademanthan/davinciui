@@ -262,6 +262,10 @@ const docsImportMap: Record<
     import("@/components/docs/shake-text").then((m) => ({
       default: m.ShakeTextDocs,
     })),
+  "shader-text": () =>
+    import("@/components/docs/shader-text").then((m) => ({
+      default: m.ShaderTextDocs,
+    })),
   calendar: () =>
     import("@/components/docs/calendar").then((m) => ({
       default: m.CalendarDocs,
