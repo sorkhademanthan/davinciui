@@ -22,7 +22,7 @@ export interface TextMorphProps {
   className?: string;
 }
 
-const DEFAULT_WORDS = ["IMAGINE", "REFINE", "RELEASE"];
+const DEFAULT_WORDS = ["DESIGN", "ANIMATE", "DELIGHT"];
 const MORPH_BLUR = 12;
 const MORPH_THRESHOLD = 18;
 

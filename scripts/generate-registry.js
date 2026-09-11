@@ -1,19 +1,22 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
-const REGISTRY_ITEM_SCHEMA = 'https://ui.shadcn.com/schema/registry-item.json';
+const REGISTRY_ITEM_SCHEMA = "https://ui.shadcn.com/schema/registry-item.json";
 
 // Configuration
-const COMPONENT_DIR = path.join(__dirname, '../packages/ui/src/components');
-const REGISTRY_DIR = path.join(__dirname, '../apps/web/public/r');
-const REGISTRY_INDEX_PATH = path.join(REGISTRY_DIR, 'registry.json');
-const WEBGL_ERROR_BOUNDARY_FILENAME = 'webgl-error-boundary.tsx';
-const WEBGL_ERROR_BOUNDARY_SOURCE_PATH = path.join(COMPONENT_DIR, WEBGL_ERROR_BOUNDARY_FILENAME);
+const COMPONENT_DIR = path.join(__dirname, "../packages/ui/src/components");
+const REGISTRY_DIR = path.join(__dirname, "../apps/web/public/r");
+const REGISTRY_INDEX_PATH = path.join(REGISTRY_DIR, "registry.json");
+const WEBGL_ERROR_BOUNDARY_FILENAME = "webgl-error-boundary.tsx";
+const WEBGL_ERROR_BOUNDARY_SOURCE_PATH = path.join(
+  COMPONENT_DIR,
+  WEBGL_ERROR_BOUNDARY_FILENAME,
+);
 
 const args = process.argv.slice(2);
 
 if (args.length === 0) {
-  console.error('Please provide a component name (e.g., scroll-based-velocity)');
+  console.error("Please provide a component name (e.g., text-morph)");
   process.exit(1);
 }
 
@@ -29,36 +32,38 @@ if (!fs.existsSync(sourcePath)) {
 }
 
 // Read source content
-const sourceContent = fs.readFileSync(sourcePath, 'utf8');
+const sourceContent = fs.readFileSync(sourcePath, "utf8");
 
 function toTitleCase(slug) {
   return slug
-    .split('-')
+    .split("-")
     .filter(Boolean)
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(' ');
+    .join(" ");
 }
 
 function normalizeRegistryContent(content) {
-  return content
-    .replace(/@workspace\/ui\/lib\/utils/g, '@/lib/utils')
-    .replace(
-      /@workspace\/ui\/components\/webgl-error-boundary/g,
-      './webgl-error-boundary'
-    )
-    // Extensionless sibling imports resolve in every bundler; the source
-    // keeps the explicit .js extension for node16/nodenext typechecking.
-    .replace(/from\s+["']\.\/([a-z0-9-]+)\.js["']/g, 'from "./$1"');
+  return (
+    content
+      .replace(/@workspace\/ui\/lib\/utils/g, "@/lib/utils")
+      .replace(
+        /@workspace\/ui\/components\/webgl-error-boundary/g,
+        "./webgl-error-boundary",
+      )
+      // Extensionless sibling imports resolve in every bundler; the source
+      // keeps the explicit .js extension for node16/nodenext typechecking.
+      .replace(/from\s+["']\.\/([a-z0-9-]+)\.js["']/g, 'from "./$1"')
+  );
 }
 
 // Prepare registry data
 let registryData;
 if (fs.existsSync(registryPath)) {
   try {
-    registryData = JSON.parse(fs.readFileSync(registryPath, 'utf8'));
+    registryData = JSON.parse(fs.readFileSync(registryPath, "utf8"));
     console.log(`Updating existing registry file for ${componentName}...`);
   } catch (error) {
-    console.error('Error parsing existing registry file:', error);
+    console.error("Error parsing existing registry file:", error);
     process.exit(1);
   }
 } else {
@@ -66,13 +71,13 @@ if (fs.existsSync(registryPath)) {
   registryData = {
     $schema: REGISTRY_ITEM_SCHEMA,
     name: componentName,
-    type: 'registry:ui',
+    type: "registry:ui",
     title: toTitleCase(componentName),
     dependencies: [],
     devDependencies: [],
     registryDependencies: [],
     description: `Component for ${componentName}`, // Default description
-    files: []
+    files: [],
   };
 }
 
@@ -101,30 +106,35 @@ if (!Array.isArray(registryData.registryDependencies)) {
 const targetFilePath = `components/ui/${componentFilename}`;
 
 if (!registryData.files) {
-    registryData.files = [];
+  registryData.files = [];
 }
 
-const existingFileIndex = registryData.files.findIndex(f => f.path === targetFilePath || f.path.endsWith(componentFilename));
+const existingFileIndex = registryData.files.findIndex(
+  (f) => f.path === targetFilePath || f.path.endsWith(componentFilename),
+);
 
 if (existingFileIndex >= 0) {
-  registryData.files[existingFileIndex].content = normalizeRegistryContent(sourceContent);
+  registryData.files[existingFileIndex].content =
+    normalizeRegistryContent(sourceContent);
 } else {
   registryData.files.push({
     path: targetFilePath,
     content: normalizeRegistryContent(sourceContent),
-    type: 'registry:ui'
+    type: "registry:ui",
   });
 }
 
 // Include shared helper file when the component uses the WebGL error boundary.
-const usesWebGLErrorBoundary = sourceContent.includes('webgl-error-boundary');
+const usesWebGLErrorBoundary = sourceContent.includes("webgl-error-boundary");
 if (usesWebGLErrorBoundary && fs.existsSync(WEBGL_ERROR_BOUNDARY_SOURCE_PATH)) {
   const boundaryContent = normalizeRegistryContent(
-    fs.readFileSync(WEBGL_ERROR_BOUNDARY_SOURCE_PATH, 'utf8')
+    fs.readFileSync(WEBGL_ERROR_BOUNDARY_SOURCE_PATH, "utf8"),
   );
   const boundaryTargetPath = `components/ui/${WEBGL_ERROR_BOUNDARY_FILENAME}`;
   const boundaryIndex = registryData.files.findIndex(
-    (f) => f.path === boundaryTargetPath || f.path.endsWith(WEBGL_ERROR_BOUNDARY_FILENAME)
+    (f) =>
+      f.path === boundaryTargetPath ||
+      f.path.endsWith(WEBGL_ERROR_BOUNDARY_FILENAME),
   );
 
   if (boundaryIndex >= 0) {
@@ -133,7 +143,7 @@ if (usesWebGLErrorBoundary && fs.existsSync(WEBGL_ERROR_BOUNDARY_SOURCE_PATH)) {
     registryData.files.push({
       path: boundaryTargetPath,
       content: boundaryContent,
-      type: 'registry:ui'
+      type: "registry:ui",
     });
   }
 }
@@ -142,22 +152,26 @@ if (usesWebGLErrorBoundary && fs.existsSync(WEBGL_ERROR_BOUNDARY_SOURCE_PATH)) {
 // (e.g. `from "./calendar"` or `from "./calendar.js"`), so multi-file
 // components install all of their parts.
 const siblingImports = new Set();
-for (const match of sourceContent.matchAll(/from\s+["']\.\/([a-z0-9-]+)(?:\.js)?["']/g)) {
+for (const match of sourceContent.matchAll(
+  /from\s+["']\.\/([a-z0-9-]+)(?:\.js)?["']/g,
+)) {
   siblingImports.add(match[1]);
 }
 for (const sibling of siblingImports) {
   const siblingFilename = `${sibling}.tsx`;
   const siblingSourcePath = path.join(COMPONENT_DIR, siblingFilename);
   if (!fs.existsSync(siblingSourcePath)) {
-    console.error(`Warning: sibling component not found at: ${siblingSourcePath}`);
+    console.error(
+      `Warning: sibling component not found at: ${siblingSourcePath}`,
+    );
     continue;
   }
   const siblingContent = normalizeRegistryContent(
-    fs.readFileSync(siblingSourcePath, 'utf8')
+    fs.readFileSync(siblingSourcePath, "utf8"),
   );
   const siblingTargetPath = `components/ui/${siblingFilename}`;
   const siblingIndex = registryData.files.findIndex(
-    (f) => f.path === siblingTargetPath || f.path.endsWith(siblingFilename)
+    (f) => f.path === siblingTargetPath || f.path.endsWith(siblingFilename),
   );
 
   if (siblingIndex >= 0) {
@@ -166,7 +180,7 @@ for (const sibling of siblingImports) {
     registryData.files.push({
       path: siblingTargetPath,
       content: siblingContent,
-      type: 'registry:ui'
+      type: "registry:ui",
     });
   }
 }
@@ -179,31 +193,39 @@ console.log(`Successfully updated ${registryPath}`);
 // Keep registry.json in sync when present.
 if (fs.existsSync(REGISTRY_INDEX_PATH)) {
   try {
-    const registryIndex = JSON.parse(fs.readFileSync(REGISTRY_INDEX_PATH, 'utf8'));
+    const registryIndex = JSON.parse(
+      fs.readFileSync(REGISTRY_INDEX_PATH, "utf8"),
+    );
     if (!Array.isArray(registryIndex.items)) {
       registryIndex.items = [];
     }
 
     const existingNames = new Set(
       registryIndex.items
-        .map((item) => (typeof item === 'string' ? item : item?.name))
-        .filter(Boolean)
+        .map((item) => (typeof item === "string" ? item : item?.name))
+        .filter(Boolean),
     );
 
     if (!existingNames.has(componentName)) {
       registryIndex.items.push({
         name: componentName,
-        type: 'registry:ui',
+        type: "registry:ui",
       });
       registryIndex.items.sort((a, b) => {
-        const aName = typeof a === 'string' ? a : a.name;
-        const bName = typeof b === 'string' ? b : b.name;
+        const aName = typeof a === "string" ? a : a.name;
+        const bName = typeof b === "string" ? b : b.name;
         return aName.localeCompare(bName);
       });
-      fs.writeFileSync(REGISTRY_INDEX_PATH, JSON.stringify(registryIndex, null, 2));
+      fs.writeFileSync(
+        REGISTRY_INDEX_PATH,
+        JSON.stringify(registryIndex, null, 2),
+      );
       console.log(`Added ${componentName} to ${REGISTRY_INDEX_PATH}`);
     }
   } catch (error) {
-    console.error('Warning: could not sync apps/web/public/r/registry.json:', error.message);
+    console.error(
+      "Warning: could not sync apps/web/public/r/registry.json:",
+      error.message,
+    );
   }
 }
