@@ -125,14 +125,6 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "encrypted-text",
     addedAt: "2026-09-11",
   },
-  "flipping-word-swap": {
-    title: "Flipping Word Swap",
-    description:
-      "A clean character-by-character flip between two words on interaction.",
-    category: "Text Animations",
-    slug: "flipping-word-swap",
-    addedAt: "2026-08-04",
-  },
   "gsap-text": {
     title: "GSAP Text",
     description:

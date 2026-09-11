@@ -246,10 +246,6 @@ const docsImportMap: Record<
     import("@/components/docs/encrypted-text").then((m) => ({
       default: m.EncryptedTextDocs,
     })),
-  "flipping-word-swap": () =>
-    import("@/components/docs/flipping-word-swap").then((m) => ({
-      default: m.FlippingWordSwapDocs,
-    })),
   "gsap-text": () =>
     import("@/components/docs/gsap-text").then((m) => ({
       default: m.GSAPTextDocs,

@@ -173,10 +173,6 @@
       "type": "registry:ui"
     },
     {
-      "name": "flipping-word-swap",
-      "type": "registry:ui"
-    },
-    {
       "name": "fluid-particle-text",
       "type": "registry:ui"
     },

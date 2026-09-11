@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { create } from "zustand";
 import {
   SHADER_TEXT_PRESETS,
-  ShaderText,
   type ShaderTextPresetName,
 } from "@workspace/ui/components/shader-text";
+import { ShaderTextFitPreview } from "@/components/docs/previews/shader-text-fit-preview";
 import { cn } from "@/lib/utils";
 import { usePlaygroundStore } from "@/hooks/use-playground-store";
 import {
@@ -44,13 +44,13 @@ const useShaderTextPlayground = create<ShaderTextPlaygroundStore>((set) => ({
   resetConfig: () => set({ config: DEFAULT_CONFIG }),
 }));
 
-function generateCode(config: ShaderTextPlaygroundConfig) {
+function generateCode(config: ShaderTextPlaygroundConfig, fontSize: number) {
   return `import { ShaderText } from "@/components/ui/shader-text"
 
 <ShaderText
   text="${config.text}"
   preset="${config.preset}"
-  fontSize={120}
+  fontSize={${fontSize}}
   speed={${config.speed}}
   scale={${config.scale}}
   softness={${config.softness}}
@@ -59,25 +59,27 @@ function generateCode(config: ShaderTextPlaygroundConfig) {
 
 export function ShaderTextPlayground() {
   const config = useShaderTextPlayground((state) => state.config);
+  const [fitSize, setFitSize] = useState(80);
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
-      usePlaygroundStore.getState().setCode(generateCode(config));
+      usePlaygroundStore.getState().setCode(generateCode(config, fitSize));
     }, 180);
     return () => window.clearTimeout(timeoutId);
-  }, [config]);
+  }, [config, fitSize]);
 
   return (
     <div className="flex h-full min-h-[440px] w-full items-center justify-center overflow-hidden bg-zinc-200/70 px-8 py-16 dark:bg-[#0a0a0f]">
-      <ShaderText
+      <ShaderTextFitPreview
         text={config.text}
         preset={config.preset}
         fontFamily="Inter, sans-serif"
-        fontSize={132}
         fontWeight={800}
         speed={config.speed}
         scale={config.scale}
         softness={config.softness}
+        maxFontSize={132}
+        onFontSizeChange={setFitSize}
       />
     </div>
   );
@@ -96,8 +98,8 @@ export function ShaderTextPersonalizePanel() {
             Personalize
           </h2>
           <p className="text-sm leading-relaxed text-muted-foreground/90">
-            Pick a fragment-shader preset, then tune the flow. Every preset is
-            a different GLSL program clipped inside the glyphs.
+            Pick a fragment-shader preset, then tune the flow. Every preset is a
+            different GLSL program clipped inside the glyphs.
           </p>
         </header>
 

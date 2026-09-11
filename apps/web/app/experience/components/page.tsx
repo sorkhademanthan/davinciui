@@ -27,7 +27,6 @@ function hasLiveCardPreview(
   | "text-morph"
   | "shake-text"
   | "encrypted-text"
-  | "flipping-word-swap"
   | "fluid-particle-text"
   | "glitch-liquid-text"
   | "text-video-mask"
@@ -37,7 +36,6 @@ function hasLiveCardPreview(
     slug === "text-morph" ||
     slug === "shake-text" ||
     slug === "encrypted-text" ||
-    slug === "flipping-word-swap" ||
     slug === "fluid-particle-text" ||
     slug === "glitch-liquid-text" ||
     slug === "text-video-mask" ||

@@ -1,21 +1,21 @@
-import { ShaderText } from "@workspace/ui/components/shader-text"
-import { DocsPageLayout } from "@/components/docs-page-layout"
-import { LiveCodeBlock } from "@/components/live-code-block"
+import { ShaderTextFitPreview } from "@/components/docs/previews/shader-text-fit-preview";
+import { DocsPageLayout } from "@/components/docs-page-layout";
+import { LiveCodeBlock } from "@/components/live-code-block";
 import {
   ShaderTextPersonalizePanel,
   ShaderTextPlayground,
-} from "@/components/docs/previews/shader-text-preview"
-import { readComponentSource } from "@/lib/source-code"
+} from "@/components/docs/previews/shader-text-preview";
+import { readComponentSource } from "@/lib/source-code";
 
 const basicUsageCode = `import { ShaderText } from "@/components/ui/shader-text"
 
-<ShaderText text="DAVINCIUI" preset="aurora" fontSize={120} />`;
+<ShaderText text="DAVINCIUI" preset="aurora" fontSize={80} />`;
 
 const plasmaCode = `<ShaderText
   text="DAVINCIUI"
   preset="plasma"
   fontFamily="Anton, sans-serif"
-  fontSize={64}
+  fontSize={80}
   speed={1.4}
   scale={1.2}
 />`;
@@ -23,7 +23,7 @@ const plasmaCode = `<ShaderText
 const lavaCode = `<ShaderText
   text="DAVINCIUI"
   preset="lava"
-  fontSize={64}
+  fontSize={80}
   speed={0.8}
   softness={0.65}
 />`;
@@ -50,11 +50,10 @@ export async function ShaderTextDocs() {
           title: "Plasma Display",
           preview: (
             <div className="flex h-full min-h-[440px] w-full items-center justify-center bg-zinc-200/70 px-6 py-14 dark:bg-[#0a0a0f]">
-              <ShaderText
+              <ShaderTextFitPreview
                 text="DAVINCIUI"
                 preset="plasma"
                 fontFamily="Anton, sans-serif"
-                fontSize={64}
                 speed={1.4}
                 scale={1.2}
               />
@@ -66,10 +65,9 @@ export async function ShaderTextDocs() {
           title: "Molten",
           preview: (
             <div className="flex h-full min-h-[440px] w-full items-center justify-center bg-zinc-200/70 px-6 py-14 dark:bg-[#0a0a0f]">
-              <ShaderText
+              <ShaderTextFitPreview
                 text="DAVINCIUI"
                 preset="lava"
-                fontSize={64}
                 speed={0.8}
                 softness={0.65}
               />

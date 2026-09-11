@@ -36,14 +36,6 @@ const EncryptedText = dynamic(
   { ssr: false },
 );
 
-const FlippingWordSwap = dynamic(
-  () =>
-    import("@/components/docs/previews/flipping-word-swap-card-preview").then(
-      (module) => module.FlippingWordSwapCardPreview,
-    ),
-  { ssr: false },
-);
-
 const FluidParticleText = dynamic(
   () =>
     import("@workspace/ui/components/fluid-particle-text").then(
@@ -82,7 +74,6 @@ type ComponentCardLivePreviewProps = {
     | "text-morph"
     | "shake-text"
     | "encrypted-text"
-    | "flipping-word-swap"
     | "fluid-particle-text"
     | "glitch-liquid-text"
     | "text-video-mask"
@@ -161,8 +152,6 @@ export function ComponentCardLivePreview({
           encryptedColor={isDark ? "#8fb58b" : "#466944"}
           revealedColor={isDark ? "#f5f5f4" : "#18181b"}
         />
-      ) : slug === "flipping-word-swap" ? (
-        <FlippingWordSwap />
       ) : slug === "fluid-particle-text" ? (
         <FluidParticleText
           preset="showcase"
