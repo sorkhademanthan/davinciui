@@ -9,10 +9,10 @@ import { readComponentSource } from "@/lib/source-code"
 
 const basicUsageCode = `import { ShaderText } from "@/components/ui/shader-text"
 
-<ShaderText text="Prism" preset="aurora" fontSize={120} />`;
+<ShaderText text="DAVINCIUI" preset="aurora" fontSize={120} />`;
 
 const plasmaCode = `<ShaderText
-  text="PLASMA"
+  text="DAVINCIUI"
   preset="plasma"
   fontFamily="Anton, sans-serif"
   fontSize={64}
@@ -20,17 +20,8 @@ const plasmaCode = `<ShaderText
   scale={1.2}
 />`;
 
-const cyberCode = `<ShaderText
-  text={"NEON\\nGRID"}
-  preset="cyber"
-  fontFamily="monospace"
-  fontSize={56}
-  lineHeight={0.95}
-  softness={0.3}
-/>`;
-
 const lavaCode = `<ShaderText
-  text="Molten"
+  text="DAVINCIUI"
   preset="lava"
   fontSize={64}
   speed={0.8}
@@ -60,7 +51,7 @@ export async function ShaderTextDocs() {
           preview: (
             <div className="flex h-full min-h-[440px] w-full items-center justify-center bg-zinc-200/70 px-6 py-14 dark:bg-[#0a0a0f]">
               <ShaderText
-                text="PLASMA"
+                text="DAVINCIUI"
                 preset="plasma"
                 fontFamily="Anton, sans-serif"
                 fontSize={64}
@@ -72,27 +63,11 @@ export async function ShaderTextDocs() {
           code: plasmaCode,
         },
         {
-          title: "Neon Grid",
-          preview: (
-            <div className="flex h-full min-h-[440px] w-full items-center justify-center bg-zinc-200/70 px-6 py-14 dark:bg-[#0a0a0f]">
-              <ShaderText
-                text={"NEON\nGRID"}
-                preset="cyber"
-                fontFamily="monospace"
-                fontSize={56}
-                lineHeight={0.95}
-                softness={0.3}
-              />
-            </div>
-          ),
-          code: cyberCode,
-        },
-        {
           title: "Molten",
           preview: (
             <div className="flex h-full min-h-[440px] w-full items-center justify-center bg-zinc-200/70 px-6 py-14 dark:bg-[#0a0a0f]">
               <ShaderText
-                text="Molten"
+                text="DAVINCIUI"
                 preset="lava"
                 fontSize={64}
                 speed={0.8}

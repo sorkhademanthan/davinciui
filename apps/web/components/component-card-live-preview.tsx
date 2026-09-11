@@ -204,7 +204,7 @@ export function ComponentCardLivePreview({
       ) : slug === "random-text-reveal" ? (
         <div className="flex h-full w-full items-center justify-center px-6">
           <RandomTextReveal
-            text="EVERY LETTER REVEALS ITSELF"
+            text="DAVINCIUI REVEALS EVERY LETTER"
             fontSize="clamp(1rem, 1.8vw, 1.35rem)"
             fontWeight={700}
             color={isDark ? "#f4f4f5" : "#18181b"}

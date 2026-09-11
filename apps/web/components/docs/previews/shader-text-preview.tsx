@@ -24,7 +24,7 @@ interface ShaderTextPlaygroundConfig {
 }
 
 const DEFAULT_CONFIG: ShaderTextPlaygroundConfig = {
-  text: "Prism",
+  text: "DAVINCIUI",
   preset: "aurora",
   speed: 1.8,
   scale: 1.6,
@@ -142,7 +142,7 @@ export function ShaderTextPersonalizePanel() {
             onChange={(event) =>
               updateConfig({ text: event.target.value.slice(0, 24) || " " })
             }
-            placeholder="Prism"
+            placeholder="DAVINCIUI"
           />
         </div>
 
