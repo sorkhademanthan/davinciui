@@ -20,6 +20,7 @@ import { ChevronRight } from "lucide-react"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import { getComponent } from "@/registry"
 import { galleryHrefForSlug, galleryTabForSlug, galleryTabLabel } from "@/lib/component-groups"
+import { cn } from "@/lib/utils"
 
 export interface PropItem {
   name: string
@@ -50,6 +51,8 @@ export interface DocsPageLayoutProps {
   props?: PropItem[]
   action?: React.ReactNode
   fullWidthPreview?: boolean
+  /** Lets a component's right-side preview provide its own scroll surface. */
+  scrollablePreview?: boolean
   unstyledPreview?: boolean
   type?: string
   dependencies?: string[]
@@ -82,6 +85,7 @@ export async function DocsPageLayout({
   examples = [],
   props = [],
   fullWidthPreview = false,
+  scrollablePreview = false,
   personalizeContent,
   hideDefaultPreviewVariant = false,
   hideExamples = false,
@@ -379,7 +383,10 @@ export async function DocsPageLayout({
       {/* Right Column: Sticky Preview — full bleed, 50% - viewport fit, no scroll */}
       <div
         data-docs-right-column
-        className="flex-1 lg:basis-1/2 lg:max-w-[50%] min-w-0 h-[55vh] lg:h-[calc(100vh-3.5rem)] lg:sticky lg:top-14 order-first lg:order-last bg-white dark:bg-[#121212] flex flex-col z-20 lg:border-l border-border/40 overflow-hidden"
+        className={cn(
+          "flex-1 lg:basis-1/2 lg:max-w-[50%] min-w-0 h-[55vh] lg:h-[calc(100vh-3.5rem)] lg:sticky lg:top-14 order-first lg:order-last bg-white dark:bg-[#121212] flex flex-col z-20 lg:border-l border-border/40 overflow-hidden",
+          scrollablePreview && "min-h-0 flex-none lg:flex-1",
+        )}
       >
         <div
           data-docs-preview-shell
@@ -389,6 +396,7 @@ export async function DocsPageLayout({
           {/* Floating Card Container */}
           <DocsPreviewWrapper
             fullWidthPreview={fullWidthPreview}
+            scrollablePreview={scrollablePreview}
             personalizeContent={personalizeContent}
             hideDefaultVariant={hideDefaultPreviewVariant}
             sourceCodeFilename={installSourceCode ? (installSourceFilename || `${installPackageName}.tsx`) : undefined}

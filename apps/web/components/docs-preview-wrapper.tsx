@@ -22,6 +22,7 @@ export interface VariantItem {
 interface DocsPreviewWrapperProps {
   children: React.ReactNode
   fullWidthPreview?: boolean
+  scrollablePreview?: boolean
   personalizeContent?: React.ReactNode
   sourceCodeFilename?: string
   sourceCodeKey?: string
@@ -99,6 +100,7 @@ function toPreviewRect(rect: DOMRect | PreviewRect): PreviewRect {
 export function DocsPreviewWrapper({
   children,
   fullWidthPreview,
+  scrollablePreview = false,
   personalizeContent,
   sourceCodeFilename,
   sourceCodeKey,
@@ -133,6 +135,16 @@ export function DocsPreviewWrapper({
   const variantBarRef = React.useRef<HTMLDivElement>(null)
   const splitPreviewRectRef = React.useRef<PreviewRect | null>(null)
   const hasSourceCode = Boolean(sourceCodeKey)
+
+  const selectVariant = React.useCallback((index: number) => {
+    if (scrollablePreview) {
+      const scroller = previewRef.current?.querySelector<HTMLElement>(
+        "[data-text-reveal-preview-scroll]",
+      )
+      if (scroller) scroller.scrollTop = 0
+    }
+    setActiveVariant(index)
+  }, [scrollablePreview])
 
   const cacheSplitPreviewRect = React.useCallback(() => {
     const layout = previewRef.current?.closest("[data-docs-layout]")
@@ -368,7 +380,10 @@ export function DocsPreviewWrapper({
         <PreviewToolbarCell>
           <button
             type="button"
-            onClick={() => setKey((k) => k + 1)}
+            onClick={() => {
+              selectVariant(resolvedActiveVariant)
+              setKey((k) => k + 1)
+            }}
             className={previewToolbarIconClass}
             aria-label="Reload preview"
           >
@@ -397,22 +412,37 @@ export function DocsPreviewWrapper({
         </PreviewToolbarCell>
       </section>
 
-      {/* Content Area — fills the pane exactly, never scrolls internally.
-          Demos are sized to fit one viewport; the left docs column scrolls. */}
+      {/* The scrollable surface is opt-in; Text Reveal uses its own scroller. */}
       <div className={cn(
-        "w-full overflow-hidden flex bg-[#f7f7f7] dark:bg-[#171717]",
-        "h-full",
-        !fullWidthPreview && "items-center justify-center"
-      )}>
+        "w-full flex bg-[#f7f7f7] dark:bg-[#171717]",
+        scrollablePreview
+          ? "min-h-0 flex-1 flex-col items-stretch overflow-x-hidden overflow-y-auto overscroll-contain"
+          : "h-full overflow-hidden",
+        !scrollablePreview && !fullWidthPreview && "items-center justify-center"
+      )}
+        data-text-reveal-preview-scroll={scrollablePreview ? "true" : undefined}
+        role={scrollablePreview ? "region" : undefined}
+        aria-label={scrollablePreview ? "Scrollable Text Reveal preview" : undefined}
+        tabIndex={scrollablePreview ? 0 : undefined}
+      >
         <div
           className={cn(
             "w-full",
-            (resolvedActiveVariant >= 0 && variants[resolvedActiveVariant]?.fullWidth) || fullWidthPreview
-              ? "h-full"
-              : "p-10 flex items-center justify-center"
+            scrollablePreview
+              ? "min-h-full"
+              : (resolvedActiveVariant >= 0 && variants[resolvedActiveVariant]?.fullWidth) || fullWidthPreview
+                ? "h-full"
+                : "p-10 flex items-center justify-center"
           )}
         >
-          <div key={key} className={cn("w-full h-full", !fullWidthPreview && "flex items-center justify-center")}>
+          <div
+            key={key}
+            className={cn(
+              "w-full",
+              scrollablePreview ? "min-h-full" : "h-full",
+              !scrollablePreview && !fullWidthPreview && "flex items-center justify-center"
+            )}
+          >
             {resolvedActiveVariant === -1 ? children : variants[resolvedActiveVariant]?.preview}
           </div>
         </div>
@@ -430,7 +460,7 @@ export function DocsPreviewWrapper({
             {!hideDefaultVariant && (
               <PreviewVariantTab
                 active={resolvedActiveVariant === -1}
-                onClick={() => setActiveVariant(-1)}
+                onClick={() => selectVariant(-1)}
               >
                 Default
               </PreviewVariantTab>
@@ -440,7 +470,7 @@ export function DocsPreviewWrapper({
               <PreviewVariantTab
                 key={i}
                 active={resolvedActiveVariant === i}
-                onClick={() => setActiveVariant(i)}
+                onClick={() => selectVariant(i)}
               >
                 {variant.title}
               </PreviewVariantTab>
