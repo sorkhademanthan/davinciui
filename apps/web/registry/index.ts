@@ -428,6 +428,14 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "shake-text",
     addedAt: "2026-09-04",
   },
+  "rolling-text": {
+    title: "Rolling Text",
+    description:
+      "Mechanical slot-machine typography — every character is an independent clipped column rolling a vertical stack of its own glyphs into place.",
+    category: "Text Animations",
+    slug: "rolling-text",
+    addedAt: "2026-09-12",
+  },
   calendar: {
     title: "Calendar",
     description:
