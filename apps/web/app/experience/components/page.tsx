@@ -32,7 +32,8 @@ function hasLiveCardPreview(
   | "text-video-mask"
   | "random-text-reveal"
   | "shader-text"
-  | "text-reveal" {
+  | "text-reveal"
+  | "rolling-text" {
   return (
     slug === "gsap-text" ||
     slug === "text-morph" ||
@@ -43,7 +44,8 @@ function hasLiveCardPreview(
     slug === "text-video-mask" ||
     slug === "random-text-reveal" ||
     slug === "shader-text" ||
-    slug === "text-reveal"
+    slug === "text-reveal" ||
+    slug === "rolling-text"
   )
 }
 

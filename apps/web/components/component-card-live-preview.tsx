@@ -84,6 +84,14 @@ const TextReveal = dynamic(
   { ssr: false },
 );
 
+const RollingText = dynamic(
+  () =>
+    import("@workspace/ui/components/rolling-text").then(
+      (module) => module.RollingText,
+    ),
+  { ssr: false },
+);
+
 type ComponentCardLivePreviewProps = {
   slug:
     | "gsap-text"
@@ -95,7 +103,8 @@ type ComponentCardLivePreviewProps = {
     | "text-video-mask"
     | "random-text-reveal"
     | "shader-text"
-    | "text-reveal";
+    | "text-reveal"
+    | "rolling-text";
 };
 
 export function ComponentCardLivePreview({
@@ -165,6 +174,22 @@ export function ComponentCardLivePreview({
           textAlign="center"
           revealedColor={isDark ? "#f4f4f5" : "#18181b"}
           unrevealedColor={isDark ? "#f4f4f5" : "#18181b"}
+          className="px-4"
+        />
+      ) : slug === "rolling-text" ? (
+        <RollingText
+          text="DAVINCIUI"
+          pattern="alternating"
+          duplicateCount={7}
+          rollDuration={1.25}
+          staggerDelay={0.035}
+          blurIntensity={2}
+          fontFamily="inherit"
+          fontSize="clamp(1.35rem, 2.7vw, 2.1rem)"
+          fontWeight={800}
+          letterSpacing="-0.055em"
+          textColor="var(--foreground)"
+          backgroundColor="transparent"
           className="px-4"
         />
       ) : slug === "text-morph" ? (
