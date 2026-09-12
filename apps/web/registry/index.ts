@@ -165,6 +165,14 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "random-text-reveal",
     addedAt: "2026-09-11",
   },
+  "text-reveal": {
+    title: "Text Reveal",
+    description:
+      "Scroll-scrubbed text reveals with spatial ordering, soft transitions, and character or word splitting.",
+    category: "Text Animations",
+    slug: "text-reveal",
+    addedAt: "2026-09-12",
+  },
   button: {
     title: "Button",
     description:

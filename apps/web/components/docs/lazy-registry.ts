@@ -262,6 +262,10 @@ const docsImportMap: Record<
     import("@/components/docs/random-text-reveal").then((m) => ({
       default: m.RandomTextRevealDocs,
     })),
+  "text-reveal": () =>
+    import("@/components/docs/text-reveal").then((m) => ({
+      default: m.TextRevealDocs,
+    })),
   "shake-text": () =>
     import("@/components/docs/shake-text").then((m) => ({
       default: m.ShakeTextDocs,
