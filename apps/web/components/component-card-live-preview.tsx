@@ -68,6 +68,22 @@ const RandomTextReveal = dynamic(
   { ssr: false },
 );
 
+const ShaderText = dynamic(
+  () =>
+    import("@workspace/ui/components/shader-text").then(
+      (module) => module.ShaderText,
+    ),
+  { ssr: false },
+);
+
+const TextReveal = dynamic(
+  () =>
+    import("@workspace/ui/components/text-reveal").then(
+      (module) => module.TextReveal,
+    ),
+  { ssr: false },
+);
+
 type ComponentCardLivePreviewProps = {
   slug:
     | "gsap-text"
@@ -77,7 +93,9 @@ type ComponentCardLivePreviewProps = {
     | "fluid-particle-text"
     | "glitch-liquid-text"
     | "text-video-mask"
-    | "random-text-reveal";
+    | "random-text-reveal"
+    | "shader-text"
+    | "text-reveal";
 };
 
 export function ComponentCardLivePreview({
@@ -115,13 +133,7 @@ export function ComponentCardLivePreview({
   }, []);
 
   const staticLabel =
-    slug === "text-morph"
-      ? "DESIGN"
-      : slug === "fluid-particle-text"
-        ? "FLOW"
-        : slug === "glitch-liquid-text"
-          ? "DAVINCIUI"
-          : "DAVINCIUI";
+    slug === "fluid-particle-text" ? "INK" : "DAVINCIUI";
 
   return (
     <div
@@ -129,13 +141,35 @@ export function ComponentCardLivePreview({
       aria-hidden="true"
       className="absolute inset-0 flex items-center justify-center overflow-hidden bg-background"
     >
-      {!shouldRender || reducedMotion ? (
+      {!shouldRender || (reducedMotion && slug !== "shader-text") ? (
         <span className="text-3xl font-black tracking-[-0.055em] text-foreground sm:text-4xl">
           {staticLabel}
         </span>
+      ) : slug === "shader-text" ? (
+        <ShaderText
+          text="DAVINCIUI"
+          preset="aurora"
+          fontSize={48}
+          fontWeight={800}
+          speed={1.2}
+          className="max-w-full"
+        />
+      ) : slug === "text-reveal" ? (
+        <TextReveal
+          text="DAVINCIUI"
+          revealStyle="diagonal"
+          revealBy="characters"
+          fontFamily="inherit"
+          fontSize="clamp(1.7rem, 3vw, 2.3rem)"
+          fontWeight={800}
+          textAlign="center"
+          revealedColor={isDark ? "#f4f4f5" : "#18181b"}
+          unrevealedColor={isDark ? "#f4f4f5" : "#18181b"}
+          className="px-4"
+        />
       ) : slug === "text-morph" ? (
         <TextMorph
-          words={["DESIGN", "ANIMATE", "DELIGHT"]}
+          words={["DAVINCIUI", "COMPONENTS"]}
           interval={1800}
           morphDuration={560}
           className="text-3xl font-black tracking-[-0.055em] text-foreground sm:text-4xl"
@@ -155,7 +189,8 @@ export function ComponentCardLivePreview({
       ) : slug === "fluid-particle-text" ? (
         <FluidParticleText
           preset="showcase"
-          text="FLOW"
+          text="INK"
+          padding={0.16}
           color={isDark ? "#f4f4f5" : "#18181b"}
           background={isDark ? "#09090b" : "#fafafa"}
           particleSpacing={2.5}
@@ -193,9 +228,10 @@ export function ComponentCardLivePreview({
       ) : slug === "random-text-reveal" ? (
         <div className="flex h-full w-full items-center justify-center px-6">
           <RandomTextReveal
-            text="DAVINCIUI REVEALS EVERY LETTER"
-            fontSize="clamp(1rem, 1.8vw, 1.35rem)"
-            fontWeight={700}
+            text="DavinciUI brings expressive motion and carefully crafted components to every interface."
+            fontSize="clamp(0.95rem, 1.5vw, 1.2rem)"
+            fontWeight={600}
+            lineHeight={1.2}
             color={isDark ? "#f4f4f5" : "#18181b"}
             textAlign="center"
             maxDelay={1}
