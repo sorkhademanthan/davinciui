@@ -13,7 +13,8 @@ export const Demo = () => {
     return (
         <FluidParticleText
             preset="showcase"
-            text="FLOW"
+            text="INK"
+            padding={0.16}
             outline
             strokeWidth={2.25}
             fillOpacity={1}
@@ -102,7 +103,7 @@ export async function FluidParticleTextDocs() {
             name: "preset",
             type: '"default" | "showcase" | "reference404"',
             description:
-              "Named tuning preset. showcase powers the FLOW demo; explicit props always win.",
+              "Named tuning preset. showcase powers the INK demo; explicit props always win.",
           },
           {
             name: "particleSpacing",

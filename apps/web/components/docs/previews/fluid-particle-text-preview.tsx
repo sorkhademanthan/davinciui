@@ -16,8 +16,9 @@ export function FluidParticleTextPreview({
   return (
     <FluidParticleText
       preset="showcase"
-      text="FLOW"
+      text="INK"
       fontFamily={fontFamily}
+      padding={0.16}
       color={isDark ? "#f4f4f5" : "#18181b"}
       background={isDark ? "#09090b" : "#fafafa"}
       outline
