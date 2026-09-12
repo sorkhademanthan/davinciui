@@ -18,13 +18,13 @@ interface TextMorphPlaygroundConfig {
 }
 
 const DEFAULT_CONFIG: TextMorphPlaygroundConfig = {
-  words: ["DESIGN", "ANIMATE", "DELIGHT"],
+  words: ["DAVINCIUI", "COMPONENTS"],
   interval: 2400,
   morphDuration: 680,
 };
 
 const PRESETS = [
-  { name: "Studio", words: ["DESIGN", "ANIMATE", "DELIGHT"] },
+  { name: "DavinciUI", words: ["DAVINCIUI", "COMPONENTS"] },
   { name: "Metrics", words: ["1.2K", "8.4K", "25K"] },
   { name: "Pricing", words: ["$29", "$49", "$99"] },
 ] as const;
@@ -140,7 +140,7 @@ export function TextMorphPersonalizePanel() {
                 .slice(0, 6);
               updateConfig({ words: words.length > 0 ? words : [""] });
             }}
-            placeholder="DESIGN, ANIMATE, DELIGHT"
+            placeholder="DAVINCIUI, COMPONENTS"
           />
           <p className="mt-2 text-[11px] leading-5 text-muted-foreground">
             Separate up to six values with commas.
