@@ -266,6 +266,10 @@ const docsImportMap: Record<
     import("@/components/docs/shake-text").then((m) => ({
       default: m.ShakeTextDocs,
     })),
+  "rolling-text": () =>
+    import("@/components/docs/rolling-text").then((m) => ({
+      default: m.RollingTextDocs,
+    })),
   "shader-text": () =>
     import("@/components/docs/shader-text").then((m) => ({
       default: m.ShaderTextDocs,
