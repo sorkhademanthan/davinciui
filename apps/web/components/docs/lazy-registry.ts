@@ -190,6 +190,10 @@ const docsImportMap: Record<
     import("@/components/docs/aurora-flow").then((m) => ({
       default: m.AuroraFlowDocs,
     })),
+  "paper-ink-background": () =>
+    import("@/components/docs/paper-ink-background").then((m) => ({
+      default: m.PaperInkBackgroundDocs,
+    })),
   "closing-plasma": () =>
     import("@/components/docs/closing-plasma").then((m) => ({
       default: m.ClosingPlasmaDocs,
@@ -253,6 +257,10 @@ const docsImportMap: Record<
   "glitch-liquid-text": () =>
     import("@/components/docs/glitch-liquid-text").then((m) => ({
       default: m.GlitchLiquidTextDocs,
+    })),
+  "media-text-hover": () =>
+    import("@/components/docs/media-text-hover").then((m) => ({
+      default: m.MediaTextHoverDocs,
     })),
   "text-video-mask": () =>
     import("@/components/docs/text-video-mask").then((m) => ({

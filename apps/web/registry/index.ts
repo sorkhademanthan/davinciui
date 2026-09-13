@@ -102,7 +102,7 @@ export const components: Record<string, ComponentMetadata> = {
       "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/component-animations/mackeyboard.webm",
   },
   "fluid-particle-text": {
-    title: "Fluid Particle Text",
+    title: "Particle Flow",
     description:
       "Interactive particle typography sampled from rasterized text — solid at rest, liquid around your cursor.",
     category: "Text Animations",
@@ -126,7 +126,7 @@ export const components: Record<string, ComponentMetadata> = {
     addedAt: "2026-09-11",
   },
   "gsap-text": {
-    title: "GSAP Text",
+    title: "Type Cascade",
     description:
       "A cinematic kinetic typography component that creates a layered 3D depth effect using continuous vertical text motion.",
     category: "Text Animations",
@@ -134,12 +134,20 @@ export const components: Record<string, ComponentMetadata> = {
     addedAt: "2026-09-03",
   },
   "glitch-liquid-text": {
-    title: "Glitch Liquid Text",
+    title: "Chromatic Melt",
     description:
       "GPU-rendered interactive typography on a liquid membrane — cursor-driven fluid distortion with chromatic glitch edges, light rays, and a magnetic custom cursor.",
     category: "Text Animations",
     slug: "glitch-liquid-text",
     addedAt: "2026-09-10",
+  },
+  "media-text-hover": {
+    title: "Hover Media",
+    description:
+      "A split branding headline that opens an image or video window with a responsive spring hover interaction.",
+    category: "Text Animations",
+    slug: "media-text-hover",
+    addedAt: "2026-09-13",
   },
   "shader-text": {
     title: "Shader Text",
@@ -718,6 +726,14 @@ export const components: Record<string, ComponentMetadata> = {
     category: "Hero Backgrounds",
     slug: "aurora-flow",
     addedAt: "2026-08-02",
+  },
+  "paper-ink-background": {
+    title: "Paper Ink Background",
+    description:
+      "Slow native WebGL pigment flow inspired by fountain-pen ink dispersing through warm watercolor paper.",
+    category: "Hero Backgrounds",
+    slug: "paper-ink-background",
+    addedAt: "2026-09-13",
   },
   "closing-plasma": {
     title: "Closing Plasma",
