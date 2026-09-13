@@ -277,6 +277,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "media-text-hover",
+      "type": "registry:ui"
+    },
+    {
       "name": "menubar",
       "type": "registry:ui"
     },
@@ -314,6 +318,10 @@
     },
     {
       "name": "pagination",
+      "type": "registry:ui"
+    },
+    {
+      "name": "paper-ink-background",
       "type": "registry:ui"
     },
     {

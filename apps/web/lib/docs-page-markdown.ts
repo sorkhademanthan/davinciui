@@ -21,7 +21,9 @@ export function buildDocsPageMarkdown(props: DocsPageMarkdownInput): string {
   lines.push("## Installation")
   lines.push("")
   lines.push(`\`\`\`bash`)
-  lines.push(`npx davinciui@latest add ${props.installPackageName}`)
+  lines.push(
+    `pnpm dlx shadcn@latest add @davinciui/${props.installPackageName}`,
+  )
   lines.push(`\`\`\``)
   if (props.installDependencies) {
     lines.push("")
