@@ -52,6 +52,22 @@ const GlitchLiquidText = dynamic(
   { ssr: false },
 );
 
+const PaperInkBackground = dynamic(
+  () =>
+    import("@workspace/ui/components/paper-ink-background").then(
+      (module) => module.PaperInkBackground,
+    ),
+  { ssr: false },
+);
+
+const MediaTextHover = dynamic(
+  () =>
+    import("@workspace/ui/components/media-text-hover").then(
+      (module) => module.MediaTextHover,
+    ),
+  { ssr: false },
+);
+
 const TextVideoMask = dynamic(
   () =>
     import("@workspace/ui/components/text-video-mask").then(
@@ -100,6 +116,8 @@ type ComponentCardLivePreviewProps = {
     | "encrypted-text"
     | "fluid-particle-text"
     | "glitch-liquid-text"
+    | "paper-ink-background"
+    | "media-text-hover"
     | "text-video-mask"
     | "random-text-reveal"
     | "shader-text"
@@ -158,7 +176,7 @@ export function ComponentCardLivePreview({
         <ShaderText
           text="DAVINCIUI"
           preset="aurora"
-          fontSize={48}
+          fontSize={42}
           fontWeight={800}
           speed={1.2}
           className="max-w-full"
@@ -192,6 +210,20 @@ export function ComponentCardLivePreview({
           backgroundColor="transparent"
           className="px-4"
         />
+      ) : slug === "media-text-hover" ? (
+        <MediaTextHover
+          text="DAVINCIUI"
+          splitIndex={5}
+          mediaSrc="/preview-videos/component-animations/spiral3dslider.mp4"
+          mediaWidth={112}
+          mediaHeight={54}
+          fontFamily="Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif"
+          fontSize="clamp(2rem, 3.2vw, 2.75rem)"
+          letterSpacing="-0.025em"
+          textColor="var(--foreground)"
+          tabIndex={-1}
+          className="px-3"
+        />
       ) : slug === "text-morph" ? (
         <TextMorph
           words={["DAVINCIUI", "COMPONENTS"]}
@@ -215,7 +247,7 @@ export function ComponentCardLivePreview({
         <FluidParticleText
           preset="showcase"
           text="INK"
-          padding={0.16}
+          padding={0.28}
           color={isDark ? "#f4f4f5" : "#18181b"}
           background={isDark ? "#09090b" : "#fafafa"}
           particleSpacing={2.5}
@@ -229,7 +261,7 @@ export function ComponentCardLivePreview({
       ) : slug === "glitch-liquid-text" ? (
         <GlitchLiquidText
           text={"DAVINCIUI\nCOMPONENTS"}
-          fontSize={54}
+          fontSize={48}
           fontWeight={800}
           lineHeight={0.95}
           backgroundColor={isDark ? "#09090b" : "#fafafa"}
@@ -241,6 +273,23 @@ export function ComponentCardLivePreview({
           grainStrength={0.012}
           className="h-full w-full"
         />
+      ) : slug === "paper-ink-background" ? (
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 flex items-center justify-center overflow-hidden bg-[#e9e1c8]"
+          style={{ containerType: "inline-size" }}
+        >
+          <PaperInkBackground maxDpr={1} />
+          <span
+            className="relative z-10 whitespace-nowrap text-[clamp(1.5rem,12cqi,7rem)] font-black uppercase leading-none tracking-[-0.075em] text-[#24225f]"
+            style={{
+              WebkitTextStroke: "0.7px rgba(233, 225, 200, 0.36)",
+              textShadow: "0 5px 18px rgba(45, 42, 147, 0.2)",
+            }}
+          >
+            DAVINCIUI
+          </span>
+        </div>
       ) : slug === "text-video-mask" ? (
         <TextVideoMask
           text="DAVINCI."
@@ -259,10 +308,11 @@ export function ComponentCardLivePreview({
             lineHeight={1.2}
             color={isDark ? "#f4f4f5" : "#18181b"}
             textAlign="center"
-            maxDelay={1}
+            duration={0.3}
+            maxDelay={0.8}
             triggerPosition="bottom"
             loop
-            loopDelay={2}
+            loopDelay={0.65}
           />
         </div>
       ) : (

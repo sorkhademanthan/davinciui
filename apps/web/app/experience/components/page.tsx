@@ -17,6 +17,27 @@ const TOP_FILTERS = ["All", "Basic", "Text Animations", "Premium Components", "H
 
 const BASIC_SUBS_ALL: readonly string[] = BASIC_SUBS
 
+// One intentionally shuffled, stable order for the Text Animations gallery.
+// Keeping it fixed avoids cards jumping to new positions on every render.
+const TEXT_ANIMATION_ORDER = [
+  "gsap-text",
+  "media-text-hover",
+  "shake-text",
+  "random-text-reveal",
+  "text-video-mask",
+  "encrypted-text",
+  "text-reveal",
+  "fluid-particle-text",
+  "text-morph",
+  "shader-text",
+  "glitch-liquid-text",
+  "rolling-text",
+] as const
+
+const TEXT_ANIMATION_RANK = new Map<string, number>(
+  TEXT_ANIMATION_ORDER.map((slug, index) => [slug, index]),
+)
+
 type TopFilter = (typeof TOP_FILTERS)[number]
 type BasicSub = (typeof BASIC_SUBS)[number]
 
@@ -29,6 +50,8 @@ function hasLiveCardPreview(
   | "encrypted-text"
   | "fluid-particle-text"
   | "glitch-liquid-text"
+  | "paper-ink-background"
+  | "media-text-hover"
   | "text-video-mask"
   | "random-text-reveal"
   | "shader-text"
@@ -41,6 +64,8 @@ function hasLiveCardPreview(
     slug === "encrypted-text" ||
     slug === "fluid-particle-text" ||
     slug === "glitch-liquid-text" ||
+    slug === "paper-ink-background" ||
+    slug === "media-text-hover" ||
     slug === "text-video-mask" ||
     slug === "random-text-reveal" ||
     slug === "shader-text" ||
@@ -90,7 +115,7 @@ function ComponentsGallery() {
   const all = useMemo(() => Object.values(components).sort((a, b) => a.title.localeCompare(b.title)), [])
 
   const filtered = useMemo(() => {
-    return all.filter((c) => {
+    const matches = all.filter((c) => {
       const matchesSearch = !q.trim() || c.title.toLowerCase().includes(q.toLowerCase()) || c.description.toLowerCase().includes(q.toLowerCase())
       if (!matchesSearch) return false
       // "All" showcases non-Basic work — Basics live under the Basic tab.
@@ -112,6 +137,16 @@ function ComponentsGallery() {
       if (activeTop === "Motion" || activeTop === "Scroll" || activeTop === "Blocks" || activeTop === "Templates") return false
       return false
     })
+
+    if (activeTop === "Text Animations") {
+      return matches.sort((a, b) => {
+        const aRank = TEXT_ANIMATION_RANK.get(a.slug) ?? Number.MAX_SAFE_INTEGER
+        const bRank = TEXT_ANIMATION_RANK.get(b.slug) ?? Number.MAX_SAFE_INTEGER
+        return aRank - bRank || a.title.localeCompare(b.title)
+      })
+    }
+
+    return matches
   }, [q, activeTop, activeSub, all])
 
   const handleTopChange = (t: TopFilter) => {
@@ -210,7 +245,7 @@ function ComponentsGallery() {
                       </div>
                     </div>
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
                   <span className="absolute bottom-2 right-2 text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/90 dark:bg-black/50 border border-border backdrop-blur">
                     {c.category || "component"}
                   </span>
