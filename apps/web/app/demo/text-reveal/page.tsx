@@ -51,7 +51,9 @@ export default function TextRevealTestPage() {
                   revealBy={revealBy}
                   randomSeed={742}
                   revealSoftness={0.24}
-                  scrubSmoothness={0.4}
+                  scrubSmoothness={0.3}
+                  startPosition="top 35%"
+                  endPosition="bottom top"
                   fontFamily="Inter, ui-sans-serif, system-ui, sans-serif"
                   fontSize={24}
                   fontWeight={500}
@@ -66,6 +68,8 @@ export default function TextRevealTestPage() {
             </section>
           ))}
         </div>
+        {/* Give the final comparison panel enough scroll runway to complete. */}
+        <div aria-hidden="true" className="h-screen" />
       </div>
     </main>
   );
