@@ -255,7 +255,7 @@ export function TextReveal({
   startOffset = 0,
   endOffset = 0,
   scrub = true,
-  scrubSmoothness = 0.4,
+  scrubSmoothness = 0.3,
   scroller,
   trigger,
   fontFamily = "Inter, sans-serif",
@@ -524,8 +524,12 @@ export function TextReveal({
     0,
   );
   const allowWillChange = unitCount <= 80;
+  const hasTransformMotion =
+    xOffset !== 0 || yOffset !== 0 || scaleFrom !== 1;
   const unitStyle: React.CSSProperties = {
-    display: "inline-block",
+    // Keep the normal text shaping and browser wrapping intact. Only promote
+    // units to transformable boxes when the optional motion controls need it.
+    display: hasTransformMotion ? "inline-block" : "inline",
     opacity: staticFinal ? toOpacity : fromOpacity,
     color: staticFinal ? revealedColor : unrevealedColor,
     willChange: allowWillChange
@@ -783,7 +787,7 @@ const POSITION_OPTIONS = [
     min: 0,
     max: 2,
     step: 0.1,
-    defaultValue: 0.4,
+    defaultValue: 0.3,
     hidden: (props: TextRevealProps) => !props.scrub,
     group: "Scroll",
   },

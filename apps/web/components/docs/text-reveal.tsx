@@ -23,7 +23,7 @@ const defaultCode = `import { TextReveal } from "@/components/ui/text-reveal"
   startPosition="top 80%"
   endPosition="bottom 40%"
   scrub
-  scrubSmoothness={0.4}
+  scrubSmoothness={0.3}
 />`;
 
 function ExamplePreview({
@@ -150,7 +150,7 @@ export async function TextRevealDocs() {
         { name: "startPosition / endPosition", type: "ScrollTrigger positions", default: '"top 80%" / "bottom 40%"', description: "GSAP start and end expressions controlling the scroll distance for a complete reveal." },
         { name: "startOffset / endOffset", type: "number", default: "0", description: "Additional pixel offsets applied to the start and end positions." },
         { name: "scrub", type: "boolean", default: "true", description: "Tie reveal progress to scrolling. Disable to play on entering the trigger range." },
-        { name: "scrubSmoothness", type: "number", default: "0.4", description: "Numeric GSAP scrub catch-up duration in seconds. Zero uses direct scrub." },
+        { name: "scrubSmoothness", type: "number", default: "0.3", description: "Numeric GSAP scrub catch-up duration in seconds. Zero uses direct scrub." },
         { name: "font", type: "Framer Font control", default: "Inter · 32px / 600 / 1.4", description: "Native typography control for family, size, style, weight, line height, letter spacing, and alignment. React consumers can also set the individual font props." },
         { name: "xOffset / yOffset", type: "number", default: "0 / 0", description: "Optional starting position offsets, in pixels." },
         { name: "scaleFrom / blurFrom", type: "number", default: "1 / 0", description: "Optional starting scale and blur amount." },
