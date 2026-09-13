@@ -31,7 +31,7 @@ export async function FluidParticleTextDocs() {
   return (
     <div className={archivoNarrow.className}>
       <DocsPageLayout
-        title="Fluid Particle Text"
+        title="Particle Flow"
         description="Interactive particle typography sampled from rasterized text. A dense sheet of material at rest, advected along your cursor trajectory with pressure, shear and topology coherence, then sprung home."
         preview={
           <FluidParticleTextPreview
