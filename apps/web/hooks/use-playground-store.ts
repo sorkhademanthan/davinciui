@@ -124,40 +124,6 @@ export const WEBGL_LIQUID_DEFAULT_CONFIG: WebGLLiquidConfig = {
   delayMs: 0,
 };
 
-export interface ClosingPlasmaConfig {
-  speed: number;
-  turbulence: number;
-  mouseInfluence: number;
-  grain: number;
-  sparkle: number;
-  vignette: number;
-  opacity: number;
-  interactive: boolean;
-  darkColorA: string;
-  darkColorB: string;
-  darkColorC: string;
-  lightColorA: string;
-  lightColorB: string;
-  lightColorC: string;
-}
-
-export const CLOSING_PLASMA_DEFAULT_CONFIG: ClosingPlasmaConfig = {
-  speed: 1,
-  turbulence: 1,
-  mouseInfluence: 1,
-  grain: 1,
-  sparkle: 1,
-  vignette: 1,
-  opacity: 1,
-  interactive: true,
-  darkColorA: "#0d0d14",
-  darkColorB: "#1f2540",
-  darkColorC: "#4a6191",
-  lightColorA: "#f0f2f7",
-  lightColorB: "#d7dceb",
-  lightColorC: "#bcc5e0",
-};
-
 interface PlaygroundStore {
   code: string;
   ditherPrismHeroConfig: DitherPrismHeroConfig;
@@ -169,9 +135,6 @@ interface PlaygroundStore {
   webglLiquidConfig: WebGLLiquidConfig;
   activeWebglLiquidPreset: string;
   webglLiquidRenderVersion: number;
-  closingPlasmaConfig: ClosingPlasmaConfig;
-  activeClosingPlasmaPreset: string;
-  closingPlasmaRenderVersion: number;
   setCode: (code: string) => void;
   setDitherPrismHeroConfig: (config: DitherPrismHeroConfig) => void;
   updateDitherPrismHeroConfig: (
@@ -190,11 +153,6 @@ interface PlaygroundStore {
   setActiveWebglLiquidPreset: (preset: string) => void;
   resetWebglLiquidPreview: () => void;
   resetWebglLiquidConfig: () => void;
-  setClosingPlasmaConfig: (config: ClosingPlasmaConfig) => void;
-  updateClosingPlasmaConfig: (updates: Partial<ClosingPlasmaConfig>) => void;
-  setActiveClosingPlasmaPreset: (preset: string) => void;
-  resetClosingPlasmaPreview: () => void;
-  resetClosingPlasmaConfig: () => void;
   signatureConfig: SignatureConfig;
   activeSignaturePreset: string;
   signatureRenderVersion: number;
@@ -232,9 +190,6 @@ export const usePlaygroundStore = create<PlaygroundStore>((set) => ({
   webglLiquidConfig: WEBGL_LIQUID_DEFAULT_CONFIG,
   activeWebglLiquidPreset: "Default",
   webglLiquidRenderVersion: 0,
-  closingPlasmaConfig: CLOSING_PLASMA_DEFAULT_CONFIG,
-  activeClosingPlasmaPreset: "Default",
-  closingPlasmaRenderVersion: 0,
   liquidChromeConfig: LIQUID_CHROME_DEFAULT_CONFIG,
   activeLiquidChromePreset: "Default",
   liquidChromeRenderVersion: 0,
@@ -289,23 +244,6 @@ export const usePlaygroundStore = create<PlaygroundStore>((set) => ({
       webglLiquidConfig: WEBGL_LIQUID_DEFAULT_CONFIG,
       activeWebglLiquidPreset: "Default",
       webglLiquidRenderVersion: state.webglLiquidRenderVersion + 1,
-    })),
-  setClosingPlasmaConfig: (config) => set({ closingPlasmaConfig: config }),
-  updateClosingPlasmaConfig: (updates) =>
-    set((state) => ({
-      closingPlasmaConfig: { ...state.closingPlasmaConfig, ...updates },
-    })),
-  setActiveClosingPlasmaPreset: (preset) =>
-    set({ activeClosingPlasmaPreset: preset }),
-  resetClosingPlasmaPreview: () =>
-    set((state) => ({
-      closingPlasmaRenderVersion: state.closingPlasmaRenderVersion + 1,
-    })),
-  resetClosingPlasmaConfig: () =>
-    set((state) => ({
-      closingPlasmaConfig: CLOSING_PLASMA_DEFAULT_CONFIG,
-      activeClosingPlasmaPreset: "Default",
-      closingPlasmaRenderVersion: state.closingPlasmaRenderVersion + 1,
     })),
   signatureConfig: SIGNATURE_DEFAULT_CONFIG,
   activeSignaturePreset: "Default",
