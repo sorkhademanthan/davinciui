@@ -60,6 +60,22 @@ const PaperInkBackground = dynamic(
   { ssr: false },
 );
 
+const SoftFluidGradientCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/soft-fluid-gradient-card-preview").then(
+      (module) => module.SoftFluidGradientCardPreview,
+    ),
+  { ssr: false },
+);
+
+const CharacterFieldCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/character-field-card-preview").then(
+      (module) => module.CharacterFieldCardPreview,
+    ),
+  { ssr: false },
+);
+
 const MediaTextHover = dynamic(
   () =>
     import("@workspace/ui/components/media-text-hover").then(
@@ -117,12 +133,14 @@ type ComponentCardLivePreviewProps = {
     | "fluid-particle-text"
     | "glitch-liquid-text"
     | "paper-ink-background"
+    | "soft-fluid-gradient"
     | "media-text-hover"
     | "text-video-mask"
     | "random-text-reveal"
     | "shader-text"
     | "text-reveal"
-    | "rolling-text";
+    | "rolling-text"
+    | "character-field";
 };
 
 export function ComponentCardLivePreview({
@@ -168,7 +186,11 @@ export function ComponentCardLivePreview({
       aria-hidden="true"
       className="absolute inset-0 flex items-center justify-center overflow-hidden bg-background"
     >
-      {!shouldRender || (reducedMotion && slug !== "shader-text") ? (
+      {!shouldRender ||
+      (reducedMotion &&
+        slug !== "shader-text" &&
+        slug !== "soft-fluid-gradient" &&
+        slug !== "character-field") ? (
         <span className="text-3xl font-black tracking-[-0.055em] text-foreground sm:text-4xl">
           {staticLabel}
         </span>
@@ -290,6 +312,10 @@ export function ComponentCardLivePreview({
             DAVINCIUI
           </span>
         </div>
+      ) : slug === "soft-fluid-gradient" ? (
+        <SoftFluidGradientCardPreview />
+      ) : slug === "character-field" ? (
+        <CharacterFieldCardPreview />
       ) : slug === "text-video-mask" ? (
         <TextVideoMask
           text="DAVINCI."
