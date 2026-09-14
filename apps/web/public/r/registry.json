@@ -21,19 +21,11 @@
       "type": "registry:ui"
     },
     {
-      "name": "animated-gradient",
-      "type": "registry:ui"
-    },
-    {
       "name": "ascii-effect",
       "type": "registry:ui"
     },
     {
       "name": "attachment",
-      "type": "registry:ui"
-    },
-    {
-      "name": "aurora-flow",
       "type": "registry:ui"
     },
     {
@@ -78,6 +70,10 @@
     },
     {
       "name": "case-study-flip-stack",
+      "type": "registry:ui"
+    },
+    {
+      "name": "character-field",
       "type": "registry:ui"
     },
     {
@@ -130,10 +126,6 @@
     },
     {
       "name": "dither-gradient",
-      "type": "registry:ui"
-    },
-    {
-      "name": "dither-prism-hero",
       "type": "registry:ui"
     },
     {
@@ -194,10 +186,6 @@
     },
     {
       "name": "gsap-text",
-      "type": "registry:ui"
-    },
-    {
-      "name": "hero-geometric",
       "type": "registry:ui"
     },
     {
@@ -445,6 +433,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "soft-fluid-gradient",
+      "type": "registry:ui"
+    },
+    {
       "name": "spiral-3d-slider",
       "type": "registry:ui"
     },
@@ -494,10 +486,6 @@
     },
     {
       "name": "tooltip",
-      "type": "registry:ui"
-    },
-    {
-      "name": "webgl-liquid",
       "type": "registry:ui"
     },
     {

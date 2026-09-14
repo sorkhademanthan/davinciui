@@ -170,37 +170,21 @@ const docsImportMap: Record<
     import("@/components/docs/magnetic-dock").then((m) => ({
       default: m.MagneticDockDocs,
     })),
-  "hero-geometric": () =>
-    import("@/components/docs/hero-geometric").then((m) => ({
-      default: m.HeroGeometricDocs,
-    })),
-  "dither-prism-hero": () =>
-    import("@/components/docs/dither-prism-hero").then((m) => ({
-      default: m.DitherPrismHeroDocs,
-    })),
-  "webgl-liquid": () =>
-    import("@/components/docs/webgl-liquid").then((m) => ({
-      default: m.WebGLLiquidDocs,
-    })),
   "silk-aurora": () =>
     import("@/components/docs/silk-aurora").then((m) => ({
       default: m.SilkAuroraDocs,
-    })),
-  "aurora-flow": () =>
-    import("@/components/docs/aurora-flow").then((m) => ({
-      default: m.AuroraFlowDocs,
     })),
   "paper-ink-background": () =>
     import("@/components/docs/paper-ink-background").then((m) => ({
       default: m.PaperInkBackgroundDocs,
     })),
+  "soft-fluid-gradient": () =>
+    import("@/components/docs/soft-fluid-gradient").then((m) => ({
+      default: m.SoftFluidGradientDocs,
+    })),
   "closing-plasma": () =>
     import("@/components/docs/closing-plasma").then((m) => ({
       default: m.ClosingPlasmaDocs,
-    })),
-  "animated-gradient": () =>
-    import("@/components/docs/animated-gradient").then((m) => ({
-      default: m.AnimatedGradientDocs,
     })),
   "prism-gradient": () =>
     import("@/components/docs/prism-gradient").then((m) => ({
@@ -221,6 +205,10 @@ const docsImportMap: Record<
   "matrix-rain": () =>
     import("@/components/docs/matrix-rain").then((m) => ({
       default: m.MatrixRainDocs,
+    })),
+  "character-field": () =>
+    import("@/components/docs/character-field").then((m) => ({
+      default: m.CharacterFieldDocs,
     })),
   "pixel-canvas": () =>
     import("@/components/docs/pixel-canvas").then((m) => ({
