@@ -181,10 +181,6 @@
       "type": "registry:ui"
     },
     {
-      "name": "gradient-hero-01",
-      "type": "registry:block"
-    },
-    {
       "name": "gsap-text",
       "type": "registry:ui"
     },
@@ -210,6 +206,10 @@
     },
     {
       "name": "infinite-image-field",
+      "type": "registry:ui"
+    },
+    {
+      "name": "ink-flow",
       "type": "registry:ui"
     },
     {
@@ -309,15 +309,15 @@
       "type": "registry:ui"
     },
     {
-      "name": "paper-ink-background",
-      "type": "registry:ui"
-    },
-    {
       "name": "particle-galaxy",
       "type": "registry:ui"
     },
     {
       "name": "pixel-canvas",
+      "type": "registry:ui"
+    },
+    {
+      "name": "pixel-flow",
       "type": "registry:ui"
     },
     {
@@ -327,14 +327,6 @@
     {
       "name": "popover",
       "type": "registry:ui"
-    },
-    {
-      "name": "pricing-01",
-      "type": "registry:block"
-    },
-    {
-      "name": "pricing-02",
-      "type": "registry:block"
     },
     {
       "name": "prism-gradient",
@@ -491,6 +483,18 @@
     {
       "name": "wheel-carousel",
       "type": "registry:ui"
+    },
+    {
+      "name": "gradient-hero-01",
+      "type": "registry:block"
+    },
+    {
+      "name": "pricing-01",
+      "type": "registry:block"
+    },
+    {
+      "name": "pricing-02",
+      "type": "registry:block"
     }
   ]
 }
