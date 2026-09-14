@@ -68,87 +68,127 @@ vec3 adjustSaturation(vec3 color, float amount) {
 
 void main() {
   float aspect = uResolution.x / max(uResolution.y, 1.0);
-  vec2 p = (vUv - 0.5) * vec2(aspect, 1.0);
-  vec2 base = p * max(uScale, 0.001) * vec2(0.88, 1.08);
+  float horizontalBoost = max(1.0, 1.0 / max(aspect, 0.6));
+  float portraitScale = max(1.0, 0.9 / max(aspect, 0.6));
+  vec2 p = (vUv - 0.5) * vec2(aspect * horizontalBoost, 1.0);
+  vec2 base = p * max(uScale, 0.001) * 1.15 * portraitScale;
   float t = uTime;
 
-  // Two broad counter-moving fields bend the paper coordinates. Y receives
-  // more displacement, stretching the result into vertical and diagonal
-  // pigment structures instead of round procedural blobs.
+  // Rotate before stretching so the dominant direction is diagonal, then let
+  // independent low-frequency fields continuously curl that direction. This
+  // keeps the long paper-ink pull without locking the result into vertical
+  // curtains.
+  vec2 paper = mat2(0.84, -0.54, 0.54, 0.84) * base;
+  paper *= vec2(0.72, 1.28);
+
   vec2 q = vec2(
-    fbm(base * 0.62 + vec2(t * 0.032, -t * 0.019)),
-    fbm(base * 0.62 + vec2(5.2, 1.3) + vec2(-t * 0.018, t * 0.028))
+    fbm(paper * 0.56 + vec2(t * 0.075, -t * 0.043)),
+    fbm(paper * 0.58 + vec2(5.2, 1.3) + vec2(-t * 0.051, t * 0.066))
   );
 
   vec2 r = vec2(
-    fbm(base * 0.78 + 3.1 * (q - 0.5) + vec2(1.7, 9.2) + vec2(t * 0.014, -t * 0.011)),
-    fbm(base * 0.78 + 3.1 * (q - 0.5) + vec2(8.3, 2.8) + vec2(-t * 0.01, t * 0.017))
+    fbm(paper * 0.92 + 2.8 * (q - 0.5) + vec2(1.7, 9.2) + vec2(t * 0.046, -t * 0.071)),
+    fbm(paper * 0.96 + 2.6 * (q - 0.5) + vec2(8.3, 2.8) + vec2(-t * 0.063, t * 0.039))
   );
 
-  vec2 warped = base;
-  warped += vec2(
-    (q.x - 0.5) * 0.62 + (r.x - 0.5) * 0.3,
-    (q.y - 0.5) * 1.38 + (r.y - 0.5) * 0.72
+  vec2 flow = paper + vec2(
+    (q.x - 0.5) * 0.5 + (q.y - 0.5) * 0.46 + (r.x - 0.5) * 0.34,
+    (q.y - 0.5) * 1.15 - (q.x - 0.5) * 0.58 + (r.y - 0.5) * 0.74
   );
-  warped.x += 0.14 * sin(warped.y * 1.65 + r.y * 3.2 + t * 0.023);
 
-  // Signed warped bands form the large marbled territories. Unlike a direct
-  // fBM color lookup, this preserves long coherent channels at every ratio.
-  float crossWarp = fbm(
-    vec2(warped.y * 0.7, warped.x * 0.3)
-      + vec2(3.4, 12.7)
-      + vec2(-t * 0.013, t * 0.009)
+  // MACRO: broad pigment placement comes from a warped scalar field. The
+  // secondary field displaces its contour spacing rather than merely adding
+  // more octaves, preserving large cream pockets and coherent blue masses.
+  float primary = fbm(
+    flow * 0.82 + vec2(11.4, -3.7) + vec2(t * 0.012, -t * 0.016)
   );
-  float phase = warped.x * 7.6
-    + (q.y - 0.5) * 8.6
-    + (r.x - 0.5) * 5.2
-    + (crossWarp - 0.5) * 3.6
-    + sin(warped.y * 1.5 + t * 0.018) * 0.72;
-  float signedBand = sin(phase);
-  float blueMask = smoothstep(0.18, 0.68, signedBand);
+  float secondary = fbm(
+    flow * 1.38
+      + 2.35 * (r - 0.5)
+      + vec2(7.1, -4.8)
+      + vec2(-t * 0.054, t * 0.032)
+  );
 
-  // Secondary folds stay inside the larger pigment masses and create the
-  // pale parallel striations visible where ink is pulled through wet paper.
-  float foldSignal = 0.5 + 0.5 * sin(
-    phase * 2.25
-      + fbm(warped * 1.18 + vec2(7.1, -4.8) - t * 0.008) * 4.2
-  );
-  float fold = smoothstep(0.32, 0.88, foldSignal) * blueMask;
+  float macroField = primary
+    + (q.x - 0.5) * 0.14
+    + sin(flow.x * 1.2 + r.y * 2.5 - t * 0.021) * 0.045;
 
-  float concentration = fbm(
-    warped * 0.72 + 1.7 * (r - 0.5) + vec2(18.2, -5.6)
-  );
-  float deepMask = blueMask
-    * smoothstep(0.56, 0.78, concentration + foldSignal * 0.12);
+  // MESO: repeated bands follow warped iso-contours of the macro field. This
+  // makes folds wrap around, merge, and peel away from cream pockets like
+  // dragged wet pigment instead of forming globally parallel sine stripes.
+  float foldPhase = macroField * 50.0
+    + (secondary - 0.5) * 17.5
+    + (r.x - 0.5) * 5.1
+    + flow.x * 4.2
+    - flow.y * 1.8
+    + sin(flow.y * 1.8 + q.y * 3.2 + t * 0.028) * 1.25;
+  float foldWave = 0.5 + 0.5 * sin(foldPhase);
+  float foldRidge = smoothstep(0.3, 0.79, foldWave);
+  float foldCore = smoothstep(0.7, 0.96, foldWave);
+  float foldChannel = smoothstep(0.58, 0.94, 1.0 - foldWave);
 
-  // Magenta follows a blue/paper contour. A central window and a separate
-  // low-frequency selection field keep the vein rare and fragmented.
-  float boundaryDistance = abs(signedBand - 0.16);
-  float veinCore = 1.0 - smoothstep(0.018, 0.095, boundaryDistance);
-  float veinHalo = 1.0 - smoothstep(0.045, 0.22, boundaryDistance);
-  float accentWindow = 1.0 - smoothstep(
-    0.2,
-    0.62,
-    abs(p.x + (q.x - 0.5) * 0.3)
+  float pigmentField = macroField
+    + (foldWave - 0.5) * 0.22
+    + (secondary - 0.5) * 0.06;
+  float paleMask = smoothstep(0.14, 0.38, pigmentField);
+  float mediumMask = smoothstep(0.3, 0.54, pigmentField);
+  float bodyMask = smoothstep(0.46, 0.67, pigmentField);
+  float boundaryFeather = 1.0 - smoothstep(
+    0.035,
+    0.17,
+    abs(pigmentField - 0.42)
   );
-  float accentSelection = smoothstep(
-    0.49,
-    0.67,
-    fbm(
-      vec2(warped.y * 0.82, warped.x * 0.24)
-        + vec2(-7.0, 13.0)
-        + vec2(t * 0.009, -t * 0.007)
-    )
+
+  // MICRO: narrow irregular contours are derived from the meso phase and its
+  // secondary warp, so detail stays attached to the physical-looking folds.
+  float hairline = 1.0 - smoothstep(
+    0.028,
+    0.105,
+    abs(foldWave - 0.48 + (secondary - 0.5) * 0.11)
   );
-  float vein = veinCore * accentWindow * accentSelection;
-  float halo = veinHalo * accentWindow * accentSelection;
+  float deepMask = smoothstep(0.59, 0.76, pigmentField)
+    * (0.58 + secondary * 0.42);
+  float paperCurrent = (1.0 - bodyMask)
+    * foldRidge
+    * smoothstep(0.2, 0.43, macroField);
+
+  vec3 paleBlue = mix(uPaperColor, uSoftInkColor, 0.36);
+  vec3 mediumBlue = mix(uSoftInkColor, uDeepInkColor, 0.24);
+  vec3 royalBlue = mix(uSoftInkColor, uDeepInkColor, 0.82);
 
   vec3 color = uPaperColor;
-  color = mix(color, uSoftInkColor, blueMask * 0.78);
-  color = mix(color, uDeepInkColor, deepMask * 0.72);
-  color = mix(color, uPaperColor, fold * (1.0 - deepMask) * 0.24);
-  color = mix(color, mix(uPaperColor, uAccentColor, 0.55), halo * 0.48);
-  color = mix(color, uAccentColor, vein * 0.95);
+  color = mix(color, paleBlue, paperCurrent * 0.24);
+  color = mix(color, paleBlue, paleMask * 0.68);
+  color = mix(color, uSoftInkColor, mediumMask * 0.62);
+  color = mix(color, mediumBlue, mediumMask * foldRidge * 0.28);
+  color = mix(color, royalBlue, bodyMask * 0.72);
+  color = mix(color, uDeepInkColor, deepMask * 0.82);
+  color = mix(color, paleBlue, foldChannel * bodyMask * 0.22);
+  color = mix(color, mediumBlue, hairline * mediumMask * 0.2);
+  color = mix(color, paleBlue, boundaryFeather * 0.16);
+
+  // Accent pigment has its own carrier rather than tracing the blue boundary.
+  // Its contours share the flow direction but select independently, producing
+  // a few clustered streaks or diffusions instead of a continuous outline.
+  float accentWarp = fbm(
+    flow * 1.45
+      + 1.35 * (q - 0.5)
+      + vec2(-7.0, 13.0)
+      + vec2(t * 0.057, -t * 0.044)
+  );
+  float accentPhase = accentWarp * 37.0
+    + (secondary - 0.5) * 10.5
+    + (r.y - 0.5) * 4.8;
+  float accentWave = 0.5 + 0.5 * sin(accentPhase);
+  float accentSelection = smoothstep(
+    0.56,
+    0.74,
+    secondary + (q.y - 0.5) * 0.12
+  );
+  float accentDiffusion = smoothstep(0.72, 0.91, accentWave) * accentSelection;
+  float accentStreak = smoothstep(0.9, 0.982, accentWave) * accentSelection;
+  color = mix(color, mix(paleBlue, uAccentColor, 0.64), accentDiffusion * 0.42);
+  color = mix(color, uAccentColor, accentStreak * 0.78);
 
   color = adjustSaturation(color, max(uSaturation, 0.0));
   color = (color - 0.5) * max(uContrast, 0.0) + 0.5;
@@ -161,10 +201,10 @@ void main() {
 `;
 
 const HEX_COLOR = /^#?[0-9a-fA-F]{6}$/;
-const DEFAULT_PAPER = "#E9E1C8";
-const DEFAULT_SOFT_INK = "#8B9BBE";
-const DEFAULT_DEEP_INK = "#2D2A93";
-const DEFAULT_ACCENT = "#DC4FA7";
+const DEFAULT_PAPER = "#F6EFD3";
+const DEFAULT_SOFT_INK = "#9DA5B6";
+const DEFAULT_DEEP_INK = "#3C2FAA";
+const DEFAULT_ACCENT = "#F5AED9";
 
 function normalizeHex(value: string, fallback: string): string {
   const color = value.trim();
