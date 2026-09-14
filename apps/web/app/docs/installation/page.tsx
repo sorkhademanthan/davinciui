@@ -107,8 +107,7 @@ export default function InstallationPage() {
           </p>
           <div className="mt-3">
             <Code>{`pnpm dlx shadcn@latest add @davinciui/text-morph
-pnpm dlx shadcn@latest add @davinciui/orbit-card-stack
-pnpm dlx shadcn@latest add @davinciui/hero-geometric`}</Code>
+pnpm dlx shadcn@latest add @davinciui/orbit-card-stack`}</Code>
           </div>
           <p className="mt-2 text-sm leading-6 text-muted-foreground">
             The CLI copies the component to{" "}

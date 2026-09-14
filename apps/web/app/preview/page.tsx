@@ -2,15 +2,13 @@
 
 import React from "react"
 import { ComponentryLogomark } from "@/components/logos/componentry-logomark"
-import { WebGLLiquid } from "@/components/landing/webgl-liquid"
 
 export default function PreviewPage() {
   return (
     <div className="relative flex h-screen w-full flex-col items-center justify-center overflow-hidden bg-[#121212] text-zinc-100 selection:bg-white/20">
 
-      {/* Background with WebGLLiquid */}
+      {/* Background */}
       <div className="absolute inset-0 z-0 bg-[#121212]">
-        <WebGLLiquid delayMs={0} className="absolute inset-0 z-10 block h-full w-full opacity-90" />
         {/* Subtle vignette/gradient overlays for depth and text legibility */}
         <div className="absolute inset-0 z-20 bg-[radial-gradient(circle_at_center,transparent_0%,#121212_90%)] opacity-80" />
         <div className="absolute inset-0 z-20 bg-gradient-to-t from-[#121212] via-transparent to-[#121212]/40" />
