@@ -222,7 +222,16 @@ export function DocsPreviewWrapper({
   React.useEffect(() => {
     cacheSplitPreviewRect()
     if (!isExpanded) return
-    const onResize = () => cacheSplitPreviewRect()
+    const onResize = () => {
+      cacheSplitPreviewRect()
+      const shell = previewRef.current
+        ?.closest("[data-docs-layout]")
+        ?.querySelector<HTMLElement>("[data-docs-preview-shell]")
+      if (shell?.dataset.previewExpanded !== "true") return
+      shell.style.width = `${window.innerWidth}px`
+      shell.style.height = `${window.innerHeight}px`
+      shell.style.padding = window.innerWidth < 1024 ? "0px" : "12px"
+    }
     window.addEventListener("resize", onResize)
     return () => window.removeEventListener("resize", onResize)
   }, [isExpanded, cacheSplitPreviewRect, showSource, showPersonalize])

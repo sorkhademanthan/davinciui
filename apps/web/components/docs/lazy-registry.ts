@@ -174,21 +174,29 @@ const docsImportMap: Record<
     import("@/components/docs/silk-aurora").then((m) => ({
       default: m.SilkAuroraDocs,
     })),
-  "paper-ink-background": () =>
-    import("@/components/docs/paper-ink-background").then((m) => ({
-      default: m.PaperInkBackgroundDocs,
+  "ink-flow": () =>
+    import("@/components/docs/ink-flow").then((m) => ({
+      default: m.InkFlowDocs,
     })),
   "soft-fluid-gradient": () =>
     import("@/components/docs/soft-fluid-gradient").then((m) => ({
       default: m.SoftFluidGradientDocs,
     })),
-  "closing-plasma": () =>
-    import("@/components/docs/closing-plasma").then((m) => ({
-      default: m.ClosingPlasmaDocs,
+  "spectra-noise": () =>
+    import("@/components/docs/spectra-noise").then((m) => ({
+      default: m.SpectraNoiseDocs,
     })),
-  "prism-gradient": () =>
-    import("@/components/docs/prism-gradient").then((m) => ({
-      default: m.PrismGradientDocs,
+  noiser: () =>
+    import("@/components/docs/noiser").then((m) => ({
+      default: m.NoiserDocs,
+    })),
+  "sunlight-effect": () =>
+    import("@/components/docs/sunlight-effect").then((m) => ({
+      default: m.SunlightEffectDocs,
+    })),
+  "ambient-audio-toggle": () =>
+    import("@/components/docs/ambient-audio-toggle").then((m) => ({
+      default: m.AmbientAudioToggleDocs,
     })),
   "liquid-chrome": () =>
     import("@/components/docs/liquid-chrome").then((m) => ({
@@ -209,6 +217,10 @@ const docsImportMap: Record<
   "character-field": () =>
     import("@/components/docs/character-field").then((m) => ({
       default: m.CharacterFieldDocs,
+    })),
+  "pixel-flow": () =>
+    import("@/components/docs/pixel-flow").then((m) => ({
+      default: m.PixelFlowDocs,
     })),
   "pixel-canvas": () =>
     import("@/components/docs/pixel-canvas").then((m) => ({
