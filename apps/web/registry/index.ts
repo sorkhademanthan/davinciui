@@ -683,32 +683,6 @@ export const components: Record<string, ComponentMetadata> = {
       "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/component-animations/eyetracking.webm",
   },
   // Hero Backgrounds
-  "hero-geometric": {
-    title: "Hero Geometric",
-    description: "Geometric shapes and patterns for hero sections.",
-    category: "Hero Backgrounds",
-    slug: "hero-geometric",
-    previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/hero-backgrounds/herogeometric.webm",
-  },
-  "dither-prism-hero": {
-    title: "Dither Prism Hero",
-    description:
-      "Stunning WebGL hero with advanced dithering, prismatic refraction, holographic iridescence, and center-focused energy.",
-    category: "Hero Backgrounds",
-    slug: "dither-prism-hero",
-    previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/hero-backgrounds/ditherprismhero.webm",
-  },
-  "webgl-liquid": {
-    title: "WebGL Liquid",
-    description:
-      "Cinematic liquid shader hero with premium gradients, configurable reveal timing, and advanced flow controls.",
-    category: "Hero Backgrounds",
-    slug: "webgl-liquid",
-    previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/hero-backgrounds/webglliquid.webm",
-  },
   "silk-aurora": {
     title: "Silk Aurora",
     description:
@@ -719,14 +693,6 @@ export const components: Record<string, ComponentMetadata> = {
     previewVideo:
       "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/hero-backgrounds/silkaurora.webm",
   },
-  "aurora-flow": {
-    title: "Aurora Flow",
-    description:
-      "Procedural atmospheric hero background with layered flowing color, diffused aurora light, and subtle interaction.",
-    category: "Hero Backgrounds",
-    slug: "aurora-flow",
-    addedAt: "2026-08-02",
-  },
   "paper-ink-background": {
     title: "Paper Ink Background",
     description:
@@ -734,6 +700,14 @@ export const components: Record<string, ComponentMetadata> = {
     category: "Hero Backgrounds",
     slug: "paper-ink-background",
     addedAt: "2026-09-13",
+  },
+  "soft-fluid-gradient": {
+    title: "Soft Fluid Gradient",
+    description:
+      "A deep, hypnotic native WebGL background with an enormous looping ribbon of dark color and fluid illumination.",
+    category: "Hero Backgrounds",
+    slug: "soft-fluid-gradient",
+    addedAt: "2026-09-14",
   },
   "closing-plasma": {
     title: "Closing Plasma",
@@ -745,15 +719,6 @@ export const components: Record<string, ComponentMetadata> = {
       "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/hero-backgrounds/closingplasma.webm",
   },
 
-  "animated-gradient": {
-    title: "Animated Gradient",
-    description:
-      "A beautiful, animated, and customizable WebGL gradient with noise capabilities.",
-    category: "Hero Backgrounds",
-    slug: "animated-gradient",
-    previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/hero-backgrounds/animatedgradient.webm",
-  },
   "prism-gradient": {
     title: "Prism Gradient",
     description:
@@ -876,6 +841,14 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "matrix-rain",
     previewVideo:
       "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/visual-effects/matrixrain.webm",
+  },
+  "character-field": {
+    title: "Character Field",
+    description:
+      "A dense ambient surface of monospace glyphs that mutate independently on canvas.",
+    category: "Hero Backgrounds",
+    slug: "character-field",
+    addedAt: "2026-09-14",
   },
   table: {
     title: "Table",
