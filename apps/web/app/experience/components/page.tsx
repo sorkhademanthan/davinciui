@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils"
 const BASIC_SLUGS: Record<string, string[]> = BASIC_GROUPS
 const BASIC_ALL = Object.values(BASIC_SLUGS).flat()
 
-const TOP_FILTERS = ["All", "Basic", "Text Animations", "Premium Components", "Hero Backgrounds", "Visual Effects", "ASCII Effects", "Motion", "Scroll", "Blocks", "Templates"] as const
+const TOP_FILTERS = ["All", "Basic", "Text Animations", "Premium Components", "Hero Backgrounds", "Sound", "Visual Effects", "ASCII Effects", "Motion", "Scroll", "Blocks", "Templates"] as const
 
 const BASIC_SUBS_ALL: readonly string[] = BASIC_SUBS
 
@@ -50,7 +50,7 @@ function hasLiveCardPreview(
   | "encrypted-text"
   | "fluid-particle-text"
   | "glitch-liquid-text"
-  | "paper-ink-background"
+  | "ink-flow"
   | "soft-fluid-gradient"
   | "media-text-hover"
   | "text-video-mask"
@@ -58,7 +58,12 @@ function hasLiveCardPreview(
   | "shader-text"
   | "text-reveal"
   | "rolling-text"
-  | "character-field" {
+  | "character-field"
+  | "pixel-flow"
+  | "spectra-noise"
+  | "noiser"
+  | "sunlight-effect"
+  | "ambient-audio-toggle" {
   return (
     slug === "gsap-text" ||
     slug === "text-morph" ||
@@ -66,7 +71,7 @@ function hasLiveCardPreview(
     slug === "encrypted-text" ||
     slug === "fluid-particle-text" ||
     slug === "glitch-liquid-text" ||
-    slug === "paper-ink-background" ||
+    slug === "ink-flow" ||
     slug === "soft-fluid-gradient" ||
     slug === "media-text-hover" ||
     slug === "text-video-mask" ||
@@ -74,10 +79,14 @@ function hasLiveCardPreview(
     slug === "shader-text" ||
     slug === "text-reveal" ||
     slug === "rolling-text" ||
-    slug === "character-field"
+    slug === "character-field" ||
+    slug === "pixel-flow" ||
+    slug === "spectra-noise" ||
+    slug === "noiser" ||
+    slug === "sunlight-effect" ||
+    slug === "ambient-audio-toggle"
   )
 }
-
 function validTop(value: string | null): TopFilter | null {
   if (!value) return null
   return (TOP_FILTERS as readonly string[]).includes(value) ? (value as TopFilter) : null
@@ -118,8 +127,13 @@ function ComponentsGallery() {
 
   const all = useMemo(() => Object.values(components).sort((a, b) => a.title.localeCompare(b.title)), [])
 
+  // Slugs hidden from the gallery grid. The components themselves (docs,
+  // registry, source) stay intact — they just don't get a card here.
+  const HIDDEN_SLUGS = useMemo(() => new Set(["liquid-chrome"]), [])
+
   const filtered = useMemo(() => {
     const matches = all.filter((c) => {
+      if (HIDDEN_SLUGS.has(c.slug)) return false
       const matchesSearch = !q.trim() || c.title.toLowerCase().includes(q.toLowerCase()) || c.description.toLowerCase().includes(q.toLowerCase())
       if (!matchesSearch) return false
       // "All" showcases non-Basic work — Basics live under the Basic tab.
@@ -135,6 +149,7 @@ function ComponentsGallery() {
       if (activeTop === "Text Animations") return c.category === "Text Animations"
       if (activeTop === "Premium Components") return c.category === "Premium Components"
       if (activeTop === "Hero Backgrounds") return c.category === "Hero Backgrounds"
+      if (activeTop === "Sound") return c.category === "Sound"
       if (activeTop === "Visual Effects") return c.category === "Visual Effects"
       if (activeTop === "ASCII Effects") return c.category === "ASCII Effects"
       // Motion / Scroll / Blocks / Templates have dedicated pages – show no registry match (handled as empty state with link)
@@ -151,7 +166,7 @@ function ComponentsGallery() {
     }
 
     return matches
-  }, [q, activeTop, activeSub, all])
+  }, [q, activeTop, activeSub, all, HIDDEN_SLUGS])
 
   const handleTopChange = (t: TopFilter) => {
     setActiveTop(t)
@@ -225,12 +240,9 @@ function ComponentsGallery() {
             return { webm: `${base}.webm${q}`, mp4: `${base}.mp4${q}` }
           }
           const sources = getSources(c.previewVideo)
-          return (
-            <Link
-              key={c.slug}
-              href={`/experience/components/${c.slug}`}
-              className="group relative flex flex-col rounded-2xl border border-border bg-white dark:bg-zinc-900/50 overflow-hidden hover:border-input hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-300"
-            >
+          const cardClassName = "group relative flex flex-col rounded-2xl border border-border bg-white dark:bg-zinc-900/50 overflow-hidden hover:border-input hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-300"
+          const cardContent = (
+            <>
               <div className="p-1.5">
                 <div className="relative h-48 rounded-xl border border-border bg-zinc-100 dark:bg-zinc-900 overflow-hidden">
                   {sources ? (
@@ -250,17 +262,34 @@ function ComponentsGallery() {
                     </div>
                   )}
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
-                  <span className="absolute bottom-2 right-2 text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/90 dark:bg-black/50 border border-border backdrop-blur">
-                    {c.category || "component"}
-                  </span>
+                  {c.slug !== "ambient-audio-toggle" && (
+                    <span className="absolute bottom-2 right-2 text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/90 dark:bg-black/50 border border-border backdrop-blur">
+                      {c.category || "component"}
+                    </span>
+                  )}
                 </div>
               </div>
               <div className="px-4 pb-4 pt-1">
                 <h3 className="text-sm font-medium flex items-center gap-1.5">
-                  {c.title} <ArrowUpRight className="size-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  {c.slug === "ambient-audio-toggle" ? (
+                    <Link href={`/experience/components/${c.slug}`} className="inline-flex items-center gap-1.5">
+                      {c.title} <ArrowUpRight className="size-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </Link>
+                  ) : (
+                    <>
+                      {c.title} <ArrowUpRight className="size-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </>
+                  )}
                 </h3>
                 <p className="text-xs text-muted-foreground line-clamp-2 mt-1">{c.description}</p>
               </div>
+            </>
+          )
+          return c.slug === "ambient-audio-toggle" ? (
+            <div key={c.slug} className={cardClassName}>{cardContent}</div>
+          ) : (
+            <Link key={c.slug} href={`/experience/components/${c.slug}`} className={cardClassName}>
+              {cardContent}
             </Link>
           )
         })}

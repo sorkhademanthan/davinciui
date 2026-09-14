@@ -52,10 +52,10 @@ const GlitchLiquidText = dynamic(
   { ssr: false },
 );
 
-const PaperInkBackground = dynamic(
+const InkFlow = dynamic(
   () =>
-    import("@workspace/ui/components/paper-ink-background").then(
-      (module) => module.PaperInkBackground,
+    import("@workspace/ui/components/ink-flow").then(
+      (module) => module.InkFlow,
     ),
   { ssr: false },
 );
@@ -72,6 +72,46 @@ const CharacterFieldCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/character-field-card-preview").then(
       (module) => module.CharacterFieldCardPreview,
+    ),
+  { ssr: false },
+);
+
+const PixelFlowCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/pixel-flow-card-preview").then(
+      (module) => module.PixelFlowCardPreview,
+    ),
+  { ssr: false },
+);
+
+const SpectraNoiseCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/spectra-noise-card-preview").then(
+      (module) => module.SpectraNoiseCardPreview,
+    ),
+  { ssr: false },
+);
+
+const NoiserCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/noiser-card-preview").then(
+      (module) => module.NoiserCardPreview,
+    ),
+  { ssr: false },
+);
+
+const SunlightEffectCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/sunlight-effect-card-preview").then(
+      (module) => module.SunlightEffectCardPreview,
+    ),
+  { ssr: false },
+);
+
+const AmbientAudioToggleCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/ambient-audio-toggle-card-preview").then(
+      (module) => module.AmbientAudioToggleCardPreview,
     ),
   { ssr: false },
 );
@@ -132,7 +172,7 @@ type ComponentCardLivePreviewProps = {
     | "encrypted-text"
     | "fluid-particle-text"
     | "glitch-liquid-text"
-    | "paper-ink-background"
+    | "ink-flow"
     | "soft-fluid-gradient"
     | "media-text-hover"
     | "text-video-mask"
@@ -140,7 +180,12 @@ type ComponentCardLivePreviewProps = {
     | "shader-text"
     | "text-reveal"
     | "rolling-text"
-    | "character-field";
+    | "character-field"
+    | "pixel-flow"
+    | "spectra-noise"
+    | "noiser"
+    | "sunlight-effect"
+    | "ambient-audio-toggle";
 };
 
 export function ComponentCardLivePreview({
@@ -177,20 +222,27 @@ export function ComponentCardLivePreview({
     };
   }, []);
 
-  const staticLabel =
-    slug === "fluid-particle-text" ? "INK" : "DAVINCIUI";
+  const staticLabel = slug === "fluid-particle-text" ? "INK" : "DAVINCIUI";
 
   return (
     <div
       ref={hostRef}
-      aria-hidden="true"
-      className="absolute inset-0 flex items-center justify-center overflow-hidden bg-background"
+      aria-hidden={slug !== "ambient-audio-toggle"}
+      className={`absolute inset-0 flex items-center justify-center overflow-hidden ${
+        slug === "ambient-audio-toggle" ? "bg-[#101815]" : "bg-background"
+      }`}
     >
-      {!shouldRender ||
+      {slug === "ambient-audio-toggle" && !shouldRender ? null :
+      !shouldRender ||
       (reducedMotion &&
         slug !== "shader-text" &&
         slug !== "soft-fluid-gradient" &&
-        slug !== "character-field") ? (
+        slug !== "character-field" &&
+        slug !== "pixel-flow" &&
+        slug !== "spectra-noise" &&
+        slug !== "noiser" &&
+        slug !== "sunlight-effect" &&
+        slug !== "ambient-audio-toggle") ? (
         <span className="text-3xl font-black tracking-[-0.055em] text-foreground sm:text-4xl">
           {staticLabel}
         </span>
@@ -295,13 +347,13 @@ export function ComponentCardLivePreview({
           grainStrength={0.012}
           className="h-full w-full"
         />
-      ) : slug === "paper-ink-background" ? (
+      ) : slug === "ink-flow" ? (
         <div
           aria-hidden="true"
           className="absolute inset-0 flex items-center justify-center overflow-hidden bg-[#e9e1c8]"
           style={{ containerType: "inline-size" }}
         >
-          <PaperInkBackground maxDpr={1} />
+          <InkFlow maxDpr={1} />
           <span
             className="relative z-10 whitespace-nowrap text-[clamp(1.5rem,12cqi,7rem)] font-black uppercase leading-none tracking-[-0.075em] text-[#24225f]"
             style={{
@@ -316,6 +368,16 @@ export function ComponentCardLivePreview({
         <SoftFluidGradientCardPreview />
       ) : slug === "character-field" ? (
         <CharacterFieldCardPreview />
+      ) : slug === "pixel-flow" ? (
+        <PixelFlowCardPreview />
+      ) : slug === "spectra-noise" ? (
+        <SpectraNoiseCardPreview />
+      ) : slug === "noiser" ? (
+        <NoiserCardPreview />
+      ) : slug === "sunlight-effect" ? (
+        <SunlightEffectCardPreview />
+      ) : slug === "ambient-audio-toggle" ? (
+        <AmbientAudioToggleCardPreview />
       ) : slug === "text-video-mask" ? (
         <TextVideoMask
           text="DAVINCI."
