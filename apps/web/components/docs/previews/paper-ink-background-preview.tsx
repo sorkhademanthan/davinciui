@@ -24,10 +24,10 @@ const DEFAULT_CONFIG: PaperInkConfig = {
   scale: 1,
   saturation: 1,
   contrast: 1,
-  paperColor: "#E9E1C8",
-  softInkColor: "#8B9BBE",
-  deepInkColor: "#2D2A93",
-  accentColor: "#DC4FA7",
+  paperColor: "#F6EFD3",
+  softInkColor: "#9DA5B6",
+  deepInkColor: "#3C2FAA",
+  accentColor: "#F5AED9",
 };
 
 const usePaperInkStore = create<{

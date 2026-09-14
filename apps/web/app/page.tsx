@@ -18,7 +18,6 @@ import { Footer } from "@/components/footer";
 // DavinciUI Previews for Bento
 import { MatrixRain } from "@workspace/ui/components/matrix-rain";
 import { TextMorph } from "@workspace/ui/components/text-morph";
-import { AnimatedGradient } from "@workspace/ui/components/animated-gradient";
 import { DitherGradient } from "@workspace/ui/components/dither-gradient";
 import {
   MagneticDock,
@@ -244,21 +243,6 @@ export default function Home() {
                   </div>
                 </div>
                 <div className={showcaseLabelClass}>Dither gradient</div>
-              </motion.div>
-
-              {/* Card 6: 1x1 Dark */}
-              <motion.div
-                variants={cardVariants}
-                className={`md:col-span-1 md:row-span-1 ${showcaseCardClass}`}
-              >
-                <div
-                  className={`${showcasePreviewClass} flex flex-col items-center justify-center p-0`}
-                >
-                  <div className="relative h-full w-full overflow-hidden rounded-[10px]">
-                    <AnimatedGradient config={{ preset: "Aurora" }} />
-                  </div>
-                </div>
-                <div className={showcaseLabelClass}>Animated gradient</div>
               </motion.div>
 
               {/* Card 7: 3x1 Magnetic Dock */}

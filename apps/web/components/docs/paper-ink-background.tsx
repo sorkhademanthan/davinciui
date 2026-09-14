@@ -108,25 +108,25 @@ export async function PaperInkBackgroundDocs() {
         {
           name: "paperColor",
           type: "string",
-          default: '"#E9E1C8"',
+          default: '"#F6EFD3"',
           description: "Warm paper base color.",
         },
         {
           name: "softInkColor",
           type: "string",
-          default: '"#8B9BBE"',
+          default: '"#9DA5B6"',
           description: "Color used for broad, diffused ink washes.",
         },
         {
           name: "deepInkColor",
           type: "string",
-          default: '"#2D2A93"',
+          default: '"#3C2FAA"',
           description: "Color used for concentrated pigment regions.",
         },
         {
           name: "accentColor",
           type: "string",
-          default: '"#DC4FA7"',
+          default: '"#F5AED9"',
           description: "Rare accent color used for thin ink veins.",
         },
         {
