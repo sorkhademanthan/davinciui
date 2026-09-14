@@ -2,6 +2,7 @@ export type ComponentCategory =
   | "Text Animations"
   | "Premium Components"
   | "Hero Backgrounds"
+  | "Sound"
   | "Visual Effects"
   | "ASCII Effects"
   | "Actions"
@@ -693,12 +694,12 @@ export const components: Record<string, ComponentMetadata> = {
     previewVideo:
       "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/hero-backgrounds/silkaurora.webm",
   },
-  "paper-ink-background": {
-    title: "Paper Ink Background",
+  "ink-flow": {
+    title: "Ink Flow",
     description:
       "Slow native WebGL pigment flow inspired by fountain-pen ink dispersing through warm watercolor paper.",
     category: "Hero Backgrounds",
-    slug: "paper-ink-background",
+    slug: "ink-flow",
     addedAt: "2026-09-13",
   },
   "soft-fluid-gradient": {
@@ -709,25 +710,37 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "soft-fluid-gradient",
     addedAt: "2026-09-14",
   },
-  "closing-plasma": {
-    title: "Closing Plasma",
+  "spectra-noise": {
+    title: "Spectra Noise",
     description:
-      "Plasma field tailored for footer and CTA sections with premium atmospheric motion.",
+      "Luminous aurora folds with soft teal halos, pale green edges, fine grain, and moving scanlines.",
     category: "Hero Backgrounds",
-    slug: "closing-plasma",
-    previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/hero-backgrounds/closingplasma.webm",
+    slug: "spectra-noise",
+    addedAt: "2026-09-14",
   },
-
-  "prism-gradient": {
-    title: "Prism Gradient",
+  noiser: {
+    title: "Noiser",
     description:
-      "A theme-aware WebGL prism field with liquid checkered motion, electric-blue refraction, and tactile grain.",
+      "A crisp procedural SVG noise overlay with Gaussian, uniform, and colorized grain for hero backgrounds.",
     category: "Hero Backgrounds",
-    slug: "prism-gradient",
-    addedAt: "2026-07-13",
-    previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/hero-backgrounds/prismgradient.webm",
+    slug: "noiser",
+    addedAt: "2026-09-14",
+  },
+  "sunlight-effect": {
+    title: "Sunlight Effect",
+    description:
+      "Animated multi-color rays radiating from a bright central glow, with adjustable density, reach, bloom, and motion.",
+    category: "Hero Backgrounds",
+    slug: "sunlight-effect",
+    addedAt: "2026-09-15",
+  },
+  "ambient-audio-toggle": {
+    title: "Ambient Audio Toggle",
+    description:
+      "A visitor-controlled background music toggle with an animated waveform, persistent playback, and accessible keyboard controls.",
+    category: "Sound",
+    slug: "ambient-audio-toggle",
+    addedAt: "2026-09-15",
   },
   "liquid-chrome": {
     title: "Liquid Chrome",
@@ -848,6 +861,14 @@ export const components: Record<string, ComponentMetadata> = {
       "A dense ambient surface of monospace glyphs that mutate independently on canvas.",
     category: "Hero Backgrounds",
     slug: "character-field",
+    addedAt: "2026-09-14",
+  },
+  "pixel-flow": {
+    title: "Pixel Flow",
+    description:
+      "Flowing violet light rendered through a fine, animated dithered pixel field.",
+    category: "Hero Backgrounds",
+    slug: "pixel-flow",
     addedAt: "2026-09-14",
   },
   table: {

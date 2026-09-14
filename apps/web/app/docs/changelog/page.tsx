@@ -34,7 +34,7 @@ export default function ChangelogPage() {
           <h2 className="text-sm font-semibold">2026-07 — Visual effects</h2>
           <ul className="mt-3 list-disc space-y-1 pl-5 text-sm leading-6 text-muted-foreground">
             <li>New: Dithered Logo, Spiral 3D Slider, Newsletter Bookshelf.</li>
-            <li>Hero backgrounds: Silk Aurora, Prism Gradient, Liquid Chrome.</li>
+            <li>Hero backgrounds: Silk Aurora and Liquid Chrome.</li>
           </ul>
         </section>
 
