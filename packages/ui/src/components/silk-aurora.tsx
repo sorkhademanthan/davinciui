@@ -162,7 +162,7 @@ export function SilkAurora({
   midColor = DEFAULT_MID,
   sheenColor = DEFAULT_SHEEN,
   accentColor = DEFAULT_ACCENT,
-  speed = 1,
+  speed = 0.85,
   intensity = 1,
   grain = 0.85,
   vignette = 1,

@@ -5,39 +5,22 @@ import { readComponentSource } from "@/lib/source-code";
 
 const basicUsageCode = `import { SilkAurora } from "@/components/ui/silk-aurora"
 
-<SilkAurora
-  title="Silk Aurora"
-  subtitle="Premium Atmosphere"
-  description="A satin-dark WebGL background with aurora ribbons, pearlescent highlights, fine grain, and cursor-driven depth."
-/>`;
-
-const champagneCode = `import { SilkAurora } from "@/components/ui/silk-aurora"
-
-<SilkAurora
-  title="Maison Lumiere"
-  subtitle="Private Preview"
-  description="Quiet motion, warm sheen, and a velvet base for refined product launches."
-  baseColor="#060505"
-  midColor="#19130f"
-  sheenColor="#ffe2a9"
-  accentColor="#c58d5d"
-  intensity={0.9}
-  speed={0.75}
-/>`;
-
-const editorialCode = `import { SilkAurora } from "@/components/ui/silk-aurora"
-
-<SilkAurora
-  title="Nocturne Index"
-  subtitle="Editorial Systems"
-  description="A cooler metallic palette for dashboards, media covers, and cinematic editorial moments."
-  baseColor="#030407"
-  midColor="#101827"
-  sheenColor="#d6e8ff"
-  accentColor="#86f0dc"
-  intensity={1.15}
-  grain={0.7}
-/>`;
+<div className="relative h-[560px] w-full overflow-hidden">
+  <SilkAurora
+    baseColor="#060505"
+    midColor="#19130f"
+    sheenColor="#ffe2a9"
+    accentColor="#c58d5d"
+    intensity={0.9}
+    speed={0.75}
+    className="h-full w-full"
+  />
+  <div className="absolute inset-0 flex items-center justify-center text-center">
+    <span className="text-5xl font-black uppercase tracking-[-0.055em] text-white">
+      DAVINCIUI
+    </span>
+  </div>
+</div>`;
 
 export async function SilkAuroraDocs() {
   const sourceCode =
@@ -49,13 +32,21 @@ export async function SilkAuroraDocs() {
       title="Silk Aurora"
       description="A premium WebGL hero background with satin-dark aurora ribbons, pearlescent highlights, subtle grain, and optional cursor depth."
       preview={
-        <div className="relative h-full w-full bg-[#f3f4f6] dark:bg-background">
+        <div className="relative h-full w-full overflow-hidden bg-[#060505]">
           <SilkAurora
-            title="Silk Aurora"
-            subtitle="Premium Atmosphere"
-            description="Polished motion for luxury product heroes, editorial launches, and high-end SaaS moments."
+            baseColor="#060505"
+            midColor="#19130f"
+            sheenColor="#ffe2a9"
+            accentColor="#c58d5d"
+            intensity={0.9}
+            speed={0.75}
             className="h-full w-full min-h-0"
           />
+          <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center px-4 text-center">
+            <span className="text-5xl font-black uppercase tracking-[-0.055em] text-white sm:text-6xl">
+              DAVINCIUI
+            </span>
+          </div>
         </div>
       }
       previewCode={basicUsageCode}
@@ -64,50 +55,6 @@ export async function SilkAuroraDocs() {
       usageCode={basicUsageCode}
       fullWidthPreview
       unstyledPreview
-      examples={[
-        {
-          title: "Champagne",
-          preview: (
-            <div className="relative h-full w-full bg-[#f3f4f6] dark:bg-background">
-              <SilkAurora
-                title="Maison Lumiere"
-                subtitle="Private Preview"
-                description="Quiet motion, warm sheen, and a velvet base for refined product launches."
-                baseColor="#060505"
-                midColor="#19130f"
-                sheenColor="#ffe2a9"
-                accentColor="#c58d5d"
-                intensity={0.9}
-                speed={0.75}
-                className="h-full w-full min-h-0"
-              />
-            </div>
-          ),
-          code: champagneCode,
-          fullWidth: true,
-        },
-        {
-          title: "Editorial",
-          preview: (
-            <div className="relative h-full w-full bg-[#f3f4f6] dark:bg-background">
-              <SilkAurora
-                title="Nocturne Index"
-                subtitle="Editorial Systems"
-                description="A cooler metallic palette for dashboards, media covers, and cinematic editorial moments."
-                baseColor="#030407"
-                midColor="#101827"
-                sheenColor="#d6e8ff"
-                accentColor="#86f0dc"
-                intensity={1.15}
-                grain={0.7}
-                className="h-full w-full min-h-0"
-              />
-            </div>
-          ),
-          code: editorialCode,
-          fullWidth: true,
-        },
-      ]}
       props={[
         {
           name: "title",
@@ -153,7 +100,7 @@ export async function SilkAuroraDocs() {
         {
           name: "speed",
           type: "number",
-          default: "1",
+          default: "0.85",
           description: "Global animation speed multiplier.",
         },
         {

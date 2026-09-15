@@ -41,7 +41,7 @@ export default function ChangelogPage() {
         <section className="rounded-lg border p-6">
           <h2 className="text-sm font-semibold">2026-06 — Premium interactions</h2>
           <ul className="mt-3 list-disc space-y-1 pl-5 text-sm leading-6 text-muted-foreground">
-            <li>New: Orbit Card Stack, Wheel Carousel, Sticky Scroll Cards.</li>
+            <li>New: Orbit Card Stack, Sticky Scroll Cards.</li>
             <li>CLI registry under @davinciui — install any component via shadcn add.</li>
           </ul>
         </section>

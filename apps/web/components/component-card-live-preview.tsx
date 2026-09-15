@@ -84,6 +84,14 @@ const PixelFlowCardPreview = dynamic(
   { ssr: false },
 );
 
+const NeonMeshBGCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/neon-mesh-bg-card-preview").then(
+      (module) => module.NeonMeshBGCardPreview,
+    ),
+  { ssr: false },
+);
+
 const SpectraNoiseCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/spectra-noise-card-preview").then(
@@ -112,6 +120,14 @@ const AmbientAudioToggleCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/ambient-audio-toggle-card-preview").then(
       (module) => module.AmbientAudioToggleCardPreview,
+    ),
+  { ssr: false },
+);
+
+const SilkAuroraCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/silk-aurora-card-preview").then(
+      (module) => module.SilkAuroraCardPreview,
     ),
   { ssr: false },
 );
@@ -173,6 +189,7 @@ type ComponentCardLivePreviewProps = {
     | "fluid-particle-text"
     | "glitch-liquid-text"
     | "ink-flow"
+    | "silk-aurora"
     | "soft-fluid-gradient"
     | "media-text-hover"
     | "text-video-mask"
@@ -182,6 +199,7 @@ type ComponentCardLivePreviewProps = {
     | "rolling-text"
     | "character-field"
     | "pixel-flow"
+    | "neon-mesh-bg"
     | "spectra-noise"
     | "noiser"
     | "sunlight-effect"
@@ -237,8 +255,10 @@ export function ComponentCardLivePreview({
       (reducedMotion &&
         slug !== "shader-text" &&
         slug !== "soft-fluid-gradient" &&
+        slug !== "silk-aurora" &&
         slug !== "character-field" &&
         slug !== "pixel-flow" &&
+        slug !== "neon-mesh-bg" &&
         slug !== "spectra-noise" &&
         slug !== "noiser" &&
         slug !== "sunlight-effect" &&
@@ -366,10 +386,14 @@ export function ComponentCardLivePreview({
         </div>
       ) : slug === "soft-fluid-gradient" ? (
         <SoftFluidGradientCardPreview />
+      ) : slug === "silk-aurora" ? (
+        <SilkAuroraCardPreview />
       ) : slug === "character-field" ? (
         <CharacterFieldCardPreview />
       ) : slug === "pixel-flow" ? (
         <PixelFlowCardPreview />
+      ) : slug === "neon-mesh-bg" ? (
+        <NeonMeshBGCardPreview />
       ) : slug === "spectra-noise" ? (
         <SpectraNoiseCardPreview />
       ) : slug === "noiser" ? (

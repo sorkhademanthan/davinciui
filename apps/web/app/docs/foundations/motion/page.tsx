@@ -660,7 +660,7 @@ export default function MotionPage() {
             <p className="text-xs text-muted-foreground">
               Existing components already use{" "}
               <code className="font-mono px-1 py-0.5 rounded bg-muted">motion-reduce:transition-none</code> and{" "}
-              <code className="font-mono px-1 py-0.5 rounded bg-muted">useReducedMotion</code> — e.g., pricing-01/02 blocks and wheel-carousel.
+              <code className="font-mono px-1 py-0.5 rounded bg-muted">useReducedMotion</code> — e.g., pricing-01/02 blocks and scroll choreography.
             </p>
           </div>
         </div>
@@ -701,7 +701,7 @@ export default function MotionPage() {
           <p className="text-sm text-muted-foreground leading-6">
             Framer Motion <code className="font-mono text-xs px-1 py-0.5 rounded bg-muted">^12.23.26</code> is already installed (
             <code className="font-mono text-xs px-1 py-0.5 rounded bg-muted">apps/web/package.json</code>). Real usage in the repo:
-            docs preview spring (<code className="font-mono text-xs px-1 py-0.5 rounded bg-muted">type: &quot;spring&quot; damping 25 stiffness 300</code>), hero sections, wheel-carousel, and{" "}
+            docs preview spring (<code className="font-mono text-xs px-1 py-0.5 rounded bg-muted">type: &quot;spring&quot; damping 25 stiffness 300</code>), hero sections, and{" "}
             <code className="font-mono text-xs px-1 py-0.5 rounded bg-muted">useReducedMotion</code> checks. No new framework is created here — specimens above reuse{" "}
             <code className="font-mono text-xs px-1 py-0.5 rounded bg-muted">motion.*</code> and{" "}
             <code className="font-mono text-xs px-1 py-0.5 rounded bg-muted">AnimatePresence</code> directly.

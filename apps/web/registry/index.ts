@@ -32,16 +32,6 @@ export function isNewComponent(component: ComponentMetadata): boolean {
 }
 
 export const components: Record<string, ComponentMetadata> = {
-  "case-study-flip-stack": {
-    title: "Case Study Flip Stack",
-    description:
-      "Editorial case study cards that fold upward on scroll to reveal the next story.",
-    category: "Premium Components",
-    slug: "case-study-flip-stack",
-    addedAt: "2026-08-08",
-    previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/component-animations/casestudyflipstack.webm",
-  },
   "dithered-logo": {
     title: "Dithered Logo",
     description:
@@ -632,16 +622,6 @@ export const components: Record<string, ComponentMetadata> = {
     previewVideo:
       "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/component-animations/orbitcardstack.webm",
   },
-  "wheel-carousel": {
-    title: "Wheel Carousel",
-    description:
-      "A cinematic rotating-wheel picker with inertial drag, curved fading labels, and crossfading project imagery.",
-    category: "Premium Components",
-    slug: "wheel-carousel",
-    addedAt: "2026-08-10",
-    previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/component-animations/wheelcarousel.webm",
-  },
   "spiral-3d-slider": {
     title: "Spiral 3D Slider",
     description:
@@ -691,8 +671,6 @@ export const components: Record<string, ComponentMetadata> = {
     category: "Hero Backgrounds",
     slug: "silk-aurora",
     addedAt: "2026-06-09",
-    previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/hero-backgrounds/silkaurora.webm",
   },
   "ink-flow": {
     title: "Ink Flow",
@@ -709,6 +687,14 @@ export const components: Record<string, ComponentMetadata> = {
     category: "Hero Backgrounds",
     slug: "soft-fluid-gradient",
     addedAt: "2026-09-14",
+  },
+  "neon-mesh-bg": {
+    title: "Neon Mesh BG",
+    description:
+      "A dark cinematic WebGL background with an evolving purple neon mesh, fine pixel matrix, and soft atmospheric bloom.",
+    category: "Hero Backgrounds",
+    slug: "neon-mesh-bg",
+    addedAt: "2026-09-15",
   },
   "spectra-noise": {
     title: "Spectra Noise",

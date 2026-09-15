@@ -73,10 +73,6 @@
       "type": "registry:ui"
     },
     {
-      "name": "case-study-flip-stack",
-      "type": "registry:ui"
-    },
-    {
       "name": "character-field",
       "type": "registry:ui"
     },
@@ -297,6 +293,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "neon-mesh-bg",
+      "type": "registry:ui"
+    },
+    {
       "name": "newsletter-bookshelf",
       "type": "registry:ui"
     },
@@ -498,10 +498,6 @@
     },
     {
       "name": "tooltip",
-      "type": "registry:ui"
-    },
-    {
-      "name": "wheel-carousel",
       "type": "registry:ui"
     }
   ]

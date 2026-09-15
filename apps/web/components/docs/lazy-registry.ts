@@ -22,10 +22,6 @@ const docsImportMap: Record<
     import("@/components/docs/sticky-scroll-cards").then((m) => ({
       default: m.StickyScrollCardsDocs,
     })),
-  "case-study-flip-stack": () =>
-    import("@/components/docs/case-study-flip-stack").then((m) => ({
-      default: m.CaseStudyFlipStackDocs,
-    })),
   "music-player": () =>
     import("@/components/docs/music-player").then((m) => ({
       default: m.MusicPlayerDocs,
@@ -181,6 +177,10 @@ const docsImportMap: Record<
   "soft-fluid-gradient": () =>
     import("@/components/docs/soft-fluid-gradient").then((m) => ({
       default: m.SoftFluidGradientDocs,
+    })),
+  "neon-mesh-bg": () =>
+    import("@/components/docs/neon-mesh-bg").then((m) => ({
+      default: m.NeonMeshBGDocs,
     })),
   "spectra-noise": () =>
     import("@/components/docs/spectra-noise").then((m) => ({
@@ -357,10 +357,6 @@ const docsImportMap: Record<
   "orbit-card-stack": () =>
     import("@/components/docs/orbit-card-stack").then((m) => ({
       default: m.OrbitCardStackDocs,
-    })),
-  "wheel-carousel": () =>
-    import("@/components/docs/wheel-carousel").then((m) => ({
-      default: m.WheelCarouselDocs,
     })),
   "spiral-3d-slider": () =>
     import("@/components/docs/spiral-3d-slider").then((m) => ({

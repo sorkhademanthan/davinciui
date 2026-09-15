@@ -51,6 +51,7 @@ function hasLiveCardPreview(
   | "fluid-particle-text"
   | "glitch-liquid-text"
   | "ink-flow"
+  | "silk-aurora"
   | "soft-fluid-gradient"
   | "media-text-hover"
   | "text-video-mask"
@@ -60,6 +61,7 @@ function hasLiveCardPreview(
   | "rolling-text"
   | "character-field"
   | "pixel-flow"
+  | "neon-mesh-bg"
   | "spectra-noise"
   | "noiser"
   | "sunlight-effect"
@@ -72,6 +74,7 @@ function hasLiveCardPreview(
     slug === "fluid-particle-text" ||
     slug === "glitch-liquid-text" ||
     slug === "ink-flow" ||
+    slug === "silk-aurora" ||
     slug === "soft-fluid-gradient" ||
     slug === "media-text-hover" ||
     slug === "text-video-mask" ||
@@ -81,6 +84,7 @@ function hasLiveCardPreview(
     slug === "rolling-text" ||
     slug === "character-field" ||
     slug === "pixel-flow" ||
+    slug === "neon-mesh-bg" ||
     slug === "spectra-noise" ||
     slug === "noiser" ||
     slug === "sunlight-effect" ||
