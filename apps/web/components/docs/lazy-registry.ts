@@ -238,6 +238,10 @@ const docsImportMap: Record<
     import("@/components/docs/scroll-tilted-grid").then((m) => ({
       default: m.ScrollTiltedGridDocs,
     })),
+  "cms-scroll-gallery": () =>
+    import("@/components/docs/cms-scroll-gallery").then((m) => ({
+      default: m.CMSScrollGalleryDocs,
+    })),
   "fluid-particle-text": () =>
     import("@/components/docs/fluid-particle-text").then((m) => ({
       default: m.FluidParticleTextDocs,

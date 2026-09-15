@@ -260,6 +260,7 @@ const scrollSection: NavSection = {
   title: "Scroll",
   items: [
     { title: "Overview", href: "/experience/scroll" },
+    { title: "CMS Scroll Gallery", href: "/experience/components/cms-scroll-gallery" },
     { title: "Scroll Animations", href: "/experience/scroll/animations" },
     { title: "Scroll Reveals", href: "/experience/scroll/reveals" },
     { title: "Parallax", href: "/experience/scroll/parallax" },
