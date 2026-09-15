@@ -603,6 +603,14 @@ export const components: Record<string, ComponentMetadata> = {
     previewVideo:
       "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/component-animations/scrolltiltedgrid.webm",
   },
+  "cms-scroll-gallery": {
+    title: "CMS Scroll Gallery",
+    description:
+      "Sticky fullscreen scroll gallery — long page scroll drives synchronized media + title transitions with a draggable glass thumbnail dock.",
+    category: "Premium Components",
+    slug: "cms-scroll-gallery",
+    addedAt: "2026-09-15",
+  },
   "layered-stack": {
     title: "Layered Stack",
     description: "A stack of layered cards that interact with mouse hover.",

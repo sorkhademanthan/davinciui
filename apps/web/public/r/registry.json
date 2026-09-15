@@ -89,6 +89,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "cms-scroll-gallery",
+      "type": "registry:ui"
+    },
+    {
       "name": "collapsible",
       "type": "registry:ui"
     },
