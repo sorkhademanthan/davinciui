@@ -611,6 +611,14 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "cms-scroll-gallery",
     addedAt: "2026-09-15",
   },
+  "scroll-reveal-image": {
+    title: "Scroll Reveal Image",
+    description:
+      "A scroll-scrubbed image sequence where each new frame arrives in a centered window before taking over the backdrop.",
+    category: "Premium Components",
+    slug: "scroll-reveal-image",
+    addedAt: "2026-09-15",
+  },
   "layered-stack": {
     title: "Layered Stack",
     description: "A stack of layered cards that interact with mouse hover.",

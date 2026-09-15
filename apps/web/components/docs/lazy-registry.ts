@@ -242,6 +242,10 @@ const docsImportMap: Record<
     import("@/components/docs/cms-scroll-gallery").then((m) => ({
       default: m.CMSScrollGalleryDocs,
     })),
+  "scroll-reveal-image": () =>
+    import("@/components/docs/scroll-reveal-image").then((m) => ({
+      default: m.ScrollRevealImageDocs,
+    })),
   "fluid-particle-text": () =>
     import("@/components/docs/fluid-particle-text").then((m) => ({
       default: m.FluidParticleTextDocs,
