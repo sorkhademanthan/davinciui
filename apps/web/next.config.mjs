@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   transpilePackages: ["@workspace/ui"],
+  // Hides the floating "N" dev badge (bottom-left). Dev-only setting —
+  // production builds never render it. Needs a dev-server restart.
+  devIndicators: false,
   async redirects() {
     return [
       { source: "/experience", destination: "/experience/components", permanent: true },

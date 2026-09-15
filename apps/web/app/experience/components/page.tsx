@@ -13,6 +13,15 @@ import { cn } from "@/lib/utils"
 const BASIC_SLUGS: Record<string, string[]> = BASIC_GROUPS
 const BASIC_ALL = Object.values(BASIC_SLUGS).flat()
 
+// Scroll-driven experiences showcased under Components > Scroll.
+const SCROLL_SLUGS = new Set([
+  "cms-scroll-gallery",
+  "scroll-choreography",
+  "scroll-tilted-grid",
+  "scroll-split-card",
+  "sticky-scroll-cards",
+])
+
 const TOP_FILTERS = ["All", "Basic", "Text Animations", "Premium Components", "Hero Backgrounds", "Sound", "Visual Effects", "ASCII Effects", "Motion", "Scroll", "Blocks", "Templates"] as const
 
 const BASIC_SUBS_ALL: readonly string[] = BASIC_SUBS
@@ -156,8 +165,9 @@ function ComponentsGallery() {
       if (activeTop === "Sound") return c.category === "Sound"
       if (activeTop === "Visual Effects") return c.category === "Visual Effects"
       if (activeTop === "ASCII Effects") return c.category === "ASCII Effects"
-      // Motion / Scroll / Blocks / Templates have dedicated pages – show no registry match (handled as empty state with link)
-      if (activeTop === "Motion" || activeTop === "Scroll" || activeTop === "Blocks" || activeTop === "Templates") return false
+      if (activeTop === "Scroll") return SCROLL_SLUGS.has(c.slug)
+      // Motion / Blocks / Templates have dedicated pages – show no registry match (handled as empty state with link)
+      if (activeTop === "Motion" || activeTop === "Blocks" || activeTop === "Templates") return false
       return false
     })
 
@@ -313,7 +323,7 @@ function ComponentsGallery() {
                 </Link>
               )}
               {activeTop === "Scroll" && (
-                <Link href="/docs/scroll/animations" className="px-3 py-1.5 rounded-full border bg-white hover:bg-zinc-50 dark:bg-zinc-900">
+                <Link href="/experience/components?tab=Scroll" className="px-3 py-1.5 rounded-full border bg-white hover:bg-zinc-50 dark:bg-zinc-900">
                   Go to Scroll →
                 </Link>
               )}
