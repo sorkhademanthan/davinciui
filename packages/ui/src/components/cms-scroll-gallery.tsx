@@ -130,46 +130,46 @@ const UNSPLASH_PARAMS = "?q=80&w=1920&auto=format&fit=crop";
 
 const DEFAULT_ITEMS: CMSScrollGalleryItem[] = [
   {
-    title: "Hacienda",
-    media: `https://images.unsplash.com/photo-1506905925346-21bda4d32df4${UNSPLASH_PARAMS}`,
-    alt: "Hacienda — mountain landscape",
+    title: "Aurora",
+    media: `https://images.unsplash.com/photo-1531366936337-7c912a4589a7${UNSPLASH_PARAMS}`,
+    alt: "Aurora — violet and green northern lights over snowy peaks",
   },
   {
-    title: "Paradise",
-    media: `https://images.unsplash.com/photo-1507525428034-b723cf961d3e${UNSPLASH_PARAMS}`,
-    alt: "Paradise — tropical beach",
+    title: "Kyoto",
+    media: `https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e${UNSPLASH_PARAMS}`,
+    alt: "Kyoto — Yasaka pagoda rising over a lantern-lit lane at dusk",
   },
   {
-    title: "Shelter",
-    media: `https://images.unsplash.com/photo-1441974231531-c6227db76b6e${UNSPLASH_PARAMS}`,
-    alt: "Shelter — forest",
-  },
-  {
-    title: "Amnesia",
-    media:
-      "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
+    title: "Tide",
+    media: "https://assets.mixkit.co/videos/44370/44370-720.mp4",
     mediaType: "video",
-    alt: "Amnesia — blooming flower film",
+    alt: "Tide — gliding over the sea into a burning sunset",
   },
   {
-    title: "Pacha",
-    media: `https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3${UNSPLASH_PARAMS}`,
-    alt: "Pacha — concert stage",
+    title: "Dunes",
+    media: `https://images.unsplash.com/photo-1473580044384-7ba9967e16a0${UNSPLASH_PARAMS}`,
+    alt: "Dunes — footprints trailing across golden sand ripples",
   },
   {
-    title: "Subclub",
-    media: `https://images.unsplash.com/photo-1514525253161-7a46d19cd819${UNSPLASH_PARAMS}`,
-    alt: "Subclub — live venue",
+    title: "Neon",
+    media: "https://assets.mixkit.co/videos/4332/4332-720.mp4",
+    mediaType: "video",
+    alt: "Neon — Times Square glowing through rain at night",
   },
   {
-    title: "Fabric",
-    media: `https://images.unsplash.com/photo-1492684223066-81342ee5ff30${UNSPLASH_PARAMS}`,
-    alt: "Fabric — event lights",
+    title: "Santorini",
+    media: `https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff${UNSPLASH_PARAMS}`,
+    alt: "Santorini — whitewashed Oia glowing at blue hour",
   },
   {
-    title: "Passion",
-    media: `https://images.unsplash.com/photo-1516450360452-9312f5e86fc7${UNSPLASH_PARAMS}`,
-    alt: "Passion — crowd at night",
+    title: "Mist",
+    media: `https://images.unsplash.com/photo-1518709268805-4e9042af9f23${UNSPLASH_PARAMS}`,
+    alt: "Mist — a fairytale castle floating in morning fog",
+  },
+  {
+    title: "Muse",
+    media: `https://images.unsplash.com/photo-1529139574466-a303027c1d8b${UNSPLASH_PARAMS}`,
+    alt: "Muse — bold editorial portrait against a teal sky",
   },
 ];
 
@@ -191,11 +191,13 @@ function easeInOut(t: number) {
 
 /**
  * Fraction of each scroll segment devoted to the crossfade (rest is a full
- * hold). The fade completes exactly at the segment boundary, so the discrete
- * active index (floor) always matches what's on screen — and segment starts
- * (including scroll-top) render fully opaque, never ghosted.
+ * hold). The blend spans most of the segment so consecutive media melt into
+ * each other instead of cutting, and it still completes exactly at the
+ * segment boundary — so the discrete active index (floor) always matches
+ * what's on screen, and segment starts (including scroll-top) render fully
+ * opaque, never ghosted.
  */
-const SEGMENT_FADE = 0.45;
+const SEGMENT_FADE = 0.75;
 
 function segmentVisibility(p: number, index: number, count: number) {
   if (count <= 1) return 1;
@@ -209,13 +211,6 @@ function segmentVisibility(p: number, index: number, count: number) {
   if (u >= 1) return 0;
   if (u < 1 - SEGMENT_FADE) return 1;
   return 1 - easeInOut((u - (1 - SEGMENT_FADE)) / SEGMENT_FADE);
-}
-
-/** Read tracking out of a title style object for optical-center compensation. */
-function letterSpacingOf(style: React.CSSProperties) {
-  const ls = style.letterSpacing;
-  if (typeof ls === "number") return `${ls}px`;
-  return ls || "0em";
 }
 
 function useIsMobile(breakpoint = 809) {
@@ -475,12 +470,12 @@ function TitleLayer({
           style={{
             display: "block",
             width: "100%",
-            maxWidth: titleStyle.maxWidth,
+            // No max-width cap here: capping the box below 100% while auto
+            // margins absorb the leftover shifts the text off-center. The
+            // full-width box keeps the glyphs dead-center; long titles
+            // overflow symmetrically instead of drifting sideways.
             margin: "0 auto",
             textAlign: titleStyle.textAlign,
-            // Tracking adds space after the final glyph, nudging the optical
-            // center sideways — cancel it so the title sits dead-center.
-            marginRight: `calc(-1 * ${letterSpacingOf(titleStyle)})`,
           }}
         >
           {item.title}
@@ -496,7 +491,7 @@ export function CMSScrollGallery({
   items = DEFAULT_ITEMS,
   className,
   scrollLengthPerItem = 100,
-  transitionSmoothing = 0.35,
+  transitionSmoothing = 0.55,
   initialItem = 0,
   fit = "cover",
   positionX = 50,
@@ -505,15 +500,15 @@ export function CMSScrollGallery({
   overlayColor = "#000000",
   overlayOpacity = 0,
   fontFamily = "Aspekta Variable, Inter, system-ui, sans-serif",
-  fontSize = 144,
-  fontWeight = 500,
+  fontSize = 168,
+  fontWeight = 800,
   lineHeight = 1,
   letterSpacing = "-0.04em",
   titleColor = "#FFFFFF",
   titleAlign = "center",
   responsiveScale = true,
   maxTitleWidth = "90vw",
-  mobileTitleScale = 0.35,
+  mobileTitleScale = 0.45,
   showThumbnails = true,
   orientation = "vertical",
   thumbnailWidth = 56,
@@ -737,7 +732,7 @@ export function CMSScrollGallery({
     // Compact stages (phone / narrow embed): dedicated size. Never multiply
     // the already-clamped desktop value — that double-shrinks into tiny type.
     const size = isCompact
-      ? `clamp(24px, 8.5vw, ${Math.round(fontSize * mobileTitleScale)}px)`
+      ? `clamp(28px, 12vw, ${Math.round(fontSize * mobileTitleScale)}px)`
       : desktop;
     return {
       fontFamily,
