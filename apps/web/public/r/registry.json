@@ -397,6 +397,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "scroll-sync-gallery",
+      "type": "registry:ui"
+    },
+    {
       "name": "scroll-tilted-grid",
       "type": "registry:ui"
     },
