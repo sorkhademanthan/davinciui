@@ -242,9 +242,17 @@ const docsImportMap: Record<
     import("@/components/docs/cms-scroll-gallery").then((m) => ({
       default: m.CMSScrollGalleryDocs,
     })),
+  "interactive-media-accordion": () =>
+    import("@/components/docs/interactive-media-accordion").then((m) => ({
+      default: m.InteractiveMediaAccordionDocs,
+    })),
   "scroll-reveal-image": () =>
     import("@/components/docs/scroll-reveal-image").then((m) => ({
       default: m.ScrollRevealImageDocs,
+    })),
+  "stacked-scroll-gallery": () =>
+    import("@/components/docs/stacked-scroll-gallery").then((m) => ({
+      default: m.StackedScrollGalleryDocs,
     })),
   "fluid-particle-text": () =>
     import("@/components/docs/fluid-particle-text").then((m) => ({

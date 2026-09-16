@@ -124,6 +124,38 @@ const AmbientAudioToggleCardPreview = dynamic(
   { ssr: false },
 );
 
+const ScrollRevealImageCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/scroll-reveal-image-card-preview").then(
+      (module) => module.ScrollRevealImageCardPreview,
+    ),
+  { ssr: false },
+);
+
+const CMSScrollGalleryCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/cms-scroll-gallery-card-preview").then(
+      (module) => module.CMSScrollGalleryCardPreview,
+    ),
+  { ssr: false },
+);
+
+const StackedScrollGalleryCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/stacked-scroll-gallery-card-preview").then(
+      (module) => module.StackedScrollGalleryCardPreview,
+    ),
+  { ssr: false },
+);
+
+const InteractiveMediaAccordionCardPreview = dynamic(
+  () =>
+    import(
+      "@/components/docs/previews/interactive-media-accordion-card-preview"
+    ).then((module) => module.InteractiveMediaAccordionCardPreview),
+  { ssr: false },
+);
+
 const SilkAuroraCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/silk-aurora-card-preview").then(
@@ -203,7 +235,11 @@ type ComponentCardLivePreviewProps = {
     | "spectra-noise"
     | "noiser"
     | "sunlight-effect"
-    | "ambient-audio-toggle";
+    | "ambient-audio-toggle"
+    | "scroll-reveal-image"
+    | "cms-scroll-gallery"
+    | "interactive-media-accordion"
+    | "stacked-scroll-gallery";
 };
 
 export function ComponentCardLivePreview({
@@ -402,6 +438,14 @@ export function ComponentCardLivePreview({
         <SunlightEffectCardPreview />
       ) : slug === "ambient-audio-toggle" ? (
         <AmbientAudioToggleCardPreview />
+      ) : slug === "scroll-reveal-image" ? (
+        <ScrollRevealImageCardPreview />
+      ) : slug === "cms-scroll-gallery" ? (
+        <CMSScrollGalleryCardPreview />
+      ) : slug === "interactive-media-accordion" ? (
+        <InteractiveMediaAccordionCardPreview />
+      ) : slug === "stacked-scroll-gallery" ? (
+        <StackedScrollGalleryCardPreview />
       ) : slug === "text-video-mask" ? (
         <TextVideoMask
           text="DAVINCI."

@@ -611,12 +611,28 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "cms-scroll-gallery",
     addedAt: "2026-09-15",
   },
+  "interactive-media-accordion": {
+    title: "Interactive Media Accordion",
+    description:
+      "Horizontal accordion gallery — one media card stays expanded while the rest collapse into pills; hover or tap to transfer the expanded state.",
+    category: "Premium Components",
+    slug: "interactive-media-accordion",
+    addedAt: "2026-09-15",
+  },
   "scroll-reveal-image": {
     title: "Scroll Reveal Image",
     description:
       "A scroll-scrubbed image sequence where each new frame arrives in a centered window before taking over the backdrop.",
     category: "Premium Components",
     slug: "scroll-reveal-image",
+    addedAt: "2026-09-15",
+  },
+  "stacked-scroll-gallery": {
+    title: "Stacked Scroll Gallery",
+    description:
+      "Pinned layered media stack — the next panel rises from below and physically covers the current one, driven directly by scroll.",
+    category: "Premium Components",
+    slug: "stacked-scroll-gallery",
     addedAt: "2026-09-15",
   },
   "layered-stack": {

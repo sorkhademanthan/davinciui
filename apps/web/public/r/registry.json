@@ -233,6 +233,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "interactive-media-accordion",
+      "type": "registry:ui"
+    },
+    {
       "name": "item",
       "type": "registry:ui"
     },
@@ -462,6 +466,10 @@
     },
     {
       "name": "spotlight-card",
+      "type": "registry:ui"
+    },
+    {
+      "name": "stacked-scroll-gallery",
       "type": "registry:ui"
     },
     {

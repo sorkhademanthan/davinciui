@@ -16,10 +16,13 @@ const BASIC_ALL = Object.values(BASIC_SLUGS).flat()
 // Scroll-driven experiences showcased under Components > Scroll.
 const SCROLL_SLUGS = new Set([
   "cms-scroll-gallery",
+  "interactive-media-accordion",
+  "stacked-scroll-gallery",
   "scroll-choreography",
   "scroll-tilted-grid",
   "scroll-split-card",
   "sticky-scroll-cards",
+  "scroll-reveal-image",
 ])
 
 const TOP_FILTERS = ["All", "Basic", "Text Animations", "Premium Components", "Hero Backgrounds", "Sound", "Visual Effects", "ASCII Effects", "Motion", "Scroll", "Blocks", "Templates"] as const
@@ -74,7 +77,11 @@ function hasLiveCardPreview(
   | "spectra-noise"
   | "noiser"
   | "sunlight-effect"
-  | "ambient-audio-toggle" {
+  | "ambient-audio-toggle"
+  | "scroll-reveal-image"
+  | "cms-scroll-gallery"
+  | "interactive-media-accordion"
+  | "stacked-scroll-gallery" {
   return (
     slug === "gsap-text" ||
     slug === "text-morph" ||
@@ -97,7 +104,11 @@ function hasLiveCardPreview(
     slug === "spectra-noise" ||
     slug === "noiser" ||
     slug === "sunlight-effect" ||
-    slug === "ambient-audio-toggle"
+    slug === "ambient-audio-toggle" ||
+    slug === "scroll-reveal-image" ||
+    slug === "cms-scroll-gallery" ||
+    slug === "interactive-media-accordion" ||
+    slug === "stacked-scroll-gallery"
   )
 }
 function validTop(value: string | null): TopFilter | null {
