@@ -11,6 +11,7 @@ import { components } from "@/registry";
 const SCROLL_ANIMATION_ORDER = [
   "scroll-reveal-image",
   "stacked-scroll-gallery",
+  "scroll-sync-gallery",
   "cms-scroll-gallery",
   "scroll-choreography",
   "scroll-tilted-grid",
@@ -22,6 +23,7 @@ const LIVE_CARD_SLUGS = new Set<string>([
   "scroll-reveal-image",
   "cms-scroll-gallery",
   "stacked-scroll-gallery",
+  "scroll-sync-gallery",
 ]);
 
 function getSources(url?: string) {
@@ -90,7 +92,7 @@ export default function ScrollAnimationsPage() {
                     />
                   ) : LIVE_CARD_SLUGS.has(c.slug) ? (
                     <ComponentCardLivePreview
-                      slug={c.slug as "scroll-reveal-image" | "cms-scroll-gallery" | "stacked-scroll-gallery"}
+                      slug={c.slug as "scroll-reveal-image" | "cms-scroll-gallery" | "stacked-scroll-gallery" | "scroll-sync-gallery"}
                     />
                   ) : (
                     <div className="absolute inset-0 bg-gradient-to-br from-zinc-900/[0.04] via-transparent to-transparent dark:from-white/[0.04] flex items-center justify-center">

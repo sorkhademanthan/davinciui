@@ -148,6 +148,14 @@ const StackedScrollGalleryCardPreview = dynamic(
   { ssr: false },
 );
 
+const ScrollSyncGalleryCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/scroll-sync-gallery-card-preview").then(
+      (module) => module.ScrollSyncGalleryCardPreview,
+    ),
+  { ssr: false },
+);
+
 const InteractiveMediaAccordionCardPreview = dynamic(
   () =>
     import(
@@ -239,7 +247,8 @@ type ComponentCardLivePreviewProps = {
     | "scroll-reveal-image"
     | "cms-scroll-gallery"
     | "interactive-media-accordion"
-    | "stacked-scroll-gallery";
+    | "stacked-scroll-gallery"
+    | "scroll-sync-gallery";
 };
 
 export function ComponentCardLivePreview({
@@ -446,6 +455,8 @@ export function ComponentCardLivePreview({
         <InteractiveMediaAccordionCardPreview />
       ) : slug === "stacked-scroll-gallery" ? (
         <StackedScrollGalleryCardPreview />
+      ) : slug === "scroll-sync-gallery" ? (
+        <ScrollSyncGalleryCardPreview />
       ) : slug === "text-video-mask" ? (
         <TextVideoMask
           text="DAVINCI."

@@ -18,6 +18,7 @@ const SCROLL_SLUGS = new Set([
   "cms-scroll-gallery",
   "interactive-media-accordion",
   "stacked-scroll-gallery",
+  "scroll-sync-gallery",
   "scroll-choreography",
   "scroll-tilted-grid",
   "scroll-split-card",
@@ -81,7 +82,8 @@ function hasLiveCardPreview(
   | "scroll-reveal-image"
   | "cms-scroll-gallery"
   | "interactive-media-accordion"
-  | "stacked-scroll-gallery" {
+  | "stacked-scroll-gallery"
+  | "scroll-sync-gallery" {
   return (
     slug === "gsap-text" ||
     slug === "text-morph" ||
@@ -108,7 +110,8 @@ function hasLiveCardPreview(
     slug === "scroll-reveal-image" ||
     slug === "cms-scroll-gallery" ||
     slug === "interactive-media-accordion" ||
-    slug === "stacked-scroll-gallery"
+    slug === "stacked-scroll-gallery" ||
+    slug === "scroll-sync-gallery"
   )
 }
 function validTop(value: string | null): TopFilter | null {
