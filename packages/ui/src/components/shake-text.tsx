@@ -34,9 +34,9 @@ export interface ShakeTextProps {
   frontColor?: string;
   /** Back-to-front colors for the 4 depth layers. @default teal/green/coral/yellow */
   layerColors?: [string, string, string, string];
-  /** Z-depth step per layer in px at the 137px reference size (scales with font). @default 8 */
+  /** Z-depth step per layer in px at the 137px reference size (scales with font). @default 5 */
   depth?: number;
-  /** Vertical offset step per layer in px at the 137px reference size (scales with font). @default 8 */
+  /** Vertical offset step per layer in px at the 137px reference size (scales with font). @default 4 */
   layerOffset?: number;
   /** CSS perspective of the wrapper in px. @default 1000 */
   perspective?: number;
@@ -66,8 +66,8 @@ export const SHAKE_TEXT_DEFAULTS = {
   letterSpacing: 0,
   frontColor: "#fff8e7",
   layerColors: ["#50adbf", "#5f845c", "#e76168", "#fdda76"],
-  depth: 8,
-  layerOffset: 8,
+  depth: 5,
+  layerOffset: 4,
   perspective: 1000,
   shakeIntensity: 1,
   shakeDuration: 1.4,
@@ -78,21 +78,26 @@ export const SHAKE_TEXT_DEFAULTS = {
 
 // ─────────────────────────────────────────────────────────────
 // Layer construction — offsets in em so depth scales with type.
-// Reference: 137px font, depth/layerOffset step of 8px.
-// Cumulative extrusion: teal lifts above the front, then each
-// deeper layer steps further down, so every color band stays
-// visibly exposed behind the front letters instead of hiding
-// underneath them. Z adds a whisper of perspective scaling.
+// Reference: 137px font, depth/layerOffset steps of 5px/4px.
+// The ghost stack is deliberately tight: teal lifts a whisper above the
+// front, then each deeper layer steps slightly further down, so every color
+// reads as an echo of the same glyphs instead of a scattered duplicate.
+// Opacity falls with depth so the farthest echoes stay subtle. Z adds a
+// whisper of perspective scaling.
 // ─────────────────────────────────────────────────────────────
 
 const REFERENCE_FONT_SIZE = 137;
 
 const LAYER_DEPTH_MULTIPLIERS = [1, 2, 3, 4];
-// Y multipliers (× layerOffset): teal up, then stepping down.
-const LAYER_Y_MULTIPLIERS = [-1, 1, 2, 3];
+// Y multipliers (× layerOffset): teal up half a step, then stepping down.
+const LAYER_Y_MULTIPLIERS = [-0.5, 0.5, 1, 1.5];
 const LAYER_Z_INDEXES = [40, 30, 20, 10];
+// Back-to-front ghost opacity: farthest echoes stay the quietest.
+const LAYER_OPACITIES = [0.9, 0.8, 0.7, 0.6];
 
-// Crisp black dimensional edge, identical on every layer. No blur.
+// Crisp black dimensional edge, reserved for the front layer only so the
+// stacked ghosts can't build up muddy outlines. Ghost layers render flat
+// color with no blur and no shadow.
 const EDGE_SHADOW =
   "-2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000";
 
@@ -346,7 +351,15 @@ export const ShakeText = React.forwardRef<ShakeTextHandle, ShakeTextProps>(funct
       ref={wrapperRef}
       data-slot="shake-text"
       className={cn("relative inline-block", className)}
-      style={{ perspective: `${perspective}px`, ...style }}
+      style={{
+        perspective: `${perspective}px`,
+        // Contain the ghost excursion inside a padded stage: echoes roam
+        // freely here but never bleed into neighboring lines. `clip`
+        // (unlike `hidden`) doesn't flatten the preserve-3d depth stack.
+        overflow: "clip",
+        padding: "12px 10px",
+        ...style,
+      }}
     >
       <div
         className="relative"
@@ -360,6 +373,7 @@ export const ShakeText = React.forwardRef<ShakeTextHandle, ShakeTextProps>(funct
             className="pointer-events-none absolute inset-0"
             style={{
               zIndex: LAYER_Z_INDEXES[i],
+              opacity: LAYER_OPACITIES[i] ?? 1,
               // Match the text size so the em-based extrusion offsets below
               // resolve against the layer's own font size, not inherited body type.
               fontSize: resolvedFontSize,
@@ -370,7 +384,7 @@ export const ShakeText = React.forwardRef<ShakeTextHandle, ShakeTextProps>(funct
             <div
               ref={setInnerRef(i)}
               className="block"
-              style={{ ...layerTypeStyle, color }}
+              style={{ ...layerTypeStyle, color, textShadow: "none" }}
             >
               {text}
             </div>
