@@ -261,6 +261,7 @@ const scrollSection: NavSection = {
   items: [
     { title: "Overview", href: "/experience/scroll" },
     { title: "CMS Scroll Gallery", href: "/experience/components/cms-scroll-gallery" },
+    { title: "Scroll Sync Gallery", href: "/experience/components/scroll-sync-gallery" },
     { title: "Interactive Media Accordion", href: "/experience/components/interactive-media-accordion" },
     { title: "Scroll Animations", href: "/experience/scroll/animations" },
     { title: "Scroll Reveals", href: "/experience/scroll/reveals" },
