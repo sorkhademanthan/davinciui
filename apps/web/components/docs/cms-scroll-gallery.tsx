@@ -6,14 +6,14 @@ import { CMSScrollGalleryPreview } from "@/components/docs/previews/cms-scroll-g
 const defaultCode = `import { CMSScrollGallery } from "@/components/ui/cms-scroll-gallery"
 
 const items = [
-  { title: "Hacienda", media: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=85" },
-  { title: "Paradise", media: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&q=85" },
-  { title: "Shelter", media: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1920&q=85" },
-  { title: "Amnesia", media: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4", mediaType: "video" },
-  { title: "Pacha", media: "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=1920&q=85" },
-  { title: "Subclub", media: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1920&q=85" },
-  { title: "Fabric", media: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=1920&q=85" },
-  { title: "Passion", media: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=1920&q=85" },
+  { title: "Aurora", media: "https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=1920&q=85" },
+  { title: "Kyoto", media: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=1920&q=85" },
+  { title: "Tide", media: "https://assets.mixkit.co/videos/44370/44370-720.mp4", mediaType: "video" },
+  { title: "Dunes", media: "https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?w=1920&q=85" },
+  { title: "Neon", media: "https://assets.mixkit.co/videos/4332/4332-720.mp4", mediaType: "video" },
+  { title: "Santorini", media: "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=1920&q=85" },
+  { title: "Mist", media: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1920&q=85" },
+  { title: "Muse", media: "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=1920&q=85" },
 ]
 
 export default function Demo() {
@@ -63,7 +63,7 @@ export async function CMSScrollGalleryDocs() {
         {
           name: "transitionSmoothing",
           type: "number",
-          default: "0.12",
+          default: "0.55",
           description: "Visual smoothing 0–1 applied on top of native scroll.",
         },
         {
