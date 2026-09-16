@@ -8,7 +8,7 @@ import {
   useTransform,
   type MotionValue,
 } from "framer-motion";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@workspace/ui/lib/utils";
 
 export interface ScrollRevealImageItem {
@@ -42,6 +42,7 @@ function RevealLayer({
   backgroundScale,
   imageScale,
   reduceMotion,
+  compact,
 }: {
   image: ScrollRevealImageItem;
   index: number;
@@ -53,6 +54,7 @@ function RevealLayer({
   backgroundScale: number;
   imageScale: number;
   reduceMotion: boolean;
+  compact: boolean;
 }) {
   const step = count > 1 ? 1 / (count - 1) : 1;
   const revealStart = Math.max(0, (index - 1) * step);
@@ -90,15 +92,32 @@ function RevealLayer({
       <div className="absolute inset-0 bg-black/18" />
       {image.title ? (
         <motion.div
-          className="absolute left-1/2 top-[60%] z-[1] -translate-x-1/2 -translate-y-1/2 whitespace-nowrap text-[clamp(3.25rem,10vw,9rem)] font-bold uppercase leading-none tracking-[0.025em]"
-          style={reduceMotion ? { color: accent } : { color: accent, x: titleX }}
+          className="pointer-events-none absolute left-1/2 top-[7%] z-20 -translate-x-1/2 text-center"
+          style={reduceMotion ? undefined : { x: titleX }}
         >
-          {image.title}
+          <div className="text-[0.7rem] font-semibold uppercase tracking-[0.45em] text-white/75 [text-shadow:0_1px_12px_rgba(0,0,0,0.65)]">
+            {String(index + 1).padStart(2, "0")} /{" "}
+            {String(count).padStart(2, "0")}
+          </div>
+          <div
+            className={
+              compact
+                ? "mt-2 whitespace-nowrap text-[clamp(3rem,13vw,6rem)] font-bold uppercase leading-none tracking-[0.025em] [text-shadow:0_2px_24px_rgba(0,0,0,0.65)]"
+                : "mt-3 whitespace-nowrap text-[clamp(4rem,13vw,12rem)] font-bold uppercase leading-none tracking-[0.025em] [text-shadow:0_2px_30px_rgba(0,0,0,0.65)]"
+            }
+            style={{ color: accent }}
+          >
+            {image.title}
+          </div>
         </motion.div>
       ) : null}
       <div
         className="absolute left-1/2 top-1/2 z-10 overflow-hidden -translate-x-1/2 -translate-y-1/2 bg-black shadow-[0_30px_100px_rgba(0,0,0,0.42)]"
-        style={{ width: imageWidth, height: imageHeight, borderRadius }}
+        style={{
+          width: compact ? "min(70%, 19rem)" : imageWidth,
+          height: compact ? "min(60%, 25rem)" : imageHeight,
+          borderRadius,
+        }}
       >
         <img
           src={image.revealSrc ?? image.src}
@@ -129,6 +148,19 @@ export function ScrollRevealImage({
 }: ScrollRevealImageProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion() ?? false;
+  // Narrow embeds (docs side preview, small cards) measured directly off the
+  // section — vw/vh units resolve against the iframe/window and oversize the
+  // reveal window there, so compact stages get proportional sizes instead.
+  const [isCompact, setIsCompact] = useState(false);
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+    const update = () => setIsCompact(el.clientWidth <= 700);
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"],
@@ -183,6 +215,7 @@ export function ScrollRevealImage({
             backgroundScale={backgroundScale}
             imageScale={imageScale}
             reduceMotion={reduceMotion}
+            compact={isCompact}
           />
         ))}
       </div>
