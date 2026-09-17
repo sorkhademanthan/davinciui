@@ -21,17 +21,19 @@ interface InteractiveMediaAccordionConfig {
   radius: number;
   titleSize: number;
   duration: number;
+  scrollStep: number;
   autoPlay: boolean;
 }
 
 const DEFAULT_CONFIG: InteractiveMediaAccordionConfig = {
-  trigger: "hover",
+  trigger: "scroll",
   height: 480,
   gap: 14,
   collapsedWidth: 132,
   radius: 48,
   titleSize: 40,
   duration: 650,
+  scrollStep: 800,
   autoPlay: false,
 };
 
@@ -69,6 +71,7 @@ const items = [
   radius={${config.radius}}
   titleSize={${config.titleSize}}
   duration={${config.duration}}
+  scrollStep={${config.scrollStep}}
   autoPlay={${config.autoPlay}}
 />`;
 }
@@ -84,7 +87,7 @@ export function InteractiveMediaAccordionPlayground() {
   }, [config]);
 
   return (
-    <div className="flex h-full min-h-[440px] w-full items-center justify-center overflow-hidden bg-black px-4 py-10 lg:min-h-[560px]">
+    <div className="h-full w-full overflow-y-auto overscroll-contain bg-black px-4 py-10">
       <InteractiveMediaAccordion
         trigger={config.trigger}
         height={config.height}
@@ -93,9 +96,10 @@ export function InteractiveMediaAccordionPlayground() {
         radius={config.radius}
         titleSize={config.titleSize}
         duration={config.duration}
+        scrollStep={config.scrollStep}
         autoPlay={config.autoPlay}
         autoPlayInterval={4000}
-        className="max-w-[1080px]"
+        className="mx-auto max-w-[1080px]"
       />
     </div>
   );
@@ -128,8 +132,8 @@ export function InteractiveMediaAccordionPersonalizePanel() {
 
         <div className="space-y-4">
           <PlaygroundSectionTitle>Interaction</PlaygroundSectionTitle>
-          <div className="grid grid-cols-2 gap-1.5">
-            {(["hover", "click"] as const).map((trigger) => (
+          <div className="grid grid-cols-3 gap-1.5">
+            {(["scroll", "hover", "click"] as const).map((trigger) => (
               <button
                 key={trigger}
                 type="button"
@@ -176,6 +180,7 @@ export function InteractiveMediaAccordionPersonalizePanel() {
         <div className="space-y-4">
           <PlaygroundSectionTitle>Motion</PlaygroundSectionTitle>
           <PlaygroundSlider label="Duration" min={200} max={1200} step={25} value={config.duration} unit="ms" onChange={(duration) => update({ duration })} />
+          <PlaygroundSlider label="Scroll distance" min={400} max={1200} step={40} value={config.scrollStep} unit="px" onChange={(scrollStep) => update({ scrollStep })} />
         </div>
       </div>
     </div>
