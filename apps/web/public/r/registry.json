@@ -189,6 +189,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "horizontal-scroll-gallery",
+      "type": "registry:ui"
+    },
+    {
       "name": "hover-card",
       "type": "registry:ui"
     },
@@ -385,7 +389,11 @@
       "type": "registry:ui"
     },
     {
-      "name": "scroll-choreography",
+      "name": "scroll-blur-overlay",
+      "type": "registry:ui"
+    },
+    {
+      "name": "scroll-media-expand",
       "type": "registry:ui"
     },
     {
@@ -393,15 +401,7 @@
       "type": "registry:ui"
     },
     {
-      "name": "scroll-split-card",
-      "type": "registry:ui"
-    },
-    {
       "name": "scroll-sync-gallery",
-      "type": "registry:ui"
-    },
-    {
-      "name": "scroll-tilted-grid",
       "type": "registry:ui"
     },
     {
@@ -474,10 +474,6 @@
     },
     {
       "name": "stacked-scroll-gallery",
-      "type": "registry:ui"
-    },
-    {
-      "name": "sticky-scroll-cards",
       "type": "registry:ui"
     },
     {
