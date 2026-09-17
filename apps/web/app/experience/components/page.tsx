@@ -15,14 +15,13 @@ const BASIC_ALL = Object.values(BASIC_SLUGS).flat()
 
 // Scroll-driven experiences showcased under Components > Scroll.
 const SCROLL_SLUGS = new Set([
+  "scroll-blur-overlay",
+  "scroll-media-expand",
   "cms-scroll-gallery",
   "interactive-media-accordion",
   "stacked-scroll-gallery",
   "scroll-sync-gallery",
-  "scroll-choreography",
-  "scroll-tilted-grid",
-  "scroll-split-card",
-  "sticky-scroll-cards",
+  "horizontal-scroll-gallery",
   "scroll-reveal-image",
 ])
 
@@ -83,7 +82,10 @@ function hasLiveCardPreview(
   | "cms-scroll-gallery"
   | "interactive-media-accordion"
   | "stacked-scroll-gallery"
-  | "scroll-sync-gallery" {
+  | "scroll-sync-gallery"
+  | "horizontal-scroll-gallery"
+  | "scroll-media-expand"
+  | "scroll-blur-overlay" {
   return (
     slug === "gsap-text" ||
     slug === "text-morph" ||
@@ -111,7 +113,10 @@ function hasLiveCardPreview(
     slug === "cms-scroll-gallery" ||
     slug === "interactive-media-accordion" ||
     slug === "stacked-scroll-gallery" ||
-    slug === "scroll-sync-gallery"
+    slug === "scroll-sync-gallery" ||
+    slug === "horizontal-scroll-gallery" ||
+    slug === "scroll-media-expand" ||
+    slug === "scroll-blur-overlay"
   )
 }
 function validTop(value: string | null): TopFilter | null {

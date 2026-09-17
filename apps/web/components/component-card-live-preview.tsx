@@ -156,6 +156,30 @@ const ScrollSyncGalleryCardPreview = dynamic(
   { ssr: false },
 );
 
+const HorizontalScrollGalleryCardPreview = dynamic(
+  () =>
+    import(
+      "@/components/docs/previews/horizontal-scroll-gallery-card-preview"
+    ).then((module) => module.HorizontalScrollGalleryCardPreview),
+  { ssr: false },
+);
+
+const ScrollMediaExpandCardPreview = dynamic(
+  () =>
+    import(
+      "@/components/docs/previews/scroll-media-expand-card-preview"
+    ).then((module) => module.ScrollMediaExpandCardPreview),
+  { ssr: false },
+);
+
+const ScrollBlurOverlayCardPreview = dynamic(
+  () =>
+    import(
+      "@/components/docs/previews/scroll-blur-overlay-card-preview"
+    ).then((module) => module.ScrollBlurOverlayCardPreview),
+  { ssr: false },
+);
+
 const InteractiveMediaAccordionCardPreview = dynamic(
   () =>
     import(
@@ -248,7 +272,10 @@ type ComponentCardLivePreviewProps = {
     | "cms-scroll-gallery"
     | "interactive-media-accordion"
     | "stacked-scroll-gallery"
-    | "scroll-sync-gallery";
+    | "scroll-sync-gallery"
+    | "horizontal-scroll-gallery"
+    | "scroll-media-expand"
+    | "scroll-blur-overlay";
 };
 
 export function ComponentCardLivePreview({
@@ -457,6 +484,12 @@ export function ComponentCardLivePreview({
         <StackedScrollGalleryCardPreview />
       ) : slug === "scroll-sync-gallery" ? (
         <ScrollSyncGalleryCardPreview />
+      ) : slug === "horizontal-scroll-gallery" ? (
+        <HorizontalScrollGalleryCardPreview />
+      ) : slug === "scroll-media-expand" ? (
+        <ScrollMediaExpandCardPreview />
+      ) : slug === "scroll-blur-overlay" ? (
+        <ScrollBlurOverlayCardPreview />
       ) : slug === "text-video-mask" ? (
         <TextVideoMask
           text="DAVINCI."

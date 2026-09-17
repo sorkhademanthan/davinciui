@@ -9,21 +9,23 @@ import { components } from "@/registry";
 // Scroll-driven experiences showcased on this page.
 // scroll-reveal-image is featured first.
 const SCROLL_ANIMATION_ORDER = [
+  "scroll-blur-overlay",
+  "scroll-media-expand",
   "scroll-reveal-image",
+  "horizontal-scroll-gallery",
   "stacked-scroll-gallery",
   "scroll-sync-gallery",
   "cms-scroll-gallery",
-  "scroll-choreography",
-  "scroll-tilted-grid",
-  "scroll-split-card",
-  "sticky-scroll-cards",
 ] as const;
 
 const LIVE_CARD_SLUGS = new Set<string>([
+  "scroll-blur-overlay",
+  "scroll-media-expand",
   "scroll-reveal-image",
   "cms-scroll-gallery",
   "stacked-scroll-gallery",
   "scroll-sync-gallery",
+  "horizontal-scroll-gallery",
 ]);
 
 function getSources(url?: string) {
@@ -92,7 +94,7 @@ export default function ScrollAnimationsPage() {
                     />
                   ) : LIVE_CARD_SLUGS.has(c.slug) ? (
                     <ComponentCardLivePreview
-                      slug={c.slug as "scroll-reveal-image" | "cms-scroll-gallery" | "stacked-scroll-gallery" | "scroll-sync-gallery"}
+                      slug={c.slug as "scroll-blur-overlay" | "scroll-media-expand" | "scroll-reveal-image" | "cms-scroll-gallery" | "stacked-scroll-gallery" | "scroll-sync-gallery" | "horizontal-scroll-gallery"}
                     />
                   ) : (
                     <div className="absolute inset-0 bg-gradient-to-br from-zinc-900/[0.04] via-transparent to-transparent dark:from-white/[0.04] flex items-center justify-center">

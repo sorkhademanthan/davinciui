@@ -54,7 +54,7 @@ export default function CliPage() {
             <Code>{`pnpm dlx shadcn@latest add @davinciui/text-morph
 pnpm dlx shadcn@latest add @davinciui/orbit-card-stack
 # local preview
-pnpm dlx shadcn@latest add @davinciui/scroll-choreography --overwrite`}</Code>
+pnpm dlx shadcn@latest add @davinciui/scroll-media-expand --overwrite`}</Code>
           </div>
           <p className="mt-2 text-sm leading-6 text-muted-foreground">
             Files go to{" "}
