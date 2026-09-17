@@ -111,6 +111,8 @@ const DEFAULT_COLUMNS: ScrollSyncGalleryColumn[] = [
       img("photo-1470229722913-7c0e2dbbafd3", 1.5, "Concert stage washed in amber light"),
       img("photo-1487958449943-2429e8be8625", 0.7, "White concrete architecture detail"),
       img("photo-1534528741775-53994a69daeb", 0.8, "Studio portrait with soft shadow"),
+      img("photo-1529626455594-4ff0802cfb7e", 0.78, "Natural-light portrait with freckles"),
+      img("photo-1509631179647-0177331693ae", 1.35, "Red editorial fashion look"),
     ],
   },
   {
@@ -125,6 +127,8 @@ const DEFAULT_COLUMNS: ScrollSyncGalleryColumn[] = [
       img("photo-1517841905240-472988babdf9", 0.75, "Smiling portrait in natural light"),
       img("photo-1473580044384-7ba9967e16a0", 1.6, "Desert dunes at golden hour"),
       img("photo-1516035069371-29a1b244cc32", 0.85, "Film camera on a wooden table"),
+      img("photo-1487412720507-e7ab37603c6f", 0.8, "Beauty portrait with soft makeup"),
+      img("photo-1495385794356-15371f348c31", 1.4, "Street-style fashion in the city"),
     ],
   },
   {
@@ -139,6 +143,8 @@ const DEFAULT_COLUMNS: ScrollSyncGalleryColumn[] = [
       img("photo-1470071459604-3b5ec3a7fe05", 1.3, "Morning fog over layered hills"),
       img("photo-1496747611176-843222e1e57c", 0.78, "Minimal fashion portrait in white"),
       img("photo-1486718448742-163732cd1544", 1.55, "Curved concrete interior"),
+      img("photo-1524504388940-b1c1722653e1", 0.72, "Studio portrait in warm tones"),
+      img("photo-1501785888041-af3ef285b470", 1.3, "Alpine lake beneath mountain peaks"),
     ],
   },
   {
@@ -153,6 +159,8 @@ const DEFAULT_COLUMNS: ScrollSyncGalleryColumn[] = [
       img("photo-1515886657613-9f3515b0c78f", 0.75, "High-fashion pose in pink light"),
       img("photo-1514525253161-7a46d19cd819", 1.5, "DJ decks under club lights"),
       img("photo-1500648767791-00dcc994a43e", 0.82, "Portrait of a man in soft daylight"),
+      img("photo-1502823403499-6ccfcf4fb453", 0.78, "Portrait with curly hair in sunlight"),
+      img("photo-1477959858617-67f85cf4f1df", 1.4, "City skyline at dusk"),
     ],
   },
 ];
