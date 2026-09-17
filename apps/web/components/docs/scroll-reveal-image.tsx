@@ -8,26 +8,18 @@ const images = [
   {
     src: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=1800&q=90",
     alt: "Noir portrait of a man on a black background",
-    title: "Noir",
-    accent: "#ff4f9a",
   },
   {
     src: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=1800&q=90",
     alt: "Ember portrait of a woman against a deep red wall",
-    title: "Ember",
-    accent: "#ff5a3c",
   },
   {
     src: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1800&q=90",
     alt: "Velvet portrait of a woman in a charcoal studio",
-    title: "Velvet",
-    accent: "#c6ff3d",
   },
   {
     src: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=1800&q=90",
     alt: "Ashen portrait of a man against a gray studio wall",
-    title: "Ashen",
-    accent: "#a86cff",
   },
 ]
 
@@ -58,14 +50,13 @@ export async function ScrollRevealImageDocs() {
       installSourceFilename="components/ui/scroll-reveal-image.tsx"
       usageCode={defaultCode}
       props={[
-        { name: "images", type: "readonly ScrollRevealImageItem[]", description: "Images shown in scroll order. Each item can provide a wide backdrop source, a portrait reveal source, title, and accent color." },
+        { name: "images", type: "readonly ScrollRevealImageItem[]", description: "Images shown in scroll order. Each item can provide a wide backdrop source, a portrait reveal source, and alt text." },
         { name: "sectionHeight", type: "string", default: '"300vh"', description: "Height of the scroll runway that drives the sequence." },
         { name: "imageWidth", type: "string", default: '"clamp(15rem, 30vw, 38rem)"', description: "CSS width of the centered reveal window." },
         { name: "imageHeight", type: "string", default: '"clamp(22rem, 78vh, 52rem)"', description: "CSS height of the centered reveal window." },
         { name: "borderRadius", type: "string", default: '"0rem"', description: "CSS radius applied to the reveal window." },
         { name: "backgroundScale", type: "number", default: "1.08", description: "Scale applied to the full-bleed backdrop for a quiet parallax depth effect." },
         { name: "imageScale", type: "number", default: "1.04", description: "Scale applied inside the centered reveal window." },
-        { name: "title / accent", type: "string", default: "undefined", description: "Optional per-image title and color used by the large backdrop typography." },
         { name: "scrub", type: "number", default: "0.18", description: "Spring mass controlling how closely the motion follows the scroll position." },
         { name: "className", type: "string", description: "Additional classes applied to the scroll section." },
       ]}

@@ -14,28 +14,20 @@ import { useEffect, useRef, useState } from "react";
 interface MiniImage {
   src: string;
   alt: string;
-  title: string;
-  accent: string;
 }
 
 const IMAGES: MiniImage[] = [
   {
     src: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=400&q=60",
     alt: "Noir portrait of a man on a black background",
-    title: "Noir",
-    accent: "#ff4f9a",
   },
   {
     src: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=400&q=60",
     alt: "Ember portrait of a woman against a deep red wall",
-    title: "Ember",
-    accent: "#ff5a3c",
   },
   {
     src: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=400&q=60",
     alt: "Velvet portrait of a woman in a charcoal studio",
-    title: "Velvet",
-    accent: "#c6ff3d",
   },
 ];
 
@@ -60,11 +52,6 @@ function MiniRevealLayer({
       ? ["inset(0% 0 0 0)", "inset(0% 0 0 0)"]
       : ["inset(100% 0 0 0)", "inset(0% 0 0 0)"],
   );
-  const titleX = useTransform(
-    progress,
-    [revealStart, revealEnd || 1],
-    ["12%", "-12%"],
-  );
 
   return (
     <motion.div
@@ -80,21 +67,6 @@ function MiniRevealLayer({
         style={{ filter: "brightness(0.62) saturate(0.9)" }}
       />
       <div className="absolute inset-0 bg-black/20" />
-      <motion.div
-        className="pointer-events-none absolute left-1/2 top-[6%] z-20 -translate-x-1/2 text-center"
-        style={{ x: titleX }}
-      >
-        <div className="text-[0.6rem] font-semibold uppercase tracking-[0.4em] text-white/75 [text-shadow:0_1px_8px_rgba(0,0,0,0.65)]">
-          {String(index + 1).padStart(2, "0")} /{" "}
-          {String(count).padStart(2, "0")}
-        </div>
-        <div
-          className="mt-1 whitespace-nowrap text-[2.6rem] font-bold uppercase leading-none tracking-[0.025em] [text-shadow:0_2px_16px_rgba(0,0,0,0.7)]"
-          style={{ color: image.accent }}
-        >
-          {image.title}
-        </div>
-      </motion.div>
       <div className="absolute left-1/2 top-1/2 z-10 h-[74%] w-[34%] -translate-x-1/2 -translate-y-1/2 overflow-hidden bg-black shadow-[0_10px_40px_rgba(0,0,0,0.5)]">
         <img
           src={image.src}
@@ -214,7 +186,7 @@ export function ScrollRevealImageCardPreview() {
           <div className="absolute bottom-2 left-1/2 z-20 flex -translate-x-1/2 gap-1">
             {IMAGES.map((image, i) => (
               <span
-                key={image.title}
+                key={image.src}
                 className={
                   i === active
                     ? "h-1 w-4 rounded-full bg-white/90"
