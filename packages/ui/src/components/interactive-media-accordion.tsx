@@ -6,7 +6,7 @@ import * as React from "react";
 /* ---------------------------------- types --------------------------------- */
 
 export type InteractiveMediaAccordionMediaType = "image" | "video" | "auto";
-export type InteractiveMediaAccordionTrigger = "hover" | "click";
+export type InteractiveMediaAccordionTrigger = "scroll" | "hover" | "click";
 export type InteractiveMediaAccordionFit = "cover" | "contain";
 
 export interface InteractiveMediaAccordionItem {
@@ -24,8 +24,10 @@ export interface InteractiveMediaAccordionItem {
   positionY?: number;
 }
 
-export interface InteractiveMediaAccordionProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, "children" | "onChange"> {
+export interface InteractiveMediaAccordionProps extends Omit<
+  React.HTMLAttributes<HTMLDivElement>,
+  "children" | "onChange"
+> {
   items?: InteractiveMediaAccordionItem[];
 
   /* Layout */
@@ -56,7 +58,6 @@ export interface InteractiveMediaAccordionProps
   inactiveBrightness?: number;
   /** Inactive media saturation 0–2 (1 = original). @default 1 */
   inactiveSaturation?: number;
-  /** Inactive media saturation 0–2 (1 = original). @default 1 */
 
   /* Text */
   titleFont?: string;
@@ -73,6 +74,10 @@ export interface InteractiveMediaAccordionProps
 
   /* Interaction */
   trigger?: InteractiveMediaAccordionTrigger;
+  /** Scroll distance in px assigned to each item in scroll mode. @default 800 */
+  scrollStep?: number;
+  /** Sticky offset from the top of the nearest scroll container in px. @default 40 */
+  stickyTop?: number;
   /** Controlled active index. */
   activeIndex?: number;
   /** Uncontrolled initial active index. @default 0 */
@@ -264,7 +269,9 @@ export function InteractiveMediaAccordion({
   textGap = 6,
   contentPadding = [40, 44],
   textAlign = "left",
-  trigger = "hover",
+  trigger = "scroll",
+  scrollStep = 800,
+  stickyTop = 40,
   activeIndex: controlledIndex,
   initialActiveIndex = 0,
   onActiveChange,
@@ -281,6 +288,7 @@ export function InteractiveMediaAccordion({
   ...divProps
 }: InteractiveMediaAccordionProps) {
   const count = items.length;
+  const scrollDriven = trigger === "scroll";
   const systemReduced = usePrefersReducedMotion();
   const reduceMotion = reducedMotionProp || systemReduced;
   const effectiveDuration = reduceMotion ? 0 : duration;
@@ -295,6 +303,11 @@ export function InteractiveMediaAccordion({
     controlledIndex !== undefined
       ? clamp(controlledIndex, 0, Math.max(0, count - 1))
       : clamp(internalIndex, 0, Math.max(0, count - 1));
+  const activeRef = React.useRef(active);
+
+  React.useEffect(() => {
+    activeRef.current = active;
+  }, [active]);
 
   const setActive = React.useCallback(
     (index: number) => {
@@ -311,6 +324,70 @@ export function InteractiveMediaAccordion({
       setInternalIndex((prev) => clamp(prev, 0, Math.max(0, count - 1)));
     }
   }, [count, controlledIndex]);
+
+  /* The reference interaction is a sticky gallery with one discrete scroll
+     band per item. Listening to the nearest scroll container makes the same
+     component work in a page, a modal, or the docs preview pane. */
+  React.useEffect(() => {
+    if (!scrollDriven || count <= 1) return;
+
+    const element = containerRef.current;
+    if (!element || typeof window === "undefined") return;
+
+    let parent = element.parentElement;
+    let scrollRoot: HTMLElement | Window = window;
+    while (parent) {
+      const overflowY = window.getComputedStyle(parent).overflowY;
+      if (/(auto|scroll|overlay)/.test(overflowY)) {
+        scrollRoot = parent;
+        break;
+      }
+      parent = parent.parentElement;
+    }
+
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const rootTop =
+        scrollRoot === window
+          ? 0
+          : (scrollRoot as HTMLElement).getBoundingClientRect().top;
+      const distance =
+        rootTop + stickyTop - element.getBoundingClientRect().top;
+      const next = clamp(
+        Math.floor(Math.max(0, distance) / Math.max(1, scrollStep)),
+        0,
+        count - 1,
+      );
+
+      if (next === activeRef.current) return;
+      activeRef.current = next;
+      if (controlledIndex === undefined) setInternalIndex(next);
+      onActiveChange?.(next);
+    };
+    const requestUpdate = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(update);
+    };
+
+    update();
+    scrollRoot.addEventListener("scroll", requestUpdate, { passive: true });
+    window.addEventListener("resize", requestUpdate, { passive: true });
+
+    return () => {
+      if (frame) window.cancelAnimationFrame(frame);
+      scrollRoot.removeEventListener("scroll", requestUpdate);
+      window.removeEventListener("resize", requestUpdate);
+    };
+  }, [
+    containerRef,
+    controlledIndex,
+    count,
+    onActiveChange,
+    scrollDriven,
+    scrollStep,
+    stickyTop,
+  ]);
 
   /* Container-aware geometry: tablet + compact breakpoints follow the
      gallery's own width, never the viewport, so the component behaves
@@ -348,12 +425,16 @@ export function InteractiveMediaAccordion({
   const [autoPaused, setAutoPaused] = React.useState(false);
   const paused = autoPlay && pauseAutoPlayOnHover && autoPaused;
   React.useEffect(() => {
-    if (!autoPlay || count <= 1 || paused || reduceMotion) return;
-    const id = window.setInterval(() => {
-      const next = (active + 1) % count;
-      if (controlledIndex === undefined) setInternalIndex(next);
-      onActiveChange?.(next);
-    }, Math.max(800, autoPlayInterval));
+    if (!autoPlay || scrollDriven || count <= 1 || paused || reduceMotion)
+      return;
+    const id = window.setInterval(
+      () => {
+        const next = (active + 1) % count;
+        if (controlledIndex === undefined) setInternalIndex(next);
+        onActiveChange?.(next);
+      },
+      Math.max(800, autoPlayInterval),
+    );
     return () => window.clearInterval(id);
   }, [
     autoPlay,
@@ -364,6 +445,7 @@ export function InteractiveMediaAccordion({
     reduceMotion,
     controlledIndex,
     onActiveChange,
+    scrollDriven,
   ]);
 
   const isCoarsePointer = React.useCallback(() => {
@@ -387,12 +469,18 @@ export function InteractiveMediaAccordion({
       {...divProps}
       ref={containerRef}
       data-slot="interactive-media-accordion"
+      data-scroll-driven={scrollDriven ? "true" : undefined}
+      data-active-index={active}
       role="group"
       aria-label={divProps["aria-label"] ?? "Interactive media gallery"}
       className={cn("w-full", className)}
       style={{
         padding: outerPadding,
-        overflow: "hidden",
+        minHeight: scrollDriven
+          ? Math.max(height, Math.max(1, scrollStep) * (count + 1))
+          : undefined,
+        position: scrollDriven ? "relative" : undefined,
+        overflow: scrollDriven ? "visible" : "hidden",
         ...style,
       }}
       onMouseEnter={(event) => {
@@ -407,6 +495,8 @@ export function InteractiveMediaAccordion({
       <div
         role="presentation"
         style={{
+          position: scrollDriven ? "sticky" : "relative",
+          top: scrollDriven ? stickyTop : undefined,
           display: "flex",
           alignItems: "stretch",
           gap: effectiveGap,
