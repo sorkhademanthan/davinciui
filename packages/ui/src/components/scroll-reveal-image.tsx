@@ -15,8 +15,6 @@ export interface ScrollRevealImageItem {
   src: string;
   revealSrc?: string;
   alt: string;
-  title?: string;
-  accent?: string;
 }
 
 export interface ScrollRevealImageProps {
@@ -41,7 +39,6 @@ function RevealLayer({
   borderRadius,
   backgroundScale,
   imageScale,
-  reduceMotion,
   compact,
 }: {
   image: ScrollRevealImageItem;
@@ -53,7 +50,6 @@ function RevealLayer({
   borderRadius: string;
   backgroundScale: number;
   imageScale: number;
-  reduceMotion: boolean;
   compact: boolean;
 }) {
   const step = count > 1 ? 1 / (count - 1) : 1;
@@ -66,12 +62,6 @@ function RevealLayer({
       ? ["inset(0% 0 0 0)", "inset(0% 0 0 0)"]
       : ["inset(100% 0 0 0)", "inset(0% 0 0 0)"],
   );
-  const titleX = useTransform(
-    progress,
-    [revealStart, revealEnd || 1],
-    ["7vw", "-7vw"],
-  );
-  const accent = image.accent ?? "#d7ff39";
 
   return (
     <motion.div
@@ -90,27 +80,6 @@ function RevealLayer({
         }}
       />
       <div className="absolute inset-0 bg-black/18" />
-      {image.title ? (
-        <motion.div
-          className="pointer-events-none absolute left-1/2 top-[7%] z-20 -translate-x-1/2 text-center"
-          style={reduceMotion ? undefined : { x: titleX }}
-        >
-          <div className="text-[0.7rem] font-semibold uppercase tracking-[0.45em] text-white/75 [text-shadow:0_1px_12px_rgba(0,0,0,0.65)]">
-            {String(index + 1).padStart(2, "0")} /{" "}
-            {String(count).padStart(2, "0")}
-          </div>
-          <div
-            className={
-              compact
-                ? "mt-2 whitespace-nowrap text-[clamp(3rem,13vw,6rem)] font-bold uppercase leading-none tracking-[0.025em] [text-shadow:0_2px_24px_rgba(0,0,0,0.65)]"
-                : "mt-3 whitespace-nowrap text-[clamp(4rem,13vw,12rem)] font-bold uppercase leading-none tracking-[0.025em] [text-shadow:0_2px_30px_rgba(0,0,0,0.65)]"
-            }
-            style={{ color: accent }}
-          >
-            {image.title}
-          </div>
-        </motion.div>
-      ) : null}
       <div
         className="absolute left-1/2 top-1/2 z-10 overflow-hidden -translate-x-1/2 -translate-y-1/2 bg-black shadow-[0_30px_100px_rgba(0,0,0,0.42)]"
         style={{
@@ -214,7 +183,6 @@ export function ScrollRevealImage({
             borderRadius={borderRadius}
             backgroundScale={backgroundScale}
             imageScale={imageScale}
-            reduceMotion={reduceMotion}
             compact={isCompact}
           />
         ))}
