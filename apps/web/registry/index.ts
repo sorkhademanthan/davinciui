@@ -42,16 +42,6 @@ export const components: Record<string, ComponentMetadata> = {
     previewVideo:
       "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/visual-effects/ditheredlogo.webm",
   },
-  "sticky-scroll-cards": {
-    title: "Sticky Scroll Cards",
-    description:
-      "A scroll-driven card stack where images pin and scale as you scroll, creating a layered depth effect.",
-    category: "Premium Components",
-    slug: "sticky-scroll-cards",
-    addedAt: "2026-04-10",
-    previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/component-animations/stickyscrollcards.webm",
-  },
   "music-player": {
     title: "Music Player",
     description:
@@ -61,16 +51,6 @@ export const components: Record<string, ComponentMetadata> = {
     addedAt: "2026-04-03",
     previewVideo:
       "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/component-animations/musicplayer.webm",
-  },
-  "scroll-split-card": {
-    title: "Scroll Split Card",
-    description:
-      "A scroll-driven interactive card that splits into three panels and flips.",
-    category: "Premium Components",
-    slug: "scroll-split-card",
-    addedAt: "2026-04-03",
-    previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/component-animations/scrollsplitcard.webm",
   },
   "hover-transition": {
     title: "Hover Transition",
@@ -583,26 +563,6 @@ export const components: Record<string, ComponentMetadata> = {
     previewVideo:
       "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/component-animations/githubcalendar.webm",
   },
-  "scroll-choreography": {
-    title: "Scroll Choreography",
-    description:
-      "A smooth, scroll-driven image choreography component using Framer Motion.",
-    category: "Premium Components",
-    slug: "scroll-choreography",
-    addedAt: "2026-02-28",
-    previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/component-animations/scrollchoreography.webm",
-  },
-  "scroll-tilted-grid": {
-    title: "Scroll Tilted Grid",
-    description:
-      "A cinematic image grid that tilts and resolves into focus as each frame crosses the viewport.",
-    category: "Premium Components",
-    slug: "scroll-tilted-grid",
-    addedAt: "2026-07-17",
-    previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/component-animations/scrolltiltedgrid.webm",
-  },
   "cms-scroll-gallery": {
     title: "CMS Scroll Gallery",
     description:
@@ -614,7 +574,7 @@ export const components: Record<string, ComponentMetadata> = {
   "interactive-media-accordion": {
     title: "Interactive Media Accordion",
     description:
-      "Horizontal accordion gallery — one media card stays expanded while the rest collapse into pills; hover or tap to transfer the expanded state.",
+      "Sticky scroll-driven media accordion — each scroll band expands the next card while the rest collapse into pills.",
     category: "Premium Components",
     slug: "interactive-media-accordion",
     addedAt: "2026-09-15",
@@ -642,6 +602,30 @@ export const components: Record<string, ComponentMetadata> = {
     category: "Premium Components",
     slug: "scroll-sync-gallery",
     addedAt: "2026-09-16",
+  },
+  "horizontal-scroll-gallery": {
+    title: "Horizontal Scroll Gallery",
+    description:
+      "Pinned variable-width film strip — vertical page scroll drives a continuous horizontal image track with no snapping or controls.",
+    category: "Premium Components",
+    slug: "horizontal-scroll-gallery",
+    addedAt: "2026-09-16",
+  },
+  "scroll-media-expand": {
+    title: "Scroll Media Expand",
+    description:
+      "A tiny centered media pill that blooms into a fullscreen cinematic scene — width first, then height — with labels pushed off-frame, inner parallax, and a glass play CTA, all scrubbed by scroll.",
+    category: "Premium Components",
+    slug: "scroll-media-expand",
+    addedAt: "2026-09-16",
+  },
+  "scroll-blur-overlay": {
+    title: "Scroll Blur Overlay",
+    description:
+      "A scroll-reactive frosted-glass sheet — real backdrop blur driven continuously by scroll position, with an extendAbove mode that diffuses the outgoing section.",
+    category: "Premium Components",
+    slug: "scroll-blur-overlay",
+    addedAt: "2026-09-17",
   },
   "layered-stack": {
     title: "Layered Stack",

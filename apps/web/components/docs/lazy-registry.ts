@@ -18,17 +18,9 @@ const docsImportMap: Record<
     import("@/components/docs/dithered-logo").then((m) => ({
       default: m.DitheredLogoDocs,
     })),
-  "sticky-scroll-cards": () =>
-    import("@/components/docs/sticky-scroll-cards").then((m) => ({
-      default: m.StickyScrollCardsDocs,
-    })),
   "music-player": () =>
     import("@/components/docs/music-player").then((m) => ({
       default: m.MusicPlayerDocs,
-    })),
-  "scroll-split-card": () =>
-    import("@/components/docs/scroll-split-card").then((m) => ({
-      default: m.ScrollSplitCardDocs,
     })),
   button: () =>
     import("@/components/docs/button").then((m) => ({
@@ -230,14 +222,6 @@ const docsImportMap: Record<
     import("@/components/docs/pixel-image-trail").then((m) => ({
       default: m.PixelImageTrailDocs,
     })),
-  "scroll-choreography": () =>
-    import("@/components/docs/scroll-choreography").then((m) => ({
-      default: m.ScrollChoreographyDocs,
-    })),
-  "scroll-tilted-grid": () =>
-    import("@/components/docs/scroll-tilted-grid").then((m) => ({
-      default: m.ScrollTiltedGridDocs,
-    })),
   "cms-scroll-gallery": () =>
     import("@/components/docs/cms-scroll-gallery").then((m) => ({
       default: m.CMSScrollGalleryDocs,
@@ -257,6 +241,18 @@ const docsImportMap: Record<
   "scroll-sync-gallery": () =>
     import("@/components/docs/scroll-sync-gallery").then((m) => ({
       default: m.ScrollSyncGalleryDocs,
+    })),
+  "horizontal-scroll-gallery": () =>
+    import("@/components/docs/horizontal-scroll-gallery").then((m) => ({
+      default: m.HorizontalScrollGalleryDocs,
+    })),
+  "scroll-media-expand": () =>
+    import("@/components/docs/scroll-media-expand").then((m) => ({
+      default: m.ScrollMediaExpandDocs,
+    })),
+  "scroll-blur-overlay": () =>
+    import("@/components/docs/scroll-blur-overlay").then((m) => ({
+      default: m.ScrollBlurOverlayDocs,
     })),
   "fluid-particle-text": () =>
     import("@/components/docs/fluid-particle-text").then((m) => ({
