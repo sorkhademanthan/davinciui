@@ -113,6 +113,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "da-vinci-preloader",
+      "type": "registry:ui"
+    },
+    {
       "name": "data-table",
       "type": "registry:ui"
     },
@@ -141,6 +145,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "editorial-wipe-preloader",
+      "type": "registry:ui"
+    },
+    {
       "name": "empty",
       "type": "registry:ui"
     },
@@ -157,6 +165,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "fill-preloader",
+      "type": "registry:ui"
+    },
+    {
       "name": "fisheye-infinite-grid",
       "type": "registry:ui"
     },
@@ -170,6 +182,10 @@
     },
     {
       "name": "form",
+      "type": "registry:ui"
+    },
+    {
+      "name": "geometric-preloader",
       "type": "registry:ui"
     },
     {
@@ -345,6 +361,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "pixel-preloader",
+      "type": "registry:ui"
+    },
+    {
       "name": "popover",
       "type": "registry:ui"
     },
@@ -402,6 +422,10 @@
     },
     {
       "name": "scroll-sync-gallery",
+      "type": "registry:ui"
+    },
+    {
+      "name": "scroll-timeline",
       "type": "registry:ui"
     },
     {
@@ -474,6 +498,10 @@
     },
     {
       "name": "stacked-scroll-gallery",
+      "type": "registry:ui"
+    },
+    {
+      "name": "staircase-preloader",
       "type": "registry:ui"
     },
     {
