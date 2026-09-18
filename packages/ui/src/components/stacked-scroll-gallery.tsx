@@ -49,7 +49,10 @@ export interface StackedScrollGalleryProps {
   enabled?: boolean;
   /** Pause videos that are not the active (or adjacent) panel. */
   pauseOffscreenVideos?: boolean;
-  /** Surrounding background color. */
+  /**
+   * Surrounding background color. When omitted, the gallery follows the
+   * theme (light zinc in light mode, near-black in dark mode).
+   */
   background?: string;
   /** Inset (px) between the viewport edge and the cards on every side. */
   gutter?: number;
@@ -121,7 +124,7 @@ export function StackedScrollGallery({
   dimStrength = 0.3,
   enabled = true,
   pauseOffscreenVideos = true,
-  background = "#0a0a0b",
+  background,
   gutter = 22,
   className,
   style,
@@ -341,12 +344,20 @@ export function StackedScrollGallery({
 
   if (count === 0) return null;
 
+  // Theme-aware chrome: an explicit `background` prop always wins via
+  // inline style; otherwise light/dark classes follow the theme toggle.
+  const hasCustomBackground = background !== undefined;
+  const themeChromeClass = hasCustomBackground
+    ? undefined
+    : "bg-zinc-100 dark:bg-[#0a0a0b]";
+  const backgroundStyle = hasCustomBackground ? { background } : undefined;
+
   if (!enabled) {
     return (
       <section
         aria-label="Media gallery"
-        className={cn("w-full", className)}
-        style={{ background, ...style }}
+        className={cn("w-full", themeChromeClass, className)}
+        style={{ ...backgroundStyle, ...style }}
       >
         <div
           className="mx-auto flex w-full max-w-6xl flex-col"
@@ -377,14 +388,14 @@ export function StackedScrollGallery({
       ref={trackRef}
       aria-label="Stacked scroll media gallery"
       data-testid="stacked-scroll-gallery-track"
-      className={cn("relative w-full", className)}
-      style={{ height: trackHeight, background, ...style }}
+      className={cn("relative w-full", themeChromeClass, className)}
+      style={{ height: trackHeight, ...backgroundStyle, ...style }}
     >
       <div
         ref={viewportRef}
         data-testid="stacked-scroll-gallery-viewport"
-        className="sticky top-0 w-full overflow-hidden"
-        style={{ height: viewportHeight, background }}
+        className={cn("sticky top-0 w-full overflow-hidden", themeChromeClass)}
+        style={{ height: viewportHeight, ...backgroundStyle }}
       >
         <div className="h-full w-full" style={{ padding: safeGutter }}>
           {/* Hidden until the first imperative frame paints so cards never
@@ -400,11 +411,10 @@ export function StackedScrollGallery({
                   }}
                   data-testid={`stacked-scroll-gallery-card-${i}`}
                   aria-hidden={i === 0 ? undefined : i !== activeIndex}
-                  className="absolute inset-0 overflow-hidden"
+                  className="absolute inset-0 overflow-hidden bg-zinc-200 dark:bg-[#17171a]"
                   style={{
                     zIndex: i + 1,
                     borderRadius: radius,
-                    background: "#17171a",
                     // Resting transform: incoming cards wait below the
                     // viewport with only their preview strip showing.
                     transform:
