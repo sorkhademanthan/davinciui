@@ -534,7 +534,7 @@ export function InteractiveMediaAccordion({
               onClick={() => activate(index)}
               data-state={isActive ? "active" : "inactive"}
               data-testid={`interactive-media-accordion-item-${index}`}
-              className="group relative block shrink-0 cursor-pointer border-0 p-0 outline-none focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+              className="group relative block shrink-0 cursor-pointer border-0 bg-zinc-200 p-0 outline-none focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:bg-[#111] dark:focus-visible:ring-offset-black"
               style={{
                 // Width redistribution: the active card takes every free
                 // pixel (flex 1 1 0%), pills hold a fixed basis. Because
@@ -560,7 +560,6 @@ export function InteractiveMediaAccordion({
                   ? effectiveRadius
                   : effectiveCollapsedRadius,
                 transition: layoutTransition,
-                background: "#111",
                 textAlign: "left",
                 WebkitTapHighlightColor: "transparent",
               }}

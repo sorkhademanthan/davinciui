@@ -21,7 +21,7 @@ export interface ScrollMediaExpandProps {
   rightLabel?: string;
   /** Center CTA text revealed once the media becomes a readable card. */
   overlayText?: string;
-  /** Media focal point (CSS object-position). @default "50% 50%" */
+  /** Media focal point (CSS object-position). @default "50% 35%" */
   objectPosition?: string;
   /** How media fills its window. @default "cover" */
   objectFit?: "cover" | "contain" | "fill";
@@ -54,9 +54,9 @@ export interface ScrollMediaExpandProps {
   pauseOffscreenVideo?: boolean;
   /** Pause transform work while the section is far offscreen. @default true */
   pauseWhenOffscreen?: boolean;
-  /** Stage background. @default "#fff" */
+  /** Stage background. Defaults to the active theme background token. */
   background?: string;
-  /** Label / overlay foreground color. @default "#111" */
+  /** Label foreground. Defaults to the active theme foreground token. */
   foreground?: string;
   className?: string;
   style?: React.CSSProperties;
@@ -65,16 +65,17 @@ export interface ScrollMediaExpandProps {
 /* --------------------------------- helpers -------------------------------- */
 
 const DEFAULT_SRC =
-  "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=2000&q=80";
+  "https://images.unsplash.com/photo-1517796931930-443b6f13cf65?auto=format&fit=crop&w=2400&q=85";
 
 /* Phase boundaries (normalized progress 0 → 1). Width leads, height follows,
    radius decays slightly delayed, CTA arrives once the card is readable,
    labels dissolve only after leaving the frame. */
 const WIDTH_IN: readonly [number, number] = [0.08, 0.72];
-const HEIGHT_IN: readonly [number, number] = [0.2, 0.78];
-const RADIUS_IN: readonly [number, number] = [0.18, 0.78];
+const HEIGHT_IN: readonly [number, number] = [0.3, 0.86];
+const RADIUS_IN: readonly [number, number] = [0.06, 0.34];
+const RADIUS_OUT: readonly [number, number] = [0.74, 1];
 const INNER_IN: readonly [number, number] = [0.08, 0.8];
-const OVERLAY_IN: readonly [number, number] = [0.32, 0.48];
+const OVERLAY_IN: readonly [number, number] = [0.4, 0.56];
 const LABEL_FADE: readonly [number, number] = [0.66, 0.82];
 const HINT_OUT: readonly [number, number] = [0, 0.08];
 
@@ -122,7 +123,7 @@ export function ScrollMediaExpand({
   leftLabel = "©2026",
   rightLabel = "Showreel",
   overlayText = "Play showreel",
-  objectPosition = "50% 50%",
+  objectPosition = "50% 35%",
   objectFit = "cover",
   initialWidth,
   initialHeight,
@@ -131,13 +132,13 @@ export function ScrollMediaExpand({
   startRadius = 999,
   endRadius = 0,
   showOverlay = true,
-  showScrollHint = true,
+  showScrollHint = false,
   smoothing = 0,
   enabled = true,
   pauseOffscreenVideo = true,
   pauseWhenOffscreen = true,
-  background = "#fff",
-  foreground = "#111",
+  background = "var(--background, #fff)",
+  foreground = "var(--foreground, #111)",
   className,
   style,
 }: ScrollMediaExpandProps) {
@@ -203,17 +204,16 @@ export function ScrollMediaExpand({
       const stageH = stage.clientHeight || window.innerHeight || 1;
       const mobile = stageW < 640;
       const cfg = configRef.current;
-      // Desktop pill ≈ 6.5vw × 1.2vw clamped; mobile starts slightly wider.
+      // Match the reference's visible cinematic aperture: a deliberate,
+      // readable capsule rather than a tiny decorative dash.
       const initialW =
         cfg.initialWidth ??
         (mobile
-          ? clamp(stageW * 0.22, 80, 110)
-          : clamp(stageW * 0.065, 72, 110));
+          ? clamp(stageW * 0.22, 90, 140)
+          : clamp(stageW * 0.14, 150, 220));
       const initialH =
         cfg.initialHeight ??
-        (mobile
-          ? clamp(stageW * 0.032, 16, 22)
-          : clamp(stageW * 0.012, 14, 20));
+        (mobile ? clamp(stageW * 0.05, 22, 32) : clamp(stageW * 0.026, 28, 42));
       metricsRef.current = { stageW, stageH, initialW, initialH };
       renderFrame(renderedRef.current);
     };
@@ -274,7 +274,8 @@ export function ScrollMediaExpand({
     const cfg = configRef.current;
     const p = clamp(progress, 0, 1);
 
-    // Staggered phase progress: width leads, height + radius follow delayed.
+    // Width leads, height follows, and the pill radius settles into a subtle
+    // card radius before resolving to the fullscreen radius near the end.
     // Smootherstep gives every phase a cinematic glide with no visible seams.
     const widthP = smootherstep(WIDTH_IN[0], WIDTH_IN[1], p);
     const heightP = smootherstep(HEIGHT_IN[0], HEIGHT_IN[1], p);
@@ -284,16 +285,21 @@ export function ScrollMediaExpand({
     // One continuous media element: pill → wide capsule → card → viewport.
     const w = lerp(initialW, stageW, widthP);
     const h = lerp(initialH, stageH, heightP);
-    const radius = lerp(cfg.startRadius, cfg.endRadius, radiusP);
+    const readableRadius = Math.max(cfg.endRadius, stageW < 640 ? 12 : 16);
+    const radius = lerp(
+      lerp(cfg.startRadius, readableRadius, radiusP),
+      cfg.endRadius,
+      smootherstep(RADIUS_OUT[0], RADIUS_OUT[1], p),
+    );
     media.style.width = `${w.toFixed(2)}px`;
     media.style.height = `${h.toFixed(2)}px`;
     media.style.borderRadius = `${radius.toFixed(2)}px`;
 
-    // Depth between the expanding mask and the underlying media: a gentle
-    // settle (scale) plus a proportional vertical drift (parallax).
+    // Keep the media covering the entire aperture from the very first frame.
+    // A scale settle adds depth without translating the image out of the
+    // shallow rest-state pill and exposing its background.
     const innerScale = lerp(1.12, 1, innerP);
-    const innerY = lerp(stageH * 0.035, 0, innerP);
-    inner.style.transform = `translate3d(0, ${innerY.toFixed(2)}px, 0) scale(${innerScale.toFixed(4)})`;
+    inner.style.transform = `scale(${innerScale.toFixed(4)})`;
 
     // Labels stay glued to the media edges: offset = half width + gap, so the
     // expansion physically pushes them outward toward the viewport edges.
@@ -324,7 +330,8 @@ export function ScrollMediaExpand({
       const o = smootherstep(OVERLAY_IN[0], OVERLAY_IN[1], p);
       overlay.style.opacity = o.toFixed(3);
       overlay.style.transform = `translate(-50%, calc(-50% + ${(8 * (1 - o)).toFixed(2)}px)) scale(${(0.96 + 0.04 * o).toFixed(3)})`;
-      overlay.style.filter = o >= 1 ? "blur(0px)" : `blur(${(4 * (1 - o)).toFixed(2)}px)`;
+      overlay.style.filter =
+        o >= 1 ? "blur(0px)" : `blur(${(4 * (1 - o)).toFixed(2)}px)`;
       overlay.style.visibility = o <= 0 ? "hidden" : "visible";
     }
 
@@ -410,7 +417,10 @@ export function ScrollMediaExpand({
     return (
       <section
         aria-label="Showreel media"
-        className={cn("relative flex w-full items-center justify-center", className)}
+        className={cn(
+          "relative flex w-full items-center justify-center",
+          className,
+        )}
         style={{ background, minHeight: viewportHeight, ...style }}
       >
         <div className="flex w-full max-w-5xl flex-wrap items-center justify-center gap-4 px-6 py-24">
@@ -482,7 +492,11 @@ export function ScrollMediaExpand({
           className="relative shrink-0 overflow-hidden"
           style={{ willChange: "width, height, border-radius" }}
         >
-          <div ref={innerRef} className="absolute inset-0" style={{ willChange: "transform" }}>
+          <div
+            ref={innerRef}
+            className="absolute inset-0"
+            style={{ willChange: "transform" }}
+          >
             {isVideo ? (
               <video
                 ref={videoRef}
@@ -519,12 +533,12 @@ export function ScrollMediaExpand({
               className="absolute left-1/2 top-1/2 z-10"
               style={{ opacity: 0, visibility: "hidden" }}
             >
-              <div className="flex items-center gap-2.5 rounded-full bg-black/35 py-2 pl-2 pr-4 ring-1 ring-white/25 backdrop-blur-md">
-                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white">
-                  <Play className="h-3 w-3 fill-zinc-950 text-zinc-950" />
-                </span>
-                <span className="whitespace-nowrap text-[13px] font-medium tracking-wide text-white">
+              <div className="flex items-center gap-2">
+                <span className="whitespace-nowrap text-[13px] font-medium tracking-wide text-white/60">
                   {overlayText}
+                </span>
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-black/80 ring-1 ring-white/15">
+                  <Play className="h-2.5 w-2.5 fill-white text-white" />
                 </span>
               </div>
             </div>
@@ -579,23 +593,91 @@ export const ScrollMediaExpandPropertyControls = {
   },
   poster: { type: "string", title: "Video Poster", defaultValue: "" },
   leftLabel: { type: "string", title: "Left Label", defaultValue: "©2026" },
-  rightLabel: { type: "string", title: "Right Label", defaultValue: "Showreel" },
-  overlayText: { type: "string", title: "Overlay Text", defaultValue: "Play showreel" },
-  objectPosition: { type: "string", title: "Focal Point", defaultValue: "50% 50%" },
+  rightLabel: {
+    type: "string",
+    title: "Right Label",
+    defaultValue: "Showreel",
+  },
+  overlayText: {
+    type: "string",
+    title: "Overlay Text",
+    defaultValue: "Play showreel",
+  },
+  objectPosition: {
+    type: "string",
+    title: "Focal Point",
+    defaultValue: "50% 35%",
+  },
   objectFit: {
     type: "enum",
     title: "Media Fit",
     options: ["cover", "contain", "fill"],
     defaultValue: "cover",
   },
-  sectionHeight: { type: "string", title: "Scroll Track Height", defaultValue: "300vh" },
-  viewportHeight: { type: "string", title: "Viewport Height", defaultValue: "100svh" },
-  startRadius: { type: "number", title: "Pill Radius", defaultValue: 999, min: 0, max: 999 },
-  endRadius: { type: "number", title: "Fullscreen Radius", defaultValue: 0, min: 0, max: 120 },
-  showOverlay: { type: "boolean", title: "Show Center CTA", defaultValue: true },
-  showScrollHint: { type: "boolean", title: "Show Scroll Cue", defaultValue: true },
-  smoothing: { type: "number", title: "Scroll Smoothing", defaultValue: 0, min: 0, max: 1 },
-  enabled: { type: "boolean", title: "Enable Scroll Animation", defaultValue: true },
-  pauseOffscreenVideo: { type: "boolean", title: "Pause Offscreen Video", defaultValue: true },
-  pauseWhenOffscreen: { type: "boolean", title: "Pause Offscreen", defaultValue: true },
+  sectionHeight: {
+    type: "string",
+    title: "Scroll Track Height",
+    defaultValue: "300vh",
+  },
+  viewportHeight: {
+    type: "string",
+    title: "Viewport Height",
+    defaultValue: "100svh",
+  },
+  startRadius: {
+    type: "number",
+    title: "Pill Radius",
+    defaultValue: 999,
+    min: 0,
+    max: 999,
+  },
+  endRadius: {
+    type: "number",
+    title: "Fullscreen Radius",
+    defaultValue: 0,
+    min: 0,
+    max: 120,
+  },
+  showOverlay: {
+    type: "boolean",
+    title: "Show Center CTA",
+    defaultValue: true,
+  },
+  showScrollHint: {
+    type: "boolean",
+    title: "Show Scroll Cue",
+    defaultValue: false,
+  },
+  smoothing: {
+    type: "number",
+    title: "Scroll Smoothing",
+    defaultValue: 0,
+    min: 0,
+    max: 1,
+  },
+  enabled: {
+    type: "boolean",
+    title: "Enable Scroll Animation",
+    defaultValue: true,
+  },
+  pauseOffscreenVideo: {
+    type: "boolean",
+    title: "Pause Offscreen Video",
+    defaultValue: true,
+  },
+  pauseWhenOffscreen: {
+    type: "boolean",
+    title: "Pause Offscreen",
+    defaultValue: true,
+  },
+  background: {
+    type: "string",
+    title: "Background",
+    defaultValue: "var(--background, #fff)",
+  },
+  foreground: {
+    type: "string",
+    title: "Label Color",
+    defaultValue: "var(--foreground, #111)",
+  },
 };

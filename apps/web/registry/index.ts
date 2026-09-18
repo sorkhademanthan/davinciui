@@ -5,6 +5,7 @@ export type ComponentCategory =
   | "Sound"
   | "Visual Effects"
   | "ASCII Effects"
+  | "Preloaders"
   | "Actions"
   | "Forms"
   | "Feedback"
@@ -614,7 +615,7 @@ export const components: Record<string, ComponentMetadata> = {
   "scroll-media-expand": {
     title: "Scroll Media Expand",
     description:
-      "A tiny centered media pill that blooms into a fullscreen cinematic scene — width first, then height — with labels pushed off-frame, inner parallax, and a glass play CTA, all scrubbed by scroll.",
+      "A cinematic scroll zoom reveal that expands a compact media capsule into a fullscreen scene while surrounding text fades away.",
     category: "Premium Components",
     slug: "scroll-media-expand",
     addedAt: "2026-09-16",
@@ -625,6 +626,14 @@ export const components: Record<string, ComponentMetadata> = {
       "A scroll-reactive frosted-glass sheet — real backdrop blur driven continuously by scroll position, with an extendAbove mode that diffuses the outgoing section.",
     category: "Premium Components",
     slug: "scroll-blur-overlay",
+    addedAt: "2026-09-17",
+  },
+  "scroll-timeline": {
+    title: "Scroll Timeline",
+    description:
+      "Pinned fullscreen year timeline — vertical scroll collapses each panel horizontally via clip-path while the oversized year rotates around its bottom-left anchor, exposing the next era underneath.",
+    category: "Premium Components",
+    slug: "scroll-timeline",
     addedAt: "2026-09-17",
   },
   "layered-stack": {
@@ -771,6 +780,55 @@ export const components: Record<string, ComponentMetadata> = {
     addedAt: "2026-07-21",
     previewVideo:
       "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/ascii-effects/asciieffect.webm",
+  },
+  // Preloaders
+  "fill-preloader": {
+    title: "Fill Preloader",
+    description:
+      "A fullscreen bottom-up blue fill loader with a giant bottom-right percentage counter and a vertical slide-away reveal.",
+    category: "Preloaders",
+    slug: "fill-preloader",
+    addedAt: "2026-09-18",
+  },
+  "staircase-preloader": {
+    title: "Staircase Preloader",
+    description:
+      "A fullscreen orange stepped-curtain loader that exits upward with a left-to-right staircase edge and a top-right finish.",
+    category: "Preloaders",
+    slug: "staircase-preloader",
+    addedAt: "2026-09-18",
+  },
+  "pixel-preloader": {
+    title: "Pixel Preloader",
+    description:
+      "A fullscreen pixel-grid loader that takes over the viewport bottom-up behind a jagged orange frontier, with a top-left percentage HUD and a clean fade reveal.",
+    category: "Preloaders",
+    slug: "pixel-preloader",
+    addedAt: "2026-09-18",
+  },
+  "editorial-wipe-preloader": {
+    title: "Editorial Wipe Preloader",
+    description:
+      "A fullscreen forest-to-cream horizontal wipe with a giant split-tone counter and a vertical slide-away reveal.",
+    category: "Preloaders",
+    slug: "editorial-wipe-preloader",
+    addedAt: "2026-09-18",
+  },
+  "da-vinci-preloader": {
+    title: "Da Vinci Preloader",
+    description:
+      "A cinematic hero-to-loader transition: hero type fragments, DA VINCI assembles on off-white, then a hero-image window opens inside the wordmark and expands into the full page.",
+    category: "Preloaders",
+    slug: "da-vinci-preloader",
+    addedAt: "2026-09-18",
+  },
+  "geometric-preloader": {
+    title: "Geometric Preloader",
+    description:
+      "A fullscreen geometric loader with nested rotating squares and a diamond-scale reveal.",
+    category: "Preloaders",
+    slug: "geometric-preloader",
+    addedAt: "2026-09-18",
   },
   // Visual Effects
   "image-trail": {
