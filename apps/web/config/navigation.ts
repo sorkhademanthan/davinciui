@@ -230,7 +230,7 @@ const experienceComponentsSection: NavSection = {
   ],
 }
 
-const categoryOrder = ["Text Animations", "Premium Components", "Hero Backgrounds", "Visual Effects", "ASCII Effects"] as const
+const categoryOrder = ["Text Animations", "Premium Components", "Hero Backgrounds", "Visual Effects", "ASCII Effects", "Preloaders"] as const
 
 function buildPremiumSections(): NavSection[] {
   return categoryOrder.map((category) => {

@@ -15,7 +15,7 @@ const items = [
 
 export default function Demo() {
   return (
-    <div className="w-full bg-[#0a0a0b]">
+    <div className="w-full bg-zinc-100 dark:bg-[#0a0a0b]">
       <StackedScrollGallery items={items} />
     </div>
   )
@@ -136,6 +136,12 @@ export async function StackedScrollGalleryDocs() {
           type: "boolean",
           default: "true",
           description: "Pause videos that are not the active (or adjacent) panel.",
+        },
+        {
+          name: "background",
+          type: "string",
+          description:
+            "Surrounding background color. When omitted, the gallery follows the theme (light zinc in light mode, near-black in dark mode).",
         },
       ]}
     />

@@ -69,6 +69,7 @@ Open code you own. Composable APIs. Beautiful defaults. Animations handled.
     "Hero Backgrounds",
     "Visual Effects",
     "ASCII Effects",
+    "Preloaders",
   ] as const;
   categoryOrder.forEach((category) => {
     text += `\n\n### ${category}\n\n`;
