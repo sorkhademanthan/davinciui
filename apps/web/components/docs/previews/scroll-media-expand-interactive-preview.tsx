@@ -6,15 +6,16 @@ import { Play } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const SRC =
-  "https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=1600&auto=format&fit=crop";
+  "https://images.unsplash.com/photo-1517796931930-443b6f13cf65?q=85&w=1800&auto=format&fit=crop";
 
 /* Phase boundaries mirror the full ScrollMediaExpand component exactly —
    the pill is rendered at rest on mount and every frame scrubs from there. */
 const WIDTH_IN: readonly [number, number] = [0.08, 0.72];
-const HEIGHT_IN: readonly [number, number] = [0.2, 0.78];
-const RADIUS_IN: readonly [number, number] = [0.18, 0.78];
+const HEIGHT_IN: readonly [number, number] = [0.3, 0.86];
+const RADIUS_IN: readonly [number, number] = [0.06, 0.34];
+const RADIUS_OUT: readonly [number, number] = [0.74, 1];
 const INNER_IN: readonly [number, number] = [0.08, 0.8];
-const OVERLAY_IN: readonly [number, number] = [0.32, 0.48];
+const OVERLAY_IN: readonly [number, number] = [0.4, 0.56];
 const LABEL_FADE: readonly [number, number] = [0.66, 0.82];
 const HINT_OUT: readonly [number, number] = [0, 0.08];
 
@@ -39,7 +40,7 @@ function smootherstep(start: number, end: number, value: number) {
 
 /**
  * Full-scale interactive ScrollMediaExpand for the docs preview pane
- * (right side + fullscreen). Hover and scroll: the wheel scrubs the
+ * (right side + fullscreen). Scroll the pane: the wheel scrubs the
  * timeline in place — the pill is present from the first frame and
  * blooms into the fullscreen scene without moving the page.
  */
@@ -112,25 +113,29 @@ export function ScrollMediaExpandInteractivePreview({
       const p = clamp(progress, 0, 1);
       const mobile = stageW < 640;
       const iw = mobile
-        ? clamp(stageW * 0.22, 80, 110)
-        : clamp(stageW * 0.065, 72, 110);
+        ? clamp(stageW * 0.22, 90, 140)
+        : clamp(stageW * 0.14, 150, 220);
       const ih = mobile
-        ? clamp(stageW * 0.032, 16, 22)
-        : clamp(stageW * 0.012, 14, 20);
+        ? clamp(stageW * 0.05, 22, 32)
+        : clamp(stageW * 0.026, 28, 42);
 
       // The pill is the rest state: geometry always starts here, so it is
       // already present before and during every frame of the animation.
       const w = lerp(iw, stageW, smootherstep(WIDTH_IN[0], WIDTH_IN[1], p));
       const h = lerp(ih, stageH, smootherstep(HEIGHT_IN[0], HEIGHT_IN[1], p));
-      const r = lerp(999, 0, smootherstep(RADIUS_IN[0], RADIUS_IN[1], p));
+      const radiusP = smootherstep(RADIUS_IN[0], RADIUS_IN[1], p);
+      const r = lerp(
+        lerp(999, mobile ? 12 : 16, radiusP),
+        0,
+        smootherstep(RADIUS_OUT[0], RADIUS_OUT[1], p),
+      );
       media.style.width = `${w.toFixed(1)}px`;
       media.style.height = `${h.toFixed(1)}px`;
       media.style.borderRadius = `${r.toFixed(1)}px`;
 
       const innerP = smootherstep(INNER_IN[0], INNER_IN[1], p);
       const innerScale = lerp(1.12, 1, innerP);
-      const innerY = lerp(stageH * 0.035, 0, innerP);
-      inner.style.transform = `translate3d(0, ${innerY.toFixed(1)}px, 0) scale(${innerScale.toFixed(3)})`;
+      inner.style.transform = `scale(${innerScale.toFixed(3)})`;
 
       const gap = mobile ? 10 : 16;
       const offset = w / 2 + gap;
@@ -188,14 +193,12 @@ export function ScrollMediaExpandInteractivePreview({
     return (
       <div
         className={cn(
-          "relative flex h-full min-h-[480px] w-full items-center justify-center gap-3 bg-white px-6 dark:bg-black",
+          "relative flex h-full min-h-[480px] w-full items-center justify-center gap-3 bg-background px-6",
           className,
         )}
       >
-        <span className="text-[13px] font-medium text-zinc-900 dark:text-zinc-100">
-          ©2026
-        </span>
-        <div className="relative aspect-video w-full max-w-md flex-none overflow-hidden rounded-2xl">
+        <span className="text-[13px] font-semibold text-foreground">©2026</span>
+        <div className="relative aspect-video w-full max-w-md flex-none overflow-hidden rounded-2xl bg-muted">
           <img
             src={SRC}
             alt="Showreel"
@@ -203,7 +206,7 @@ export function ScrollMediaExpandInteractivePreview({
             draggable={false}
           />
         </div>
-        <span className="text-[13px] font-medium text-zinc-900 dark:text-zinc-100">
+        <span className="text-[13px] font-semibold text-foreground">
           Showreel
         </span>
       </div>
@@ -211,12 +214,20 @@ export function ScrollMediaExpandInteractivePreview({
   }
 
   const stageH = stageSize.h > 0 ? stageSize.h : 600;
+  const stageW = stageSize.w > 0 ? stageSize.w : 960;
+  const mobile = stageW < 640;
+  const restWidth = mobile
+    ? clamp(stageW * 0.22, 90, 140)
+    : clamp(stageW * 0.14, 150, 220);
+  const restHeight = mobile
+    ? clamp(stageW * 0.05, 22, 32)
+    : clamp(stageW * 0.026, 28, 42);
 
   return (
     <div
       ref={containerRef}
       className={cn(
-        "absolute inset-0 overflow-y-auto overflow-x-hidden bg-white dark:bg-black [&::-webkit-scrollbar]:hidden",
+        "absolute inset-0 overflow-y-auto overflow-x-hidden bg-background [&::-webkit-scrollbar]:hidden",
         className,
       )}
       style={{ scrollbarWidth: "none", overscrollBehaviorY: "contain" }}
@@ -224,12 +235,17 @@ export function ScrollMediaExpandInteractivePreview({
       <div className="relative" style={{ height: 3 * stageH }}>
         <div
           ref={stageRef}
-          className="sticky top-0 flex w-full items-center justify-center overflow-hidden bg-white dark:bg-black"
+          className="sticky top-0 flex w-full items-center justify-center overflow-hidden bg-background"
           style={{ height: stageH }}
         >
           <div
             ref={mediaRef}
-            className="relative shrink-0 overflow-hidden bg-zinc-200 dark:bg-zinc-900"
+            className="relative shrink-0 overflow-hidden bg-muted"
+            style={{
+              width: restWidth,
+              height: restHeight,
+              borderRadius: 999,
+            }}
           >
             <div ref={innerRef} className="absolute inset-0">
               <img
@@ -239,6 +255,7 @@ export function ScrollMediaExpandInteractivePreview({
                 draggable={false}
                 loading="eager"
                 className="block h-full w-full select-none object-cover"
+                style={{ objectPosition: "50% 35%" }}
               />
             </div>
             <div
@@ -247,12 +264,12 @@ export function ScrollMediaExpandInteractivePreview({
               className="absolute left-1/2 top-1/2 z-10"
               style={{ opacity: 0, visibility: "hidden" }}
             >
-              <div className="flex items-center gap-2.5 rounded-full bg-black/35 py-2 pl-2 pr-4 ring-1 ring-white/25 backdrop-blur-md">
-                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white">
-                  <Play className="h-3 w-3 fill-zinc-950 text-zinc-950" />
-                </span>
-                <span className="whitespace-nowrap text-[13px] font-medium tracking-wide text-white">
+              <div className="flex items-center gap-2">
+                <span className="whitespace-nowrap text-[13px] font-medium tracking-wide text-white/60">
                   Play showreel
+                </span>
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-black/80 ring-1 ring-white/15">
+                  <Play className="h-2.5 w-2.5 fill-white text-white" />
                 </span>
               </div>
             </div>
@@ -260,26 +277,18 @@ export function ScrollMediaExpandInteractivePreview({
           <span
             ref={labelLeftRef}
             aria-hidden="true"
-            className="pointer-events-none absolute left-1/2 top-1/2 z-10 whitespace-nowrap text-[12px] font-medium tracking-wide text-zinc-900 md:text-[13px] dark:text-zinc-100"
+            className="pointer-events-none absolute left-1/2 top-1/2 z-10 whitespace-nowrap text-[12px] font-semibold text-foreground md:text-[13px]"
           >
             ©2026
           </span>
           <span
             ref={labelRightRef}
             aria-hidden="true"
-            className="pointer-events-none absolute left-1/2 top-1/2 z-10 whitespace-nowrap text-[12px] font-medium tracking-wide text-zinc-900 md:text-[13px] dark:text-zinc-100"
+            className="pointer-events-none absolute left-1/2 top-1/2 z-10 whitespace-nowrap text-[12px] font-semibold text-foreground md:text-[13px]"
           >
             Showreel
           </span>
-          <div
-            ref={hintRef}
-            aria-hidden="true"
-            className="pointer-events-none absolute bottom-8 left-1/2 z-10 -translate-x-1/2"
-          >
-            <span className="whitespace-nowrap text-[11px] font-medium uppercase tracking-[0.22em] text-neutral-400">
-              Scroll to explore
-            </span>
-          </div>
+          <div ref={hintRef} aria-hidden="true" className="hidden" />
         </div>
       </div>
     </div>

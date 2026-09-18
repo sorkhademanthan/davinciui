@@ -80,7 +80,7 @@ export function InteractiveMediaAccordionCardPreview() {
   if (reduceMotion) {
     const item = ITEMS[0]!;
     return (
-      <div className="absolute inset-0 overflow-hidden bg-black">
+      <div className="absolute inset-0 overflow-hidden bg-white dark:bg-black">
         <img
           src={item.media}
           alt=""
@@ -92,7 +92,7 @@ export function InteractiveMediaAccordionCardPreview() {
   }
 
   return (
-    <div className="absolute inset-0 overflow-hidden bg-black">
+    <div className="absolute inset-0 overflow-hidden bg-white dark:bg-black">
       <div
         ref={containerRef}
         className="h-full w-full overflow-y-auto overflow-x-hidden [&::-webkit-scrollbar]:hidden"
@@ -121,15 +121,15 @@ export function InteractiveMediaAccordionCardPreview() {
         onActiveChange={handleActiveChange}
       />
       </div>
-      {/* Scroll progress ticks — also signal the card is scrubbable */}
-      <div className="pointer-events-none absolute bottom-2 left-1/2 z-10 flex -translate-x-1/2 gap-1">
+      {/* Scroll progress ticks — difference blend stays legible on every background */}
+      <div className="pointer-events-none absolute bottom-2 left-1/2 z-10 flex -translate-x-1/2 gap-1 text-white mix-blend-difference">
         {ITEMS.map((item, i) => (
           <span
             key={item.id}
             className={
               i === active
-                ? "h-1 w-4 rounded-full bg-white/90"
-                : "h-1 w-1 rounded-full bg-white/50"
+                ? "h-1 w-4 rounded-full bg-current opacity-90"
+                : "h-1 w-1 rounded-full bg-current opacity-50"
             }
           />
         ))}

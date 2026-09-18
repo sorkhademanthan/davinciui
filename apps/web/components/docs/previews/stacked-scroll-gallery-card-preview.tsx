@@ -75,7 +75,7 @@ function MiniStackLayer({
   return (
     <motion.div
       aria-hidden={!active}
-      className="absolute overflow-hidden bg-[#17171a]"
+      className="absolute overflow-hidden bg-zinc-200 dark:bg-[#17171a]"
       style={{
         inset: MINI_GUTTER,
         zIndex: index + 1,
@@ -168,9 +168,9 @@ export function StackedScrollGalleryCardPreview() {
   if (reduceMotion) {
     const item = ITEMS[0]!;
     return (
-      <div className="absolute inset-0 overflow-hidden bg-[#0a0a0b]">
+      <div className="absolute inset-0 overflow-hidden bg-zinc-100 dark:bg-[#0a0a0b]">
         <div
-          className="absolute overflow-hidden bg-[#17171a]"
+          className="absolute overflow-hidden bg-zinc-200 dark:bg-[#17171a]"
           style={{ inset: MINI_GUTTER, borderRadius: MINI_RADIUS }}
         >
           <img
@@ -187,7 +187,7 @@ export function StackedScrollGalleryCardPreview() {
   return (
     <div
       ref={containerRef}
-      className="absolute inset-0 overflow-y-auto overflow-x-hidden bg-[#0a0a0b] [&::-webkit-scrollbar]:hidden"
+      className="absolute inset-0 overflow-y-auto overflow-x-hidden bg-zinc-100 dark:bg-[#0a0a0b] [&::-webkit-scrollbar]:hidden"
       style={{
         scrollbarWidth: "none",
         overscrollBehaviorY: "contain",
@@ -195,7 +195,7 @@ export function StackedScrollGalleryCardPreview() {
     >
       <div className="relative" style={{ height: ITEMS.length * stageH }}>
         <div
-          className="sticky top-0 w-full overflow-hidden bg-[#0a0a0b]"
+          className="sticky top-0 w-full overflow-hidden bg-zinc-100 dark:bg-[#0a0a0b]"
           style={{ height: stageH }}
         >
           {ITEMS.map((item, i) => (
@@ -209,15 +209,15 @@ export function StackedScrollGalleryCardPreview() {
               active={i === active}
             />
           ))}
-          {/* Scroll progress ticks */}
-          <div className="absolute bottom-2 left-1/2 z-20 flex -translate-x-1/2 gap-1">
+          {/* Scroll progress ticks — difference blend stays legible on every background */}
+          <div className="absolute bottom-2 left-1/2 z-20 flex -translate-x-1/2 gap-1 text-white mix-blend-difference">
             {ITEMS.map((item, i) => (
               <span
                 key={item.src}
                 className={
                   i === active
-                    ? "h-1 w-4 rounded-full bg-white/90"
-                    : "h-1 w-1 rounded-full bg-white/50"
+                    ? "h-1 w-4 rounded-full bg-current opacity-90"
+                    : "h-1 w-1 rounded-full bg-current opacity-50"
                 }
               />
             ))}
