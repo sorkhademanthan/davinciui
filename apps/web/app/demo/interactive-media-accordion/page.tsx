@@ -52,7 +52,7 @@ export default function InteractiveMediaAccordionDemoPage() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-black px-6 py-10">
+    <main className="min-h-screen bg-white px-6 py-10 dark:bg-black">
       <InteractiveMediaAccordion
         items={ITEMS}
         trigger="scroll"

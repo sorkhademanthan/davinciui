@@ -13,6 +13,7 @@ const categoryOrder = [
   "Hero Backgrounds",
   "Visual Effects",
   "ASCII Effects",
+  "Preloaders",
 ] as const
 
 export default function ComponentsIndexPage() {
