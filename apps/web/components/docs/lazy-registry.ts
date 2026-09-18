@@ -254,6 +254,10 @@ const docsImportMap: Record<
     import("@/components/docs/scroll-blur-overlay").then((m) => ({
       default: m.ScrollBlurOverlayDocs,
     })),
+  "scroll-timeline": () =>
+    import("@/components/docs/scroll-timeline").then((m) => ({
+      default: m.ScrollTimelineDocs,
+    })),
   "fluid-particle-text": () =>
     import("@/components/docs/fluid-particle-text").then((m) => ({
       default: m.FluidParticleTextDocs,
@@ -481,6 +485,30 @@ const docsImportMap: Record<
   marker: () =>
     import("@/components/docs/marker").then((m) => ({
       default: m.MarkerDocs,
+    })),
+  "fill-preloader": () =>
+    import("@/components/docs/fill-preloader").then((m) => ({
+      default: m.FillPreloaderDocs,
+    })),
+  "staircase-preloader": () =>
+    import("@/components/docs/staircase-preloader").then((m) => ({
+      default: m.StaircasePreloaderDocs,
+    })),
+  "pixel-preloader": () =>
+    import("@/components/docs/pixel-preloader").then((m) => ({
+      default: m.PixelPreloaderDocs,
+    })),
+  "editorial-wipe-preloader": () =>
+    import("@/components/docs/editorial-wipe-preloader").then((m) => ({
+      default: m.EditorialWipePreloaderDocs,
+    })),
+  "da-vinci-preloader": () =>
+    import("@/components/docs/da-vinci-preloader").then((m) => ({
+      default: m.DaVinciPreloaderDocs,
+    })),
+  "geometric-preloader": () =>
+    import("@/components/docs/geometric-preloader").then((m) => ({
+      default: m.GeometricPreloaderDocs,
     })),
 };
 

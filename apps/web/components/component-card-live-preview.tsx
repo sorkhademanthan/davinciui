@@ -3,6 +3,10 @@
 import dynamic from "next/dynamic";
 import { useTheme } from "next-themes";
 import { useEffect, useRef, useState } from "react";
+import {
+  isBasicPreviewSlug,
+  type BasicPreviewSlug,
+} from "@/components/docs/previews/basic-component-card-slugs";
 
 const TextMorph = dynamic(
   () =>
@@ -180,6 +184,22 @@ const ScrollBlurOverlayCardPreview = dynamic(
   { ssr: false },
 );
 
+const ScrollTimelineCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/scroll-timeline-card-preview").then(
+      (module) => module.ScrollTimelineCardPreview,
+    ),
+  { ssr: false },
+);
+
+const BasicComponentCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/basic-component-card-preview").then(
+      (module) => module.BasicComponentCardPreview,
+    ),
+  { ssr: false },
+);
+
 const InteractiveMediaAccordionCardPreview = dynamic(
   () =>
     import(
@@ -193,6 +213,54 @@ const SilkAuroraCardPreview = dynamic(
     import("@/components/docs/previews/silk-aurora-card-preview").then(
       (module) => module.SilkAuroraCardPreview,
     ),
+  { ssr: false },
+);
+
+const FillPreloaderCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/fill-preloader-card-preview").then(
+      (module) => module.FillPreloaderCardPreview,
+    ),
+  { ssr: false },
+);
+
+const StaircasePreloaderCardPreview = dynamic(
+  () =>
+    import(
+      "@/components/docs/previews/staircase-preloader-card-preview"
+    ).then((module) => module.StaircasePreloaderCardPreview),
+  { ssr: false },
+);
+
+const PixelPreloaderCardPreview = dynamic(
+  () =>
+    import(
+      "@/components/docs/previews/pixel-preloader-card-preview"
+    ).then((module) => module.PixelPreloaderCardPreview),
+  { ssr: false },
+);
+
+const EditorialWipePreloaderCardPreview = dynamic(
+  () =>
+    import(
+      "@/components/docs/previews/editorial-wipe-preloader-card-preview"
+    ).then((module) => module.EditorialWipePreloaderCardPreview),
+  { ssr: false },
+);
+
+const DaVinciPreloaderCardPreview = dynamic(
+  () =>
+    import(
+      "@/components/docs/previews/da-vinci-preloader-card-preview"
+    ).then((module) => module.DaVinciPreloaderCardPreview),
+  { ssr: false },
+);
+
+const GeometricPreloaderCardPreview = dynamic(
+  () =>
+    import(
+      "@/components/docs/previews/geometric-preloader-card-preview"
+    ).then((module) => module.GeometricPreloaderCardPreview),
   { ssr: false },
 );
 
@@ -275,7 +343,15 @@ type ComponentCardLivePreviewProps = {
     | "scroll-sync-gallery"
     | "horizontal-scroll-gallery"
     | "scroll-media-expand"
-    | "scroll-blur-overlay";
+    | "scroll-blur-overlay"
+    | "scroll-timeline"
+    | "fill-preloader"
+    | "staircase-preloader"
+    | "pixel-preloader"
+    | "editorial-wipe-preloader"
+    | "da-vinci-preloader"
+    | "geometric-preloader"
+    | BasicPreviewSlug;
 };
 
 export function ComponentCardLivePreview({
@@ -334,7 +410,8 @@ export function ComponentCardLivePreview({
         slug !== "spectra-noise" &&
         slug !== "noiser" &&
         slug !== "sunlight-effect" &&
-        slug !== "ambient-audio-toggle") ? (
+        slug !== "ambient-audio-toggle" &&
+        !isBasicPreviewSlug(slug)) ? (
         <span className="text-3xl font-black tracking-[-0.055em] text-foreground sm:text-4xl">
           {staticLabel}
         </span>
@@ -490,6 +567,22 @@ export function ComponentCardLivePreview({
         <ScrollMediaExpandCardPreview />
       ) : slug === "scroll-blur-overlay" ? (
         <ScrollBlurOverlayCardPreview />
+      ) : slug === "scroll-timeline" ? (
+        <ScrollTimelineCardPreview />
+      ) : slug === "fill-preloader" ? (
+        <FillPreloaderCardPreview />
+      ) : slug === "staircase-preloader" ? (
+        <StaircasePreloaderCardPreview />
+      ) : slug === "pixel-preloader" ? (
+        <PixelPreloaderCardPreview />
+      ) : slug === "editorial-wipe-preloader" ? (
+        <EditorialWipePreloaderCardPreview />
+      ) : slug === "da-vinci-preloader" ? (
+        <DaVinciPreloaderCardPreview />
+      ) : slug === "geometric-preloader" ? (
+        <GeometricPreloaderCardPreview />
+      ) : isBasicPreviewSlug(slug) ? (
+        <BasicComponentCardPreview slug={slug} />
       ) : slug === "text-video-mask" ? (
         <TextVideoMask
           text="DAVINCI."

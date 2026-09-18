@@ -6,6 +6,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { Search, ArrowUpRight } from "lucide-react"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import { ComponentCardLivePreview } from "@/components/component-card-live-preview"
+import { isBasicPreviewSlug, type BasicPreviewSlug } from "@/components/docs/previews/basic-component-card-slugs"
 import { components } from "@/registry"
 import { BASIC_GROUPS, BASIC_SUBS } from "@/lib/component-groups"
 import { cn } from "@/lib/utils"
@@ -23,9 +24,10 @@ const SCROLL_SLUGS = new Set([
   "scroll-sync-gallery",
   "horizontal-scroll-gallery",
   "scroll-reveal-image",
+  "scroll-timeline",
 ])
 
-const TOP_FILTERS = ["All", "Basic", "Text Animations", "Premium Components", "Hero Backgrounds", "Sound", "Visual Effects", "ASCII Effects", "Motion", "Scroll", "Blocks", "Templates"] as const
+const TOP_FILTERS = ["All", "Basic", "Text Animations", "Premium Components", "Hero Backgrounds", "Sound", "Visual Effects", "ASCII Effects", "Preloaders", "Motion", "Scroll"] as const
 
 const BASIC_SUBS_ALL: readonly string[] = BASIC_SUBS
 
@@ -85,7 +87,15 @@ function hasLiveCardPreview(
   | "scroll-sync-gallery"
   | "horizontal-scroll-gallery"
   | "scroll-media-expand"
-  | "scroll-blur-overlay" {
+  | "scroll-blur-overlay"
+  | "scroll-timeline"
+  | "fill-preloader"
+  | "staircase-preloader"
+  | "pixel-preloader"
+  | "editorial-wipe-preloader"
+  | "da-vinci-preloader"
+  | "geometric-preloader"
+  | BasicPreviewSlug {
   return (
     slug === "gsap-text" ||
     slug === "text-morph" ||
@@ -116,7 +126,15 @@ function hasLiveCardPreview(
     slug === "scroll-sync-gallery" ||
     slug === "horizontal-scroll-gallery" ||
     slug === "scroll-media-expand" ||
-    slug === "scroll-blur-overlay"
+    slug === "scroll-blur-overlay" ||
+    slug === "scroll-timeline" ||
+    slug === "fill-preloader" ||
+    slug === "staircase-preloader" ||
+    slug === "pixel-preloader" ||
+    slug === "editorial-wipe-preloader" ||
+    slug === "da-vinci-preloader" ||
+    slug === "geometric-preloader" ||
+    isBasicPreviewSlug(slug)
   )
 }
 function validTop(value: string | null): TopFilter | null {
@@ -184,9 +202,10 @@ function ComponentsGallery() {
       if (activeTop === "Sound") return c.category === "Sound"
       if (activeTop === "Visual Effects") return c.category === "Visual Effects"
       if (activeTop === "ASCII Effects") return c.category === "ASCII Effects"
+      if (activeTop === "Preloaders") return c.category === "Preloaders"
       if (activeTop === "Scroll") return SCROLL_SLUGS.has(c.slug)
-      // Motion / Blocks / Templates have dedicated pages – show no registry match (handled as empty state with link)
-      if (activeTop === "Motion" || activeTop === "Blocks" || activeTop === "Templates") return false
+      // Motion has a dedicated page – show no registry match (handled as empty state with link)
+      if (activeTop === "Motion") return false
       return false
     })
 
@@ -334,7 +353,7 @@ function ComponentsGallery() {
             No components match “{q}” in {activeTop}
             {activeTop === "Basic" && activeSub !== "All" ? ` › ${activeSub}` : ""}.
           </p>
-          {(activeTop === "Motion" || activeTop === "Scroll" || activeTop === "Blocks" || activeTop === "Templates") && (
+          {(activeTop === "Motion" || activeTop === "Scroll") && (
             <div className="flex justify-center gap-2 text-xs">
               {activeTop === "Motion" && (
                 <Link href="/docs/motion/components" className="px-3 py-1.5 rounded-full border bg-white hover:bg-zinc-50 dark:bg-zinc-900">
@@ -344,16 +363,6 @@ function ComponentsGallery() {
               {activeTop === "Scroll" && (
                 <Link href="/experience/components?tab=Scroll" className="px-3 py-1.5 rounded-full border bg-white hover:bg-zinc-50 dark:bg-zinc-900">
                   Go to Scroll →
-                </Link>
-              )}
-              {activeTop === "Blocks" && (
-                <Link href="/blocks" className="px-3 py-1.5 rounded-full border bg-white hover:bg-zinc-50 dark:bg-zinc-900">
-                  Go to Blocks →
-                </Link>
-              )}
-              {activeTop === "Templates" && (
-                <Link href="/templates" className="px-3 py-1.5 rounded-full border bg-white hover:bg-zinc-50 dark:bg-zinc-900">
-                  Go to Templates →
                 </Link>
               )}
             </div>
