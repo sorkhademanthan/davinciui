@@ -241,8 +241,8 @@ export async function AsciiEffectDocs() {
 
   return (
     <DocsPageLayout
-      title="ASCII Effect"
-      description="A responsive image-to-ASCII renderer with image, flowing ripple, and signal-glitch variations."
+      title="Messi ASCII Effect"
+      description="A responsive Messi image-to-ASCII renderer with image, flowing ripple, and signal-glitch variations."
       preview={<AsciiImagePreview />}
       previewCode={imageCode}
       installPackageName="ascii-effect"
