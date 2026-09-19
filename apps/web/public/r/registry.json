@@ -29,6 +29,14 @@
       "type": "registry:ui"
     },
     {
+      "name": "ascii-image",
+      "type": "registry:ui"
+    },
+    {
+      "name": "ascii-portraits",
+      "type": "registry:ui"
+    },
+    {
       "name": "attachment",
       "type": "registry:ui"
     },
@@ -110,10 +118,6 @@
     },
     {
       "name": "context-menu",
-      "type": "registry:ui"
-    },
-    {
-      "name": "da-vinci-preloader",
       "type": "registry:ui"
     },
     {
@@ -366,6 +370,10 @@
     },
     {
       "name": "popover",
+      "type": "registry:ui"
+    },
+    {
+      "name": "preloader-pro",
       "type": "registry:ui"
     },
     {
