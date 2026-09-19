@@ -70,6 +70,8 @@ Open code you own. Composable APIs. Beautiful defaults. Animations handled.
     "Visual Effects",
     "ASCII Effects",
     "Preloaders",
+    "Interactions",
+    "Cursor Effects",
   ] as const;
   categoryOrder.forEach((category) => {
     text += `\n\n### ${category}\n\n`;
