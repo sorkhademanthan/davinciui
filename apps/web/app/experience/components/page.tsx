@@ -27,7 +27,7 @@ const SCROLL_SLUGS = new Set([
   "scroll-timeline",
 ])
 
-const TOP_FILTERS = ["All", "Basic", "Text Animations", "Premium Components", "Hero Backgrounds", "Sound", "Visual Effects", "ASCII Effects", "Preloaders", "Motion", "Scroll"] as const
+const TOP_FILTERS = ["All", "Basic", "Text Animations", "Premium Components", "Hero Backgrounds", "Sound", "Visual Effects", "ASCII Effects", "Preloaders", "Interactions", "Cursor Effects", "Motion", "Scroll"] as const
 
 const BASIC_SUBS_ALL: readonly string[] = BASIC_SUBS
 
@@ -93,8 +93,10 @@ function hasLiveCardPreview(
   | "staircase-preloader"
   | "pixel-preloader"
   | "editorial-wipe-preloader"
-  | "da-vinci-preloader"
   | "geometric-preloader"
+  | "preloader-pro"
+  | "ascii-image"
+  | "ascii-effect"
   | BasicPreviewSlug {
   return (
     slug === "gsap-text" ||
@@ -132,8 +134,10 @@ function hasLiveCardPreview(
     slug === "staircase-preloader" ||
     slug === "pixel-preloader" ||
     slug === "editorial-wipe-preloader" ||
-    slug === "da-vinci-preloader" ||
     slug === "geometric-preloader" ||
+    slug === "preloader-pro" ||
+    slug === "ascii-image" ||
+    slug === "ascii-effect" ||
     isBasicPreviewSlug(slug)
   )
 }
@@ -203,6 +207,8 @@ function ComponentsGallery() {
       if (activeTop === "Visual Effects") return c.category === "Visual Effects"
       if (activeTop === "ASCII Effects") return c.category === "ASCII Effects"
       if (activeTop === "Preloaders") return c.category === "Preloaders"
+      if (activeTop === "Interactions") return c.category === "Interactions"
+      if (activeTop === "Cursor Effects") return c.category === "Cursor Effects"
       if (activeTop === "Scroll") return SCROLL_SLUGS.has(c.slug)
       // Motion has a dedicated page – show no registry match (handled as empty state with link)
       if (activeTop === "Motion") return false
@@ -297,7 +303,9 @@ function ComponentsGallery() {
             <>
               <div className="p-1.5">
                 <div className="relative h-48 rounded-xl border border-border bg-zinc-100 dark:bg-zinc-900 overflow-hidden">
-                  {sources ? (
+                  {c.slug === "ascii-image" || c.slug === "ascii-effect" ? (
+                    <ComponentCardLivePreview slug={c.slug} />
+                  ) : sources ? (
                     <video autoPlay muted loop playsInline preload="metadata" className="absolute inset-0 h-full w-full object-cover">
                       <source src={sources.webm} type="video/webm" />
                       <source src={sources.mp4} type="video/mp4" />

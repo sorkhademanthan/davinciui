@@ -24,6 +24,22 @@ const KineticText = dynamic(
   { ssr: false },
 );
 
+const AsciiGalleryImageCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/ascii-gallery-card-previews").then(
+      (module) => module.AsciiGalleryImageCardPreview,
+    ),
+  { ssr: false },
+);
+
+const AsciiGalleryEffectCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/ascii-gallery-card-previews").then(
+      (module) => module.AsciiGalleryEffectCardPreview,
+    ),
+  { ssr: false },
+);
+
 const ShakeText = dynamic(
   () =>
     import("@workspace/ui/components/shake-text").then(
@@ -248,19 +264,19 @@ const EditorialWipePreloaderCardPreview = dynamic(
   { ssr: false },
 );
 
-const DaVinciPreloaderCardPreview = dynamic(
-  () =>
-    import(
-      "@/components/docs/previews/da-vinci-preloader-card-preview"
-    ).then((module) => module.DaVinciPreloaderCardPreview),
-  { ssr: false },
-);
-
 const GeometricPreloaderCardPreview = dynamic(
   () =>
     import(
       "@/components/docs/previews/geometric-preloader-card-preview"
     ).then((module) => module.GeometricPreloaderCardPreview),
+  { ssr: false },
+);
+
+const PreloaderProCardPreview = dynamic(
+  () =>
+    import(
+      "@/components/docs/previews/preloader-pro-card-preview"
+    ).then((module) => module.PreloaderProCardPreview),
   { ssr: false },
 );
 
@@ -314,6 +330,8 @@ const RollingText = dynamic(
 
 type ComponentCardLivePreviewProps = {
   slug:
+    | "ascii-image"
+    | "ascii-effect"
     | "gsap-text"
     | "text-morph"
     | "shake-text"
@@ -349,8 +367,8 @@ type ComponentCardLivePreviewProps = {
     | "staircase-preloader"
     | "pixel-preloader"
     | "editorial-wipe-preloader"
-    | "da-vinci-preloader"
     | "geometric-preloader"
+    | "preloader-pro"
     | BasicPreviewSlug;
 };
 
@@ -411,10 +429,16 @@ export function ComponentCardLivePreview({
         slug !== "noiser" &&
         slug !== "sunlight-effect" &&
         slug !== "ambient-audio-toggle" &&
+        slug !== "ascii-image" &&
+        slug !== "ascii-effect" &&
         !isBasicPreviewSlug(slug)) ? (
         <span className="text-3xl font-black tracking-[-0.055em] text-foreground sm:text-4xl">
           {staticLabel}
         </span>
+      ) : slug === "ascii-image" ? (
+        <AsciiGalleryImageCardPreview />
+      ) : slug === "ascii-effect" ? (
+        <AsciiGalleryEffectCardPreview animated={!reducedMotion} />
       ) : slug === "shader-text" ? (
         <ShaderText
           text="DAVINCIUI"
@@ -577,10 +601,10 @@ export function ComponentCardLivePreview({
         <PixelPreloaderCardPreview />
       ) : slug === "editorial-wipe-preloader" ? (
         <EditorialWipePreloaderCardPreview />
-      ) : slug === "da-vinci-preloader" ? (
-        <DaVinciPreloaderCardPreview />
       ) : slug === "geometric-preloader" ? (
         <GeometricPreloaderCardPreview />
+      ) : slug === "preloader-pro" ? (
+        <PreloaderProCardPreview />
       ) : isBasicPreviewSlug(slug) ? (
         <BasicComponentCardPreview slug={slug} />
       ) : slug === "text-video-mask" ? (
