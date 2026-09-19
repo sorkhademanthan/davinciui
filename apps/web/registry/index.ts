@@ -6,6 +6,8 @@ export type ComponentCategory =
   | "Visual Effects"
   | "ASCII Effects"
   | "Preloaders"
+  | "Interactions"
+  | "Cursor Effects"
   | "Actions"
   | "Forms"
   | "Feedback"
@@ -771,10 +773,18 @@ export const components: Record<string, ComponentMetadata> = {
       "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/hero-backgrounds/liquidchrome.webm",
   },
   // ASCII Effects
-  "ascii-effect": {
-    title: "ASCII Effect",
+  "ascii-image": {
+    title: "Ronaldo ASCII Effect",
     description:
-      "Render images as responsive ASCII artwork with image, flow, and glitch variations.",
+      "Cristiano Ronaldo rendered as responsive ASCII art with presets, background suppression, and reveal/scramble effects.",
+    category: "ASCII Effects",
+    slug: "ascii-image",
+    addedAt: "2026-09-19",
+  },
+  "ascii-effect": {
+    title: "Messi ASCII Effect",
+    description:
+      "Lionel Messi rendered as responsive ASCII artwork with image, flow, and glitch variations.",
     category: "ASCII Effects",
     slug: "ascii-effect",
     addedAt: "2026-07-21",
@@ -814,14 +824,6 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "editorial-wipe-preloader",
     addedAt: "2026-09-18",
   },
-  "da-vinci-preloader": {
-    title: "Da Vinci Preloader",
-    description:
-      "A cinematic hero-to-loader transition: hero type fragments, DA VINCI assembles on off-white, then a hero-image window opens inside the wordmark and expands into the full page.",
-    category: "Preloaders",
-    slug: "da-vinci-preloader",
-    addedAt: "2026-09-18",
-  },
   "geometric-preloader": {
     title: "Geometric Preloader",
     description:
@@ -829,6 +831,14 @@ export const components: Record<string, ComponentMetadata> = {
     category: "Preloaders",
     slug: "geometric-preloader",
     addedAt: "2026-09-18",
+  },
+  "preloader-pro": {
+    title: "Preloader Pro",
+    description:
+      "A cinematic two-stage loader: heavy percentage with a thin red line on white, then a sliding panel reveal into a dark PRELOADER PRO hero.",
+    category: "Preloaders",
+    slug: "preloader-pro",
+    addedAt: "2026-09-19",
   },
   // Visual Effects
   "image-trail": {

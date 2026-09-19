@@ -2,11 +2,11 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "ascii-effect",
   "type": "registry:ui",
-  "title": "ASCII Effect",
+  "title": "Messi ASCII Effect",
   "dependencies": [],
   "devDependencies": [],
   "registryDependencies": [],
-  "description": "Render images as responsive ASCII artwork with image, flow, and glitch variations.",
+  "description": "Lionel Messi rendered as responsive ASCII artwork with image, flow, and glitch variations.",
   "files": [
     {
       "path": "components/ui/ascii-effect.tsx",
