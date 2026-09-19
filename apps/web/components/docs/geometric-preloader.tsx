@@ -33,9 +33,16 @@ export async function GeometricPreloaderDocs() {
         { name: "duration", type: "number", default: "2200", description: "Milliseconds spent in the loading phase." },
         { name: "holdDuration", type: "number", default: "180", description: "Milliseconds the completed geometric frame holds." },
         { name: "exitDuration", type: "number", default: "720", description: "Milliseconds for the diamond-scale reveal." },
-        { name: "backgroundColor", type: "string", default: '"#111111"', description: "Overlay background color." },
-        { name: "foregroundColor", type: "string", default: '"#f5f1e8"', description: "Secondary geometric line color." },
+        { name: "backgroundColor", type: "string", default: 'theme-aware ("#111111" / "#e8e6e3")', description: "Overlay background color. Defaults follow the page color scheme." },
+        { name: "foregroundColor", type: "string", default: 'theme-aware ("#f5f1e8" / "#1b1b19")', description: "Secondary square-line color. Defaults follow the page color scheme." },
         { name: "accentColor", type: "string", default: '"#ff4d23"', description: "Accent line and progress color." },
+        {
+          name: "theme",
+          type: '"auto" | "light" | "dark"',
+          default: '"auto"',
+          description:
+            "Color scheme for the defaults. Auto follows the page and updates live; explicit colors always win.",
+        },
         { name: "showLabel", type: "boolean", default: "true", description: "Show the progress label in the center." },
         { name: "onComplete", type: "() => void", description: "Fires once after the reveal finishes." },
       ]}
