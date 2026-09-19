@@ -14,6 +14,10 @@ const docsImportMap: Record<
     import("@/components/docs/ascii-effect").then((m) => ({
       default: m.AsciiEffectDocs,
     })),
+  "ascii-image": () =>
+    import("@/components/docs/ascii-image").then((m) => ({
+      default: m.AsciiImageDocs,
+    })),
   "dithered-logo": () =>
     import("@/components/docs/dithered-logo").then((m) => ({
       default: m.DitheredLogoDocs,
@@ -502,13 +506,13 @@ const docsImportMap: Record<
     import("@/components/docs/editorial-wipe-preloader").then((m) => ({
       default: m.EditorialWipePreloaderDocs,
     })),
-  "da-vinci-preloader": () =>
-    import("@/components/docs/da-vinci-preloader").then((m) => ({
-      default: m.DaVinciPreloaderDocs,
-    })),
   "geometric-preloader": () =>
     import("@/components/docs/geometric-preloader").then((m) => ({
       default: m.GeometricPreloaderDocs,
+    })),
+  "preloader-pro": () =>
+    import("@/components/docs/preloader-pro").then((m) => ({
+      default: m.PreloaderProDocs,
     })),
 };
 

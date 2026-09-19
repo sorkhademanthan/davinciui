@@ -14,6 +14,8 @@ const categoryOrder = [
   "Visual Effects",
   "ASCII Effects",
   "Preloaders",
+  "Interactions",
+  "Cursor Effects",
 ] as const
 
 export default function ComponentsIndexPage() {
