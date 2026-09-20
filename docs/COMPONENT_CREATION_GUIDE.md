@@ -197,7 +197,6 @@ export const components: Record<string, ComponentMetadata> = {
 | `"Components"`       | Interactive UI elements (Cards, Modals, Docks)      |
 | `"Hero Backgrounds"` | Full-page background effects                        |
 | `"Visual Effects"`   | Decorative effects (Blobs, Particles, Noise)        |
-| `"ASCII Effects"`    | Image-to-ASCII renderers and animated ASCII effects |
 | `"Preloaders"`       | Full-screen loading screens and page-load indicators |
 
 ---

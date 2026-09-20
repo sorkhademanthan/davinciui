@@ -24,18 +24,34 @@ const KineticText = dynamic(
   { ssr: false },
 );
 
-const AsciiGalleryImageCardPreview = dynamic(
+const ElectricVijdiCursorCardPreview = dynamic(
   () =>
-    import("@/components/docs/previews/ascii-gallery-card-previews").then(
-      (module) => module.AsciiGalleryImageCardPreview,
+    import("@/components/docs/previews/electric-vijdi-cursor-card-preview").then(
+      (module) => module.ElectricVijdiCursorCardPreview,
     ),
   { ssr: false },
 );
 
-const AsciiGalleryEffectCardPreview = dynamic(
+const CursorMaskRevealCardPreview = dynamic(
   () =>
-    import("@/components/docs/previews/ascii-gallery-card-previews").then(
-      (module) => module.AsciiGalleryEffectCardPreview,
+    import("@/components/docs/previews/cursor-mask-reveal-card-preview").then(
+      (module) => module.CursorMaskRevealCardPreview,
+    ),
+  { ssr: false },
+);
+
+const MagicCursorProCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/magic-cursor-pro-card-preview").then(
+      (module) => module.MagicCursorProCardPreview,
+    ),
+  { ssr: false },
+);
+
+const ChromaticCursorCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/chromatic-cursor-card-preview").then(
+      (module) => module.ChromaticCursorCardPreview,
     ),
   { ssr: false },
 );
@@ -178,25 +194,25 @@ const ScrollSyncGalleryCardPreview = dynamic(
 
 const HorizontalScrollGalleryCardPreview = dynamic(
   () =>
-    import(
-      "@/components/docs/previews/horizontal-scroll-gallery-card-preview"
-    ).then((module) => module.HorizontalScrollGalleryCardPreview),
+    import("@/components/docs/previews/horizontal-scroll-gallery-card-preview").then(
+      (module) => module.HorizontalScrollGalleryCardPreview,
+    ),
   { ssr: false },
 );
 
 const ScrollMediaExpandCardPreview = dynamic(
   () =>
-    import(
-      "@/components/docs/previews/scroll-media-expand-card-preview"
-    ).then((module) => module.ScrollMediaExpandCardPreview),
+    import("@/components/docs/previews/scroll-media-expand-card-preview").then(
+      (module) => module.ScrollMediaExpandCardPreview,
+    ),
   { ssr: false },
 );
 
 const ScrollBlurOverlayCardPreview = dynamic(
   () =>
-    import(
-      "@/components/docs/previews/scroll-blur-overlay-card-preview"
-    ).then((module) => module.ScrollBlurOverlayCardPreview),
+    import("@/components/docs/previews/scroll-blur-overlay-card-preview").then(
+      (module) => module.ScrollBlurOverlayCardPreview,
+    ),
   { ssr: false },
 );
 
@@ -218,9 +234,9 @@ const BasicComponentCardPreview = dynamic(
 
 const InteractiveMediaAccordionCardPreview = dynamic(
   () =>
-    import(
-      "@/components/docs/previews/interactive-media-accordion-card-preview"
-    ).then((module) => module.InteractiveMediaAccordionCardPreview),
+    import("@/components/docs/previews/interactive-media-accordion-card-preview").then(
+      (module) => module.InteractiveMediaAccordionCardPreview,
+    ),
   { ssr: false },
 );
 
@@ -242,41 +258,41 @@ const FillPreloaderCardPreview = dynamic(
 
 const StaircasePreloaderCardPreview = dynamic(
   () =>
-    import(
-      "@/components/docs/previews/staircase-preloader-card-preview"
-    ).then((module) => module.StaircasePreloaderCardPreview),
+    import("@/components/docs/previews/staircase-preloader-card-preview").then(
+      (module) => module.StaircasePreloaderCardPreview,
+    ),
   { ssr: false },
 );
 
 const PixelPreloaderCardPreview = dynamic(
   () =>
-    import(
-      "@/components/docs/previews/pixel-preloader-card-preview"
-    ).then((module) => module.PixelPreloaderCardPreview),
+    import("@/components/docs/previews/pixel-preloader-card-preview").then(
+      (module) => module.PixelPreloaderCardPreview,
+    ),
   { ssr: false },
 );
 
 const EditorialWipePreloaderCardPreview = dynamic(
   () =>
-    import(
-      "@/components/docs/previews/editorial-wipe-preloader-card-preview"
-    ).then((module) => module.EditorialWipePreloaderCardPreview),
+    import("@/components/docs/previews/editorial-wipe-preloader-card-preview").then(
+      (module) => module.EditorialWipePreloaderCardPreview,
+    ),
   { ssr: false },
 );
 
 const GeometricPreloaderCardPreview = dynamic(
   () =>
-    import(
-      "@/components/docs/previews/geometric-preloader-card-preview"
-    ).then((module) => module.GeometricPreloaderCardPreview),
+    import("@/components/docs/previews/geometric-preloader-card-preview").then(
+      (module) => module.GeometricPreloaderCardPreview,
+    ),
   { ssr: false },
 );
 
 const PreloaderProCardPreview = dynamic(
   () =>
-    import(
-      "@/components/docs/previews/preloader-pro-card-preview"
-    ).then((module) => module.PreloaderProCardPreview),
+    import("@/components/docs/previews/preloader-pro-card-preview").then(
+      (module) => module.PreloaderProCardPreview,
+    ),
   { ssr: false },
 );
 
@@ -330,8 +346,10 @@ const RollingText = dynamic(
 
 type ComponentCardLivePreviewProps = {
   slug:
-    | "ascii-image"
-    | "ascii-effect"
+    | "electric-vijdi-cursor"
+    | "cursor-mask-reveal"
+    | "magic-cursor-pro"
+    | "chromatic-cursor"
     | "gsap-text"
     | "text-morph"
     | "shake-text"
@@ -416,29 +434,31 @@ export function ComponentCardLivePreview({
         slug === "ambient-audio-toggle" ? "bg-[#101815]" : "bg-background"
       }`}
     >
-      {slug === "ambient-audio-toggle" && !shouldRender ? null :
-      !shouldRender ||
-      (reducedMotion &&
-        slug !== "shader-text" &&
-        slug !== "soft-fluid-gradient" &&
-        slug !== "silk-aurora" &&
-        slug !== "character-field" &&
-        slug !== "pixel-flow" &&
-        slug !== "neon-mesh-bg" &&
-        slug !== "spectra-noise" &&
-        slug !== "noiser" &&
-        slug !== "sunlight-effect" &&
-        slug !== "ambient-audio-toggle" &&
-        slug !== "ascii-image" &&
-        slug !== "ascii-effect" &&
-        !isBasicPreviewSlug(slug)) ? (
+      {slug === "ambient-audio-toggle" &&
+      !shouldRender ? null : !shouldRender ||
+        (reducedMotion &&
+          slug !== "shader-text" &&
+          slug !== "soft-fluid-gradient" &&
+          slug !== "silk-aurora" &&
+          slug !== "character-field" &&
+          slug !== "pixel-flow" &&
+          slug !== "neon-mesh-bg" &&
+          slug !== "spectra-noise" &&
+          slug !== "noiser" &&
+          slug !== "sunlight-effect" &&
+          slug !== "ambient-audio-toggle" &&
+          !isBasicPreviewSlug(slug)) ? (
         <span className="text-3xl font-black tracking-[-0.055em] text-foreground sm:text-4xl">
           {staticLabel}
         </span>
-      ) : slug === "ascii-image" ? (
-        <AsciiGalleryImageCardPreview />
-      ) : slug === "ascii-effect" ? (
-        <AsciiGalleryEffectCardPreview animated={!reducedMotion} />
+      ) : slug === "electric-vijdi-cursor" ? (
+        <ElectricVijdiCursorCardPreview />
+      ) : slug === "cursor-mask-reveal" ? (
+        <CursorMaskRevealCardPreview />
+      ) : slug === "magic-cursor-pro" ? (
+        <MagicCursorProCardPreview />
+      ) : slug === "chromatic-cursor" ? (
+        <ChromaticCursorCardPreview />
       ) : slug === "shader-text" ? (
         <ShaderText
           text="DAVINCIUI"

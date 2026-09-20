@@ -12,7 +12,6 @@ const categoryOrder = [
   "Premium Components",
   "Hero Backgrounds",
   "Visual Effects",
-  "ASCII Effects",
   "Preloaders",
   "Interactions",
   "Cursor Effects",

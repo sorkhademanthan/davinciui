@@ -27,7 +27,7 @@ const SCROLL_SLUGS = new Set([
   "scroll-timeline",
 ])
 
-const TOP_FILTERS = ["All", "Basic", "Text Animations", "Premium Components", "Hero Backgrounds", "Sound", "Visual Effects", "ASCII Effects", "Preloaders", "Interactions", "Cursor Effects", "Motion", "Scroll"] as const
+const TOP_FILTERS = ["All", "Basic", "Text Animations", "Premium Components", "Hero Backgrounds", "Sound", "Visual Effects", "Preloaders", "Interactions", "Cursor Effects", "Motion", "Scroll"] as const
 
 const BASIC_SUBS_ALL: readonly string[] = BASIC_SUBS
 
@@ -95,8 +95,10 @@ function hasLiveCardPreview(
   | "editorial-wipe-preloader"
   | "geometric-preloader"
   | "preloader-pro"
-  | "ascii-image"
-  | "ascii-effect"
+  | "electric-vijdi-cursor"
+  | "cursor-mask-reveal"
+  | "magic-cursor-pro"
+  | "chromatic-cursor"
   | BasicPreviewSlug {
   return (
     slug === "gsap-text" ||
@@ -136,8 +138,10 @@ function hasLiveCardPreview(
     slug === "editorial-wipe-preloader" ||
     slug === "geometric-preloader" ||
     slug === "preloader-pro" ||
-    slug === "ascii-image" ||
-    slug === "ascii-effect" ||
+    slug === "electric-vijdi-cursor" ||
+    slug === "cursor-mask-reveal" ||
+    slug === "magic-cursor-pro" ||
+    slug === "chromatic-cursor" ||
     isBasicPreviewSlug(slug)
   )
 }
@@ -205,7 +209,6 @@ function ComponentsGallery() {
       if (activeTop === "Hero Backgrounds") return c.category === "Hero Backgrounds"
       if (activeTop === "Sound") return c.category === "Sound"
       if (activeTop === "Visual Effects") return c.category === "Visual Effects"
-      if (activeTop === "ASCII Effects") return c.category === "ASCII Effects"
       if (activeTop === "Preloaders") return c.category === "Preloaders"
       if (activeTop === "Interactions") return c.category === "Interactions"
       if (activeTop === "Cursor Effects") return c.category === "Cursor Effects"
@@ -303,9 +306,7 @@ function ComponentsGallery() {
             <>
               <div className="p-1.5">
                 <div className="relative h-48 rounded-xl border border-border bg-zinc-100 dark:bg-zinc-900 overflow-hidden">
-                  {c.slug === "ascii-image" || c.slug === "ascii-effect" ? (
-                    <ComponentCardLivePreview slug={c.slug} />
-                  ) : sources ? (
+                  {sources ? (
                     <video autoPlay muted loop playsInline preload="metadata" className="absolute inset-0 h-full w-full object-cover">
                       <source src={sources.webm} type="video/webm" />
                       <source src={sources.mp4} type="video/mp4" />

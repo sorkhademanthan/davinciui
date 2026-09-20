@@ -86,6 +86,7 @@ export async function DocsPageLayout({
   props = [],
   fullWidthPreview = false,
   scrollablePreview = false,
+  unstyledPreview = false,
   personalizeContent,
   hideDefaultPreviewVariant = false,
   hideExamples = false,
@@ -385,6 +386,7 @@ export async function DocsPageLayout({
         data-docs-right-column
         className={cn(
           "flex-1 lg:basis-1/2 lg:max-w-[50%] min-w-0 h-[55vh] lg:h-[calc(100vh-3.5rem)] lg:sticky lg:top-14 order-first lg:order-last bg-white dark:bg-[#121212] flex flex-col z-20 lg:border-l border-border/40 overflow-hidden",
+          fullWidthPreview && unstyledPreview && "h-[calc(100vh-3.5rem)]",
           scrollablePreview && "min-h-0 flex-none lg:flex-1",
         )}
       >

@@ -68,7 +68,6 @@ Open code you own. Composable APIs. Beautiful defaults. Animations handled.
     "Premium Components",
     "Hero Backgrounds",
     "Visual Effects",
-    "ASCII Effects",
     "Preloaders",
     "Interactions",
     "Cursor Effects",
