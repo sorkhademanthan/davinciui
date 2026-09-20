@@ -4,7 +4,6 @@ export type ComponentCategory =
   | "Hero Backgrounds"
   | "Sound"
   | "Visual Effects"
-  | "ASCII Effects"
   | "Preloaders"
   | "Interactions"
   | "Cursor Effects"
@@ -35,6 +34,38 @@ export function isNewComponent(component: ComponentMetadata): boolean {
 }
 
 export const components: Record<string, ComponentMetadata> = {
+  "chromatic-cursor": {
+    title: "Chromatic Cursor",
+    description:
+      "A smooth RGB canvas cursor with glowing, independently customizable color trails.",
+    category: "Cursor Effects",
+    slug: "chromatic-cursor",
+    addedAt: "2026-09-19",
+  },
+  "magic-cursor-pro": {
+    title: "Magic Cursor Pro",
+    description:
+      "A spring-driven outlined cursor with tactile click feedback, blend-mode contrast, and automatic touch-device disablement.",
+    category: "Cursor Effects",
+    slug: "magic-cursor-pro",
+    addedAt: "2026-09-19",
+  },
+  "cursor-mask-reveal": {
+    title: "Cursor Mask Reveal",
+    description:
+      "A custom PNG or SVG cursor mask that punches through a pale foreground image to reveal a vivid background image.",
+    category: "Cursor Effects",
+    slug: "cursor-mask-reveal",
+    addedAt: "2026-09-19",
+  },
+  "electric-vijdi-cursor": {
+    title: "Electric Vijdi Cursor",
+    description:
+      "A white-hot violet lightning cursor that crackles through recent pointer movement and decays without blocking interaction.",
+    category: "Cursor Effects",
+    slug: "electric-vijdi-cursor",
+    addedAt: "2026-09-19",
+  },
   "dithered-logo": {
     title: "Dithered Logo",
     description:
@@ -771,25 +802,6 @@ export const components: Record<string, ComponentMetadata> = {
     addedAt: "2026-06-24",
     previewVideo:
       "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/hero-backgrounds/liquidchrome.webm",
-  },
-  // ASCII Effects
-  "ascii-image": {
-    title: "Ronaldo ASCII Effect",
-    description:
-      "Cristiano Ronaldo rendered as responsive ASCII art with presets, background suppression, and reveal/scramble effects.",
-    category: "ASCII Effects",
-    slug: "ascii-image",
-    addedAt: "2026-09-19",
-  },
-  "ascii-effect": {
-    title: "Messi ASCII Effect",
-    description:
-      "Lionel Messi rendered as responsive ASCII artwork with image, flow, and glitch variations.",
-    category: "ASCII Effects",
-    slug: "ascii-effect",
-    addedAt: "2026-07-21",
-    previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/ascii-effects/asciieffect.webm",
   },
   // Preloaders
   "fill-preloader": {

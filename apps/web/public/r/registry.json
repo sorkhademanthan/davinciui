@@ -25,18 +25,6 @@
       "type": "registry:ui"
     },
     {
-      "name": "ascii-effect",
-      "type": "registry:ui"
-    },
-    {
-      "name": "ascii-image",
-      "type": "registry:ui"
-    },
-    {
-      "name": "ascii-portraits",
-      "type": "registry:ui"
-    },
-    {
       "name": "attachment",
       "type": "registry:ui"
     },
@@ -93,6 +81,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "chromatic-cursor",
+      "type": "registry:ui"
+    },
+    {
       "name": "circuit-board",
       "type": "registry:ui"
     },
@@ -118,6 +110,10 @@
     },
     {
       "name": "context-menu",
+      "type": "registry:ui"
+    },
+    {
+      "name": "cursor-mask-reveal",
       "type": "registry:ui"
     },
     {
@@ -150,6 +146,10 @@
     },
     {
       "name": "editorial-wipe-preloader",
+      "type": "registry:ui"
+    },
+    {
+      "name": "electric-vijdi-cursor",
       "type": "registry:ui"
     },
     {
@@ -278,6 +278,10 @@
     },
     {
       "name": "mac-keyboard",
+      "type": "registry:ui"
+    },
+    {
+      "name": "magic-cursor-pro",
       "type": "registry:ui"
     },
     {

@@ -10,13 +10,21 @@ const docsImportMap: Record<
     | { [key: string]: React.ComponentType<Record<string, unknown>> }
   >
 > = {
-  "ascii-effect": () =>
-    import("@/components/docs/ascii-effect").then((m) => ({
-      default: m.AsciiEffectDocs,
+  "chromatic-cursor": () =>
+    import("@/components/docs/chromatic-cursor").then((m) => ({
+      default: m.ChromaticCursorDocs,
     })),
-  "ascii-image": () =>
-    import("@/components/docs/ascii-image").then((m) => ({
-      default: m.AsciiImageDocs,
+  "magic-cursor-pro": () =>
+    import("@/components/docs/magic-cursor-pro").then((m) => ({
+      default: m.MagicCursorProDocs,
+    })),
+  "cursor-mask-reveal": () =>
+    import("@/components/docs/cursor-mask-reveal").then((m) => ({
+      default: m.CursorMaskRevealDocs,
+    })),
+  "electric-vijdi-cursor": () =>
+    import("@/components/docs/electric-vijdi-cursor").then((m) => ({
+      default: m.ElectricVijdiCursorDocs,
     })),
   "dithered-logo": () =>
     import("@/components/docs/dithered-logo").then((m) => ({
