@@ -71,6 +71,7 @@ Open code you own. Composable APIs. Beautiful defaults. Animations handled.
     "Preloaders",
     "Interactions",
     "Cursor Effects",
+    "Motion",
   ] as const;
   categoryOrder.forEach((category) => {
     text += `\n\n### ${category}\n\n`;
