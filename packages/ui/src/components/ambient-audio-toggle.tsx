@@ -21,13 +21,13 @@ export interface AmbientAudioToggleProps extends Omit<
   volume?: number;
   /** Waveform presentation. */
   visualizer?: AmbientVisualizerStyle;
-  /** Active waveform color. */
+  /** Active waveform color. Follows the site theme when omitted. */
   activeColor?: string;
-  /** Paused waveform color. */
+  /** Paused waveform color. Follows the site theme when omitted. */
   inactiveColor?: string;
-  /** Playing label color. */
+  /** Playing label color. Follows the site theme when omitted. */
   playingColor?: string;
-  /** Paused label color. */
+  /** Paused label color. Follows the site theme when omitted. */
   pausedColor?: string;
   /** Button label shown while audio is playing. */
   labelPlaying?: string;
@@ -60,6 +60,17 @@ export interface AmbientAudioToggleProps extends Omit<
   /** Additional classes applied to the toggle button. */
   className?: string;
 }
+
+// Theme-aware runtime defaults: light mode → deep emerald waveform with dark
+// ink labels on the light button, dark mode → mint waveform with pale labels
+// on the dark button. Pure CSS variables, so toggling the theme never touches
+// the audio session or rebuilds the visualizer.
+const THEME_COLOR_VARS = {
+  activeColor: "var(--ambient-active)",
+  inactiveColor: "var(--ambient-inactive)",
+  playingColor: "var(--ambient-playing)",
+  pausedColor: "var(--ambient-paused)",
+} as const;
 
 type AudioSession = {
   audio: HTMLAudioElement;
@@ -157,10 +168,10 @@ export function AmbientAudioToggle({
   loop = true,
   volume = 65,
   visualizer = "wave",
-  activeColor = "#a7f3d0",
-  inactiveColor = "#64748b",
-  playingColor = "#f8fafc",
-  pausedColor = "#94a3b8",
+  activeColor = THEME_COLOR_VARS.activeColor,
+  inactiveColor = THEME_COLOR_VARS.inactiveColor,
+  playingColor = THEME_COLOR_VARS.playingColor,
+  pausedColor = THEME_COLOR_VARS.pausedColor,
   labelPlaying = "Playing",
   labelPaused = "Play ambient audio",
   hideLabel = false,
@@ -259,7 +270,10 @@ export function AmbientAudioToggle({
       data-playing={isPlaying}
       onClick={toggle}
       className={cn(
-        "group inline-flex min-h-12 min-w-12 select-none items-center justify-center rounded-xl border border-white/15 bg-zinc-950/90 px-3 py-2 text-left shadow-lg shadow-black/25 backdrop-blur-md transition-[background-color,border-color,box-shadow,transform] hover:border-emerald-200/35 hover:bg-zinc-900 hover:shadow-xl hover:shadow-black/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 active:scale-[0.98]",
+        "group inline-flex min-h-12 min-w-12 select-none items-center justify-center rounded-xl border border-zinc-950/10 bg-white/90 px-3 py-2 text-left shadow-lg shadow-zinc-950/10 backdrop-blur-md transition-[background-color,border-color,box-shadow,transform] hover:border-emerald-600/40 hover:bg-zinc-50 hover:shadow-xl hover:shadow-zinc-950/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 focus-visible:ring-offset-white active:scale-[0.98]",
+        "dark:border-white/15 dark:bg-zinc-950/90 dark:shadow-black/25 dark:hover:border-emerald-200/35 dark:hover:bg-zinc-900 dark:hover:shadow-black/30 dark:focus-visible:ring-emerald-300 dark:focus-visible:ring-offset-zinc-950",
+        "[--ambient-active:#047857] [--ambient-inactive:#94a3b8] [--ambient-playing:#09090b] [--ambient-paused:#64748b]",
+        "dark:[--ambient-active:#a7f3d0] dark:[--ambient-inactive:#64748b] dark:[--ambient-playing:#f8fafc] dark:[--ambient-paused:#94a3b8]",
         column ? "flex-col" : "flex-row",
         className,
       )}
@@ -329,7 +343,6 @@ export function AmbientAudioToggle({
           <path
             d={waveData}
             fill="none"
-            stroke={isPlaying ? activeColor : inactiveColor}
             strokeWidth={lineWeight * (isPlaying ? Math.max(0, intensity) : 1)}
             strokeLinecap={lineCap}
             strokeLinejoin={lineCap === "round" ? "round" : "miter"}
@@ -337,6 +350,7 @@ export function AmbientAudioToggle({
             strokeDashoffset="0"
             className={isPlaying ? "ambient-audio-wave-motion" : undefined}
             style={{
+              stroke: isPlaying ? activeColor : inactiveColor,
               opacity: isPlaying ? 1 : Math.max(0, Math.min(1, pausedAmount)),
               animation: isPlaying
                 ? `ambient-audio-wave-scroll ${motionDuration} linear infinite`

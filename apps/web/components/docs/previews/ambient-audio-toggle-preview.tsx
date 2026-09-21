@@ -1,5 +1,6 @@
 "use client";
 
+import { useTheme } from "next-themes";
 import { create } from "zustand";
 import { AmbientAudioToggle } from "@workspace/ui/components/ambient-audio-toggle";
 import {
@@ -57,28 +58,96 @@ const DEFAULT_CONFIG: AmbientAudioToggleConfig = {
   transition: 0.35,
 };
 
+type AmbientAudioColorKey =
+  | "activeColor"
+  | "inactiveColor"
+  | "playingColor"
+  | "pausedColor";
+
+const LIGHT_COLOR_DEFAULTS: Record<AmbientAudioColorKey, string> = {
+  activeColor: "#047857",
+  inactiveColor: "#94a3b8",
+  playingColor: "#09090b",
+  pausedColor: "#64748b",
+};
+
+const DARK_COLOR_DEFAULTS: Record<AmbientAudioColorKey, string> = {
+  activeColor: "#a7f3d0",
+  inactiveColor: "#64748b",
+  playingColor: "#f8fafc",
+  pausedColor: "#94a3b8",
+};
+
 const useAmbientAudioToggleStore = create<{
   config: AmbientAudioToggleConfig;
+  touchedColors: Record<AmbientAudioColorKey, boolean>;
   update: (next: Partial<AmbientAudioToggleConfig>) => void;
+  updateColor: (key: AmbientAudioColorKey, value: string) => void;
   reset: () => void;
 }>((set) => ({
   config: DEFAULT_CONFIG,
+  touchedColors: {
+    activeColor: false,
+    inactiveColor: false,
+    playingColor: false,
+    pausedColor: false,
+  },
   update: (next) => set((state) => ({ config: { ...state.config, ...next } })),
-  reset: () => set({ config: DEFAULT_CONFIG }),
+  updateColor: (key, value) =>
+    set((state) => ({
+      config: { ...state.config, [key]: value },
+      touchedColors: { ...state.touchedColors, [key]: true },
+    })),
+  reset: () =>
+    set({
+      config: DEFAULT_CONFIG,
+      touchedColors: {
+        activeColor: false,
+        inactiveColor: false,
+        playingColor: false,
+        pausedColor: false,
+      },
+    }),
 }));
 
 export function AmbientAudioTogglePreview() {
   const config = useAmbientAudioToggleStore((state) => state.config);
+  const touchedColors = useAmbientAudioToggleStore(
+    (state) => state.touchedColors,
+  );
+  const { resolvedTheme } = useTheme();
+  const themeDefaults =
+    resolvedTheme === "light" ? LIGHT_COLOR_DEFAULTS : DARK_COLOR_DEFAULTS;
 
   return (
     <section
-      className="relative flex h-full min-h-[560px] w-full flex-col items-center justify-center overflow-hidden bg-[#101815] px-6 text-center"
+      className="relative flex h-full min-h-[560px] w-full flex-col items-center justify-center overflow-hidden bg-[#eef4f0] px-6 text-center dark:bg-[#101815]"
       style={{ containerType: "inline-size" }}
     >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_40%,rgba(70,132,104,0.32),transparent_64%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_40%,rgba(4,120,87,0.14),transparent_64%)] dark:bg-[radial-gradient(ellipse_at_50%_40%,rgba(70,132,104,0.32),transparent_64%)]" />
       <div className="relative flex items-center justify-center">
         <AmbientAudioToggle
           {...config}
+          activeColor={
+            touchedColors.activeColor
+              ? config.activeColor
+              : themeDefaults.activeColor
+          }
+          inactiveColor={
+            touchedColors.inactiveColor
+              ? config.inactiveColor
+              : themeDefaults.inactiveColor
+          }
+          playingColor={
+            touchedColors.playingColor
+              ? config.playingColor
+              : themeDefaults.playingColor
+          }
+          pausedColor={
+            touchedColors.pausedColor
+              ? config.pausedColor
+              : themeDefaults.pausedColor
+          }
           src="/audio/ambient-toggle-demo.wav"
           persistenceKey="davinciui-ambient-audio-preview"
           className="min-h-[64px] rounded-2xl px-5 py-3"
@@ -90,8 +159,29 @@ export function AmbientAudioTogglePreview() {
 
 export function AmbientAudioTogglePersonalizePanel() {
   const config = useAmbientAudioToggleStore((state) => state.config);
+  const touchedColors = useAmbientAudioToggleStore(
+    (state) => state.touchedColors,
+  );
   const update = useAmbientAudioToggleStore((state) => state.update);
+  const updateColor = useAmbientAudioToggleStore((state) => state.updateColor);
   const reset = useAmbientAudioToggleStore((state) => state.reset);
+  const { resolvedTheme } = useTheme();
+  const themeDefaults =
+    resolvedTheme === "light" ? LIGHT_COLOR_DEFAULTS : DARK_COLOR_DEFAULTS;
+  const visibleColors: Record<AmbientAudioColorKey, string> = {
+    activeColor: touchedColors.activeColor
+      ? config.activeColor
+      : themeDefaults.activeColor,
+    inactiveColor: touchedColors.inactiveColor
+      ? config.inactiveColor
+      : themeDefaults.inactiveColor,
+    playingColor: touchedColors.playingColor
+      ? config.playingColor
+      : themeDefaults.playingColor,
+    pausedColor: touchedColors.pausedColor
+      ? config.pausedColor
+      : themeDefaults.pausedColor,
+  };
 
   return (
     <div className="h-full overflow-auto bg-background [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
@@ -204,27 +294,31 @@ export function AmbientAudioTogglePersonalizePanel() {
           <PlaygroundSectionTitle>Color</PlaygroundSectionTitle>
           <PlaygroundColorPicker
             label="Active waveform"
-            value={config.activeColor}
-            onChange={(activeColor) => update({ activeColor })}
-            defaultColor={DEFAULT_CONFIG.activeColor}
+            value={visibleColors.activeColor}
+            onChange={(activeColor) => updateColor("activeColor", activeColor)}
+            defaultColor={themeDefaults.activeColor}
           />
           <PlaygroundColorPicker
             label="Inactive waveform"
-            value={config.inactiveColor}
-            onChange={(inactiveColor) => update({ inactiveColor })}
-            defaultColor={DEFAULT_CONFIG.inactiveColor}
+            value={visibleColors.inactiveColor}
+            onChange={(inactiveColor) =>
+              updateColor("inactiveColor", inactiveColor)
+            }
+            defaultColor={themeDefaults.inactiveColor}
           />
           <PlaygroundColorPicker
             label="Playing label"
-            value={config.playingColor}
-            onChange={(playingColor) => update({ playingColor })}
-            defaultColor={DEFAULT_CONFIG.playingColor}
+            value={visibleColors.playingColor}
+            onChange={(playingColor) =>
+              updateColor("playingColor", playingColor)
+            }
+            defaultColor={themeDefaults.playingColor}
           />
           <PlaygroundColorPicker
             label="Paused label"
-            value={config.pausedColor}
-            onChange={(pausedColor) => update({ pausedColor })}
-            defaultColor={DEFAULT_CONFIG.pausedColor}
+            value={visibleColors.pausedColor}
+            onChange={(pausedColor) => updateColor("pausedColor", pausedColor)}
+            defaultColor={themeDefaults.pausedColor}
           />
         </section>
 
