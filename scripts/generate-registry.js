@@ -22,12 +22,28 @@ if (args.length === 0) {
 
 const componentName = args[0];
 const componentFilename = `${componentName}.tsx`;
-const sourcePath = path.join(COMPONENT_DIR, componentFilename);
+
+// Components may live in grouped subdirectories (e.g. components/motion/).
+// Resolve the flat path first, then fall back to a recursive search.
+function findComponentSource(dir, filename) {
+  const direct = path.join(dir, filename);
+  if (fs.existsSync(direct)) return direct;
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue;
+    const nested = findComponentSource(path.join(dir, entry.name), filename);
+    if (nested) return nested;
+  }
+  return null;
+}
+
+const sourcePath = findComponentSource(COMPONENT_DIR, componentFilename);
 const registryPath = path.join(REGISTRY_DIR, `${componentName}.json`);
 
 // Check if source component exists
-if (!fs.existsSync(sourcePath)) {
-  console.error(`Component file not found at: ${sourcePath}`);
+if (!sourcePath) {
+  console.error(
+    `Component file not found: ${componentFilename} (searched ${COMPONENT_DIR})`,
+  );
   process.exit(1);
 }
 
