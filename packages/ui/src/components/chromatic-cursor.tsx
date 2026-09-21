@@ -2,6 +2,9 @@
 
 import * as React from "react";
 
+export type ChromaticCursorTheme = "auto" | "light" | "dark";
+export type ChromaticCursorQuality = "low" | "medium" | "high";
+
 export interface ChromaticCursorProps {
   /** Maximum number of samples retained in each colored trail. */
   trailLength?: number;
@@ -11,7 +14,7 @@ export interface ChromaticCursorProps {
   fadeSpeed?: number;
   /** Cursor head radius and stroke scale in pixels. */
   size?: number;
-  /** Follow smoothing from 0.05 (soft) to 1 (direct). */
+  /** Follow responsiveness from 0.05 (soft) to 1 (tight). */
   tension?: number;
   /** Red channel color. */
   red?: string;
@@ -19,6 +22,10 @@ export interface ChromaticCursorProps {
   green?: string;
   /** Blue channel color. */
   blue?: string;
+  /** Color scheme for blending and core rendering. `"auto"` follows the site theme live. */
+  theme?: ChromaticCursorTheme;
+  /** Rendering detail and DPR cap. */
+  quality?: ChromaticCursorQuality;
   /** Hide the native cursor while the effect is active. */
   hideSystemCursor?: boolean;
   /** Optional host that constrains pointer tracking and canvas rendering. */
@@ -37,16 +44,56 @@ type Channel = { color: string; direction: number };
 const clamp = (value: number, minimum: number, maximum: number) =>
   Math.min(maximum, Math.max(minimum, value));
 
+const QUALITY_DPR: Record<ChromaticCursorQuality, number> = {
+  low: 1,
+  medium: 1.5,
+  high: 2,
+};
+
+const FALLBACK_GLOW_LIGHT = "rgba(0,149,255,";
+
+/** Parse `#rgb` / `#rrggbb` into an rgba() string; returns null for other formats. */
+const withAlpha = (color: string, alpha: number) => {
+  const hex = color.trim().replace(/^#/, "");
+  const full =
+    hex.length === 3 ? hex.split("").map((c) => c + c).join("") : hex;
+  if (!/^[0-9a-fA-F]{6}$/.test(full)) return null;
+  const r = parseInt(full.slice(0, 2), 16);
+  const g = parseInt(full.slice(2, 4), 16);
+  const b = parseInt(full.slice(4, 6), 16);
+  return `rgba(${r},${g},${b},${alpha})`;
+};
+
+/** Read the page color scheme without requiring a theme provider. */
+const resolveColorScheme = (): "light" | "dark" => {
+  if (typeof document === "undefined") return "dark";
+  const root = document.documentElement;
+  if (root.classList.contains("dark")) return "dark";
+  if (root.classList.contains("light")) return "light";
+  const dataTheme = root.dataset.theme;
+  if (dataTheme === "dark" || dataTheme === "light") return dataTheme;
+  if (
+    typeof window !== "undefined" &&
+    typeof window.matchMedia === "function" &&
+    window.matchMedia("(prefers-color-scheme: light)").matches
+  ) {
+    return "light";
+  }
+  return "dark";
+};
+
 /** A lightweight RGB canvas cursor with softly split, glowing trails. */
 export function ChromaticCursor({
-  trailLength = 64,
-  splitDistance = 4,
-  fadeSpeed = 0.1,
-  size = 8,
-  tension = 0.2,
-  red = "#FF3C3C",
-  green = "#78FFA0",
-  blue = "#0095FF",
+  trailLength = 40,
+  splitDistance = 5,
+  fadeSpeed = 0.25,
+  size = 9,
+  tension = 0.5,
+  red = "#FF4040",
+  green = "#3DFF88",
+  blue = "#2E9BFF",
+  theme = "auto",
+  quality = "high",
   hideSystemCursor = false,
   containerRef,
   zIndex = 9999,
@@ -54,8 +101,10 @@ export function ChromaticCursor({
   className,
 }: ChromaticCursorProps) {
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
-  const settingsRef = React.useRef({ trailLength, splitDistance, fadeSpeed, size, tension, red, green, blue });
-  settingsRef.current = { trailLength, splitDistance, fadeSpeed, size, tension, red, green, blue };
+  const settingsRef = React.useRef({ trailLength, splitDistance, fadeSpeed, size, tension, red, green, blue, quality });
+  settingsRef.current = { trailLength, splitDistance, fadeSpeed, size, tension, red, green, blue, quality };
+  const themeRef = React.useRef(theme);
+  themeRef.current = theme;
 
   React.useEffect(() => {
     const canvas = canvasRef.current;
@@ -67,19 +116,27 @@ export function ChromaticCursor({
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const cursorStyle = document.createElement("style");
     const trail: Point[] = [];
+    let scheme: "light" | "dark" =
+      themeRef.current === "auto" ? resolveColorScheme() : themeRef.current;
     let width = 0;
     let height = 0;
     let frame = 0;
     let running = false;
     let hasPointer = false;
-    let smoothX = 0;
-    let smoothY = 0;
+    let headX = 0;
+    let headY = 0;
     let targetX = 0;
     let targetY = 0;
+    let lastTime = 0;
+    let appliedDpr = 0;
 
     const resize = () => {
       const bounds = container?.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const dpr = Math.min(
+        window.devicePixelRatio || 1,
+        QUALITY_DPR[settingsRef.current.quality] ?? 2,
+      );
+      appliedDpr = dpr;
       width = bounds?.width ?? window.innerWidth;
       height = bounds?.height ?? window.innerHeight;
       canvas.width = Math.round(width * dpr);
@@ -108,110 +165,257 @@ export function ChromaticCursor({
     const wake = () => {
       if (!running) {
         running = true;
+        lastTime = performance.now();
         frame = requestAnimationFrame(render);
       }
+    };
+
+    const pushPoint = (x: number, y: number, time: number) => {
+      const previous = trail[trail.length - 1];
+      if (previous && Math.hypot(x - previous.x, y - previous.y) < 0.6) return;
+      trail.push({ x, y, time });
+      const maximum = Math.max(8, Math.round(settingsRef.current.trailLength));
+      if (trail.length > maximum) trail.splice(0, trail.length - maximum);
+    };
+
+    /** Resample to uniform arc-length spacing so segments are even and the
+     *  motion looks buttery at any pointer speed. Caps output at 28 points
+     *  to keep per-frame stroke cost flat. */
+    const resampleTrail = (points: Point[]): Point[] => {
+      const count = points.length;
+      if (count <= 2) return points;
+      const target = Math.min(28, count);
+      if (count <= target) return points;
+      let total = 0;
+      const lengths: number[] = new Array(count);
+      lengths[0] = 0;
+      for (let index = 1; index < count; index += 1) {
+        const a = points[index - 1] ?? { x: 0, y: 0, time: 0 };
+        const b = points[index] ?? { x: 0, y: 0, time: 0 };
+        total += Math.hypot(b.x - a.x, b.y - a.y);
+        lengths[index] = total;
+      }
+      if (total < 0.5) return points.slice(-target);
+      const step = total / (target - 1);
+      const output: Point[] = [];
+      let cursor = 0;
+      for (let slot = 0; slot < target; slot += 1) {
+        const distance = slot * step;
+        while (cursor < count - 2 && (lengths[cursor + 1] ?? 0) < distance) cursor += 1;
+        const a = points[cursor] ?? { x: 0, y: 0, time: 0 };
+        const b = points[cursor + 1] ?? a;
+        const span = (lengths[cursor + 1] ?? 0) - (lengths[cursor] ?? 0) || 1;
+        const progress = clamp((distance - (lengths[cursor] ?? 0)) / span, 0, 1);
+        output.push({
+          x: a.x + (b.x - a.x) * progress,
+          y: a.y + (b.y - a.y) * progress,
+          time: a.time + (b.time - a.time) * progress,
+        });
+      }
+      return output;
     };
 
     const move = (event: PointerEvent) => {
       if (reducedMotion.matches) return;
       const bounds = container?.getBoundingClientRect();
-      targetX = event.clientX - (bounds?.left ?? 0);
-      targetY = event.clientY - (bounds?.top ?? 0);
+      const x = event.clientX - (bounds?.left ?? 0);
+      const y = event.clientY - (bounds?.top ?? 0);
+      const now = performance.now();
       if (!hasPointer) {
-        smoothX = targetX;
-        smoothY = targetY;
         hasPointer = true;
+        headX = x;
+        headY = y;
+        targetX = x;
+        targetY = y;
+        trail.length = 0;
+        pushPoint(x, y, now);
+      } else {
+        // Interpolate fast jumps so high-velocity moves stay a smooth
+        // curve instead of one long straight segment.
+        const last = trail[trail.length - 1] ?? { x: headX, y: headY };
+        const distance = Math.hypot(x - last.x, y - last.y);
+        const steps = Math.min(8, Math.max(1, Math.floor(distance / 6)));
+        for (let step = 1; step <= steps; step += 1) {
+          const progress = step / steps;
+          pushPoint(
+            last.x + (x - last.x) * progress,
+            last.y + (y - last.y) * progress,
+            now,
+          );
+        }
+        targetX = x;
+        targetY = y;
       }
       wake();
     };
 
-    const drawChannel = (points: Point[], channel: Channel, alpha: number, settings: typeof settingsRef.current) => {
-      if (points.length < 2) return;
-      context.save();
-      context.globalCompositeOperation = "lighter";
-      context.globalAlpha = alpha;
-      context.strokeStyle = channel.color;
-      context.lineCap = "round";
-      context.lineJoin = "round";
-      context.lineWidth = Math.max(1.15, settings.size * 0.26);
-      context.shadowColor = channel.color;
-      context.shadowBlur = settings.size * 0.9;
-      context.setLineDash([Math.max(5, settings.size * 1.35), Math.max(4, settings.size * 0.85)]);
-      context.beginPath();
-      points.forEach((point, index) => {
+    const drawChannel = (
+      points: Point[],
+      color: string,
+      direction: number,
+      alpha: number,
+      composite: GlobalCompositeOperation,
+      lineWidth: number,
+      offset: number,
+      now: number,
+      lifetime: number,
+    ) => {
+      const count = points.length;
+      if (count < 2) return;
+      // Per-segment taper + per-point age fade in a single pass. No dashes,
+      // no section seams: width grows tail -> head and old points dissolve
+      // individually so the trail melts away instead of dimming as one blob.
+      const normals: Array<{ x: number; y: number }> = new Array(count);
+      for (let index = 0; index < count; index += 1) {
+        const point = points[index] ?? { x: 0, y: 0, time: 0 };
         const before = points[Math.max(0, index - 1)] ?? point;
-        const after = points[Math.min(points.length - 1, index + 1)] ?? point;
+        const after = points[Math.min(count - 1, index + 1)] ?? point;
         const dx = after.x - before.x;
         const dy = after.y - before.y;
         const length = Math.hypot(dx, dy) || 1;
-        const offsetX = (-dy / length) * settings.splitDistance * channel.direction;
-        const offsetY = (dx / length) * settings.splitDistance * channel.direction;
-        if (index === 0) context.moveTo(point.x + offsetX, point.y + offsetY);
-        else {
-          const previous = points[index - 1] ?? point;
-          const midpointX = (previous.x + point.x) / 2 + offsetX;
-          const midpointY = (previous.y + point.y) / 2 + offsetY;
-          context.quadraticCurveTo(previous.x + offsetX, previous.y + offsetY, midpointX, midpointY);
-        }
-      });
-      context.stroke();
-      context.setLineDash([]);
+        normals[index] = { x: (-dy / length) * offset * direction, y: (dx / length) * offset * direction };
+      }
+      context.save();
+      context.globalCompositeOperation = composite;
+      context.lineCap = "round";
+      context.lineJoin = "round";
+      context.strokeStyle = color;
+      context.shadowBlur = 0;
+      for (let index = 1; index < count; index += 1) {
+        const previous = points[index - 1];
+        const current = points[index];
+        if (!previous || !current) continue;
+        const progress = index / (count - 1); // 0 tail -> 1 head
+        const shape = Math.pow(progress, 1.6);
+        const ageFade = clamp(1 - (now - current.time) / lifetime, 0, 1);
+        const segmentAlpha = alpha * shape * ageFade;
+        if (segmentAlpha <= 0.004) continue;
+        const normalA = normals[index - 1] ?? { x: 0, y: 0 };
+        const normalB = normals[index] ?? { x: 0, y: 0 };
+        context.globalAlpha = segmentAlpha;
+        context.lineWidth = Math.max(0.5, lineWidth * (0.22 + 0.78 * shape));
+        context.beginPath();
+        context.moveTo(previous.x + normalA.x, previous.y + normalA.y);
+        context.lineTo(current.x + normalB.x, current.y + normalB.y);
+        context.stroke();
+      }
       context.restore();
     };
 
     const render = (now: number) => {
       const settings = settingsRef.current;
+      if (themeRef.current !== "auto") scheme = themeRef.current;
+      const light = scheme === "light";
+      const dprCap = QUALITY_DPR[settings.quality] ?? 2;
+      if (appliedDpr !== Math.min(window.devicePixelRatio || 1, dprCap)) resize();
       const lifetime = 340 + (1 - clamp(settings.fadeSpeed, 0.05, 1)) * 1060;
-      const ease = clamp(settings.tension, 0.05, 1) * 0.38;
+      // Frame-rate independent follow: tension maps to a spring rate so the
+      // feel is identical on 60Hz and 120Hz+ displays.
+      const delta = clamp((now - (lastTime || now)) / 1000, 0.001, 0.05);
+      lastTime = now;
+      const rate = 8 + clamp(settings.tension, 0.05, 1) * 44;
+      const ease = 1 - Math.exp(-rate * delta);
       if (hasPointer) {
-        smoothX += (targetX - smoothX) * ease;
-        smoothY += (targetY - smoothY) * ease;
-        const previous = trail[trail.length - 1];
-        if (!previous || Math.hypot(smoothX - previous.x, smoothY - previous.y) > 0.75) {
-          trail.push({ x: smoothX, y: smoothY, time: now });
-        }
+        headX += (targetX - headX) * ease;
+        headY += (targetY - headY) * ease;
+        pushPoint(headX, headY, now);
       }
       const maximum = Math.max(8, Math.round(settings.trailLength));
       if (trail.length > maximum) trail.splice(0, trail.length - maximum);
-      while (trail[0] && now - trail[0].time > lifetime) trail.shift();
+      let start = 0;
+      while (start < trail.length && now - (trail[start]?.time ?? 0) > lifetime) start += 1;
+      if (start > 0) trail.splice(0, start);
       context.clearRect(0, 0, width, height);
 
       if (!trail.length) {
+        if (hasPointer) {
+          // Keep the loop alive briefly so a resting pointer still eases
+          // toward its target instead of freezing mid-glide.
+          if (Math.hypot(targetX - headX, targetY - headY) > 0.2) {
+            frame = requestAnimationFrame(render);
+            return;
+          }
+          hasPointer = false;
+        }
         running = false;
         frame = 0;
         return;
       }
 
-      const visible = trail.filter((point) => now - point.time <= lifetime);
-      const head = visible[visible.length - 1];
-      const age = head ? clamp(1 - (now - head.time) / lifetime, 0, 1) : 0;
+      const head = { x: headX, y: headY, time: trail[trail.length - 1]?.time ?? now };
+      const headAge = clamp(1 - (now - head.time) / lifetime, 0, 1);
+      // Additive glow on dark stages; normal blending on light stages where
+      // "lighter" would wash out to white.
+      const composite: GlobalCompositeOperation = light ? "source-over" : "lighter";
+      const lineWidth = Math.max(1.8, settings.size * 0.34);
+      // Resample once per frame: even spacing => smooth curves at any speed
+      // and a flat stroke budget (<=28 pts x 4 passes).
+      const smooth = resampleTrail(trail);
       const channels: Channel[] = [
         { color: settings.red, direction: 1 },
         { color: settings.green, direction: 0 },
         { color: settings.blue, direction: -1 },
       ];
-      channels.forEach((channel) => drawChannel(visible, channel, 0.9 * age, settings));
-      drawChannel(visible, { color: "#ffffff", direction: 0 }, 0.92 * age, { ...settings, splitDistance: 0, size: settings.size * 0.56 });
+      channels.forEach((channel) =>
+        drawChannel(smooth, channel.color, channel.direction, light ? 0.85 : 0.8, composite, lineWidth, settings.splitDistance, now, lifetime),
+      );
+      // Bright core on dark, ink core on light so the trail reads on any stage.
+      drawChannel(smooth, light ? "#18181b" : "#ffffff", 0, 0.85, composite, lineWidth * 0.5, 0, now, lifetime);
 
       if (head) {
         context.save();
-        context.globalCompositeOperation = "lighter";
-        const radius = Math.max(2.5, settings.size * 0.55);
-        const glow = context.createRadialGradient(head.x, head.y, 0, head.x, head.y, radius * 2.6);
-        glow.addColorStop(0, "rgba(255,255,255,0.95)");
-        glow.addColorStop(0.18, "rgba(255,255,255,0.52)");
-        glow.addColorStop(0.48, "rgba(123,243,255,0.22)");
-        glow.addColorStop(1, "rgba(123,243,255,0)");
-        context.fillStyle = glow;
-        context.beginPath();
-        context.arc(head.x, head.y, radius * 2.6, 0, Math.PI * 2);
-        context.fill();
-        context.fillStyle = "#ffffff";
-        context.shadowColor = "#ffffff";
-        context.shadowBlur = radius * 1.4;
-        context.beginPath();
-        context.arc(head.x, head.y, radius * 0.42, 0, Math.PI * 2);
-        context.fill();
+        context.globalCompositeOperation = composite;
+        context.globalAlpha = 0.35 + 0.65 * headAge;
+        const radius = Math.max(3, settings.size * 0.6);
+        if (light) {
+          const halo = withAlpha(settings.blue, 0.3) ?? `${FALLBACK_GLOW_LIGHT}0.3)`;
+          const haloSoft = withAlpha(settings.blue, 0.12) ?? `${FALLBACK_GLOW_LIGHT}0.12)`;
+          const glow = context.createRadialGradient(head.x, head.y, 0, head.x, head.y, radius * 2.6);
+          glow.addColorStop(0, "rgba(24,24,27,0.9)");
+          glow.addColorStop(0.35, halo);
+          glow.addColorStop(0.65, haloSoft);
+          glow.addColorStop(1, "rgba(255,255,255,0)");
+          context.fillStyle = glow;
+          context.beginPath();
+          context.arc(head.x, head.y, radius * 2.6, 0, Math.PI * 2);
+          context.fill();
+          context.fillStyle = "#18181b";
+          context.shadowColor = settings.blue;
+          context.shadowBlur = radius * 1.4;
+          context.beginPath();
+          context.arc(head.x, head.y, radius * 0.52, 0, Math.PI * 2);
+          context.fill();
+          context.shadowBlur = 0;
+          context.globalAlpha *= 0.85;
+          context.strokeStyle = "#18181b";
+          context.lineWidth = 1;
+          context.beginPath();
+          context.arc(head.x, head.y, radius * 0.95, 0, Math.PI * 2);
+          context.stroke();
+        } else {
+          const glow = context.createRadialGradient(head.x, head.y, 0, head.x, head.y, radius * 2.6);
+          glow.addColorStop(0, "rgba(255,255,255,0.95)");
+          glow.addColorStop(0.18, "rgba(255,255,255,0.52)");
+          glow.addColorStop(0.48, "rgba(123,243,255,0.22)");
+          glow.addColorStop(1, "rgba(123,243,255,0)");
+          context.fillStyle = glow;
+          context.beginPath();
+          context.arc(head.x, head.y, radius * 2.6, 0, Math.PI * 2);
+          context.fill();
+          context.fillStyle = "#ffffff";
+          context.shadowColor = "#ffffff";
+          context.shadowBlur = radius * 1.4;
+          context.beginPath();
+          context.arc(head.x, head.y, radius * 0.52, 0, Math.PI * 2);
+          context.fill();
+          context.shadowBlur = 0;
+          context.globalAlpha *= 0.9;
+          context.strokeStyle = "rgba(255,255,255,0.85)";
+          context.lineWidth = 1;
+          context.beginPath();
+          context.arc(head.x, head.y, radius * 0.95, 0, Math.PI * 2);
+          context.stroke();
+        }
         context.restore();
       }
 
@@ -225,6 +429,10 @@ export function ChromaticCursor({
       context.clearRect(0, 0, width, height);
     };
 
+    const syncScheme = () => {
+      if (themeRef.current === "auto") scheme = resolveColorScheme();
+    };
+
     resize();
     setNativeCursor(true);
     if (container) container.addEventListener("pointermove", move, { passive: true });
@@ -233,6 +441,12 @@ export function ChromaticCursor({
     const resizeObserver = container && typeof ResizeObserver !== "undefined" ? new ResizeObserver(resize) : null;
     if (resizeObserver && container) resizeObserver.observe(container);
     reducedMotion.addEventListener("change", clearForReducedMotion);
+    const schemeObserver =
+      typeof MutationObserver !== "undefined" ? new MutationObserver(syncScheme) : null;
+    schemeObserver?.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class", "data-theme", "style"],
+    });
 
     return () => {
       cancelAnimationFrame(frame);
@@ -241,6 +455,7 @@ export function ChromaticCursor({
       else window.removeEventListener("pointermove", move);
       window.removeEventListener("resize", resize);
       resizeObserver?.disconnect();
+      schemeObserver?.disconnect();
       reducedMotion.removeEventListener("change", clearForReducedMotion);
     };
   }, [containerRef, disabled, hideSystemCursor]);
