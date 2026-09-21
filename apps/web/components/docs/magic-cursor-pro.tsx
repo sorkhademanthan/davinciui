@@ -18,6 +18,7 @@ export async function MagicCursorProDocs() {
     { name: "customIcon", type: "string", description: "PNG, SVG, or data URL used instead of the default arrow." },
     { name: "invertDefaultIcon", type: "boolean", default: "false", description: "Swap the default arrow fill and outline." },
     { name: "iconSize", type: "number", default: "34", description: "Cursor icon width and height in pixels." },
+    { name: "theme", type: '"auto" | "light" | "dark"', default: '"auto"', description: "Default arrow colors. Auto follows the site theme live." },
     { name: "mixBlendMode", type: "CSS mix-blend-mode", default: '"normal"', description: "Use difference or exclusion for dynamic background contrast." },
     { name: "clickSquish", type: "boolean", default: "true", description: "Compress and rebound the icon on primary clicks." },
     { name: "stiffness", type: "number", default: "400", description: "Spring pull toward the pointer." },
