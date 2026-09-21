@@ -212,6 +212,9 @@ importers:
       three:
         specifier: ^0.182.0
         version: 0.182.0
+      threejs-components:
+        specifier: 0.0.19
+        version: 0.0.19
       tw-animate-css:
         specifier: ^1.3.6
         version: 1.3.6
@@ -3420,6 +3423,9 @@ packages:
 
   three@0.182.0:
     resolution: {integrity: sha512-GbHabT+Irv+ihI1/f5kIIsZ+Ef9Sl5A1Y7imvS5RQjWgtTPfPnZ43JmlYI7NtCRDK9zir20lQpfg8/9Yd02OvQ==}
+
+  threejs-components@0.0.19:
+    resolution: {integrity: sha512-4Zk9StS8nLM07h66g2q5WtZWRDSe5D58W4whCq8MkT95+nidnYS8SNr49kYr44/sfN6NKwz0ibA9APkxKT/dWA==}
 
   through@2.3.8:
     resolution: {integrity: sha512-w89qg7PI8wAdvX60bMDP+bFoD5Dvhm9oLheFp5O4a2QF0cSBGsBX4qZmadPMvVqlLJBBci+WqGGOAPvcDeNSVg==}
@@ -7111,6 +7117,8 @@ snapshots:
       three: 0.182.0
 
   three@0.182.0: {}
+
+  threejs-components@0.0.19: {}
 
   through@2.3.8: {}
 
