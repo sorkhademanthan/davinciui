@@ -24,6 +24,14 @@ const KineticText = dynamic(
   { ssr: false },
 );
 
+const CircleCursorCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/circle-cursor-card-preview").then(
+      (module) => module.CircleCursorCardPreview,
+    ),
+  { ssr: false },
+);
+
 const ElectricVijdiCursorCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/electric-vijdi-cursor-card-preview").then(
@@ -52,6 +60,38 @@ const ChromaticCursorCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/chromatic-cursor-card-preview").then(
       (module) => module.ChromaticCursorCardPreview,
+    ),
+  { ssr: false },
+);
+
+const TubesCursorCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/tubes-cursor-card-preview").then(
+      (module) => module.TubesCursorCardPreview,
+    ),
+  { ssr: false },
+);
+
+const ElasticBlobCursorCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/elastic-blob-cursor-card-preview").then(
+      (module) => module.ElasticBlobCursorCardPreview,
+    ),
+  { ssr: false },
+);
+
+const FluidCursorCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/fluid-cursor-card-preview").then(
+      (module) => module.FluidCursorCardPreview,
+    ),
+  { ssr: false },
+);
+
+const GeometricTrailCursorCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/geometric-trail-cursor-card-preview").then(
+      (module) => module.GeometricTrailCursorCardPreview,
     ),
   { ssr: false },
 );
@@ -354,10 +394,15 @@ const RollingText = dynamic(
 
 type ComponentCardLivePreviewProps = {
   slug:
+    | "circle-cursor"
     | "electric-vijdi-cursor"
+    | "tubes-cursor"
     | "cursor-mask-reveal"
     | "magic-cursor-pro"
     | "chromatic-cursor"
+    | "fluid-cursor"
+    | "geometric-trail-cursor"
+    | "elastic-blob-cursor"
     | "gsap-text"
     | "text-morph"
     | "shake-text"
@@ -440,7 +485,7 @@ export function ComponentCardLivePreview({
       ref={hostRef}
       aria-hidden={slug !== "ambient-audio-toggle"}
       className={`absolute inset-0 flex items-center justify-center overflow-hidden ${
-        slug === "ambient-audio-toggle" ? "bg-[#101815]" : "bg-background"
+        slug === "ambient-audio-toggle" ? "bg-[#eef4f0] dark:bg-[#101815]" : "bg-background"
       }`}
     >
       {slug === "ambient-audio-toggle" &&
@@ -461,14 +506,24 @@ export function ComponentCardLivePreview({
         <span className="text-3xl font-black tracking-[-0.055em] text-foreground sm:text-4xl">
           {staticLabel}
         </span>
+      ) : slug === "circle-cursor" ? (
+        <CircleCursorCardPreview />
       ) : slug === "electric-vijdi-cursor" ? (
         <ElectricVijdiCursorCardPreview />
+      ) : slug === "tubes-cursor" ? (
+        <TubesCursorCardPreview />
       ) : slug === "cursor-mask-reveal" ? (
         <CursorMaskRevealCardPreview />
       ) : slug === "magic-cursor-pro" ? (
         <MagicCursorProCardPreview />
       ) : slug === "chromatic-cursor" ? (
         <ChromaticCursorCardPreview />
+      ) : slug === "fluid-cursor" ? (
+        <FluidCursorCardPreview />
+      ) : slug === "geometric-trail-cursor" ? (
+        <GeometricTrailCursorCardPreview />
+      ) : slug === "elastic-blob-cursor" ? (
+        <ElasticBlobCursorCardPreview />
       ) : slug === "shader-text" ? (
         <ShaderText
           text="DAVINCIUI"

@@ -10,6 +10,10 @@ const docsImportMap: Record<
     | { [key: string]: React.ComponentType<Record<string, unknown>> }
   >
 > = {
+  "circle-cursor": () =>
+    import("@/components/docs/circle-cursor").then((m) => ({
+      default: m.CircleCursorDocs,
+    })),
   "chromatic-cursor": () =>
     import("@/components/docs/chromatic-cursor").then((m) => ({
       default: m.ChromaticCursorDocs,
@@ -25,6 +29,22 @@ const docsImportMap: Record<
   "electric-vijdi-cursor": () =>
     import("@/components/docs/electric-vijdi-cursor").then((m) => ({
       default: m.ElectricVijdiCursorDocs,
+    })),
+  "elastic-blob-cursor": () =>
+    import("@/components/docs/elastic-blob-cursor").then((m) => ({
+      default: m.ElasticBlobCursorDocs,
+    })),
+  "fluid-cursor": () =>
+    import("@/components/docs/fluid-cursor").then((m) => ({
+      default: m.FluidCursorDocs,
+    })),
+  "tubes-cursor": () =>
+    import("@/components/docs/tubes-cursor").then((m) => ({
+      default: m.TubesCursorDocs,
+    })),
+  "geometric-trail-cursor": () =>
+    import("@/components/docs/geometric-trail-cursor").then((m) => ({
+      default: m.GeometricTrailCursorDocs,
     })),
   "dithered-logo": () =>
     import("@/components/docs/dithered-logo").then((m) => ({

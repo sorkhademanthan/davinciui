@@ -97,9 +97,14 @@ function hasLiveCardPreview(
   | "geometric-preloader"
   | "preloader-pro"
   | "electric-vijdi-cursor"
+  | "circle-cursor"
+  | "tubes-cursor"
   | "cursor-mask-reveal"
   | "magic-cursor-pro"
   | "chromatic-cursor"
+  | "fluid-cursor"
+  | "geometric-trail-cursor"
+  | "elastic-blob-cursor"
   | BasicPreviewSlug {
   return (
     slug === "gsap-text" ||
@@ -141,9 +146,14 @@ function hasLiveCardPreview(
     slug === "geometric-preloader" ||
     slug === "preloader-pro" ||
     slug === "electric-vijdi-cursor" ||
+    slug === "circle-cursor" ||
+    slug === "tubes-cursor" ||
     slug === "cursor-mask-reveal" ||
     slug === "magic-cursor-pro" ||
     slug === "chromatic-cursor" ||
+    slug === "fluid-cursor" ||
+    slug === "geometric-trail-cursor" ||
+    slug === "elastic-blob-cursor" ||
     isBasicPreviewSlug(slug)
   )
 }

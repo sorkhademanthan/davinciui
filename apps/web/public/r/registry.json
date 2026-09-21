@@ -85,6 +85,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "circle-cursor",
+      "type": "registry:ui"
+    },
+    {
       "name": "circuit-board",
       "type": "registry:ui"
     },
@@ -149,6 +153,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "elastic-blob-cursor",
+      "type": "registry:ui"
+    },
+    {
       "name": "electric-vijdi-cursor",
       "type": "registry:ui"
     },
@@ -181,6 +189,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "fluid-cursor",
+      "type": "registry:ui"
+    },
+    {
       "name": "fluid-particle-text",
       "type": "registry:ui"
     },
@@ -190,6 +202,10 @@
     },
     {
       "name": "geometric-preloader",
+      "type": "registry:ui"
+    },
+    {
+      "name": "geometric-trail-cursor",
       "type": "registry:ui"
     },
     {
@@ -558,6 +574,10 @@
     },
     {
       "name": "tooltip",
+      "type": "registry:ui"
+    },
+    {
+      "name": "tubes-cursor",
       "type": "registry:ui"
     }
   ]

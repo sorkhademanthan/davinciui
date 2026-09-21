@@ -35,6 +35,14 @@ export function isNewComponent(component: ComponentMetadata): boolean {
 }
 
 export const components: Record<string, ComponentMetadata> = {
+  "circle-cursor": {
+    title: "Circle Cursor",
+    description:
+      "A single solid orange follower circle with smooth inertia, viewport-wide tracking, and automatic touch-device disablement.",
+    category: "Cursor Effects",
+    slug: "circle-cursor",
+    addedAt: "2026-09-20",
+  },
   "chromatic-cursor": {
     title: "Chromatic Cursor",
     description:
@@ -66,6 +74,38 @@ export const components: Record<string, ComponentMetadata> = {
     category: "Cursor Effects",
     slug: "electric-vijdi-cursor",
     addedAt: "2026-09-19",
+  },
+  "elastic-blob-cursor": {
+    title: "Elastic Blob Cursor",
+    description:
+      "A soft white blob that chases the pointer with inertia, stretches along the direction of travel, and relaxes back into a circle.",
+    category: "Cursor Effects",
+    slug: "elastic-blob-cursor",
+    addedAt: "2026-09-21",
+  },
+  "fluid-cursor": {
+    title: "Fluid Cursor",
+    description:
+      "A fullscreen GPU fluid simulation where pointer movement injects velocity and spectral dye into liquid light that drifts, curls, and fades into black.",
+    category: "Cursor Effects",
+    slug: "fluid-cursor",
+    addedAt: "2026-09-21",
+  },
+  "tubes-cursor": {
+    title: "Tubes Cursor",
+    description:
+      "A bundle of glowing 3D neon tubes that chases the pointer with fluid inertia and soft bloom. Click to randomize the palette.",
+    category: "Cursor Effects",
+    slug: "tubes-cursor",
+    addedAt: "2026-09-20",
+  },
+  "geometric-trail-cursor": {
+    title: "Geometric Trail Cursor",
+    description:
+      "A procedural wireframe cursor history on pure black — pointer movement extrudes twisting chains of outlined polygons, bright at the head and preserved as a long-lived dark geometric skeleton.",
+    category: "Cursor Effects",
+    slug: "geometric-trail-cursor",
+    addedAt: "2026-09-21",
   },
   "dithered-logo": {
     title: "Dithered Logo",
