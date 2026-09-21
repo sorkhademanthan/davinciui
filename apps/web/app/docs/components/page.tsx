@@ -15,6 +15,7 @@ const categoryOrder = [
   "Preloaders",
   "Interactions",
   "Cursor Effects",
+  "Motion",
 ] as const
 
 export default function ComponentsIndexPage() {

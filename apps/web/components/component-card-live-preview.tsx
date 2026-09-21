@@ -160,6 +160,14 @@ const AmbientAudioToggleCardPreview = dynamic(
   { ssr: false },
 );
 
+const MotionHamburgerCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/motion-hamburger-card-preview").then(
+      (module) => module.MotionHamburgerCardPreview,
+    ),
+  { ssr: false },
+);
+
 const ScrollRevealImageCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/scroll-reveal-image-card-preview").then(
@@ -372,6 +380,7 @@ type ComponentCardLivePreviewProps = {
     | "noiser"
     | "sunlight-effect"
     | "ambient-audio-toggle"
+    | "motion-hamburger"
     | "scroll-reveal-image"
     | "cms-scroll-gallery"
     | "interactive-media-accordion"
@@ -447,6 +456,7 @@ export function ComponentCardLivePreview({
           slug !== "noiser" &&
           slug !== "sunlight-effect" &&
           slug !== "ambient-audio-toggle" &&
+          slug !== "motion-hamburger" &&
           !isBasicPreviewSlug(slug)) ? (
         <span className="text-3xl font-black tracking-[-0.055em] text-foreground sm:text-4xl">
           {staticLabel}
@@ -595,6 +605,8 @@ export function ComponentCardLivePreview({
         <SunlightEffectCardPreview />
       ) : slug === "ambient-audio-toggle" ? (
         <AmbientAudioToggleCardPreview />
+      ) : slug === "motion-hamburger" ? (
+        <MotionHamburgerCardPreview />
       ) : slug === "scroll-reveal-image" ? (
         <ScrollRevealImageCardPreview />
       ) : slug === "cms-scroll-gallery" ? (

@@ -80,6 +80,7 @@ function hasLiveCardPreview(
   | "noiser"
   | "sunlight-effect"
   | "ambient-audio-toggle"
+  | "motion-hamburger"
   | "scroll-reveal-image"
   | "cms-scroll-gallery"
   | "interactive-media-accordion"
@@ -123,6 +124,7 @@ function hasLiveCardPreview(
     slug === "noiser" ||
     slug === "sunlight-effect" ||
     slug === "ambient-audio-toggle" ||
+    slug === "motion-hamburger" ||
     slug === "scroll-reveal-image" ||
     slug === "cms-scroll-gallery" ||
     slug === "interactive-media-accordion" ||
@@ -212,9 +214,8 @@ function ComponentsGallery() {
       if (activeTop === "Preloaders") return c.category === "Preloaders"
       if (activeTop === "Interactions") return c.category === "Interactions"
       if (activeTop === "Cursor Effects") return c.category === "Cursor Effects"
+      if (activeTop === "Motion") return c.category === "Motion"
       if (activeTop === "Scroll") return SCROLL_SLUGS.has(c.slug)
-      // Motion has a dedicated page – show no registry match (handled as empty state with link)
-      if (activeTop === "Motion") return false
       return false
     })
 

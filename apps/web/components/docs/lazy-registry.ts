@@ -414,6 +414,10 @@ const docsImportMap: Record<
     import("@/components/docs/navigation-menu").then((m) => ({
       default: m.NavigationMenuDocs,
     })),
+  "motion-hamburger": () =>
+    import("@/components/docs/motion-hamburger").then((m) => ({
+      default: m.MotionHamburgerDocs,
+    })),
   dialog: () =>
     import("@/components/docs/dialog").then((m) => ({
       default: m.DialogDocs,
