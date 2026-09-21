@@ -2,6 +2,8 @@
 
 import * as React from "react";
 
+export type MagicCursorProTheme = "auto" | "light" | "dark";
+
 export interface MagicCursorProProps {
   /** Optional PNG, SVG, or data URL that replaces the default arrow icon. */
   customIcon?: string;
@@ -9,6 +11,8 @@ export interface MagicCursorProProps {
   invertDefaultIcon?: boolean;
   /** Width and height of the cursor icon in pixels. */
   iconSize?: number;
+  /** Color scheme of the default arrow icon. `"auto"` follows the site theme live. */
+  theme?: MagicCursorProTheme;
   /** CSS blend mode used to maintain contrast across changing backgrounds. */
   mixBlendMode?: React.CSSProperties["mixBlendMode"];
   /** Enable the subtle compression and rebound on primary-pointer clicks. */
@@ -36,11 +40,57 @@ export interface MagicCursorProProps {
 const clamp = (value: number, minimum: number, maximum: number) =>
   Math.min(maximum, Math.max(minimum, value));
 
+/** Read the page color scheme without requiring a theme provider. */
+const resolveColorScheme = (): "light" | "dark" => {
+  if (typeof document === "undefined") return "light";
+  const root = document.documentElement;
+  if (root.classList.contains("dark")) return "dark";
+  if (root.classList.contains("light")) return "light";
+  const dataTheme = root.dataset.theme;
+  if (dataTheme === "dark" || dataTheme === "light") return dataTheme;
+  if (
+    typeof window !== "undefined" &&
+    typeof window.matchMedia === "function" &&
+    window.matchMedia("(prefers-color-scheme: dark)").matches
+  ) {
+    return "dark";
+  }
+  return "light";
+};
+
+/** Resolve the effective scheme, following the site theme live when `"auto"`. */
+const useThemeScheme = (theme: MagicCursorProTheme): "light" | "dark" => {
+  const [scheme, setScheme] = React.useState<"light" | "dark">(() =>
+    theme === "auto" || typeof document === "undefined" ? resolveColorScheme() : theme,
+  );
+  React.useEffect(() => {
+    if (theme !== "auto") {
+      setScheme(theme);
+      return;
+    }
+    setScheme(resolveColorScheme());
+    const observer = new MutationObserver(() => setScheme(resolveColorScheme()));
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class", "data-theme", "style"],
+    });
+    const query = window.matchMedia("(prefers-color-scheme: dark)");
+    const onChange = () => setScheme(resolveColorScheme());
+    query.addEventListener("change", onChange);
+    return () => {
+      observer.disconnect();
+      query.removeEventListener("change", onChange);
+    };
+  }, [theme]);
+  return scheme;
+};
+
 /** A spring-driven custom cursor with a compact outlined arrow and tactile click feedback. */
 export function MagicCursorPro({
   customIcon,
   invertDefaultIcon = false,
   iconSize = 34,
+  theme = "auto",
   mixBlendMode = "normal",
   clickSquish = true,
   stiffness = 400,
@@ -53,6 +103,8 @@ export function MagicCursorPro({
   containerRef,
   className,
 }: MagicCursorProProps) {
+  const scheme = useThemeScheme(theme);
+  const light = theme === "auto" ? scheme === "light" : theme === "light";
   const cursorRef = React.useRef<HTMLDivElement>(null);
   const iconRef = React.useRef<HTMLDivElement>(null);
   const settingsRef = React.useRef({ stiffness, damping, mass, clickSquish });
@@ -190,8 +242,12 @@ export function MagicCursorPro({
     };
   }, [containerRef, disabled, disableOnPortrait, hideSystemCursor]);
 
-  const defaultFill = invertDefaultIcon ? "#ffffff" : "#09090b";
-  const defaultStroke = invertDefaultIcon ? "#09090b" : "#ffffff";
+  // Dark arrow on light stages, light arrow on dark stages; the contrasting
+  // outline keeps the icon readable while the spring settles across blends.
+  const baseFill = light ? "#09090b" : "#ffffff";
+  const baseStroke = light ? "#ffffff" : "#09090b";
+  const defaultFill = invertDefaultIcon ? baseStroke : baseFill;
+  const defaultStroke = invertDefaultIcon ? baseFill : baseStroke;
 
   return (
     <div
@@ -208,7 +264,7 @@ export function MagicCursorPro({
         {customIcon ? (
           <img src={customIcon} alt="" draggable={false} className="h-full w-full select-none object-contain" />
         ) : (
-          <svg viewBox="0 0 28 34" className="h-full w-full drop-shadow-[0_2px_6px_rgba(0,0,0,0.22)]" fill="none">
+          <svg viewBox="0 0 28 34" className="h-full w-full drop-shadow-[0_2px_6px_rgba(0,0,0,0.28)] dark:drop-shadow-[0_2px_8px_rgba(0,0,0,0.75)]" fill="none">
             <path d="M3 2.5 24.5 16 14.2 19.2 10.8 30.8 3 2.5Z" fill={defaultFill} stroke={defaultStroke} strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.4" />
           </svg>
         )}
