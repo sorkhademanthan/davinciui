@@ -317,6 +317,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "motion-hamburger",
+      "type": "registry:ui"
+    },
+    {
       "name": "music-player",
       "type": "registry:ui"
     },

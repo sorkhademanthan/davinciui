@@ -13,7 +13,8 @@ export type ComponentCategory =
   | "Navigation"
   | "Overlays"
   | "Data Display"
-  | "Layout";
+  | "Layout"
+  | "Motion";
 
 export interface ComponentMetadata {
   title: string;
@@ -349,6 +350,14 @@ export const components: Record<string, ComponentMetadata> = {
     category: "Navigation",
     slug: "navigation-menu",
     addedAt: "2026-09-04",
+  },
+  "motion-hamburger": {
+    title: "Motion Hamburger",
+    description:
+      "A premium animated hamburger toggle that morphs into a close icon with SVG path-drawing, elastic rotation, and an optional ring.",
+    category: "Motion",
+    slug: "motion-hamburger",
+    addedAt: "2026-09-21",
   },
   dialog: {
     title: "Dialog",
