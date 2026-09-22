@@ -59,8 +59,12 @@ export const cinematicDemoCards: CinematicCardItem[] = [
 
 export function CinematicCardCarouselPreview() {
   return (
-    <div className="w-full">
-      <CinematicCardCarousel items={cinematicDemoCards} initialIndex={2} />
+    <div className="h-full w-full">
+      <CinematicCardCarousel
+        items={cinematicDemoCards}
+        initialIndex={2}
+        className="h-full min-h-0"
+      />
     </div>
   );
 }

@@ -9,7 +9,7 @@ import {
   useTransform,
   type MotionValue,
 } from "framer-motion";
-import { Plus } from "lucide-react";
+import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import * as React from "react";
 import { cn } from "@workspace/ui/lib/utils";
 
@@ -28,6 +28,17 @@ export interface CinematicCardCarouselProps
   initialIndex?: number;
   loop?: boolean;
   onIndexChange?: (index: number) => void;
+  /**
+   * Wheel / trackpad-scroll navigation.
+   * - "horizontal": sideways scroll (two-finger swipe, shift+wheel) moves the deck.
+   *   Vertical scroll always scrolls the page — never trapped.
+   * - "both": vertical scroll over the deck also advances it.
+   * - false: wheel does nothing.
+   * @default "horizontal"
+   */
+  wheelNavigation?: false | "horizontal" | "both";
+  /** Show minimal edge arrows. @default true */
+  showArrows?: boolean;
 }
 
 const mod = (n: number, m: number) => ((n % m) + m) % m;
@@ -111,6 +122,22 @@ function useContainerWidth(ref: React.RefObject<HTMLDivElement | null>) {
     return () => ro.disconnect();
   }, [ref]);
   return width;
+}
+
+/**
+ * Viewport height for vertical fitting. The gallery is often embedded in
+ * fixed-height slots (docs preview column, fullscreen overlays) — capping
+ * the deck by viewport height guarantees the bottom never clips.
+ */
+function useViewportHeight() {
+  const [vh, setVh] = React.useState(0);
+  React.useEffect(() => {
+    const update = () => setVh(window.innerHeight);
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+  return vh;
 }
 
 interface DeckCardProps {
@@ -265,6 +292,8 @@ export function CinematicCardCarousel({
   initialIndex = 0,
   loop = true,
   onIndexChange,
+  wheelNavigation = "horizontal",
+  showArrows = true,
   className,
   ...props
 }: CinematicCardCarouselProps) {
@@ -272,10 +301,14 @@ export function CinematicCardCarousel({
   const reduceMotion = useReducedMotion() ?? false;
   const containerRef = React.useRef<HTMLDivElement>(null);
   const containerWidth = useContainerWidth(containerRef);
+  const viewportHeight = useViewportHeight();
+  const vh = viewportHeight === 0 ? 900 : viewportHeight;
 
   // Deck geometry follows the measured container so the layered stack
   // stays visible in narrow embeds (docs preview columns) as well as
-  // full-bleed pages and small handsets.
+  // full-bleed pages and small handsets. Card height is additionally
+  // capped by the viewport so fixed-height slots (docs column, fullscreen
+  // overlays) never clip the deck top or bottom.
   const spreadScale =
     containerWidth === 0 || containerWidth >= 1200
       ? 1
@@ -284,11 +317,21 @@ export function CinematicCardCarousel({
         : containerWidth >= 560
           ? 0.62
           : 0.42;
-  const cardWidth =
+  const widthRule =
     containerWidth === 0
       ? 300
       : Math.min(320, Math.max(190, Math.round(containerWidth * 0.72)));
+  const heightRule = Math.round(
+    (Math.min(490, Math.max(300, vh - 170)) * 320) / 490,
+  );
+  const cardWidth = Math.min(widthRule, heightRule);
   const cardHeight = Math.round((cardWidth * 490) / 320);
+  // Gallery floor keeps the spacious feel on tall screens but yields to
+  // short viewports instead of overflowing fixed-height parents.
+  const galleryMinHeight = Math.min(
+    containerWidth >= 1024 ? 650 : containerWidth >= 640 ? 600 : 540,
+    Math.max(440, vh - 64),
+  );
 
   const clampedInitial = React.useMemo(() => {
     if (count === 0) return 0;
@@ -357,6 +400,65 @@ export function CinematicCardCarousel({
     },
     [count, goTo, loop, position],
   );
+
+  // Wheel / trackpad-scroll navigation. Native non-passive listener —
+  // React's root wheel listener is passive, so preventDefault would be
+  // ignored there. Vertical scroll is only captured in "both" mode (and
+  // released at non-looping ends) so the page never gets scroll-trapped.
+  React.useEffect(() => {
+    const el = containerRef.current;
+    if (!el || wheelNavigation === false || count < 2) return;
+
+    const THRESHOLD = 60;
+    const COOLDOWN = 850;
+    let accum = 0;
+    let lastEvent = 0;
+    let lastStep = 0;
+
+    const onWheel = (event: WheelEvent) => {
+      const now = performance.now();
+      // Stale gestures start fresh; rapid repeats wait out the cooldown.
+      if (now - lastEvent > 320) accum = 0;
+      lastEvent = now;
+
+      const horizontal = Math.abs(event.deltaX) >= Math.abs(event.deltaY);
+      if (!horizontal && wheelNavigation !== "both") return;
+
+      if (!horizontal && !loop) {
+        const pos = Math.round(position.get());
+        if (
+          (event.deltaY > 0 && pos >= count - 1) ||
+          (event.deltaY < 0 && pos <= 0)
+        ) {
+          return; // at the end — let the page scroll on.
+        }
+      }
+
+      if (now - lastStep < COOLDOWN) {
+        if (horizontal) event.preventDefault();
+        return;
+      }
+
+      event.preventDefault();
+      const delta = horizontal ? event.deltaX : event.deltaY;
+      // Direction flips restart accumulation instead of cancelling out.
+      if (accum !== 0 && Math.sign(accum) !== Math.sign(delta)) accum = 0;
+      accum += delta;
+
+      if (accum > THRESHOLD) {
+        accum = 0;
+        lastStep = now;
+        step(1);
+      } else if (accum < -THRESHOLD) {
+        accum = 0;
+        lastStep = now;
+        step(-1);
+      }
+    };
+
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, [wheelNavigation, loop, count, step, position]);
 
   const dragDistance = Math.max(110, 190 * spreadScale);
 
@@ -516,9 +618,10 @@ export function CinematicCardCarousel({
         userSelect: dragging ? "none" : undefined,
         perspective: 1200,
         transformStyle: "preserve-3d",
+        minHeight: galleryMinHeight,
       }}
       className={cn(
-        "relative flex min-h-[540px] w-full items-center justify-center overflow-hidden bg-[#fafaf8] outline-none transition-colors duration-300 sm:min-h-[600px] lg:min-h-[650px] dark:bg-[#0a0a0b]",
+        "relative flex w-full items-center justify-center overflow-hidden bg-[#fafaf8] outline-none transition-colors duration-300 dark:bg-[#0a0a0b]",
         "focus-visible:ring-2 focus-visible:ring-zinc-950/20 focus-visible:ring-offset-4 focus-visible:ring-offset-[#fafaf8] dark:focus-visible:ring-white/30 dark:focus-visible:ring-offset-[#0a0a0b]",
         className,
       )}
@@ -528,23 +631,33 @@ export function CinematicCardCarousel({
         Card {activeIndex + 1} of {count}: {items[activeIndex]?.title}
       </span>
 
-      {/* Screen-reader / keyboard controls — intentionally minimal visually */}
-      <button
-        type="button"
-        aria-label="Previous card"
-        onClick={() => step(-1)}
-        className="sr-only focus-visible:not-sr-only focus-visible:absolute focus-visible:left-4 focus-visible:top-1/2 focus-visible:z-[200] focus-visible:-translate-y-1/2 focus-visible:rounded-full focus-visible:bg-zinc-950 focus-visible:px-4 focus-visible:py-2 focus-visible:text-sm focus-visible:text-white"
-      >
-        Previous
-      </button>
-      <button
-        type="button"
-        aria-label="Next card"
-        onClick={() => step(1)}
-        className="sr-only focus-visible:not-sr-only focus-visible:absolute focus-visible:right-4 focus-visible:top-1/2 focus-visible:z-[200] focus-visible:-translate-y-1/2 focus-visible:rounded-full focus-visible:bg-zinc-950 focus-visible:px-4 focus-visible:py-2 focus-visible:text-sm focus-visible:text-white"
-      >
-        Next
-      </button>
+      {/* Minimal edge navigation — translucent so the media stays the focus */}
+      {showArrows && count > 1 && (
+        <>
+          <button
+            type="button"
+            aria-label="Previous card"
+            onClick={(event) => {
+              event.stopPropagation();
+              step(-1);
+            }}
+            className="absolute left-3 top-1/2 z-[150] grid size-9 -translate-y-1/2 place-items-center rounded-full bg-black/30 text-white backdrop-blur-md transition-[background-color,transform] duration-200 hover:bg-black/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 active:scale-95 sm:left-5 motion-reduce:transition-none"
+          >
+            <ChevronLeft className="size-4" strokeWidth={2} aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            aria-label="Next card"
+            onClick={(event) => {
+              event.stopPropagation();
+              step(1);
+            }}
+            className="absolute right-3 top-1/2 z-[150] grid size-9 -translate-y-1/2 place-items-center rounded-full bg-black/30 text-white backdrop-blur-md transition-[background-color,transform] duration-200 hover:bg-black/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 active:scale-95 sm:right-5 motion-reduce:transition-none"
+          >
+            <ChevronRight className="size-4" strokeWidth={2} aria-hidden="true" />
+          </button>
+        </>
+      )}
 
       <div
         className="relative w-full"

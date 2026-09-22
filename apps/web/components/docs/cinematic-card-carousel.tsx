@@ -107,6 +107,20 @@ import {
           description: "Callback fired when the active card changes.",
         },
         {
+          name: "wheelNavigation",
+          type: 'false | "horizontal" | "both"',
+          default: '"horizontal"',
+          description:
+            "Sideways trackpad/mouse scroll moves the deck. \"both\" also captures vertical scroll; vertical page scroll is never trapped in \"horizontal\" mode.",
+        },
+        {
+          name: "showArrows",
+          type: "boolean",
+          default: "true",
+          description:
+            "Show minimal translucent previous/next edge controls.",
+        },
+        {
           name: "className",
           type: "string",
           description: "Additional CSS classes for the gallery container.",
