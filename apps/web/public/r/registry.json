@@ -85,6 +85,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "cinematic-card-carousel",
+      "type": "registry:ui"
+    },
+    {
       "name": "circle-cursor",
       "type": "registry:ui"
     },
@@ -114,10 +118,6 @@
     },
     {
       "name": "context-menu",
-      "type": "registry:ui"
-    },
-    {
-      "name": "cursor-mask-reveal",
       "type": "registry:ui"
     },
     {
@@ -390,6 +390,10 @@
     },
     {
       "name": "pixel-preloader",
+      "type": "registry:ui"
+    },
+    {
+      "name": "pixel-wipe-carousel",
       "type": "registry:ui"
     },
     {
