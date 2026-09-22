@@ -76,10 +76,14 @@ function hasLiveCardPreview(
   | "character-field"
   | "pixel-flow"
   | "pixel-wipe-carousel"
+  | "segmented-image-carousel"
+  | "cinematic-card-carousel"
+  | "radial-fan-deck"
   | "neon-mesh-bg"
   | "spectra-noise"
   | "noiser"
   | "sunlight-effect"
+  | "vertical-image-marquee"
   | "ambient-audio-toggle"
   | "motion-hamburger"
   | "scroll-reveal-image"
@@ -125,10 +129,14 @@ function hasLiveCardPreview(
     slug === "character-field" ||
     slug === "pixel-flow" ||
     slug === "pixel-wipe-carousel" ||
+    slug === "segmented-image-carousel" ||
+    slug === "cinematic-card-carousel" ||
+    slug === "radial-fan-deck" ||
     slug === "neon-mesh-bg" ||
     slug === "spectra-noise" ||
     slug === "noiser" ||
     slug === "sunlight-effect" ||
+    slug === "vertical-image-marquee" ||
     slug === "ambient-audio-toggle" ||
     slug === "motion-hamburger" ||
     slug === "scroll-reveal-image" ||

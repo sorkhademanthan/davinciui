@@ -160,6 +160,30 @@ const PixelWipeCarouselCardPreview = dynamic(
   { ssr: false },
 );
 
+const SegmentedImageCarouselCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/segmented-image-carousel-card-preview").then(
+      (module) => module.SegmentedImageCarouselCardPreview,
+    ),
+  { ssr: false },
+);
+
+const CinematicCardCarouselCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/cinematic-card-carousel-card-preview").then(
+      (module) => module.CinematicCardCarouselCardPreview,
+    ),
+  { ssr: false },
+);
+
+const RadialFanDeckCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/radial-fan-deck-card-preview").then(
+      (module) => module.RadialFanDeckCardPreview,
+    ),
+  { ssr: false },
+);
+
 const NeonMeshBGCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/neon-mesh-bg-card-preview").then(
@@ -188,6 +212,14 @@ const SunlightEffectCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/sunlight-effect-card-preview").then(
       (module) => module.SunlightEffectCardPreview,
+    ),
+  { ssr: false },
+);
+
+const VerticalImageMarqueeCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/vertical-image-marquee-card-preview").then(
+      (module) => module.VerticalImageMarqueeCardPreview,
     ),
   { ssr: false },
 );
@@ -420,10 +452,14 @@ type ComponentCardLivePreviewProps = {
     | "character-field"
     | "pixel-flow"
     | "pixel-wipe-carousel"
+    | "segmented-image-carousel"
+    | "cinematic-card-carousel"
+    | "radial-fan-deck"
     | "neon-mesh-bg"
     | "spectra-noise"
     | "noiser"
     | "sunlight-effect"
+    | "vertical-image-marquee"
     | "ambient-audio-toggle"
     | "motion-hamburger"
     | "scroll-reveal-image"
@@ -497,10 +533,14 @@ export function ComponentCardLivePreview({
           slug !== "character-field" &&
           slug !== "pixel-flow" &&
           slug !== "pixel-wipe-carousel" &&
+          slug !== "segmented-image-carousel" &&
+          slug !== "cinematic-card-carousel" &&
+          slug !== "radial-fan-deck" &&
           slug !== "neon-mesh-bg" &&
           slug !== "spectra-noise" &&
           slug !== "noiser" &&
           slug !== "sunlight-effect" &&
+          slug !== "vertical-image-marquee" &&
           slug !== "ambient-audio-toggle" &&
           slug !== "motion-hamburger" &&
           !isBasicPreviewSlug(slug)) ? (
@@ -651,6 +691,12 @@ export function ComponentCardLivePreview({
         <PixelFlowCardPreview />
       ) : slug === "pixel-wipe-carousel" ? (
         <PixelWipeCarouselCardPreview />
+      ) : slug === "segmented-image-carousel" ? (
+        <SegmentedImageCarouselCardPreview />
+      ) : slug === "cinematic-card-carousel" ? (
+        <CinematicCardCarouselCardPreview />
+      ) : slug === "radial-fan-deck" ? (
+        <RadialFanDeckCardPreview />
       ) : slug === "neon-mesh-bg" ? (
         <NeonMeshBGCardPreview />
       ) : slug === "spectra-noise" ? (
@@ -659,6 +705,8 @@ export function ComponentCardLivePreview({
         <NoiserCardPreview />
       ) : slug === "sunlight-effect" ? (
         <SunlightEffectCardPreview />
+      ) : slug === "vertical-image-marquee" ? (
+        <VerticalImageMarqueeCardPreview />
       ) : slug === "ambient-audio-toggle" ? (
         <AmbientAudioToggleCardPreview />
       ) : slug === "motion-hamburger" ? (
