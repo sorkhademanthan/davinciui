@@ -603,19 +603,32 @@ export function GeometricTrailCursor({
       handleMove(touch.clientX, touch.clientY, performance.now());
     };
 
-    on(window, "pointermove", onPointerMove as EventListener, {
-      passive: true,
-    });
-    on(window, "pointerdown", onPointerDown as EventListener, {
-      passive: true,
-    });
+    const observedHost = containerRefRef.current?.current ?? null;
+
+    // Container previews track their own host directly. Viewport mode keeps
+    // the window listener, avoiding duplicate handling as host events bubble.
+    if (observedHost) {
+      on(observedHost, "pointermove", onPointerMove as EventListener, {
+        passive: true,
+      });
+      on(observedHost, "pointerdown", onPointerDown as EventListener, {
+        passive: true,
+      });
+      on(observedHost, "pointerleave", onPointerLeave as EventListener);
+    } else {
+      on(window, "pointermove", onPointerMove as EventListener, {
+        passive: true,
+      });
+      on(window, "pointerdown", onPointerDown as EventListener, {
+        passive: true,
+      });
+    }
     on(document.documentElement, "pointerleave", onPointerLeave as EventListener);
     on(window, "blur", onBlur as EventListener);
     on(window, "touchmove", onTouchMove as EventListener, { passive: true });
     on(window, "resize", resize as EventListener);
 
     let resizeObserver: ResizeObserver | null = null;
-    const observedHost = containerRefRef.current?.current ?? null;
     if (typeof ResizeObserver !== "undefined" && observedHost) {
       resizeObserver = new ResizeObserver(resize);
       resizeObserver.observe(observedHost);
