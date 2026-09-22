@@ -93,19 +93,11 @@
       "type": "registry:ui"
     },
     {
-      "name": "circuit-board",
-      "type": "registry:ui"
-    },
-    {
       "name": "cms-scroll-gallery",
       "type": "registry:ui"
     },
     {
       "name": "collapsible",
-      "type": "registry:ui"
-    },
-    {
-      "name": "collection-surfer",
       "type": "registry:ui"
     },
     {
@@ -121,23 +113,11 @@
       "type": "registry:ui"
     },
     {
-      "name": "data-table",
-      "type": "registry:ui"
-    },
-    {
       "name": "date-picker",
       "type": "registry:ui"
     },
     {
       "name": "dialog",
-      "type": "registry:ui"
-    },
-    {
-      "name": "dither-gradient",
-      "type": "registry:ui"
-    },
-    {
-      "name": "dithered-logo",
       "type": "registry:ui"
     },
     {
@@ -169,10 +149,6 @@
       "type": "registry:ui"
     },
     {
-      "name": "eye-tracking",
-      "type": "registry:ui"
-    },
-    {
       "name": "field",
       "type": "registry:ui"
     },
@@ -182,10 +158,6 @@
     },
     {
       "name": "fisheye-infinite-grid",
-      "type": "registry:ui"
-    },
-    {
-      "name": "flight-status-card",
       "type": "registry:ui"
     },
     {
@@ -209,16 +181,8 @@
       "type": "registry:ui"
     },
     {
-      "name": "github-calendar",
-      "type": "registry:ui"
-    },
-    {
       "name": "glitch-liquid-text",
       "type": "registry:ui"
-    },
-    {
-      "name": "gradient-hero-01",
-      "type": "registry:block"
     },
     {
       "name": "gsap-text",
@@ -238,18 +202,6 @@
     },
     {
       "name": "hyper-text",
-      "type": "registry:ui"
-    },
-    {
-      "name": "image-ripple-effect",
-      "type": "registry:ui"
-    },
-    {
-      "name": "image-trail",
-      "type": "registry:ui"
-    },
-    {
-      "name": "infinite-image-field",
       "type": "registry:ui"
     },
     {
@@ -281,10 +233,6 @@
       "type": "registry:ui"
     },
     {
-      "name": "layered-stack",
-      "type": "registry:ui"
-    },
-    {
       "name": "liquid-blob",
       "type": "registry:ui"
     },
@@ -293,19 +241,7 @@
       "type": "registry:ui"
     },
     {
-      "name": "mac-keyboard",
-      "type": "registry:ui"
-    },
-    {
       "name": "magic-cursor-pro",
-      "type": "registry:ui"
-    },
-    {
-      "name": "magnet-lines",
-      "type": "registry:ui"
-    },
-    {
-      "name": "magnetic-dock",
       "type": "registry:ui"
     },
     {
@@ -337,10 +273,6 @@
       "type": "registry:ui"
     },
     {
-      "name": "music-player",
-      "type": "registry:ui"
-    },
-    {
       "name": "native-select",
       "type": "registry:ui"
     },
@@ -353,19 +285,11 @@
       "type": "registry:ui"
     },
     {
-      "name": "newsletter-bookshelf",
-      "type": "registry:ui"
-    },
-    {
       "name": "noise-texture",
       "type": "registry:ui"
     },
     {
       "name": "noiser",
-      "type": "registry:ui"
-    },
-    {
-      "name": "orbit-card-stack",
       "type": "registry:ui"
     },
     {
@@ -385,10 +309,6 @@
       "type": "registry:ui"
     },
     {
-      "name": "pixel-image-trail",
-      "type": "registry:ui"
-    },
-    {
       "name": "pixel-preloader",
       "type": "registry:ui"
     },
@@ -405,14 +325,6 @@
       "type": "registry:ui"
     },
     {
-      "name": "pricing-01",
-      "type": "registry:block"
-    },
-    {
-      "name": "pricing-02",
-      "type": "registry:block"
-    },
-    {
       "name": "progress",
       "type": "registry:ui"
     },
@@ -425,15 +337,15 @@
       "type": "registry:ui"
     },
     {
+      "name": "radial-fan-deck",
+      "type": "registry:ui"
+    },
+    {
       "name": "radio",
       "type": "registry:ui"
     },
     {
       "name": "random-text-reveal",
-      "type": "registry:ui"
-    },
-    {
-      "name": "ripple-transition",
       "type": "registry:ui"
     },
     {
@@ -469,6 +381,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "segmented-image-carousel",
+      "type": "registry:ui"
+    },
+    {
       "name": "select",
       "type": "registry:ui"
     },
@@ -501,10 +417,6 @@
       "type": "registry:ui"
     },
     {
-      "name": "signature",
-      "type": "registry:ui"
-    },
-    {
       "name": "silk-aurora",
       "type": "registry:ui"
     },
@@ -525,10 +437,6 @@
       "type": "registry:ui"
     },
     {
-      "name": "split-flap-display",
-      "type": "registry:ui"
-    },
-    {
       "name": "spotlight-card",
       "type": "registry:ui"
     },
@@ -542,10 +450,6 @@
     },
     {
       "name": "sunlight-effect",
-      "type": "registry:ui"
-    },
-    {
-      "name": "table",
       "type": "registry:ui"
     },
     {
@@ -583,6 +487,22 @@
     {
       "name": "tubes-cursor",
       "type": "registry:ui"
+    },
+    {
+      "name": "vertical-image-marquee",
+      "type": "registry:ui"
+    },
+    {
+      "name": "gradient-hero-01",
+      "type": "registry:block"
+    },
+    {
+      "name": "pricing-01",
+      "type": "registry:block"
+    },
+    {
+      "name": "pricing-02",
+      "type": "registry:block"
     }
   ]
 }

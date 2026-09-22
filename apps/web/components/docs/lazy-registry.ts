@@ -42,14 +42,6 @@ const docsImportMap: Record<
     import("@/components/docs/geometric-trail-cursor").then((m) => ({
       default: m.GeometricTrailCursorDocs,
     })),
-  "dithered-logo": () =>
-    import("@/components/docs/dithered-logo").then((m) => ({
-      default: m.DitheredLogoDocs,
-    })),
-  "music-player": () =>
-    import("@/components/docs/music-player").then((m) => ({
-      default: m.MusicPlayerDocs,
-    })),
   button: () =>
     import("@/components/docs/button").then((m) => ({
       default: m.ButtonDocs,
@@ -162,30 +154,6 @@ const docsImportMap: Record<
     import("@/components/docs/hover-transition").then((m) => ({
       default: m.HoverTransitionDocs,
     })),
-  "circuit-board": () =>
-    import("@/components/docs/circuit-board").then((m) => ({
-      default: m.CircuitBoardDocs,
-    })),
-  "collection-surfer": () =>
-    import("@/components/docs/collection-surfer").then((m) => ({
-      default: m.CollectionSurferDocs,
-    })),
-  "flight-status-card": () =>
-    import("@/components/docs/flight-status-card").then((m) => ({
-      default: m.FlightStatusCardDocs,
-    })),
-  "github-calendar": () =>
-    import("@/components/docs/github-calendar").then((m) => ({
-      default: m.GithubCalendarDocs,
-    })),
-  "mac-keyboard": () =>
-    import("@/components/docs/mac-keyboard").then((m) => ({
-      default: m.MacKeyboardDocs,
-    })),
-  "magnetic-dock": () =>
-    import("@/components/docs/magnetic-dock").then((m) => ({
-      default: m.MagneticDockDocs,
-    })),
   "silk-aurora": () =>
     import("@/components/docs/silk-aurora").then((m) => ({
       default: m.SilkAuroraDocs,
@@ -214,6 +182,10 @@ const docsImportMap: Record<
     import("@/components/docs/sunlight-effect").then((m) => ({
       default: m.SunlightEffectDocs,
     })),
+  "vertical-image-marquee": () =>
+    import("@/components/docs/vertical-image-marquee").then((m) => ({
+      default: m.VerticalImageMarqueeDocs,
+    })),
   "ambient-audio-toggle": () =>
     import("@/components/docs/ambient-audio-toggle").then((m) => ({
       default: m.AmbientAudioToggleDocs,
@@ -221,14 +193,6 @@ const docsImportMap: Record<
   "liquid-chrome": () =>
     import("@/components/docs/liquid-chrome").then((m) => ({
       default: m.LiquidChromeDocs,
-    })),
-  "dither-gradient": () =>
-    import("@/components/docs/dither-gradient").then((m) => ({
-      default: m.DitherGradientDocs,
-    })),
-  "magnet-lines": () =>
-    import("@/components/docs/magnet-lines").then((m) => ({
-      default: m.MagnetLinesDocs,
     })),
   "matrix-rain": () =>
     import("@/components/docs/matrix-rain").then((m) => ({
@@ -246,13 +210,13 @@ const docsImportMap: Record<
     import("@/components/docs/pixel-canvas").then((m) => ({
       default: m.PixelCanvasDocs,
     })),
-  "pixel-image-trail": () =>
-    import("@/components/docs/pixel-image-trail").then((m) => ({
-      default: m.PixelImageTrailDocs,
-    })),
   "pixel-wipe-carousel": () =>
     import("@/components/docs/pixel-wipe-carousel").then((m) => ({
       default: m.PixelWipeCarouselDocs,
+    })),
+  "segmented-image-carousel": () =>
+    import("@/components/docs/segmented-image-carousel").then((m) => ({
+      default: m.SegmentedImageCarouselDocs,
     })),
   "cinematic-card-carousel": () =>
     import("@/components/docs/cinematic-card-carousel").then((m) => ({
@@ -386,53 +350,17 @@ const docsImportMap: Record<
     import("@/components/docs/sheet").then((m) => ({
       default: m.SheetDocs,
     })),
-  "image-trail": () =>
-    import("@/components/docs/image-trail").then((m) => ({
-      default: m.ImageTrailDocs,
-    })),
-  "image-ripple-effect": () =>
-    import("@/components/docs/image-ripple-effect").then((m) => ({
-      default: m.ImageRippleEffectDocs,
-    })),
-  "ripple-transition": () =>
-    import("@/components/docs/ripple-transition").then((m) => ({
-      default: m.RippleTransitionDocs,
-    })),
-  "infinite-image-field": () =>
-    import("@/components/docs/infinite-image-field").then((m) => ({
-      default: m.InfiniteImageFieldDocs,
-    })),
   "fisheye-infinite-grid": () =>
     import("@/components/docs/fisheye-infinite-grid").then((m) => ({
       default: m.FisheyeInfiniteGridDocs,
     })),
-  "layered-stack": () =>
-    import("@/components/docs/layered-stack").then((m) => ({
-      default: m.LayeredStackDocs,
-    })),
-  "orbit-card-stack": () =>
-    import("@/components/docs/orbit-card-stack").then((m) => ({
-      default: m.OrbitCardStackDocs,
+  "radial-fan-deck": () =>
+    import("@/components/docs/radial-fan-deck").then((m) => ({
+      default: m.RadialFanDeckDocs,
     })),
   "spiral-3d-slider": () =>
     import("@/components/docs/spiral-3d-slider").then((m) => ({
       default: m.Spiral3DSliderDocs,
-    })),
-  "newsletter-bookshelf": () =>
-    import("@/components/docs/newsletter-bookshelf").then((m) => ({
-      default: m.NewsletterBookshelfDocs,
-    })),
-  signature: () =>
-    import("@/components/docs/signature").then((m) => ({
-      default: m.SignatureDocs,
-    })),
-  "split-flap-display": () =>
-    import("@/components/docs/split-flap-display").then((m) => ({
-      default: m.SplitFlapDisplayDocs,
-    })),
-  "eye-tracking": () =>
-    import("@/components/docs/eye-tracking").then((m) => ({
-      default: m.EyeTrackingDocs,
     })),
   "navigation-menu": () =>
     import("@/components/docs/navigation-menu").then((m) => ({
@@ -469,14 +397,6 @@ const docsImportMap: Record<
   badge: () =>
     import("@/components/docs/badge").then((m) => ({
       default: m.BadgeDocs,
-    })),
-  table: () =>
-    import("@/components/docs/table").then((m) => ({
-      default: m.TableDocs,
-    })),
-  "data-table": () =>
-    import("@/components/docs/data-table").then((m) => ({
-      default: m.DataTableDocs,
     })),
   questionnaire: () =>
     import("@/components/docs/questionnaire").then((m) => ({

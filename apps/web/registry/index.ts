@@ -99,26 +99,6 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "geometric-trail-cursor",
     addedAt: "2026-09-21",
   },
-  "dithered-logo": {
-    title: "Dithered Logo",
-    description:
-      "An interactive particle logo that turns image assets into a dithered canvas field with cursor ripples.",
-    category: "Visual Effects",
-    slug: "dithered-logo",
-    addedAt: "2026-07-08",
-    previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/visual-effects/ditheredlogo.webm",
-  },
-  "music-player": {
-    title: "Music Player",
-    description:
-      "A fun interactive vinyl record music player with swinging tonearm.",
-    category: "Premium Components",
-    slug: "music-player",
-    addedAt: "2026-04-03",
-    previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/component-animations/musicplayer.webm",
-  },
   "hover-transition": {
     title: "Hover Transition",
     description:
@@ -128,16 +108,6 @@ export const components: Record<string, ComponentMetadata> = {
     addedAt: "2026-08-08",
     previewVideo:
       "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/component-animations/hovertransition.webm",
-  },
-  "mac-keyboard": {
-    title: "Mac Keyboard",
-    description:
-      "A realistic Mac keyboard component with interactive keys and detailed styling.",
-    category: "Premium Components",
-    slug: "mac-keyboard",
-    addedAt: "2026-03-13",
-    previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/component-animations/mackeyboard.webm",
   },
   "fluid-particle-text": {
     title: "Particle Flow",
@@ -391,6 +361,14 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "motion-hamburger",
     addedAt: "2026-09-21",
   },
+  "radial-fan-deck": {
+    title: "Radial Fan Deck",
+    description:
+      "An editorial card deck that unfolds from a shared hinge into a full radial fan before folding back into a centered stack.",
+    category: "Motion",
+    slug: "radial-fan-deck",
+    addedAt: "2026-09-22",
+  },
   dialog: {
     title: "Dialog",
     description:
@@ -587,39 +565,6 @@ export const components: Record<string, ComponentMetadata> = {
     addedAt: "2026-09-04",
   },
   // Components
-  "circuit-board": {
-    title: "Circuit Board",
-    description:
-      "Animated circuit board visualization with nodes and connections.",
-    category: "Premium Components",
-    slug: "circuit-board",
-    previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/component-animations/circuitboard.webm",
-  },
-  "flight-status-card": {
-    title: "Flight Status Card",
-    description: "A detailed card showing flight information with animations.",
-    category: "Premium Components",
-    slug: "flight-status-card",
-    previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/component-animations/flightstatuscard.webm",
-  },
-  "magnetic-dock": {
-    title: "Magnetic Dock",
-    description: "MacOS style dock that scales items based on mouse proximity.",
-    category: "Premium Components",
-    slug: "magnetic-dock",
-    previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/component-animations/magneticdock.webm",
-  },
-  "collection-surfer": {
-    title: "Collection Surfer",
-    description: "Smooth surfing interaction for browsing collections.",
-    category: "Premium Components",
-    slug: "collection-surfer",
-    previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/component-animations/collectionsurfer.webm",
-  },
   "fisheye-infinite-grid": {
     title: "Fisheye Infinite Grid",
     description:
@@ -629,14 +574,6 @@ export const components: Record<string, ComponentMetadata> = {
     addedAt: "2026-08-08",
     previewVideo:
       "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/component-animations/fisheyeinfinitegrid.webm",
-  },
-  "github-calendar": {
-    title: "Github Calendar",
-    description: "GitHub-style contribution calendar heatmap.",
-    category: "Premium Components",
-    slug: "github-calendar",
-    previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/component-animations/githubcalendar.webm",
   },
   "cms-scroll-gallery": {
     title: "CMS Scroll Gallery",
@@ -710,25 +647,6 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "scroll-timeline",
     addedAt: "2026-09-17",
   },
-  "layered-stack": {
-    title: "Layered Stack",
-    description: "A stack of layered cards that interact with mouse hover.",
-    category: "Premium Components",
-    slug: "layered-stack",
-    addedAt: "2026-03-15",
-    previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/component-animations/layeredstack.webm",
-  },
-  "orbit-card-stack": {
-    title: "Orbit Card Stack",
-    description:
-      "Premium hover card deck that fans outward and lifts the active card without changing its color or angle.",
-    category: "Premium Components",
-    slug: "orbit-card-stack",
-    addedAt: "2026-06-07",
-    previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/component-animations/orbitcardstack.webm",
-  },
   "spiral-3d-slider": {
     title: "Spiral 3D Slider",
     description:
@@ -738,37 +656,6 @@ export const components: Record<string, ComponentMetadata> = {
     addedAt: "2026-08-08",
     previewVideo: "/preview-videos/component-animations/spiral3dslider.webm",
     previewImage: "/images/spiral-3d-slider/catalog-preview.jpg",
-  },
-  "newsletter-bookshelf": {
-    title: "Newsletter Bookshelf",
-    description:
-      "A tactile 3D newsletter archive with hover lift, camera browsing, centered covers, and automatic drag-adjustable orbiting.",
-    category: "Premium Components",
-    slug: "newsletter-bookshelf",
-    addedAt: "2026-08-06",
-    previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/component-animations/newsletterbookshelf.webm",
-  },
-
-  "split-flap-display": {
-    title: "Split Flap Display",
-    description:
-      "A premium split-flap display component inspired by vintage departure boards.",
-    category: "Premium Components",
-    slug: "split-flap-display",
-    addedAt: "2026-03-27",
-    previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/component-animations/splitflapdisplay.webm",
-  },
-  "eye-tracking": {
-    title: "Eye Tracking",
-    description:
-      "Hyper-realistic eyes that follow your cursor with smooth spring physics, reactive pupils, blinking, and multiple stunning variants.",
-    category: "Premium Components",
-    slug: "eye-tracking",
-    addedAt: "2026-03-28",
-    previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/component-animations/eyetracking.webm",
   },
   // Hero Backgrounds
   "silk-aurora": {
@@ -894,62 +781,6 @@ export const components: Record<string, ComponentMetadata> = {
     addedAt: "2026-09-19",
   },
   // Visual Effects
-  "image-trail": {
-    title: "Image Trail",
-    description:
-      "Leaves a trail of images behind the cursor with a premium delay fade.",
-    category: "Visual Effects",
-    slug: "image-trail",
-    addedAt: "2026-03-09",
-    previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/visual-effects/imagetrail.webm",
-  },
-  "image-ripple-effect": {
-    title: "Image Ripple Effect",
-    description:
-      "WebGL-powered cursor ripples that displace layered image cards in real time.",
-    category: "Visual Effects",
-    slug: "image-ripple-effect",
-    addedAt: "2026-03-19",
-    previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/visual-effects/imagerippleeffect.webm",
-  },
-  "ripple-transition": {
-    title: "Ripple Transition",
-    description:
-      "WebGL image transitions with noisy refractive waves, chromatic edges, glow, and click-triggered ripple origins.",
-    category: "Visual Effects",
-    slug: "ripple-transition",
-    addedAt: "2026-07-07",
-    previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/visual-effects/rippletransition.webm",
-  },
-  "infinite-image-field": {
-    title: "Infinite Image Field",
-    description:
-      "An endless, cursor-driven photo canvas that tiles images infinitely and pans fluidly toward wherever you move your cursor.",
-    category: "Visual Effects",
-    slug: "infinite-image-field",
-    addedAt: "2026-03-20",
-    previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/visual-effects/infiniteimagefield.webm",
-  },
-  "dither-gradient": {
-    title: "Dither Gradient",
-    description: "Gradient background with dithering noise.",
-    category: "Visual Effects",
-    slug: "dither-gradient",
-    previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/visual-effects/dithergradient.webm",
-  },
-  "magnet-lines": {
-    title: "Magnet Lines",
-    description: "Lines that react to cursor movement like a magnetic field.",
-    category: "Visual Effects",
-    slug: "magnet-lines",
-    previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/visual-effects/magneticlines.webm",
-  },
   "pixel-canvas": {
     title: "Pixel Canvas",
     description: "Canvas where pixels react to interaction.",
@@ -958,22 +789,20 @@ export const components: Record<string, ComponentMetadata> = {
     previewVideo:
       "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/visual-effects/pixelcanvas.webm",
   },
-  "pixel-image-trail": {
-    title: "Pixel Image Trail",
-    description:
-      "An image reveal made from cursor-painted squares that expire into a bounded pixel trail.",
-    category: "Visual Effects",
-    slug: "pixel-image-trail",
-    addedAt: "2026-08-06",
-    previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/visual-effects/pixelimagetrail.webm",
-  },
   "pixel-wipe-carousel": {
     title: "Pixel Wipe Carousel",
     description:
       "An editorial image carousel with fast right-to-left mosaic wipes that resolve into crisp stills.",
     category: "Visual Effects",
     slug: "pixel-wipe-carousel",
+    addedAt: "2026-09-22",
+  },
+  "segmented-image-carousel": {
+    title: "Segmented Image Carousel",
+    description:
+      "A monochrome editorial carousel that rebuilds every image through a staggered grid of horizontal slices.",
+    category: "Visual Effects",
+    slug: "segmented-image-carousel",
     addedAt: "2026-09-22",
   },
   "cinematic-card-carousel": {
@@ -984,15 +813,13 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "cinematic-card-carousel",
     addedAt: "2026-09-22",
   },
-  signature: {
-    title: "Signature",
+  "vertical-image-marquee": {
+    title: "Vertical Image Marquee",
     description:
-      "An animated SVG signature effect that draws out text as if hand-written.",
-    category: "Premium Components",
-    slug: "signature",
-    addedAt: "2026-03-17",
-    previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/component-animations/signature.webm",
+      "A seamless vertical editorial image strip with generous monochrome gutters and a theme-aware light or dark stage.",
+    category: "Visual Effects",
+    slug: "vertical-image-marquee",
+    addedAt: "2026-09-23",
   },
   "matrix-rain": {
     title: "Matrix Rain",
@@ -1017,22 +844,6 @@ export const components: Record<string, ComponentMetadata> = {
     category: "Hero Backgrounds",
     slug: "pixel-flow",
     addedAt: "2026-09-14",
-  },
-  table: {
-    title: "Table",
-    description:
-      "Virtualized data table that stays smooth at 100+ rows, with sortable headers, row selection, column resize and reorder, and a sticky header. Minimal, reduced-motion-safe motion.",
-    category: "Premium Components",
-    slug: "table",
-    addedAt: "2026-07-13",
-  },
-  "data-table": {
-    title: "Data Table",
-    description:
-      "Feature-rich data table with sorting, filtering, pagination, column visibility, row selection, and RTL support — built on TanStack Table.",
-    category: "Premium Components",
-    slug: "data-table",
-    addedAt: "2026-07-14",
   },
   questionnaire: {
     title: "Questionnaire",
