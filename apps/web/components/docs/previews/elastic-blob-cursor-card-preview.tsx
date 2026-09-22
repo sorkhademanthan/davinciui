@@ -4,10 +4,9 @@ import { useEffect, useRef } from "react";
 import { ElasticBlobCursor } from "@workspace/ui/components/elastic-blob-cursor";
 
 /**
- * Self-presenting card thumbnail. Cards can't rely on hover, so a lightweight
- * ambient driver steers a virtual pointer in slow loops by dispatching
- * synthetic pointermove events (which ElasticBlobCursor already listens for).
- * Real user input simply interleaves and takes over momentarily.
+ * Hover-driven card thumbnail. A lightweight ambient driver steers a virtual
+ * pointer in slow loops so a stationary hover demonstrates the same elastic
+ * response as the docs. Fresh real pointer input owns the blob temporarily.
  */
 export function ElasticBlobCursorCardPreview() {
   const previewRef = useRef<HTMLDivElement>(null);
@@ -18,28 +17,51 @@ export function ElasticBlobCursorCardPreview() {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     let raf = 0;
-    let driving = true;
+    let hovering = false;
+    let visible = true;
+    let driving = false;
+    let lastRealInput = 0;
     const start = performance.now();
+
+    const updateDriving = () => {
+      const next = hovering && visible;
+      if (next === driving) return;
+      driving = next;
+      cancelAnimationFrame(raf);
+      raf = 0;
+      if (driving) raf = requestAnimationFrame(tick);
+    };
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        driving = entry?.isIntersecting ?? true;
-        if (driving) {
-          cancelAnimationFrame(raf);
-          raf = requestAnimationFrame(tick);
-        } else {
-          cancelAnimationFrame(raf);
-          raf = 0;
-        }
+        visible = entry?.isIntersecting ?? true;
+        updateDriving();
       },
       { threshold: 0.05 },
     );
     observer.observe(host);
 
+    const onEnter = () => {
+      hovering = true;
+      updateDriving();
+    };
+    const onLeave = () => {
+      hovering = false;
+      updateDriving();
+    };
+    const onRealInput = (event: PointerEvent) => {
+      if (!event.isTrusted) return;
+      lastRealInput = performance.now();
+    };
+    host.addEventListener("pointerenter", onEnter);
+    host.addEventListener("pointerleave", onLeave);
+    host.addEventListener("pointermove", onRealInput);
+
     const tick = (now: number) => {
       raf = 0;
       if (!driving) return;
       raf = requestAnimationFrame(tick);
+      if (now - lastRealInput < 900) return;
       const rect = host.getBoundingClientRect();
       if (rect.width < 2 || rect.height < 2) return;
       const t = (now - start) / 1000;
@@ -55,19 +77,20 @@ export function ElasticBlobCursorCardPreview() {
         }),
       );
     };
-    raf = requestAnimationFrame(tick);
-
     return () => {
       driving = false;
       cancelAnimationFrame(raf);
       observer.disconnect();
+      host.removeEventListener("pointerenter", onEnter);
+      host.removeEventListener("pointerleave", onLeave);
+      host.removeEventListener("pointermove", onRealInput);
     };
   }, []);
 
   return (
     <div
       ref={previewRef}
-      className="absolute inset-0 overflow-hidden bg-zinc-100 dark:bg-black"
+      className="absolute inset-0 cursor-none overflow-hidden bg-zinc-100 dark:bg-black"
       style={{ containerType: "inline-size" }}
     >
       <ElasticBlobCursor containerRef={previewRef} mode="container" size={34} zIndex={10} />
