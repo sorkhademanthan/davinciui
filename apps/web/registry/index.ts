@@ -59,14 +59,6 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "magic-cursor-pro",
     addedAt: "2026-09-19",
   },
-  "cursor-mask-reveal": {
-    title: "Cursor Mask Reveal",
-    description:
-      "A custom PNG or SVG cursor mask that punches through a pale foreground image to reveal a vivid background image.",
-    category: "Cursor Effects",
-    slug: "cursor-mask-reveal",
-    addedAt: "2026-09-19",
-  },
   "electric-vijdi-cursor": {
     title: "Electric Vijdi Cursor",
     description:
@@ -975,6 +967,22 @@ export const components: Record<string, ComponentMetadata> = {
     addedAt: "2026-08-06",
     previewVideo:
       "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/visual-effects/pixelimagetrail.webm",
+  },
+  "pixel-wipe-carousel": {
+    title: "Pixel Wipe Carousel",
+    description:
+      "An editorial image carousel with fast right-to-left mosaic wipes that resolve into crisp stills.",
+    category: "Visual Effects",
+    slug: "pixel-wipe-carousel",
+    addedAt: "2026-09-22",
+  },
+  "cinematic-card-carousel": {
+    title: "Cinematic Card Carousel",
+    description:
+      "A cinematic depth-based card gallery — one sharp hero portrait with progressively blurred, compressed neighbors and pointer-driven spring promotion.",
+    category: "Visual Effects",
+    slug: "cinematic-card-carousel",
+    addedAt: "2026-09-22",
   },
   signature: {
     title: "Signature",
