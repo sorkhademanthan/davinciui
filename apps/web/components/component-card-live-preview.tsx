@@ -40,14 +40,6 @@ const ElectricVijdiCursorCardPreview = dynamic(
   { ssr: false },
 );
 
-const CursorMaskRevealCardPreview = dynamic(
-  () =>
-    import("@/components/docs/previews/cursor-mask-reveal-card-preview").then(
-      (module) => module.CursorMaskRevealCardPreview,
-    ),
-  { ssr: false },
-);
-
 const MagicCursorProCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/magic-cursor-pro-card-preview").then(
@@ -156,6 +148,14 @@ const PixelFlowCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/pixel-flow-card-preview").then(
       (module) => module.PixelFlowCardPreview,
+    ),
+  { ssr: false },
+);
+
+const PixelWipeCarouselCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/pixel-wipe-carousel-card-preview").then(
+      (module) => module.PixelWipeCarouselCardPreview,
     ),
   { ssr: false },
 );
@@ -397,7 +397,6 @@ type ComponentCardLivePreviewProps = {
     | "circle-cursor"
     | "electric-vijdi-cursor"
     | "tubes-cursor"
-    | "cursor-mask-reveal"
     | "magic-cursor-pro"
     | "chromatic-cursor"
     | "fluid-cursor"
@@ -420,6 +419,7 @@ type ComponentCardLivePreviewProps = {
     | "rolling-text"
     | "character-field"
     | "pixel-flow"
+    | "pixel-wipe-carousel"
     | "neon-mesh-bg"
     | "spectra-noise"
     | "noiser"
@@ -496,6 +496,7 @@ export function ComponentCardLivePreview({
           slug !== "silk-aurora" &&
           slug !== "character-field" &&
           slug !== "pixel-flow" &&
+          slug !== "pixel-wipe-carousel" &&
           slug !== "neon-mesh-bg" &&
           slug !== "spectra-noise" &&
           slug !== "noiser" &&
@@ -512,8 +513,6 @@ export function ComponentCardLivePreview({
         <ElectricVijdiCursorCardPreview />
       ) : slug === "tubes-cursor" ? (
         <TubesCursorCardPreview />
-      ) : slug === "cursor-mask-reveal" ? (
-        <CursorMaskRevealCardPreview />
       ) : slug === "magic-cursor-pro" ? (
         <MagicCursorProCardPreview />
       ) : slug === "chromatic-cursor" ? (
@@ -650,6 +649,8 @@ export function ComponentCardLivePreview({
         <CharacterFieldCardPreview />
       ) : slug === "pixel-flow" ? (
         <PixelFlowCardPreview />
+      ) : slug === "pixel-wipe-carousel" ? (
+        <PixelWipeCarouselCardPreview />
       ) : slug === "neon-mesh-bg" ? (
         <NeonMeshBGCardPreview />
       ) : slug === "spectra-noise" ? (
