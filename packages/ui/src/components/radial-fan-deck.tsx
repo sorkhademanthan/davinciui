@@ -18,8 +18,11 @@ export interface RadialFanDeckProps
   cardWidth?: number;
   /** Height divided by width for each cover. */
   cardAspectRatio?: number;
-  /** Time for one closed → open → closed loop, in milliseconds. */
-  cycleDuration?: number;
+  /**
+   * Controlled scroll position from 0 (stacked) to 1 (fully fanned).
+   * When omitted, the deck derives the value from its position in the viewport.
+   */
+  scrollProgress?: number;
   /** Start angle of the first cover in degrees. */
   startAngle?: number;
   /** Total angular sweep of the expanded fan in degrees. */
@@ -30,78 +33,18 @@ export interface RadialFanDeckProps
 
 const defaultItems: RadialFanDeckItem[] = [
   { id: "cover", title: "BORN OF NATURE", tone: "ink" },
-  {
-    id: "silver",
-    title: "LIMINAL FORM",
-    image: "/images/spiral-3d-slider/silver-motion.jpg",
-    tone: "paper",
-  },
-  {
-    id: "night",
-    title: "NOCTURNE",
-    image: "/images/spiral-3d-slider/dark-glitch.jpg",
-    tone: "ink",
-  },
-  {
-    id: "prism",
-    title: "PRISM STUDY",
-    image: "/images/spiral-3d-slider/prism-portrait.jpg",
-    tone: "paper",
-  },
-  {
-    id: "teal",
-    title: "SHAPESHIFT",
-    image: "/images/spiral-3d-slider/teal-echo.jpg",
-    tone: "ink",
-  },
-  {
-    id: "red",
-    title: "RED ECHO",
-    image: "/images/spiral-3d-slider/red-echo.jpg",
-    tone: "paper",
-  },
-  {
-    id: "blue",
-    title: "BLUE HOUR",
-    image: "/images/spiral-3d-slider/blue-profile.jpg",
-    tone: "ink",
-  },
-  {
-    id: "figure",
-    title: "SIGNAL BODY",
-    image: "/images/spiral-3d-slider/red-blue-figure.jpg",
-    tone: "paper",
-  },
-  {
-    id: "white",
-    title: "AFTER IMAGE",
-    image: "/images/spiral-3d-slider/white-motion.jpg",
-    tone: "ink",
-  },
-  {
-    id: "crimson",
-    title: "CRIMSON FIELD",
-    image: "/images/spiral-3d-slider/crimson-profile.jpg",
-    tone: "paper",
-  },
-  {
-    id: "camera",
-    title: "CONTACT SHEET",
-    image: "/images/spiral-3d-slider/camera-reflection.jpg",
-    tone: "ink",
-  },
-  {
-    id: "orange",
-    title: "HEAT MAP",
-    image: "/images/spiral-3d-slider/orange-haze.jpg",
-    tone: "paper",
-  },
-  {
-    id: "green",
-    title: "GREEN ROOM",
-    image: "/images/spiral-3d-slider/green-portrait.jpg",
-    tone: "ink",
-  },
+  { id: "silver", title: "LIMINAL FORM", tone: "paper" },
+  { id: "night", title: "NOCTURNE", tone: "ink" },
+  { id: "prism", title: "PRISM STUDY", tone: "paper" },
+  { id: "teal", title: "SHAPESHIFT", tone: "ink" },
+  { id: "red", title: "RED ECHO", tone: "paper" },
+  { id: "blue", title: "BLUE HOUR", tone: "ink" },
+  { id: "figure", title: "SIGNAL BODY", tone: "paper" },
+  { id: "white", title: "AFTER IMAGE", tone: "ink" },
+  { id: "crimson", title: "CRIMSON FIELD", tone: "paper" },
+  { id: "camera", title: "CONTACT SHEET", tone: "ink" },
+  { id: "orange", title: "HEAT MAP", tone: "paper" },
+  { id: "green", title: "GREEN ROOM", tone: "ink" },
 ];
 
 function DeckFace({ item, index }: { item: RadialFanDeckItem; index: number }) {
@@ -153,11 +96,15 @@ function DeckFace({ item, index }: { item: RadialFanDeckItem; index: number }) {
   );
 }
 
+function clamp(value: number, min = 0, max = 1) {
+  return Math.min(max, Math.max(min, value));
+}
+
 export function RadialFanDeck({
   items = defaultItems,
   cardWidth = 332,
   cardAspectRatio = 0.585,
-  cycleDuration = 15400,
+  scrollProgress,
   startAngle = -24,
   fanAngle = 332,
   ariaLabel = "Animated radial fan deck",
@@ -165,24 +112,81 @@ export function RadialFanDeck({
   style,
   ...props
 }: RadialFanDeckProps) {
+  const hostRef = React.useRef<HTMLDivElement>(null);
   const cards = items.length > 0 ? items : defaultItems;
-  const cardHeight = Math.round(cardWidth * cardAspectRatio);
+  const [measuredWidth, setMeasuredWidth] = React.useState(cardWidth);
+  const [viewportProgress, setViewportProgress] = React.useState(0);
+  const [prefersReducedMotion, setPrefersReducedMotion] = React.useState(false);
+  const progress = prefersReducedMotion
+    ? 1
+    : clamp(scrollProgress ?? viewportProgress);
+  const measuredHeight = measuredWidth * cardAspectRatio;
+
+  React.useEffect(() => {
+    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const updatePreference = () => setPrefersReducedMotion(motionQuery.matches);
+    updatePreference();
+    motionQuery.addEventListener("change", updatePreference);
+    return () => motionQuery.removeEventListener("change", updatePreference);
+  }, []);
+
+  React.useEffect(() => {
+    const host = hostRef.current;
+    if (!host) return;
+
+    const updateSize = () => {
+      setMeasuredWidth(Math.min(cardWidth, host.clientWidth * 0.36));
+    };
+    updateSize();
+
+    const observer = new ResizeObserver(updateSize);
+    observer.observe(host);
+    return () => observer.disconnect();
+  }, [cardWidth]);
+
+  React.useEffect(() => {
+    if (scrollProgress !== undefined) return;
+
+    const updateProgress = () => {
+      const host = hostRef.current;
+      if (!host) return;
+      const rect = host.getBoundingClientRect();
+      const start = window.innerHeight * 0.78;
+      const end = window.innerHeight * 0.2;
+      setViewportProgress(clamp((start - rect.top) / Math.max(1, start - end)));
+    };
+
+    let frame = 0;
+    const scheduleUpdate = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(updateProgress);
+    };
+
+    scheduleUpdate();
+    window.addEventListener("scroll", scheduleUpdate, { passive: true, capture: true });
+    window.addEventListener("resize", scheduleUpdate, { passive: true });
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", scheduleUpdate, true);
+      window.removeEventListener("resize", scheduleUpdate);
+    };
+  }, [scrollProgress]);
+
   const sharedStyle = {
-    "--radial-fan-card-width": `${cardWidth}px`,
-    "--radial-fan-card-height": `${cardHeight}px`,
-    "--radial-fan-cycle": `${Math.max(1200, cycleDuration)}ms`,
+    "--radial-fan-card-width": `min(${cardWidth}px, 36cqw)`,
     ...style,
   } as React.CSSProperties;
 
   return (
     <div
+      ref={hostRef}
       role="img"
       aria-label={ariaLabel}
       className={cn(
         "relative isolate flex h-full min-h-[360px] w-full items-center justify-center overflow-hidden bg-[#f7f5e8] transition-colors duration-300 dark:bg-[#11120f]",
         className,
       )}
-      style={sharedStyle}
+      style={{ containerType: "size", ...sharedStyle }}
       {...props}
     >
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.65),transparent_48%)] dark:bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.055),transparent_48%)]" />
@@ -193,19 +197,24 @@ export function RadialFanDeck({
           const stackX = index * 1.45;
           const stackY = -index * 0.72;
           const stackRotation = index * 0.32;
+          const closedX = -measuredWidth / 2 + stackX;
+          const closedY = -measuredHeight / 2 + stackY;
+          const openRotation = angle;
+          const translateX = closedX * (1 - progress);
+          const translateY =
+            closedY + (-measuredHeight - closedY) * progress;
+          const rotation =
+            stackRotation + (openRotation - stackRotation) * progress;
 
           return (
             <article
               key={item.id}
-              className="radial-fan-deck-card absolute left-1/2 top-1/2 w-[var(--radial-fan-card-width)] origin-bottom-left shadow-[0_16px_28px_rgba(20,20,16,0.16)]"
+              className="radial-fan-deck-card absolute left-1/2 top-1/2 w-[var(--radial-fan-card-width)] origin-bottom-left shadow-[0_16px_28px_rgba(20,20,16,0.16)] will-change-transform"
               style={
                 {
-                  height: "var(--radial-fan-card-height)",
+                  aspectRatio: `${1 / cardAspectRatio}`,
                   zIndex: cards.length - index,
-                  "--fan-angle": `${angle}deg`,
-                  "--fan-stack-x": `${stackX}px`,
-                  "--fan-stack-y": `${stackY}px`,
-                  "--fan-stack-rotation": `${stackRotation}deg`,
+                  transform: `translate3d(${translateX}px, ${translateY}px, 0) rotate(${rotation}deg)`,
                 } as React.CSSProperties
               }
             >
@@ -214,26 +223,6 @@ export function RadialFanDeck({
           );
         })}
       </div>
-      <style>{`
-        @keyframes radial-fan-deck-motion {
-          0%, 15% {
-            transform: translate(calc(-50% + var(--fan-stack-x)), calc(-50% + var(--fan-stack-y))) rotate(var(--fan-stack-rotation));
-          }
-          55%, 69% {
-            transform: translate(0, -100%) rotate(var(--fan-angle));
-          }
-          100% {
-            transform: translate(calc(-50% + var(--fan-stack-x)), calc(-50% + var(--fan-stack-y))) rotate(var(--fan-stack-rotation));
-          }
-        }
-        .radial-fan-deck-card {
-          animation: radial-fan-deck-motion var(--radial-fan-cycle) cubic-bezier(0.16, 1, 0.3, 1) infinite both;
-          will-change: transform;
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .radial-fan-deck-card { animation: none; }
-        }
-      `}</style>
     </div>
   );
 }
