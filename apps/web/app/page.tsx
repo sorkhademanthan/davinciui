@@ -9,7 +9,6 @@ import {
   LandingContent,
   LandingGutter,
 } from "@/components/landing/landing-frame";
-import { ResponsiveMagnetLines } from "@/components/landing/responsive-magnet-lines";
 import { Testimonials } from "@/components/landing/testimonials";
 import { CustomWorkCta } from "@/components/landing/custom-work-cta";
 import { InfiniteIconField } from "@/components/landing/infinite-icon-field";
@@ -18,15 +17,6 @@ import { Footer } from "@/components/footer";
 // DavinciUI Previews for Bento
 import { MatrixRain } from "@workspace/ui/components/matrix-rain";
 import { TextMorph } from "@workspace/ui/components/text-morph";
-import { DitherGradient } from "@workspace/ui/components/dither-gradient";
-import {
-  MagneticDock,
-  DockIconHome,
-  DockIconSearch,
-  DockIconMail,
-  DockIconSettings,
-  DockIconFolder,
-} from "@workspace/ui/components/magnetic-dock";
 
 const showcaseCardClass =
   "relative flex flex-col rounded-2xl bg-white p-1.5 shadow-[0_0_0_1px_rgba(0,0,0,0.055),0_10px_30px_-18px_rgba(0,0,0,0.35)] transition-[box-shadow,transform] duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] hover:-translate-y-0.5 hover:shadow-[0_0_0_1px_rgba(0,0,0,0.075),0_18px_48px_-22px_rgba(0,0,0,0.45)] dark:bg-[#161616] dark:shadow-[0_0_0_1px_rgba(255,255,255,0.07)] dark:hover:shadow-[0_0_0_1px_rgba(255,255,255,0.12)] transform-gpu will-change-transform";
@@ -200,95 +190,6 @@ export default function Home() {
                 <div className={showcaseLabelClass}>Infinite icon field</div>
               </motion.div>
 
-              {/* Card 4: 2x1 White */}
-              <motion.div
-                variants={cardVariants}
-                className={`md:col-span-2 md:row-span-1 ${showcaseCardClass}`}
-              >
-                <div
-                  className={`${showcasePreviewClass} flex flex-col items-center justify-center p-0`}
-                >
-                  <ResponsiveMagnetLines
-                    rows={5}
-                    containerSize="100%"
-                    lineColor="rgba(113,113,122,0.5)"
-                    lineWidth="4px"
-                    lineHeight="32px"
-                  />
-                </div>
-                <div className="flex shrink-0 items-center justify-between gap-2 px-2.5 pb-1 pt-2 text-[13px] font-medium leading-5 text-zinc-700 dark:text-zinc-400">
-                  Magnet lines
-                  <span className="hidden shrink-0 font-mono text-xs tracking-wider text-zinc-400 opacity-60 sm:inline">
-                    [ hover over me ]
-                  </span>
-                </div>
-              </motion.div>
-
-              {/* Card 5: 1x1 Dither Gradient */}
-              <motion.div
-                variants={cardVariants}
-                className={`md:col-span-1 md:row-span-1 ${showcaseCardClass}`}
-              >
-                <div
-                  className={`${showcasePreviewClass} flex flex-col items-center justify-center`}
-                >
-                  <div className="absolute inset-0 z-0 opacity-100 rounded-xl overflow-hidden">
-                    <DitherGradient
-                      colorFrom="#ffaa40"
-                      colorTo="#9c40ff"
-                      colorMid="#ff00cc"
-                      intensity={0.5}
-                      speed={2}
-                    />
-                  </div>
-                </div>
-                <div className={showcaseLabelClass}>Dither gradient</div>
-              </motion.div>
-
-              {/* Card 7: 3x1 Magnetic Dock */}
-              <motion.div
-                variants={cardVariants}
-                className={`md:col-span-3 md:row-span-1 ${showcaseCardClass}`}
-              >
-                <div
-                  className={`${showcasePreviewClass} flex max-h-[260px] items-center justify-center overflow-hidden p-6 text-black sm:p-10`}
-                >
-                  <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:16px_16px] opacity-70 dark:opacity-60" />
-
-                  <div className="z-10 flex h-[80px] items-center justify-center translate-y-2">
-                    <MagneticDock
-                      items={[
-                        { id: "home", label: "Home", icon: <DockIconHome /> },
-                        {
-                          id: "search",
-                          label: "Search",
-                          icon: <DockIconSearch />,
-                        },
-                        {
-                          id: "mail",
-                          label: "Mail",
-                          icon: <DockIconMail />,
-                          badge: 3,
-                        },
-                        {
-                          id: "folder",
-                          label: "Projects",
-                          icon: <DockIconFolder />,
-                        },
-                        {
-                          id: "settings",
-                          label: "Settings",
-                          icon: <DockIconSettings />,
-                        },
-                      ]}
-                      position="bottom"
-                      variant="glass"
-                      className="mx-auto"
-                    />
-                  </div>
-                </div>
-                <div className={showcaseLabelClass}>Magnetic dock</div>
-              </motion.div>
             </motion.div>
           </LandingContent>
         </LandingGutter>
