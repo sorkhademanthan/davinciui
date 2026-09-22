@@ -22,10 +22,6 @@ const docsImportMap: Record<
     import("@/components/docs/magic-cursor-pro").then((m) => ({
       default: m.MagicCursorProDocs,
     })),
-  "cursor-mask-reveal": () =>
-    import("@/components/docs/cursor-mask-reveal").then((m) => ({
-      default: m.CursorMaskRevealDocs,
-    })),
   "electric-vijdi-cursor": () =>
     import("@/components/docs/electric-vijdi-cursor").then((m) => ({
       default: m.ElectricVijdiCursorDocs,
@@ -253,6 +249,14 @@ const docsImportMap: Record<
   "pixel-image-trail": () =>
     import("@/components/docs/pixel-image-trail").then((m) => ({
       default: m.PixelImageTrailDocs,
+    })),
+  "pixel-wipe-carousel": () =>
+    import("@/components/docs/pixel-wipe-carousel").then((m) => ({
+      default: m.PixelWipeCarouselDocs,
+    })),
+  "cinematic-card-carousel": () =>
+    import("@/components/docs/cinematic-card-carousel").then((m) => ({
+      default: m.CinematicCardCarouselDocs,
     })),
   "cms-scroll-gallery": () =>
     import("@/components/docs/cms-scroll-gallery").then((m) => ({
