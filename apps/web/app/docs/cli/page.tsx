@@ -52,7 +52,7 @@ export default function CliPage() {
           </p>
           <div className="mt-3">
             <Code>{`pnpm dlx shadcn@latest add @davinciui/text-morph
-pnpm dlx shadcn@latest add @davinciui/orbit-card-stack
+pnpm dlx shadcn@latest add @davinciui/cinematic-card-carousel
 # local preview
 pnpm dlx shadcn@latest add @davinciui/scroll-media-expand --overwrite`}</Code>
           </div>

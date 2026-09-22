@@ -58,8 +58,6 @@ export const BASIC_PREVIEW_SLUGS = [
   "message-scroller",
   "message",
   "marker",
-  "table",
-  "data-table",
   "accordion",
   "carousel",
   "collapsible",

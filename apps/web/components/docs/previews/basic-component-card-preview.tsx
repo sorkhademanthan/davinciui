@@ -9,7 +9,6 @@ import {
   Inbox,
   Info,
   PackageOpen,
-  Search,
   Settings,
 } from "lucide-react";
 
@@ -64,7 +63,6 @@ import { Slider } from "@workspace/ui/components/slider";
 import { Spinner } from "@workspace/ui/components/spinner";
 import { Switch } from "@workspace/ui/components/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@workspace/ui/components/tabs";
-import { Table } from "@workspace/ui/components/table";
 import { Textarea } from "@workspace/ui/components/textarea";
 import { Toaster, toast } from "@workspace/ui/components/toast";
 import { Toggle } from "@workspace/ui/components/toggle";
@@ -193,42 +191,6 @@ function ChartMini() {
           <span>Jan</span>
           <span>Jun</span>
           <span>Dec</span>
-        </div>
-      </div>
-    </Stage>
-  );
-}
-
-/** Static mini grid for the data-table card (no table engine in the gallery chunk). */
-function DataTableMini() {
-  const rows = [
-    { name: "Aarav Sharma", city: "Pune", status: "Active" },
-    { name: "Mira Chen", city: "Austin", status: "Trial" },
-    { name: "Jonas Weber", city: "Berlin", status: "Active" },
-  ];
-  return (
-    <Stage>
-      <div className="w-full max-w-60 overflow-hidden rounded-lg border bg-card text-left">
-        <div className="flex items-center gap-1.5 border-b px-2 py-1.5">
-          <div className="flex h-5 flex-1 items-center gap-1 rounded-sm bg-muted px-1.5 text-[9px] text-muted-foreground">
-            <Search className="size-2.5" /> Search…
-          </div>
-          <div className="rounded-sm bg-primary px-1.5 py-1 text-[9px] font-medium text-primary-foreground">
-            Filter
-          </div>
-        </div>
-        {rows.map((r) => (
-          <div key={r.name} className="flex items-center justify-between border-b px-2 py-1.5 text-[10px] last:border-0">
-            <span className="font-medium">{r.name}</span>
-            <span className="text-muted-foreground">{r.city}</span>
-            <span className="rounded-full bg-emerald-500/10 px-1.5 py-px text-[9px] text-emerald-600 dark:text-emerald-400">
-              {r.status}
-            </span>
-          </div>
-        ))}
-        <div className="flex items-center justify-between bg-muted/40 px-2 py-1 text-[9px] text-muted-foreground">
-          <span>1–3 of 12</span>
-          <span>‹ 1 ›</span>
         </div>
       </div>
     </Stage>
@@ -942,30 +904,6 @@ export function BasicComponentCardPreview({ slug }: { slug: BasicPreviewSlug }) 
           </div>
         </Stage>
       );
-    case "table":
-      return (
-        <div
-          className="h-full w-full cursor-default overflow-hidden bg-background p-3"
-          onClick={stopCardNav}
-        >
-          <Table
-            data={[
-              { id: "1", name: "Aarav", city: "Pune" },
-              { id: "2", name: "Mira", city: "Austin" },
-              { id: "3", name: "Jonas", city: "Berlin" },
-              { id: "4", name: "Ada", city: "London" },
-            ]}
-            columns={[
-              { key: "name", header: "Name", sortable: true },
-              { key: "city", header: "City" },
-            ]}
-            height={168}
-            rowHeight={32}
-          />
-        </div>
-      );
-    case "data-table":
-      return <DataTableMini />;
     /* -------------------------------- Layout ------------------------------ */
     case "accordion":
       return (

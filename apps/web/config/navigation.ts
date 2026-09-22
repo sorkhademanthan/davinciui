@@ -204,8 +204,6 @@ const experienceComponentsSection: NavSection = {
         { title: "Card", href: "/experience/components/card" },
         { title: "Badge", href: "/experience/components/badge" },
         { title: "Avatar", href: "/experience/components/avatar" },
-        { title: "Table", href: "/experience/components/table" },
-        { title: "Data Table", href: "/experience/components/data-table" },
         { title: "Separator", href: "/experience/components/separator" },
         { title: "Bubble", href: "/experience/components/bubble" },
         { title: "Attachment", href: "/experience/components/attachment" },

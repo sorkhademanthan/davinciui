@@ -23,7 +23,6 @@ const LEGACY_UNDOCUMENTED_ITEMS = new Set([
   "scrub-input",
   "shimmer-button",
   "showcase-card",
-  "signature",
   "spotlight-card",
   "testimonial-marquee",
   "text-animate",

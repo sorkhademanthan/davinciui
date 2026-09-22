@@ -13,40 +13,6 @@ export interface DitherPrismHeroConfig {
   showParticles: boolean;
 }
 
-export interface SignatureConfig {
-  text: string;
-  color: string;
-  fontSize: number;
-  duration: number;
-}
-
-export const SIGNATURE_DEFAULT_CONFIG: SignatureConfig = {
-  text: "DavinciUI",
-  color: "",
-  fontSize: 48,
-  duration: 1.5,
-};
-
-export interface SplitFlapDisplayConfig {
-  text: string;
-  columns: number;
-  size: "sm" | "md" | "lg";
-  accentColor: string;
-  showIndicators: boolean;
-  staggerDelay: number;
-  flipSpeed: number;
-}
-
-export const SPLIT_FLAP_DISPLAY_DEFAULT_CONFIG: SplitFlapDisplayConfig = {
-  text: "DAVINCIUI",
-  columns: 11,
-  size: "md",
-  accentColor: "#22c55e",
-  showIndicators: true,
-  staggerDelay: 30,
-  flipSpeed: 35,
-};
-
 export const DITHER_PRISM_HERO_DEFAULT_CONFIG: DitherPrismHeroConfig = {
   title1: "Experience",
   title2: "The Future",
@@ -153,22 +119,6 @@ interface PlaygroundStore {
   setActiveWebglLiquidPreset: (preset: string) => void;
   resetWebglLiquidPreview: () => void;
   resetWebglLiquidConfig: () => void;
-  signatureConfig: SignatureConfig;
-  activeSignaturePreset: string;
-  signatureRenderVersion: number;
-  setSignatureConfig: (config: SignatureConfig) => void;
-  updateSignatureConfig: (updates: Partial<SignatureConfig>) => void;
-  setActiveSignaturePreset: (preset: string) => void;
-  resetSignaturePreview: () => void;
-  resetSignatureConfig: () => void;
-  splitFlapDisplayConfig: SplitFlapDisplayConfig;
-  activeSplitFlapDisplayPreset: string;
-  splitFlapDisplayRenderVersion: number;
-  setSplitFlapDisplayConfig: (config: SplitFlapDisplayConfig) => void;
-  updateSplitFlapDisplayConfig: (updates: Partial<SplitFlapDisplayConfig>) => void;
-  setActiveSplitFlapDisplayPreset: (preset: string) => void;
-  resetSplitFlapDisplayPreview: () => void;
-  resetSplitFlapDisplayConfig: () => void;
   liquidChromeConfig: LiquidChromeConfig;
   activeLiquidChromePreset: string;
   liquidChromeRenderVersion: number;
@@ -244,45 +194,6 @@ export const usePlaygroundStore = create<PlaygroundStore>((set) => ({
       webglLiquidConfig: WEBGL_LIQUID_DEFAULT_CONFIG,
       activeWebglLiquidPreset: "Default",
       webglLiquidRenderVersion: state.webglLiquidRenderVersion + 1,
-    })),
-  signatureConfig: SIGNATURE_DEFAULT_CONFIG,
-  activeSignaturePreset: "Default",
-  signatureRenderVersion: 0,
-  setSignatureConfig: (config) => set({ signatureConfig: config }),
-  updateSignatureConfig: (updates) =>
-    set((state) => ({
-      signatureConfig: { ...state.signatureConfig, ...updates },
-    })),
-  setActiveSignaturePreset: (preset) => set({ activeSignaturePreset: preset }),
-  resetSignaturePreview: () =>
-    set((state) => ({
-      signatureRenderVersion: state.signatureRenderVersion + 1,
-    })),
-  resetSignatureConfig: () =>
-    set((state) => ({
-      signatureConfig: SIGNATURE_DEFAULT_CONFIG,
-      activeSignaturePreset: "Default",
-      signatureRenderVersion: state.signatureRenderVersion + 1,
-    })),
-  splitFlapDisplayConfig: SPLIT_FLAP_DISPLAY_DEFAULT_CONFIG,
-  activeSplitFlapDisplayPreset: "Default",
-  splitFlapDisplayRenderVersion: 0,
-  setSplitFlapDisplayConfig: (config) => set({ splitFlapDisplayConfig: config }),
-  updateSplitFlapDisplayConfig: (updates) =>
-    set((state) => ({
-      splitFlapDisplayConfig: { ...state.splitFlapDisplayConfig, ...updates },
-    })),
-  setActiveSplitFlapDisplayPreset: (preset) =>
-    set({ activeSplitFlapDisplayPreset: preset }),
-  resetSplitFlapDisplayPreview: () =>
-    set((state) => ({
-      splitFlapDisplayRenderVersion: state.splitFlapDisplayRenderVersion + 1,
-    })),
-  resetSplitFlapDisplayConfig: () =>
-    set((state) => ({
-      splitFlapDisplayConfig: SPLIT_FLAP_DISPLAY_DEFAULT_CONFIG,
-      activeSplitFlapDisplayPreset: "Default",
-      splitFlapDisplayRenderVersion: state.splitFlapDisplayRenderVersion + 1,
     })),
   setLiquidChromeConfig: (config) => set({ liquidChromeConfig: config }),
   updateLiquidChromeConfig: (updates) =>

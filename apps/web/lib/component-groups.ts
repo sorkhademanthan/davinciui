@@ -41,7 +41,7 @@ export const BASIC_GROUPS: Record<string, string[]> = {
   Feedback: ["alert", "toast", "progress", "spinner", "skeleton", "empty", ...PLANNED_FEEDBACK],
   Navigation: ["tabs", "breadcrumb", "pagination", "sidebar", "navigation-menu", "menubar", ...PLANNED_NAVIGATION],
   Overlays: ["dialog", "drawer", "popover", "tooltip", "dropdown-menu", ...PLANNED_OVERLAYS],
-  "Data Display": ["card", "badge", "avatar", "table", "data-table", "separator", "bubble", "attachment", "chart", "item", "message-scroller", "message", "marker", ...PLANNED_DATA_DISPLAY],
+  "Data Display": ["card", "badge", "avatar", "separator", "bubble", "attachment", "chart", "item", "message-scroller", "message", "marker", ...PLANNED_DATA_DISPLAY],
   Layout: ["accordion", "carousel", "collapsible", "scroll-area"],
 };
 
