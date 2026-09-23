@@ -821,6 +821,22 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "vertical-image-marquee",
     addedAt: "2026-09-23",
   },
+  "hover-cards": {
+    title: "Hover Cards",
+    description:
+      "An editorial portrait row that expands the active card over a blurred, full-bleed image backdrop.",
+    category: "Visual Effects",
+    slug: "hover-cards",
+    addedAt: "2026-09-23",
+  },
+  "profile-carousel": {
+    title: "Profile Carousel",
+    description:
+      "An editorial team carousel with full portrait cards, one traveling profile detail card, edge clipping, and seamless looping.",
+    category: "Visual Effects",
+    slug: "profile-carousel",
+    addedAt: "2026-09-23",
+  },
   "matrix-rain": {
     title: "Matrix Rain",
     description: "Classic Matrix digital rain effect.",

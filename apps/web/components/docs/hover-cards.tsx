@@ -1,0 +1,99 @@
+import { DocsPageLayout } from "@/components/docs-page-layout";
+import { HoverCardsPreview } from "@/components/docs/previews/hover-cards-preview";
+import { readComponentSource } from "@/lib/source-code";
+
+const usageCode = `import { HoverCards, type HoverCardsItem } from "@/components/ui/hover-cards"
+
+const portraits: HoverCardsItem[] = [
+  {
+    id: "soft-focus",
+    src: "/images/portrait-01.jpg",
+    alt: "Portrait in warm window light",
+    label: "Soft Focus",
+    description: "A quiet portrait shaped by warm light and subtle shadows.",
+    textTone: "light",
+  },
+  {
+    id: "silver-poise",
+    src: "/images/portrait-02.jpg",
+    alt: "Monochrome editorial portrait",
+    label: "Silver Poise",
+    description: "Monochrome restraint with a calm, cinematic presence.",
+    textTone: "dark",
+  },
+]
+
+export default function PortraitGallery() {
+  return <HoverCards items={portraits} className="min-h-[42rem]" />
+}`;
+
+export async function HoverCardsDocs() {
+  const sourceCode =
+    (await readComponentSource("hover-cards")) ||
+    "// Unable to load source code";
+
+  return (
+    <DocsPageLayout
+      title="Hover Cards"
+      description="An editorial portrait row that opens the hovered card into a tall focal image while a blurred, full-bleed version of the same artwork washes across the stage. Pointer, keyboard, and tap interactions share the same responsive composition."
+      preview={<HoverCardsPreview />}
+      previewCode={usageCode}
+      usageCode={usageCode}
+      installPackageName="hover-cards"
+      installDependencies="clsx tailwind-merge"
+      installSourceCode={sourceCode}
+      installSourceFilename="components/ui/hover-cards.tsx"
+      fullWidthPreview
+      unstyledPreview
+      props={[
+        {
+          name: "items",
+          type: "readonly HoverCardsItem[]",
+          description:
+            "Portrait source, alt text, label, description, crop position, and optional active-backdrop text tone for each card.",
+        },
+        {
+          name: "title",
+          type: "ReactNode",
+          default: '"Hover Cards"',
+          description: "Centered title above the portrait row.",
+        },
+        {
+          name: "activeIndex",
+          type: "number | null",
+          description: "Controlled active card. Pass null for the idle layout.",
+        },
+        {
+          name: "initialActiveIndex",
+          type: "number | null",
+          default: "null",
+          description: "Initial active card for uncontrolled usage.",
+        },
+        {
+          name: "onActiveIndexChange",
+          type: "(index: number | null) => void",
+          description:
+            "Called when pointer, keyboard focus, or tap changes the active card.",
+        },
+        {
+          name: "clearOnLeave",
+          type: "boolean",
+          default: "true",
+          description:
+            "Restore the equal-width idle row when a mouse leaves the composition.",
+        },
+        {
+          name: "backdropBlur",
+          type: "number",
+          default: "44",
+          description: "Blur radius, in pixels, for the expanded background image.",
+        },
+        {
+          name: "className",
+          type: "string",
+          description: "Additional classes for sizing and styling the stage.",
+        },
+      ]}
+    />
+  );
+}

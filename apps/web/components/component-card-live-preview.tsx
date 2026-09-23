@@ -224,6 +224,22 @@ const VerticalImageMarqueeCardPreview = dynamic(
   { ssr: false },
 );
 
+const HoverCardsCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/hover-cards-card-preview").then(
+      (module) => module.HoverCardsCardPreview,
+    ),
+  { ssr: false },
+);
+
+const ProfileCarouselCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/profile-carousel-card-preview").then(
+      (module) => module.ProfileCarouselCardPreview,
+    ),
+  { ssr: false },
+);
+
 const AmbientAudioToggleCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/ambient-audio-toggle-card-preview").then(
@@ -460,6 +476,8 @@ type ComponentCardLivePreviewProps = {
     | "noiser"
     | "sunlight-effect"
     | "vertical-image-marquee"
+    | "hover-cards"
+    | "profile-carousel"
     | "ambient-audio-toggle"
     | "motion-hamburger"
     | "scroll-reveal-image"
@@ -541,6 +559,7 @@ export function ComponentCardLivePreview({
           slug !== "noiser" &&
           slug !== "sunlight-effect" &&
           slug !== "vertical-image-marquee" &&
+          slug !== "hover-cards" &&
           slug !== "ambient-audio-toggle" &&
           slug !== "motion-hamburger" &&
           !isBasicPreviewSlug(slug)) ? (
@@ -707,6 +726,10 @@ export function ComponentCardLivePreview({
         <SunlightEffectCardPreview />
       ) : slug === "vertical-image-marquee" ? (
         <VerticalImageMarqueeCardPreview />
+      ) : slug === "hover-cards" ? (
+        <HoverCardsCardPreview />
+      ) : slug === "profile-carousel" ? (
+        <ProfileCarouselCardPreview />
       ) : slug === "ambient-audio-toggle" ? (
         <AmbientAudioToggleCardPreview />
       ) : slug === "motion-hamburger" ? (

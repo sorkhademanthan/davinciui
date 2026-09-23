@@ -84,6 +84,8 @@ function hasLiveCardPreview(
   | "noiser"
   | "sunlight-effect"
   | "vertical-image-marquee"
+  | "hover-cards"
+  | "profile-carousel"
   | "ambient-audio-toggle"
   | "motion-hamburger"
   | "scroll-reveal-image"
@@ -137,6 +139,8 @@ function hasLiveCardPreview(
     slug === "noiser" ||
     slug === "sunlight-effect" ||
     slug === "vertical-image-marquee" ||
+    slug === "hover-cards" ||
+    slug === "profile-carousel" ||
     slug === "ambient-audio-toggle" ||
     slug === "motion-hamburger" ||
     slug === "scroll-reveal-image" ||

@@ -186,6 +186,14 @@ const docsImportMap: Record<
     import("@/components/docs/vertical-image-marquee").then((m) => ({
       default: m.VerticalImageMarqueeDocs,
     })),
+  "hover-cards": () =>
+    import("@/components/docs/hover-cards").then((m) => ({
+      default: m.HoverCardsDocs,
+    })),
+  "profile-carousel": () =>
+    import("@/components/docs/profile-carousel").then((m) => ({
+      default: m.ProfileCarouselDocs,
+    })),
   "ambient-audio-toggle": () =>
     import("@/components/docs/ambient-audio-toggle").then((m) => ({
       default: m.AmbientAudioToggleDocs,

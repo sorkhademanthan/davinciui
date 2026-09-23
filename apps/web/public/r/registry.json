@@ -197,6 +197,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "hover-cards",
+      "type": "registry:ui"
+    },
+    {
       "name": "hover-transition",
       "type": "registry:ui"
     },
