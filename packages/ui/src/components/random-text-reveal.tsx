@@ -317,7 +317,17 @@ export function RandomTextReveal({
 
     if (typeof IntersectionObserver !== "undefined") {
       io = new IntersectionObserver((entries) => {
-        inView = entries[0]?.isIntersecting ?? true;
+        const visible = entries[0]?.isIntersecting ?? true;
+        const wasHidden = !inView && visible;
+        inView = visible;
+        // A loop beat that fired while offscreen is skipped without
+        // re-arming — resume here so the text never sits stuck in the
+        // from-state with no animation running.
+        if (visible && wasHidden && loop && !cancelled && hasPlayed) {
+          if (randomizeEachReplay) buildTimeline();
+          else setFromState();
+          timeline?.play(0);
+        }
       });
       io.observe(root);
     }
