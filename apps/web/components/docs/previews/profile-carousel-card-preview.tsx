@@ -6,29 +6,29 @@ import * as React from "react";
 
 const MINI_PROFILES = [
   {
-    id: "mario-tomsen",
-    src: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop",
-    alt: "Portrait of Mario Tomsen",
+    id: "blue-double",
+    src: "/images/spiral-3d-slider/blue-double.jpg",
+    alt: "Blue double-exposure portrait",
   },
   {
-    id: "linda-fuchs",
-    src: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200&auto=format&fit=crop",
-    alt: "Portrait of Linda Fuchs",
+    id: "dark-glitch",
+    src: "/images/spiral-3d-slider/dark-glitch.jpg",
+    alt: "Editorial portrait with light trails",
   },
   {
-    id: "ava-kim",
-    src: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200&auto=format&fit=crop",
-    alt: "Portrait of Ava Kim",
+    id: "prism-portrait",
+    src: "/images/spiral-3d-slider/prism-portrait.jpg",
+    alt: "Portrait in green and magenta light",
   },
   {
-    id: "noah-carter",
-    src: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=200&auto=format&fit=crop",
-    alt: "Portrait of Noah Carter",
+    id: "silver-motion",
+    src: "/images/spiral-3d-slider/silver-motion.jpg",
+    alt: "Silver portrait in soft exposure",
   },
   {
-    id: "marcus-berendt",
-    src: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=200&auto=format&fit=crop",
-    alt: "Portrait of Marcus Berendt",
+    id: "red-echo",
+    src: "/images/spiral-3d-slider/red-echo.jpg",
+    alt: "Red fashion portrait",
   },
 ];
 

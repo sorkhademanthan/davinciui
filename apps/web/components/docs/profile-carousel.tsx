@@ -8,7 +8,7 @@ const profiles: Profile[] = [
   {
     id: "marcus-berendt",
     name: "Marcus Berendt",
-    image: "/images/marcus-berendt.jpg",
+    image: "/images/spiral-3d-slider/red-echo.jpg",
     description: "Product Designer focused on intuitive digital experiences.",
     category: "Product Design",
     objectPosition: "50% 20%",
@@ -16,7 +16,7 @@ const profiles: Profile[] = [
   {
     id: "ava-kim",
     name: "Ava Kim",
-    image: "/images/ava-kim.jpg",
+    image: "/images/spiral-3d-slider/prism-portrait.jpg",
     description: "UX researcher turning insight into clear direction.",
     category: "UX Research",
   },
