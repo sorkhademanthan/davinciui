@@ -23,9 +23,8 @@ const ITEMS: MiniItem[] = [
       "https://images.unsplash.com/photo-1531366936337-7c912a4589a7?q=80&w=600&auto=format&fit=crop",
   },
   {
-    title: "Kyoto",
-    media:
-      "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=600&auto=format&fit=crop",
+    title: "Prism",
+    media: "/images/spiral-3d-slider/prism-portrait.jpg",
   },
   {
     title: "Dunes",

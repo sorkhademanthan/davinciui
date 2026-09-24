@@ -135,9 +135,9 @@ const DEFAULT_ITEMS: CMSScrollGalleryItem[] = [
     alt: "Aurora — violet and green northern lights over snowy peaks",
   },
   {
-    title: "Kyoto",
-    media: `https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e${UNSPLASH_PARAMS}`,
-    alt: "Kyoto — Yasaka pagoda rising over a lantern-lit lane at dusk",
+    title: "Prism",
+    media: "/images/spiral-3d-slider/prism-portrait.jpg",
+    alt: "Prism — portrait illuminated by green light and a magenta prism",
   },
   {
     title: "Tide",
@@ -157,14 +157,14 @@ const DEFAULT_ITEMS: CMSScrollGalleryItem[] = [
     alt: "Neon — Times Square glowing through rain at night",
   },
   {
-    title: "Santorini",
-    media: `https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff${UNSPLASH_PARAMS}`,
-    alt: "Santorini — whitewashed Oia glowing at blue hour",
+    title: "Ember",
+    media: "/images/spiral-3d-slider/red-echo.jpg",
+    alt: "Ember — red fashion portrait swept through a long exposure",
   },
   {
-    title: "Mist",
-    media: `https://images.unsplash.com/photo-1518709268805-4e9042af9f23${UNSPLASH_PARAMS}`,
-    alt: "Mist — a fairytale castle floating in morning fog",
+    title: "Ghost",
+    media: "/images/spiral-3d-slider/ghosted-portrait.jpg",
+    alt: "Ghost — portrait layered in soft motion",
   },
   {
     title: "Muse",

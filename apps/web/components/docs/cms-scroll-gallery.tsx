@@ -7,12 +7,12 @@ const defaultCode = `import { CMSScrollGallery } from "@/components/ui/cms-scrol
 
 const items = [
   { title: "Aurora", media: "https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=1920&q=85" },
-  { title: "Kyoto", media: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=1920&q=85" },
+  { title: "Prism", media: "/images/spiral-3d-slider/prism-portrait.jpg" },
   { title: "Tide", media: "https://assets.mixkit.co/videos/44370/44370-720.mp4", mediaType: "video" },
   { title: "Dunes", media: "https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?w=1920&q=85" },
   { title: "Neon", media: "https://assets.mixkit.co/videos/4332/4332-720.mp4", mediaType: "video" },
-  { title: "Santorini", media: "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=1920&q=85" },
-  { title: "Mist", media: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1920&q=85" },
+  { title: "Ember", media: "/images/spiral-3d-slider/red-echo.jpg" },
+  { title: "Ghost", media: "/images/spiral-3d-slider/ghosted-portrait.jpg" },
   { title: "Muse", media: "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=1920&q=85" },
 ]
 
