@@ -98,6 +98,10 @@ function img(id: string, aspectRatio: number, alt: string): ScrollSyncGalleryIma
   return { src: `https://images.unsplash.com/${id}${UNSPLASH}`, aspectRatio, alt };
 }
 
+function local(file: string, aspectRatio: number, alt: string): ScrollSyncGalleryImage {
+  return { src: `/images/spiral-3d-slider/${file}`, aspectRatio, alt };
+}
+
 const DEFAULT_COLUMNS: ScrollSyncGalleryColumn[] = [
   {
     id: "column-1",
@@ -106,12 +110,12 @@ const DEFAULT_COLUMNS: ScrollSyncGalleryColumn[] = [
     offset: 0,
     images: [
       img("photo-1506905925346-21bda4d32df4", 0.72, "Matterhorn peak above a sea of clouds"),
-      img("photo-1529139574466-a303027c1d8b", 1.35, "Editorial fashion portrait in warm light"),
+      local("blue-double.jpg", 0.72, "Blue double-exposure portrait in a dark studio"),
       img("photo-1493863641943-9b68992a8d07", 0.78, "Photographer holding a vintage camera"),
-      img("photo-1470229722913-7c0e2dbbafd3", 1.5, "Concert stage washed in amber light"),
+      local("prism-portrait.jpg", 0.72, "Portrait illuminated by green light and a magenta prism"),
       img("photo-1487958449943-2429e8be8625", 0.7, "White concrete architecture detail"),
-      img("photo-1534528741775-53994a69daeb", 0.8, "Studio portrait with soft shadow"),
-      img("photo-1529626455594-4ff0802cfb7e", 0.78, "Natural-light portrait with freckles"),
+      local("red-echo.jpg", 0.72, "Red fashion portrait swept through a long exposure"),
+      local("crimson-profile.jpg", 0.72, "Crimson profile emerging from a deep green shadow"),
       img("photo-1509631179647-0177331693ae", 1.35, "Red editorial fashion look"),
     ],
   },
@@ -122,12 +126,12 @@ const DEFAULT_COLUMNS: ScrollSyncGalleryColumn[] = [
     offset: 0.1,
     images: [
       img("photo-1490481651871-ab68de25d43d", 1.4, "Fashion editorial against a bright wall"),
-      img("photo-1506794778202-cad84cf45f1d", 0.72, "Noir studio portrait on black"),
+      local("dark-glitch.jpg", 0.72, "Editorial portrait crossed by dark horizontal light trails"),
       img("photo-1449157291145-7efd050a4d0e", 1.2, "Glass high-rise facade from below"),
       img("photo-1517841905240-472988babdf9", 0.75, "Smiling portrait in natural light"),
-      img("photo-1473580044384-7ba9967e16a0", 1.6, "Desert dunes at golden hour"),
-      img("photo-1516035069371-29a1b244cc32", 0.85, "Film camera on a wooden table"),
-      img("photo-1487412720507-e7ab37603c6f", 0.8, "Beauty portrait with soft makeup"),
+      local("silver-motion.jpg", 0.72, "Silver portrait stretched through a soft horizontal exposure"),
+      local("ghosted-portrait.jpg", 0.72, "Ghosted portrait layered in soft motion"),
+      local("blue-motion.jpg", 0.72, "Portrait dissolving into blue motion blur"),
       img("photo-1495385794356-15371f348c31", 1.4, "Street-style fashion in the city"),
     ],
   },
@@ -137,13 +141,13 @@ const DEFAULT_COLUMNS: ScrollSyncGalleryColumn[] = [
     speed: 1.22,
     offset: -0.08,
     images: [
-      img("photo-1469334031218-e382a71b716b", 0.8, "Fashion look with sunglasses"),
+      local("green-portrait.jpg", 0.72, "Portrait washed in green studio light"),
       img("photo-1501281668745-f7f57925c3b4", 1.45, "Crowd with raised hands at a festival"),
       img("photo-1483985988355-763728e1935b", 0.7, "Editorial shopping-street style"),
-      img("photo-1470071459604-3b5ec3a7fe05", 1.3, "Morning fog over layered hills"),
+      local("orange-haze.jpg", 0.72, "Portrait glowing through orange haze"),
       img("photo-1496747611176-843222e1e57c", 0.78, "Minimal fashion portrait in white"),
-      img("photo-1486718448742-163732cd1544", 1.55, "Curved concrete interior"),
-      img("photo-1524504388940-b1c1722653e1", 0.72, "Studio portrait in warm tones"),
+      local("teal-echo.jpg", 0.72, "Portrait echoing through teal light"),
+      local("visor-portrait.jpg", 0.72, "Portrait wearing a reflective visor"),
       img("photo-1501785888041-af3ef285b470", 1.3, "Alpine lake beneath mountain peaks"),
     ],
   },
@@ -154,12 +158,12 @@ const DEFAULT_COLUMNS: ScrollSyncGalleryColumn[] = [
     offset: 0.05,
     images: [
       img("photo-1445205170230-053b83016050", 1.35, "Clothing rack in a sunlit store"),
-      img("photo-1531123897727-8f129e1688ce", 0.72, "Ember portrait against a red wall"),
+      local("blue-profile.jpg", 0.72, "Blue profile study in shadow"),
       img("photo-1469474968028-56623f02e42e", 1.25, "Sunlight breaking through a valley"),
-      img("photo-1515886657613-9f3515b0c78f", 0.75, "High-fashion pose in pink light"),
+      local("camera-reflection.jpg", 0.72, "Portrait caught in a camera reflection"),
       img("photo-1514525253161-7a46d19cd819", 1.5, "DJ decks under club lights"),
-      img("photo-1500648767791-00dcc994a43e", 0.82, "Portrait of a man in soft daylight"),
-      img("photo-1502823403499-6ccfcf4fb453", 0.78, "Portrait with curly hair in sunlight"),
+      local("red-blue-figure.jpg", 0.72, "Figure lit by saturated red and electric blue light"),
+      local("white-motion.jpg", 0.72, "Portrait dissolving into white light"),
       img("photo-1477959858617-67f85cf4f1df", 1.4, "City skyline at dusk"),
     ],
   },

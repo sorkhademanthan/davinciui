@@ -17,6 +17,8 @@ interface MiniColumn {
 
 const Q = "?q=80&w=300&auto=format&fit=crop";
 
+const LOCAL = (file: string) => `/images/spiral-3d-slider/${file}`;
+
 // Four columns with deliberately mismatched image heights — the editorial
 // collage look. Each column's heights are fixed pixels so the duplicated
 // content math stays deterministic at any card size.
@@ -30,27 +32,27 @@ const COLUMNS: MiniColumn[] = [
 const COLUMN_IMAGES: string[][] = [
   [
     `https://images.unsplash.com/photo-1506905925346-21bda4d32df4${Q}`,
+    LOCAL("blue-double.jpg"),
     `https://images.unsplash.com/photo-1529139574466-a303027c1d8b${Q}`,
-    `https://images.unsplash.com/photo-1493863641943-9b68992a8d07${Q}`,
-    `https://images.unsplash.com/photo-1534528741775-53994a69daeb${Q}`,
+    LOCAL("prism-portrait.jpg"),
   ],
   [
+    LOCAL("dark-glitch.jpg"),
     `https://images.unsplash.com/photo-1490481651871-ab68de25d43d${Q}`,
+    LOCAL("red-echo.jpg"),
     `https://images.unsplash.com/photo-1506794778202-cad84cf45f1d${Q}`,
-    `https://images.unsplash.com/photo-1517841905240-472988babdf9${Q}`,
-    `https://images.unsplash.com/photo-1473580044384-7ba9967e16a0${Q}`,
   ],
   [
     `https://images.unsplash.com/photo-1469334031218-e382a71b716b${Q}`,
+    LOCAL("crimson-profile.jpg"),
     `https://images.unsplash.com/photo-1501281668745-f7f57925c3b4${Q}`,
-    `https://images.unsplash.com/photo-1483985988355-763728e1935b${Q}`,
-    `https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05${Q}`,
+    LOCAL("silver-motion.jpg"),
   ],
   [
+    LOCAL("ghosted-portrait.jpg"),
     `https://images.unsplash.com/photo-1445205170230-053b83016050${Q}`,
+    LOCAL("blue-motion.jpg"),
     `https://images.unsplash.com/photo-1531123897727-8f129e1688ce${Q}`,
-    `https://images.unsplash.com/photo-1515886657613-9f3515b0c78f${Q}`,
-    `https://images.unsplash.com/photo-1500648767791-00dcc994a43e${Q}`,
   ],
 ];
 
