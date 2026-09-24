@@ -240,6 +240,46 @@ const ProfileCarouselCardPreview = dynamic(
   { ssr: false },
 );
 
+const ServicesShowcaseCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/services-showcase-card-preview").then(
+      (module) => module.ServicesShowcaseCardPreview,
+    ),
+  { ssr: false },
+);
+
+const GlassSceneDockCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/glass-scene-dock-card-preview").then(
+      (module) => module.GlassSceneDockCardPreview,
+    ),
+  { ssr: false },
+);
+
+const LiquidRevealButtonCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/liquid-reveal-button-card-preview").then(
+      (module) => module.LiquidRevealButtonCardPreview,
+    ),
+  { ssr: false },
+);
+
+const AnimatedMetricCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/animated-metric-card-preview").then(
+      (module) => module.AnimatedMetricCardPreview,
+    ),
+  { ssr: false },
+);
+
+const NudgeButtonCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/nudge-button-card-preview").then(
+      (module) => module.NudgeButtonCardPreview,
+    ),
+  { ssr: false },
+);
+
 const AmbientAudioToggleCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/ambient-audio-toggle-card-preview").then(
@@ -392,6 +432,14 @@ const PreloaderProCardPreview = dynamic(
   { ssr: false },
 );
 
+const WaveBarsLoaderCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/wave-bars-loader-card-preview").then(
+      (module) => module.WaveBarsLoaderCardPreview,
+    ),
+  { ssr: false },
+);
+
 const MediaTextHover = dynamic(
   () =>
     import("@workspace/ui/components/media-text-hover").then(
@@ -432,10 +480,10 @@ const TextReveal = dynamic(
   { ssr: false },
 );
 
-const RollingText = dynamic(
+const RollingTextCardPreview = dynamic(
   () =>
-    import("@workspace/ui/components/rolling-text").then(
-      (module) => module.RollingText,
+    import("@/components/docs/previews/rolling-text-card-preview").then(
+      (module) => module.RollingTextCardPreview,
     ),
   { ssr: false },
 );
@@ -478,6 +526,11 @@ type ComponentCardLivePreviewProps = {
     | "vertical-image-marquee"
     | "hover-cards"
     | "profile-carousel"
+    | "services-showcase"
+    | "glass-scene-dock"
+    | "liquid-reveal-button"
+    | "animated-metric"
+    | "nudge-button"
     | "ambient-audio-toggle"
     | "motion-hamburger"
     | "scroll-reveal-image"
@@ -495,6 +548,7 @@ type ComponentCardLivePreviewProps = {
     | "editorial-wipe-preloader"
     | "geometric-preloader"
     | "preloader-pro"
+    | "wave-bars-loader"
     | BasicPreviewSlug;
 };
 
@@ -560,8 +614,14 @@ export function ComponentCardLivePreview({
           slug !== "sunlight-effect" &&
           slug !== "vertical-image-marquee" &&
           slug !== "hover-cards" &&
+          slug !== "services-showcase" &&
+          slug !== "glass-scene-dock" &&
+          slug !== "liquid-reveal-button" &&
+          slug !== "animated-metric" &&
+          slug !== "nudge-button" &&
           slug !== "ambient-audio-toggle" &&
           slug !== "motion-hamburger" &&
+          slug !== "wave-bars-loader" &&
           !isBasicPreviewSlug(slug)) ? (
         <span className="text-3xl font-black tracking-[-0.055em] text-foreground sm:text-4xl">
           {staticLabel}
@@ -605,21 +665,7 @@ export function ComponentCardLivePreview({
           className="px-4"
         />
       ) : slug === "rolling-text" ? (
-        <RollingText
-          text="DAVINCIUI"
-          pattern="alternating"
-          duplicateCount={7}
-          rollDuration={1.25}
-          staggerDelay={0.035}
-          blurIntensity={2}
-          fontFamily="inherit"
-          fontSize="clamp(1.35rem, 2.7vw, 2.1rem)"
-          fontWeight={800}
-          letterSpacing="-0.055em"
-          textColor="var(--foreground)"
-          backgroundColor="transparent"
-          className="px-4"
-        />
+        <RollingTextCardPreview />
       ) : slug === "media-text-hover" ? (
         <MediaTextHover
           text="DAVINCIUI"
@@ -730,6 +776,16 @@ export function ComponentCardLivePreview({
         <HoverCardsCardPreview />
       ) : slug === "profile-carousel" ? (
         <ProfileCarouselCardPreview />
+      ) : slug === "services-showcase" ? (
+        <ServicesShowcaseCardPreview />
+      ) : slug === "glass-scene-dock" ? (
+        <GlassSceneDockCardPreview />
+      ) : slug === "liquid-reveal-button" ? (
+        <LiquidRevealButtonCardPreview />
+      ) : slug === "animated-metric" ? (
+        <AnimatedMetricCardPreview />
+      ) : slug === "nudge-button" ? (
+        <NudgeButtonCardPreview />
       ) : slug === "ambient-audio-toggle" ? (
         <AmbientAudioToggleCardPreview />
       ) : slug === "motion-hamburger" ? (
@@ -764,6 +820,8 @@ export function ComponentCardLivePreview({
         <GeometricPreloaderCardPreview />
       ) : slug === "preloader-pro" ? (
         <PreloaderProCardPreview />
+      ) : slug === "wave-bars-loader" ? (
+        <WaveBarsLoaderCardPreview />
       ) : isBasicPreviewSlug(slug) ? (
         <BasicComponentCardPreview slug={slug} />
       ) : slug === "text-video-mask" ? (
@@ -783,6 +841,7 @@ export function ComponentCardLivePreview({
             fontWeight={600}
             lineHeight={1.2}
             color={isDark ? "#f4f4f5" : "#18181b"}
+            fromOpacity={0.32}
             textAlign="center"
             duration={0.3}
             maxDelay={0.8}

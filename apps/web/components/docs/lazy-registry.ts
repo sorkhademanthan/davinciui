@@ -114,6 +114,10 @@ const docsImportMap: Record<
     import("@/components/docs/spinner").then((m) => ({
       default: m.SpinnerDocs,
     })),
+  "wave-bars-loader": () =>
+    import("@/components/docs/wave-bars-loader").then((m) => ({
+      default: m.WaveBarsLoaderDocs,
+    })),
   progress: () =>
     import("@/components/docs/progress").then((m) => ({
       default: m.ProgressDocs,
@@ -193,6 +197,26 @@ const docsImportMap: Record<
   "profile-carousel": () =>
     import("@/components/docs/profile-carousel").then((m) => ({
       default: m.ProfileCarouselDocs,
+    })),
+  "services-showcase": () =>
+    import("@/components/docs/services-showcase").then((m) => ({
+      default: m.ServicesShowcaseDocs,
+    })),
+  "glass-scene-dock": () =>
+    import("@/components/docs/glass-scene-dock").then((m) => ({
+      default: m.GlassSceneDockDocs,
+    })),
+  "liquid-reveal-button": () =>
+    import("@/components/docs/liquid-reveal-button").then((m) => ({
+      default: m.LiquidRevealButtonDocs,
+    })),
+  "animated-metric": () =>
+    import("@/components/docs/animated-metric").then((m) => ({
+      default: m.AnimatedMetricDocs,
+    })),
+  "nudge-button": () =>
+    import("@/components/docs/nudge-button").then((m) => ({
+      default: m.NudgeButtonDocs,
     })),
   "ambient-audio-toggle": () =>
     import("@/components/docs/ambient-audio-toggle").then((m) => ({

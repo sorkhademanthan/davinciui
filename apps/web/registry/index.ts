@@ -307,6 +307,14 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "spinner",
     addedAt: "2026-09-04",
   },
+  "wave-bars-loader": {
+    title: "Wave Bars Loader",
+    description:
+      "A deterministic 4-bar traveling-wave loader with mint bars morphing through descending, flat, and ascending states.",
+    category: "Motion",
+    slug: "wave-bars-loader",
+    addedAt: "2026-09-23",
+  },
   skeleton: {
     title: "Skeleton",
     description: "Content placeholders with shimmer and configurable shapes.",
@@ -836,6 +844,46 @@ export const components: Record<string, ComponentMetadata> = {
     category: "Visual Effects",
     slug: "profile-carousel",
     addedAt: "2026-09-23",
+  },
+  "services-showcase": {
+    title: "Services Showcase",
+    description:
+      "A dark editorial services section with layered image stacks, scroll-driven parallax, restrained hover spread, and container-query sizing for card, panel, and fullscreen previews.",
+    category: "Visual Effects",
+    slug: "services-showcase",
+    addedAt: "2026-09-23",
+  },
+  "glass-scene-dock": {
+    title: "Glass Scene Dock",
+    description:
+      "A floating glass navigation dock pinned over scroll-driven photographic scenes — a travelling glass highlight glides between icons while scrolling crossfades the cinematic backdrop.",
+    category: "Interactions",
+    slug: "glass-scene-dock",
+    addedAt: "2026-09-24",
+  },
+  "liquid-reveal-button": {
+    title: "Liquid Reveal Button",
+    description:
+      "A substantial acid-yellow pill CTA with a pointer-driven black liquid reveal — the mask originates at the real cursor position, expands to full cover with spatially-masked two-tone text, then retracts toward the exit point.",
+    category: "Interactions",
+    slug: "liquid-reveal-button",
+    addedAt: "2026-09-24",
+  },
+  "animated-metric": {
+    title: "Animated Metric",
+    description:
+      "An editorial count-up statistic — the number eases to its exact final figure on viewport entry, with a subtle rise-and-fade entrance and a screen-reader-friendly final value.",
+    category: "Motion",
+    slug: "animated-metric",
+    addedAt: "2026-09-24",
+  },
+  "nudge-button": {
+    title: "Nudge Button",
+    description:
+      "A white pill CTA with a directional nudge interaction — concentric blue, red, and yellow rings burst from the pointer entry point before a white reveal pushes them out through the clipped edges.",
+    category: "Interactions",
+    slug: "nudge-button",
+    addedAt: "2026-09-24",
   },
   "matrix-rain": {
     title: "Matrix Rain",

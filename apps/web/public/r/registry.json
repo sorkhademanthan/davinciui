@@ -25,6 +25,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "animated-metric",
+      "type": "registry:ui"
+    },
+    {
       "name": "attachment",
       "type": "registry:ui"
     },
@@ -181,8 +185,16 @@
       "type": "registry:ui"
     },
     {
+      "name": "glass-scene-dock",
+      "type": "registry:ui"
+    },
+    {
       "name": "glitch-liquid-text",
       "type": "registry:ui"
+    },
+    {
+      "name": "gradient-hero-01",
+      "type": "registry:block"
     },
     {
       "name": "gsap-text",
@@ -245,6 +257,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "liquid-reveal-button",
+      "type": "registry:ui"
+    },
+    {
       "name": "magic-cursor-pro",
       "type": "registry:ui"
     },
@@ -297,6 +313,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "nudge-button",
+      "type": "registry:ui"
+    },
+    {
       "name": "pagination",
       "type": "registry:ui"
     },
@@ -327,6 +347,14 @@
     {
       "name": "preloader-pro",
       "type": "registry:ui"
+    },
+    {
+      "name": "pricing-01",
+      "type": "registry:block"
+    },
+    {
+      "name": "pricing-02",
+      "type": "registry:block"
     },
     {
       "name": "progress",
@@ -394,6 +422,10 @@
     },
     {
       "name": "separator",
+      "type": "registry:ui"
+    },
+    {
+      "name": "services-showcase",
       "type": "registry:ui"
     },
     {
@@ -497,16 +529,8 @@
       "type": "registry:ui"
     },
     {
-      "name": "gradient-hero-01",
-      "type": "registry:block"
-    },
-    {
-      "name": "pricing-01",
-      "type": "registry:block"
-    },
-    {
-      "name": "pricing-02",
-      "type": "registry:block"
+      "name": "wave-bars-loader",
+      "type": "registry:ui"
     }
   ]
 }

@@ -86,6 +86,11 @@ function hasLiveCardPreview(
   | "vertical-image-marquee"
   | "hover-cards"
   | "profile-carousel"
+  | "services-showcase"
+  | "glass-scene-dock"
+  | "liquid-reveal-button"
+  | "animated-metric"
+  | "nudge-button"
   | "ambient-audio-toggle"
   | "motion-hamburger"
   | "scroll-reveal-image"
@@ -103,6 +108,7 @@ function hasLiveCardPreview(
   | "editorial-wipe-preloader"
   | "geometric-preloader"
   | "preloader-pro"
+  | "wave-bars-loader"
   | "electric-vijdi-cursor"
   | "circle-cursor"
   | "tubes-cursor"
@@ -141,6 +147,11 @@ function hasLiveCardPreview(
     slug === "vertical-image-marquee" ||
     slug === "hover-cards" ||
     slug === "profile-carousel" ||
+    slug === "services-showcase" ||
+    slug === "glass-scene-dock" ||
+    slug === "liquid-reveal-button" ||
+    slug === "animated-metric" ||
+    slug === "nudge-button" ||
     slug === "ambient-audio-toggle" ||
     slug === "motion-hamburger" ||
     slug === "scroll-reveal-image" ||
@@ -158,6 +169,7 @@ function hasLiveCardPreview(
     slug === "editorial-wipe-preloader" ||
     slug === "geometric-preloader" ||
     slug === "preloader-pro" ||
+    slug === "wave-bars-loader" ||
     slug === "electric-vijdi-cursor" ||
     slug === "circle-cursor" ||
     slug === "tubes-cursor" ||
