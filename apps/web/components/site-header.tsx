@@ -3,10 +3,12 @@
 import React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { SlidersHorizontal } from "lucide-react"
 import { ComponentryLogomark } from "@/components/logos/componentry-logomark"
 import { CommandMenu } from "@/components/command-menu"
 import { landingGutterClass } from "@/components/landing/landing-frame"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { useDocStore } from "@/hooks/use-doc-store"
 import { cn } from "@/lib/utils"
 
 interface SiteHeaderProps {
@@ -30,6 +32,13 @@ export function SiteHeader({ sidebarToggle, landingGutter }: SiteHeaderProps) {
     const [stars, setStars] = React.useState<number | null>(null)
     const [mobileNavOpen, setMobileNavOpen] = React.useState(false)
     const [isScrolled, setIsScrolled] = React.useState(false)
+
+    // Personalize entry point: a docs preview registers its playground
+    // panel in the doc store; the header offers the same drawer globally.
+    const personalizeContent = useDocStore((state) => state.personalizeContent)
+    const personalizeOpen = useDocStore((state) => state.personalizeOpen)
+    const setPersonalizeOpen = useDocStore((state) => state.setPersonalizeOpen)
+    const hasPersonalize = personalizeContent != null
 
     React.useEffect(() => {
         setMobileNavOpen(false)
@@ -218,6 +227,24 @@ export function SiteHeader({ sidebarToggle, landingGutter }: SiteHeaderProps) {
                         <div className="hidden sm:block">
                             <ThemeToggle />
                         </div>
+                        {hasPersonalize && (
+                            <>
+                                <div className="hidden h-4 w-px bg-foreground/15 dark:bg-foreground/20 sm:block" />
+                                <button
+                                    type="button"
+                                    onClick={() => setPersonalizeOpen(!personalizeOpen)}
+                                    aria-label="Personalize"
+                                    title="Personalize"
+                                    aria-expanded={personalizeOpen}
+                                    className={cn(
+                                        "hidden h-8 w-8 items-center justify-center rounded-lg border border-transparent transition-shadow hover:bg-accent sm:inline-flex",
+                                        personalizeOpen && "bg-accent"
+                                    )}
+                                >
+                                    <SlidersHorizontal className="size-4 opacity-80" />
+                                </button>
+                            </>
+                        )}
                         <div className="hidden h-4 w-px bg-foreground/15 dark:bg-foreground/20 sm:block" />
                         <Link
                             href="/docs/installation"
@@ -263,6 +290,20 @@ export function SiteHeader({ sidebarToggle, landingGutter }: SiteHeaderProps) {
                             </Link>
                         ))}
                         <div className="my-1 h-px bg-border" />
+                        {hasPersonalize && (
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setMobileNavOpen(false)
+                                    setPersonalizeOpen(true)
+                                }}
+                                aria-expanded={personalizeOpen}
+                                className="flex items-center justify-between rounded-lg px-3 py-2 text-base"
+                            >
+                                <span>Personalize</span>
+                                <SlidersHorizontal className="size-4 opacity-60" />
+                            </button>
+                        )}
                         <Link
                             href="/docs/installation"
                             className="rounded-lg bg-foreground px-3 py-2 text-center text-base font-medium text-background"

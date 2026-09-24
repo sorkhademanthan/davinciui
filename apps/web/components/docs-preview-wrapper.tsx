@@ -5,6 +5,7 @@ import * as ReactDOM from "react-dom"
 import { cn } from "@/lib/utils"
 import { RotateCcw, Search, SlidersHorizontal, Check, Maximize, Minimize, CodeXml, ChevronLeft, Copy } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { PersonalizeDrawer } from "@/components/personalize-drawer"
 import { motion, AnimatePresence, useDragControls, type PanInfo } from "framer-motion"
 import { useDocStore } from "@/hooks/use-doc-store"
 
@@ -108,7 +109,6 @@ export function DocsPreviewWrapper({
   hideDefaultVariant = false,
 }: DocsPreviewWrapperProps) {
   const [key, setKey] = React.useState(0)
-  const [showPersonalize, setShowPersonalize] = React.useState(false)
   const [showSource, setShowSource] = React.useState(false)
   const [mounted, setMounted] = React.useState(false)
   const [copied, setCopied] = React.useState(false)
@@ -124,12 +124,24 @@ export function DocsPreviewWrapper({
 
   const resolvedActiveVariant = hideDefaultVariant && activeVariant === -1 ? 0 : activeVariant
 
-  const { setActiveVariantIndex } = useDocStore()
+  const { setActiveVariantIndex, personalizeOpen, registerPersonalizeContent, clearPersonalizeContent, setPersonalizeOpen } = useDocStore()
 
   // Sync state with store
   React.useEffect(() => {
     setActiveVariantIndex(resolvedActiveVariant)
   }, [resolvedActiveVariant, setActiveVariantIndex])
+
+  // Expose this preview's playground panel so the site header can offer
+  // the same Personalize entry point. Guarded by id so sibling previews
+  // never clobber each other on unmount.
+  const personalizeId = React.useId()
+  React.useEffect(() => {
+    if (!personalizeContent) return
+    registerPersonalizeContent(personalizeId, personalizeContent)
+    return () => {
+      clearPersonalizeContent(personalizeId)
+    }
+  }, [personalizeContent, personalizeId, registerPersonalizeContent, clearPersonalizeContent])
 
   const previewRef = React.useRef<HTMLDivElement>(null)
   const variantBarRef = React.useRef<HTMLDivElement>(null)
@@ -154,7 +166,7 @@ export function DocsPreviewWrapper({
   }, [])
 
   const handleSourceOpen = React.useCallback(async () => {
-    setShowPersonalize(false)
+    setPersonalizeOpen(false)
     if (isExpanded) {
       setIsExpanded(false)
     }
@@ -185,18 +197,18 @@ export function DocsPreviewWrapper({
     } finally {
       setIsSourceLoading(false)
     }
-  }, [isExpanded, isSourceLoading, sourceCodeKey, sourceHtml])
+  }, [isExpanded, isSourceLoading, sourceCodeKey, sourceHtml, setPersonalizeOpen])
 
   const handleToggleExpanded = React.useCallback(() => {
     setIsExpanded((prev) => {
       const next = !prev
       if (next) {
         setShowSource(false)
-        setShowPersonalize(false)
+        setPersonalizeOpen(false)
       }
       return next
     })
-  }, [])
+  }, [setPersonalizeOpen])
 
   React.useEffect(() => {
     setMounted(true)
@@ -234,7 +246,7 @@ export function DocsPreviewWrapper({
     }
     window.addEventListener("resize", onResize)
     return () => window.removeEventListener("resize", onResize)
-  }, [isExpanded, cacheSplitPreviewRect, showSource, showPersonalize])
+  }, [isExpanded, cacheSplitPreviewRect, showSource])
 
   React.useEffect(() => {
     const layout = previewRef.current?.closest("[data-docs-layout]")
@@ -368,18 +380,19 @@ export function DocsPreviewWrapper({
         )}
 
         {personalizeContent && (
-          <PreviewToolbarCell active={showPersonalize}>
+          <PreviewToolbarCell active={personalizeOpen}>
             <button
               type="button"
               onClick={() => {
                 if (isExpanded) {
                   setIsExpanded(false)
                 }
-                setShowPersonalize(true)
+                setPersonalizeOpen(true)
                 setShowSource(false)
               }}
               className={previewToolbarIconClass}
               aria-label="Personalize"
+              aria-expanded={personalizeOpen}
             >
               <SlidersHorizontal className="size-4" />
             </button>
@@ -488,55 +501,9 @@ export function DocsPreviewWrapper({
         </div>
       )}
 
-      {/* Personalize Drawer Portal */}
-      {mounted && ReactDOM.createPortal(
-        <AnimatePresence>
-          {showPersonalize && personalizeContent && (
-            <motion.div
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              exit={{ y: "100%" }}
-              transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              drag="y"
-              dragConstraints={{ top: 0, bottom: 0 }}
-              dragElastic={{ top: 0, bottom: 0.4 }}
-              onDragEnd={(_: unknown, info: PanInfo) => {
-                if (info.offset.y > 100 || info.velocity.y > 500) {
-                  setShowPersonalize(false)
-                }
-              }}
-              className="fixed bottom-0 left-0 z-50 flex flex-col outline-none h-[80vh] w-full rounded-t-lg border-t border-border/20 bg-transparent shadow-none pointer-events-none lg:top-0 lg:bottom-0 lg:h-screen lg:max-h-screen lg:w-1/2 lg:rounded-none lg:border-none lg:pt-3 lg:pb-3 lg:pl-3 lg:pr-1.5"
-            >
-              <div className="relative h-full bg-white dark:bg-[#171717] lg:rounded-2xl overflow-hidden border border-border/20 shadow-2xl pointer-events-auto">
-                <div className="absolute top-0 left-0 right-0 z-20 pointer-events-none">
-                  <div className="absolute inset-0 h-32 bg-gradient-to-b from-white to-transparent dark:from-[#171717] [mask-image:linear-gradient(to_bottom,black_20%,transparent)]" />
-                  <div className="relative z-10 flex flex-col pointer-events-auto">
-                    <div className="flex items-center justify-center pt-2 pb-1">
-                      <div className="w-10 h-1 rounded-full bg-zinc-900/[0.08] dark:bg-white/[0.08] transition-colors hover:bg-zinc-900/[0.15] dark:hover:bg-white/[0.15]" />
-                    </div>
-
-                    <div className="flex items-center justify-between px-4 py-1">
-                      <button
-                        onClick={() => setShowPersonalize(false)}
-                        className="inline-flex items-center gap-1.5 text-zinc-500 dark:text-zinc-400 transition-colors hover:text-zinc-900 dark:hover:text-white focus-visible:outline-none"
-                      >
-                        <ChevronLeft className="w-4 h-4" />
-                        <span className="text-xs font-mono tracking-wide">Personalize</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="relative h-full min-h-0">
-                  <div className="absolute bottom-0 left-0 right-0 z-10 h-16 bg-gradient-to-t from-white to-transparent dark:from-[#171717] pointer-events-none [mask-image:linear-gradient(to_top,black_30%,transparent)]" />
-                  <div className="h-full">{personalizeContent}</div>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>,
-        document.body
-      )}
+      {/* Personalize drawer — rendered by the preview that owns the panel,
+          opened from the toolbar pill or the site header via the doc store. */}
+      {personalizeContent && <PersonalizeDrawer />}
 
       {/* Source Code Panel Portal */}
       {mounted && ReactDOM.createPortal(
