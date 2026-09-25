@@ -3,14 +3,13 @@
 import { ServicesShowcase } from "@workspace/ui/components/services-showcase";
 
 /**
- * Miniature for the component gallery card. Same component, compact
- * density — container queries scale type, rows and artwork down while
- * preserving numbers, dividers and the layered-stack effect.
+ * Miniature for the component gallery card. It loops automatically while
+ * remaining display-only, so the route-linked card stays fully navigable.
  */
 export function ServicesShowcaseCardPreview() {
   return (
-    <div className="absolute inset-0 overflow-hidden bg-[#0a0a0b]">
-      <ServicesShowcase density="compact" interactive={false} />
+    <div className="absolute inset-0 overflow-hidden bg-background">
+      <ServicesShowcase density="compact" interactive={false} autoPlay />
     </div>
   );
 }
