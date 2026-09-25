@@ -214,6 +214,10 @@ const docsImportMap: Record<
     import("@/components/docs/animated-metric").then((m) => ({
       default: m.AnimatedMetricDocs,
     })),
+  "kinetic-split-text": () =>
+    import("@/components/docs/kinetic-split-text").then((m) => ({
+      default: m.KineticSplitTextDocs,
+    })),
   "nudge-button": () =>
     import("@/components/docs/nudge-button").then((m) => ({
       default: m.NudgeButtonDocs,
@@ -222,17 +226,36 @@ const docsImportMap: Record<
     import("@/components/docs/animated-pill-button").then((m) => ({
       default: m.AnimatedPillButtonDocs,
     })),
+  "team-slide-reveal": () =>
+    import("@/components/docs/team-slide-reveal").then((m) => ({
+      default: m.TeamSlideRevealDocs,
+    })),
   "ambient-audio-toggle": () =>
     import("@/components/docs/ambient-audio-toggle").then((m) => ({
       default: m.AmbientAudioToggleDocs,
     })),
+  "waveform-audio-player": () =>
+    import("@/components/docs/waveform-audio-player").then((m) => ({
+      default: m.WaveformAudioPlayerDocs,
+    })),
+  "voice-note": () =>
+    import("@/components/docs/voice-note").then((m) => ({
+      default: m.VoiceNoteDocs,
+    })),
+  "audio-spectrum": () =>
+    import("@/components/docs/audio-spectrum").then((m) => ({
+      default: m.AudioSpectrumDocs,
+    })),
+  "interaction-sound-kit": () =>
+    import("@/components/docs/interaction-sound-kit").then((m) => ({
+      default: m.InteractionSoundKitDocs,
+    })),
+  "voice-recorder": () => import("@/components/docs/voice-recorder").then((m) => ({ default: m.VoiceRecorderDocs })),
+  "keyboard-command-sounds": () => import("@/components/docs/keyboard-command-sounds").then((m) => ({ default: m.KeyboardCommandSoundsDocs })),
+  "upload-sound-status": () => import("@/components/docs/upload-sound-status").then((m) => ({ default: m.UploadSoundStatusDocs })),
   "liquid-chrome": () =>
     import("@/components/docs/liquid-chrome").then((m) => ({
       default: m.LiquidChromeDocs,
-    })),
-  "matrix-rain": () =>
-    import("@/components/docs/matrix-rain").then((m) => ({
-      default: m.MatrixRainDocs,
     })),
   "character-field": () =>
     import("@/components/docs/character-field").then((m) => ({
@@ -242,10 +265,6 @@ const docsImportMap: Record<
     import("@/components/docs/pixel-flow").then((m) => ({
       default: m.PixelFlowDocs,
     })),
-  "pixel-canvas": () =>
-    import("@/components/docs/pixel-canvas").then((m) => ({
-      default: m.PixelCanvasDocs,
-    })),
   "pixel-wipe-carousel": () =>
     import("@/components/docs/pixel-wipe-carousel").then((m) => ({
       default: m.PixelWipeCarouselDocs,
@@ -253,6 +272,10 @@ const docsImportMap: Record<
   "segmented-image-carousel": () =>
     import("@/components/docs/segmented-image-carousel").then((m) => ({
       default: m.SegmentedImageCarouselDocs,
+    })),
+  "burn-plus": () =>
+    import("@/components/docs/burn-plus").then((m) => ({
+      default: m.BurnPlusDocs,
     })),
   "cinematic-card-carousel": () =>
     import("@/components/docs/cinematic-card-carousel").then((m) => ({
@@ -405,6 +428,10 @@ const docsImportMap: Record<
   "motion-hamburger": () =>
     import("@/components/docs/motion-hamburger").then((m) => ({
       default: m.MotionHamburgerDocs,
+    })),
+  "liquid-chrome-button": () =>
+    import("@/components/docs/liquid-chrome-button").then((m) => ({
+      default: m.LiquidChromeButtonDocs,
     })),
   dialog: () =>
     import("@/components/docs/dialog").then((m) => ({

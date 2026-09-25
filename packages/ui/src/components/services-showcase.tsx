@@ -12,153 +12,86 @@ export interface ServiceImage {
   alt: string;
 }
 
-export interface Service {
-  number: string;
-  title: string;
-  description: string;
-  images: ServiceImage[];
-}
-
 export interface ServicesShowcaseProps
   extends Omit<React.HTMLAttributes<HTMLElement>, "children"> {
-  services?: Service[];
+  /** The three images that form the single card stack. */
+  images?: ServiceImage[];
   /** "comfortable" for full pages, "compact" for small card previews. */
   density?: "comfortable" | "compact";
-  /** When false, pointer tilt + hover spread are disabled (card previews). */
+  /** When false, pointer perspective + hover unfold are disabled. */
   interactive?: boolean;
+  /** Runs the compact-to-open loop without requiring pointer input. */
+  autoPlay?: boolean;
 }
 
 /* ------------------------------------------------------------------ */
 /* data                                                                */
 /* ------------------------------------------------------------------ */
 
-const DEFAULT_SERVICES: Service[] = [
+const DEFAULT_IMAGES: ServiceImage[] = [
   {
-    number: "01",
-    title: "Brand identity",
-    description:
-      "Logos, systems and guidelines that give ambitious companies a distinctive voice.",
-    images: [
-      {
-        src: "/images/spiral-3d-slider/orange-haze.jpg",
-        alt: "Portrait wrapped in warm orange haze",
-      },
-      {
-        src: "/images/spiral-3d-slider/dark-glitch.jpg",
-        alt: "Dark graphic texture study",
-      },
-      {
-        src: "/images/spiral-3d-slider/crimson-profile.jpg",
-        alt: "Profile rendered in deep crimson",
-      },
-    ],
+    src: "/images/spiral-3d-slider/orange-haze.jpg",
+    alt: "Portrait wrapped in warm orange haze",
   },
   {
-    number: "02",
-    title: "Art direction & photography",
-    description:
-      "Editorial imagery and photoshoots with a cinematic, monochrome sensibility.",
-    images: [
-      {
-        src: "/images/spiral-3d-slider/silver-motion.jpg",
-        alt: "Monochrome editorial portrait in motion",
-      },
-      {
-        src: "/images/spiral-3d-slider/white-motion.jpg",
-        alt: "Figure in white captured through long exposure",
-      },
-      {
-        src: "/images/spiral-3d-slider/camera-reflection.jpg",
-        alt: "Camera reflected in studio glass",
-      },
-    ],
+    src: "/images/spiral-3d-slider/dark-glitch.jpg",
+    alt: "Dark graphic texture study",
   },
   {
-    number: "03",
-    title: "Motion & film",
-    description:
-      "Title sequences, short films and kinetic stories cut for every screen.",
-    images: [
-      {
-        src: "/images/spiral-3d-slider/blue-profile.jpg",
-        alt: "Profile drawn in saturated electric blue",
-      },
-      {
-        src: "/images/spiral-3d-slider/blue-motion.jpg",
-        alt: "Blue motion blur study",
-      },
-      {
-        src: "/images/spiral-3d-slider/teal-echo.jpg",
-        alt: "Teal echo portrait still",
-      },
-    ],
-  },
-  {
-    number: "04",
-    title: "Content systems",
-    description:
-      "Modular templates and toolkits that keep every channel sharp and on-brand.",
-    images: [
-      {
-        src: "/images/spiral-3d-slider/prism-portrait.jpg",
-        alt: "Portrait refracted through a glass prism",
-      },
-      {
-        src: "/images/segmented-image-carousel/chrome-chair.jpg",
-        alt: "Chrome product study in a studio",
-      },
-      {
-        src: "/images/spiral-3d-slider/green-portrait.jpg",
-        alt: "Portrait graded in deep green tones",
-      },
-    ],
+    src: "/images/spiral-3d-slider/crimson-profile.jpg",
+    alt: "Profile rendered in deep crimson",
   },
 ];
 
-/* Per-service stack geometry. Each entry positions one card inside the
-   visual stage (percentages of stage size). Slot 0 = front, slot 2 = rear.
-   `h*` = hover spread delta for the middle (hover) layer. */
+/* Stack geometry. Cards are laid out in their open position, then collapsed
+   into one wide, central pile with transforms. Slot 0 = front, slot 2 = rear. */
 interface CardGeometry {
   w: number;
-  aspect: string;
+  h: number;
   x: number;
   y: number;
-  r: number;
-  hx: number;
-  hy: number;
-  hr: number;
+  openRotation: number;
+  closedX: number;
+  closedY: number;
+  closedRotation: number;
+  depth: number;
 }
 
-const STACK_GEOMETRY: CardGeometry[][] = [
-  // 01 — small portrait with darker graphic cards layered behind
-  [
-    { w: 47, aspect: "3 / 4", x: 6, y: 14, r: -4, hx: -5, hy: 2.5, hr: -2 },
-    { w: 44, aspect: "3 / 4", x: 29, y: 6, r: 3, hx: 1.5, hy: -1, hr: 1 },
-    { w: 40, aspect: "3 / 4", x: 52, y: 18, r: 8, hx: 6, hy: -2.5, hr: 2.5 },
-  ],
-  // 02 — large monochrome face with secondary cards behind
-  [
-    { w: 60, aspect: "4 / 5", x: 22, y: 5, r: 2, hx: 0, hy: 2.5, hr: 0.5 },
-    { w: 38, aspect: "3 / 4", x: 0, y: 26, r: -7, hx: -6, hy: 1, hr: -2 },
-    { w: 35, aspect: "3 / 4", x: 63, y: 0, r: 7, hx: 6, hy: -1.5, hr: 2 },
-  ],
-  // 03 — narrow overlapping cinematic strips
-  [
-    { w: 34, aspect: "3 / 4.4", x: 33, y: 8, r: -2, hx: -1, hy: 3, hr: -1 },
-    { w: 30, aspect: "3 / 4.4", x: 10, y: 16, r: -8, hx: -6, hy: 0.5, hr: -2.5 },
-    { w: 30, aspect: "3 / 4.4", x: 58, y: 16, r: 7, hx: 6, hy: 0.5, hr: 2.5 },
-  ],
-  // 04 — device / product-style layered set
-  [
-    { w: 30, aspect: "9 / 17", x: 36, y: 2, r: 0, hx: 0, hy: 3, hr: 0 },
-    { w: 33, aspect: "4 / 5", x: 8, y: 22, r: -6, hx: -6, hy: -1, hr: -2 },
-    { w: 35, aspect: "4 / 5", x: 59, y: 20, r: 6, hx: 6, hy: -1, hr: 2 },
-  ],
+const STACK_GEOMETRY: CardGeometry[] = [
+  {
+    w: 39,
+    h: 72,
+    x: 7,
+    y: 19,
+    openRotation: -7,
+    closedX: 60.25,
+    closedY: -8.33,
+    closedRotation: 0,
+    depth: 1,
+  },
+  {
+    w: 39,
+    h: 72,
+    x: 31,
+    y: 7,
+    openRotation: 2,
+    closedX: -1.28,
+    closedY: 8.33,
+    closedRotation: 0,
+    depth: 0.82,
+  },
+  {
+    w: 39,
+    h: 72,
+    x: 55,
+    y: 17,
+    openRotation: 8,
+    closedX: -62.82,
+    closedY: -5.56,
+    closedRotation: 0,
+    depth: 0.68,
+  },
 ];
-
-/* Scroll travel per card depth (front → rear), px at full width. */
-const SCROLL_AMP = [14, 26, 38];
-const SCROLL_LAT = [0, -7, -12];
 
 /* ------------------------------------------------------------------ */
 /* helpers                                                             */
@@ -169,85 +102,64 @@ function clamp(n: number, min: number, max: number) {
   return Math.min(max, Math.max(min, n));
 }
 
-/** The preview panel scrolls inside its own element — measure against it,
-    not window, so right-side preview parallax stays correct. */
-function findScrollParent(el: HTMLElement): HTMLElement | Window {
-  let p: HTMLElement | null = el.parentElement;
-  while (p) {
-    if (p.hasAttribute("data-text-reveal-preview-scroll")) return p;
-    const s = getComputedStyle(p);
-    if (/(auto|scroll)/.test(s.overflowY)) return p;
-    p = p.parentElement;
-  }
-  return window;
-}
-
 /* ------------------------------------------------------------------ */
-/* visual — transform layers compose without overwriting each other:   */
-/*   .svc-s  (outer)  → scroll parallax, written imperatively          */
-/*   .svc-h  (middle) → hover spread, CSS transition                   */
-/*   .svc-rest        → static resting geometry                        */
-/*   .svc-img(inner)  → pointer micro-tilt via CSS vars                */
+/* visual — transforms compose without overwriting one another:        */
+/*   .svc-s    → compact/open stack geometry                            */
+/*   .svc-card → pointer perspective response                           */
+/*   .svc-rest → clipping and image surface                             */
 /* ------------------------------------------------------------------ */
 
 function ServiceVisual({
-  service,
+  images,
   geometry,
-  rowIndex,
   interactive,
-  collectCard,
+  autoPlay,
   tiltRef,
 }: {
-  service: Service;
+  images: ServiceImage[];
   geometry: CardGeometry[];
-  rowIndex: number;
   interactive: boolean;
-  collectCard: (el: HTMLDivElement | null) => void;
+  autoPlay: boolean;
   tiltRef: (el: HTMLDivElement | null) => void;
 }) {
   return (
     <div
       ref={tiltRef}
       data-svc-tilt={interactive ? "true" : undefined}
+      data-svc-autoplay={autoPlay ? "true" : undefined}
       className="svc-visual relative w-full overflow-visible"
       style={{ aspectRatio: "4 / 3.4" }}
     >
       {[0, 1, 2].map((slot) => {
-        const image = service.images[slot % service.images.length]!;
+        const image =
+          images.length > 0
+            ? images[slot % images.length]!
+            : DEFAULT_IMAGES[slot]!;
         const geo = geometry[slot]!;
         return (
           <div
             key={slot}
-            ref={collectCard}
-            data-svc-scroll={rowIndex * 3 + slot}
             className="svc-s absolute left-0 top-0 will-change-transform"
             style={{
               width: `${geo.w}%`,
-              aspectRatio: geo.aspect,
+              height: `${geo.h}%`,
               left: `${geo.x}%`,
               top: `${geo.y}%`,
               zIndex: 3 - slot,
+              ["--closed-x" as string]: `${geo.closedX}%`,
+              ["--closed-y" as string]: `${geo.closedY}%`,
+              ["--closed-r" as string]: `${geo.closedRotation}deg`,
+              ["--open-r" as string]: `${geo.openRotation}deg`,
+              ["--depth" as string]: geo.depth,
             }}
           >
-            <div
-              className="svc-h h-full w-full"
-              style={
-                {
-                  ["--hx" as string]: `${geo.hx}%`,
-                  ["--hy" as string]: `${geo.hy}%`,
-                  ["--hr" as string]: `${geo.hr}deg`,
-                } as React.CSSProperties
-              }
-            >
-              <div
-                className="svc-rest h-full w-full overflow-hidden rounded-[10px] bg-zinc-800"
-                style={{ transform: `rotate(${geo.r}deg)` }}
-              >
+            <div className="svc-card h-full w-full">
+              <div className="svc-rest h-full w-full overflow-hidden rounded-[22px] bg-muted">
                 <img
                   src={image.src}
                   alt={image.alt}
                   draggable={false}
-                  loading={rowIndex === 0 ? "eager" : "lazy"}
+                  loading="eager"
                   decoding="async"
                   className="svc-img block h-full w-full select-none object-cover"
                 />
@@ -265,128 +177,17 @@ function ServiceVisual({
 /* ------------------------------------------------------------------ */
 
 export function ServicesShowcase({
-  services = DEFAULT_SERVICES,
+  images = DEFAULT_IMAGES,
   density = "comfortable",
   interactive = true,
+  autoPlay = false,
   className,
   style,
   ...props
 }: ServicesShowcaseProps) {
-  const rootRef = React.useRef<HTMLElement>(null);
-  const rowRefs = React.useRef<Array<HTMLElement | null>>([]);
-  const cardRefs = React.useRef<Array<HTMLDivElement | null>>([]);
-  const textRefs = React.useRef<Array<HTMLDivElement | null>>([]);
   const tiltRefs = React.useRef<Array<HTMLDivElement | null>>([]);
-  const widthRef = React.useRef(1100);
-  const lastProgress = React.useRef<number[]>([]);
 
-  const collectCard = React.useCallback((el: HTMLDivElement | null) => {
-    if (!el) return;
-    const id = Number(el.dataset.svcScroll);
-    if (Number.isFinite(id)) cardRefs.current[id] = el;
-  }, []);
-
-  /* ---- scroll-driven parallax: one rAF loop, zero react state ---- */
-  React.useEffect(() => {
-    const root = rootRef.current;
-    if (!root) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    const scrollParent = findScrollParent(root);
-    let raf = 0;
-    let scheduled = false;
-    let disposed = false;
-
-    const measureWidth = () => {
-      widthRef.current = root.clientWidth || 1100;
-    };
-    measureWidth();
-
-    const update = () => {
-      scheduled = false;
-      if (disposed) return;
-      const rows = rowRefs.current;
-      if (!rows.length) return;
-
-      let vh = window.innerHeight;
-      let viewTop = 0;
-      let viewBottom = vh;
-      if (scrollParent instanceof HTMLElement) {
-        const pr = scrollParent.getBoundingClientRect();
-        vh = pr.height;
-        viewTop = pr.top;
-        viewBottom = pr.bottom;
-      }
-      if (vh <= 0) return;
-
-      // Smaller containers (card / right preview) travel less.
-      const unit = clamp(widthRef.current / 1100, 0.3, 1);
-
-      for (let r = 0; r < rows.length; r++) {
-        const row = rows[r];
-        if (!row) continue;
-        const rect = row.getBoundingClientRect();
-        if (rect.bottom < viewTop - vh * 0.5 || rect.top > viewBottom + vh * 0.5)
-          continue;
-
-        // 0 = entering, 0.5 = centered, 1 = exiting. Reverses on scroll-up.
-        const t = clamp((viewBottom - rect.top) / (vh + rect.height), 0, 1);
-        if (Math.abs((lastProgress.current[r] ?? -1) - t) < 0.0005) continue;
-        lastProgress.current[r] = t;
-
-        const c = t - 0.5;
-        for (let s = 0; s < 3; s++) {
-          const el = cardRefs.current[r * 3 + s];
-          if (!el) continue;
-          const y = -c * 2 * SCROLL_AMP[s]! * unit;
-          const x = -c * 2 * SCROLL_LAT[s]! * unit;
-          const scale = 1 - Math.abs(c) * 2 * s * 0.012;
-          el.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0) scale(${scale.toFixed(4)})`;
-        }
-        const text = textRefs.current[r];
-        if (text) {
-          const ty = -c * 2 * 10 * unit;
-          text.style.transform = `translate3d(0, ${ty.toFixed(2)}px, 0)`;
-        }
-      }
-    };
-
-    const requestUpdate = () => {
-      if (scheduled || disposed) return;
-      scheduled = true;
-      raf = requestAnimationFrame(update);
-    };
-
-    const ro =
-      typeof ResizeObserver !== "undefined"
-        ? new ResizeObserver(() => {
-            measureWidth();
-            requestUpdate();
-          })
-        : null;
-    ro?.observe(root);
-
-    const target: Window | HTMLElement =
-      scrollParent instanceof HTMLElement ? scrollParent : window;
-    target.addEventListener("scroll", requestUpdate, { passive: true });
-    if (target !== window)
-      window.addEventListener("scroll", requestUpdate, { passive: true });
-    window.addEventListener("resize", requestUpdate);
-
-    requestUpdate();
-
-    return () => {
-      disposed = true;
-      cancelAnimationFrame(raf);
-      ro?.disconnect();
-      target.removeEventListener("scroll", requestUpdate);
-      if (target !== window)
-        window.removeEventListener("scroll", requestUpdate);
-      window.removeEventListener("resize", requestUpdate);
-    };
-  }, []);
-
-  /* ---- pointer micro-tilt: fine pointers only, CSS vars on .svc-img ---- */
+  /* ---- pointer perspective: fine pointers only, CSS vars on each card ---- */
   React.useEffect(() => {
     if (!interactive) return;
     if (window.matchMedia("(pointer: coarse)").matches) return;
@@ -396,16 +197,37 @@ export function ServicesShowcase({
     for (const visual of tiltRefs.current) {
       if (!visual || visual.dataset.svcTilt !== "true") continue;
       let raf = 0;
-      let tx = 0;
-      let ty = 0;
-      let rx = 0;
-      let ry = 0;
-      const apply = () => {
-        raf = 0;
-        visual.style.setProperty("--tx", `${tx.toFixed(2)}px`);
-        visual.style.setProperty("--ty", `${ty.toFixed(2)}px`);
-        visual.style.setProperty("--rx", `${rx.toFixed(3)}deg`);
-        visual.style.setProperty("--ry", `${ry.toFixed(3)}deg`);
+      let targetX = 0;
+      let targetY = 0;
+      let targetRotateX = 0;
+      let targetRotateY = 0;
+      let currentX = 0;
+      let currentY = 0;
+      let currentRotateX = 0;
+      let currentRotateY = 0;
+      const render = () => {
+        const smoothing = 0.14;
+        currentX += (targetX - currentX) * smoothing;
+        currentY += (targetY - currentY) * smoothing;
+        currentRotateX += (targetRotateX - currentRotateX) * smoothing;
+        currentRotateY += (targetRotateY - currentRotateY) * smoothing;
+        visual.style.setProperty("--tx", `${currentX.toFixed(2)}px`);
+        visual.style.setProperty("--ty", `${currentY.toFixed(2)}px`);
+        visual.style.setProperty("--rx", `${currentRotateX.toFixed(3)}deg`);
+        visual.style.setProperty("--ry", `${currentRotateY.toFixed(3)}deg`);
+        if (
+          Math.abs(targetX - currentX) > 0.01 ||
+          Math.abs(targetY - currentY) > 0.01 ||
+          Math.abs(targetRotateX - currentRotateX) > 0.01 ||
+          Math.abs(targetRotateY - currentRotateY) > 0.01
+        ) {
+          raf = requestAnimationFrame(render);
+        } else {
+          raf = 0;
+        }
+      };
+      const schedule = () => {
+        if (!raf) raf = requestAnimationFrame(render);
       };
       const onMove = (e: PointerEvent) => {
         if (e.pointerType !== "mouse" && e.pointerType !== "pen") return;
@@ -413,18 +235,18 @@ export function ServicesShowcase({
         if (!rect.width || !rect.height) return;
         const nx = clamp(((e.clientX - rect.left) / rect.width) * 2 - 1, -1, 1);
         const ny = clamp(((e.clientY - rect.top) / rect.height) * 2 - 1, -1, 1);
-        tx = nx * 5;
-        ty = ny * 4;
-        ry = nx * 3.5;
-        rx = -ny * 3;
-        if (!raf) raf = requestAnimationFrame(apply);
+        targetX = nx * 5;
+        targetY = ny * 4;
+        targetRotateY = nx * 7;
+        targetRotateX = -ny * 5.5;
+        schedule();
       };
       const onLeave = () => {
-        tx = 0;
-        ty = 0;
-        rx = 0;
-        ry = 0;
-        if (!raf) raf = requestAnimationFrame(apply);
+        targetX = 0;
+        targetY = 0;
+        targetRotateX = 0;
+        targetRotateY = 0;
+        schedule();
       };
       visual.addEventListener("pointermove", onMove, { passive: true });
       visual.addEventListener("pointerleave", onLeave, { passive: true });
@@ -437,15 +259,14 @@ export function ServicesShowcase({
     return () => {
       for (const fn of cleanups) fn();
     };
-  }, [interactive, services.length]);
+  }, [interactive]);
 
   return (
     <section
-      ref={rootRef}
       data-slot="services-showcase"
       data-density={density}
       className={cn(
-        "svc-root relative w-full overflow-hidden bg-[#0a0a0b] text-zinc-100",
+        "svc-root relative h-full w-full overflow-hidden bg-background text-foreground",
         className,
       )}
       style={{ containerType: "inline-size", containerName: "svc", ...style }}
@@ -453,61 +274,15 @@ export function ServicesShowcase({
     >
       <style>{SVC_CSS}</style>
 
-      <div className="svc-rows mx-auto w-full max-w-[1200px] px-6 pb-16 pt-6 sm:px-10 sm:pb-24 sm:pt-10">
-        {services.map((service, i) => {
-          const geometry = STACK_GEOMETRY[i % STACK_GEOMETRY.length]!;
-          return (
-            <React.Fragment key={`${service.number}-${i}`}>
-              <div
-                aria-hidden="true"
-                className="svc-divider h-px w-full bg-white/10"
-              />
-              <article
-                ref={(el) => {
-                  rowRefs.current[i] = el;
-                }}
-                className="svc-row relative grid grid-cols-1 items-center gap-x-8 gap-y-6 py-10 sm:py-12"
-              >
-                <span
-                  aria-hidden="true"
-                  className="svc-number order-1 font-sans font-medium leading-none tracking-[-0.03em] text-zinc-700"
-                >
-                  {service.number}
-                </span>
-
-                <div className="svc-visual-col order-2 min-w-0">
-                  <ServiceVisual
-                    service={service}
-                    geometry={geometry}
-                    rowIndex={i}
-                    interactive={interactive}
-                    collectCard={collectCard}
-                    tiltRef={(el) => {
-                      tiltRefs.current[i] = el;
-                    }}
-                  />
-                </div>
-
-                <div
-                  ref={(el) => {
-                    textRefs.current[i] = el;
-                  }}
-                  className="svc-text-col order-3 min-w-0 will-change-transform"
-                >
-                  <h3 className="svc-title font-sans font-medium leading-[1.05] tracking-[-0.02em] text-zinc-50">
-                    {service.title}
-                  </h3>
-                  <p className="svc-desc mt-3 max-w-[30ch] font-sans leading-[1.6] text-zinc-500">
-                    {service.description}
-                  </p>
-                </div>
-              </article>
-            </React.Fragment>
-          );
-        })}
-        <div
-          aria-hidden="true"
-          className="svc-divider h-px w-full bg-white/10"
+      <div className="svc-stage mx-auto flex h-full min-h-[360px] w-full max-w-[760px] items-center justify-center overflow-visible px-8 py-14 sm:min-h-[520px] sm:px-12 sm:py-20">
+        <ServiceVisual
+          images={images}
+          geometry={STACK_GEOMETRY}
+          interactive={interactive}
+          autoPlay={autoPlay}
+          tiltRef={(el) => {
+            tiltRefs.current[0] = el;
+          }}
         />
       </div>
     </section>
@@ -515,58 +290,83 @@ export function ServicesShowcase({
 }
 
 const SVC_CSS = `
-.svc-root { --svc-ease: cubic-bezier(0.22, 1, 0.36, 1); }
-.svc-number { font-size: clamp(2.6rem, 6cqi, 4.6rem); }
-.svc-title { font-size: clamp(1.35rem, 2.6cqi, 2rem); }
-.svc-desc { font-size: clamp(0.68rem, 1.15cqi, 0.82rem); }
-
-/* rows: [number] [visual] [content] */
-.svc-row { grid-template-columns: 1fr; }
-@container svc (min-width: 560px) {
-  .svc-row { grid-template-columns: 3.4rem minmax(0, 1.15fr) minmax(0, 0.85fr); }
-  .svc-row .svc-number { order: 1; align-self: start; padding-top: 0.4rem; }
-  .svc-row .svc-visual-col { order: 2; }
-  .svc-row .svc-text-col { order: 3; align-self: center; }
+.svc-root {
+  --svc-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --closed-scale-x: 1.28;
+  --closed-scale-y: 0.78;
 }
-@container svc (min-width: 900px) {
-  .svc-row { grid-template-columns: 5rem minmax(0, 1.2fr) minmax(0, 0.8fr); column-gap: 3.5rem; }
+/* The gallery keeps the same stack, but gives its miniature more breathing room. */
+.svc-root[data-density="compact"] {
+  --closed-scale-x: 1.14;
+  --closed-scale-y: 0.74;
 }
-
-/* compact density (component card preview) */
-.svc-root[data-density="compact"] .svc-rows { padding-bottom: 1rem; }
-.svc-root[data-density="compact"] .svc-row { padding-top: 0.7rem; padding-bottom: 0.7rem; gap-y: 0.4rem; }
-.svc-root[data-density="compact"] .svc-desc { display: none; }
-@container svc (max-width: 559px) {
-  .svc-root[data-density="compact"] .svc-row { grid-template-columns: 2rem minmax(0,1fr); }
-  .svc-root[data-density="compact"] .svc-visual-col { grid-column: 2; }
-  .svc-root[data-density="compact"] .svc-text-col { grid-column: 2; }
+.svc-root[data-density="compact"] .svc-stage { min-height: 100%; padding: 1rem; }
+.svc-root[data-density="compact"] .svc-visual {
+  width: 88%;
+  transform: translateY(-8%);
 }
 
-/* small containers: number / visual / text stack */
-@container svc (max-width: 559px) {
-  .svc-number { font-size: 2.4rem; }
+/* The reference starts as one broad pile, then unfolds into three portraits. */
+.svc-s {
+  transform: translate3d(var(--closed-x), var(--closed-y), 0) scaleX(var(--closed-scale-x)) scaleY(var(--closed-scale-y)) rotate(var(--closed-r));
+  transform-origin: center center;
+  transition: transform 720ms var(--svc-ease), opacity 180ms ease-out;
+  will-change: transform;
 }
+.svc-s:not(:first-child) { opacity: 0; }
 
-/* hover spread — middle layer only, never touches scroll/pointer layers */
-.svc-h { transition: transform 380ms var(--svc-ease); will-change: transform; }
+/* Gallery cards remain display-only, but demonstrate the same unfold on a loop. */
+@keyframes svc-autoplay-stack {
+  0%, 24% {
+    transform: translate3d(var(--closed-x), var(--closed-y), 0) scaleX(var(--closed-scale-x)) scaleY(var(--closed-scale-y)) rotate(var(--closed-r));
+  }
+  48%, 72% {
+    transform: translate3d(0, 0, 0) scaleX(1) scaleY(1) rotate(var(--open-r));
+  }
+  100% {
+    transform: translate3d(var(--closed-x), var(--closed-y), 0) scaleX(var(--closed-scale-x)) scaleY(var(--closed-scale-y)) rotate(var(--closed-r));
+  }
+}
+@keyframes svc-autoplay-layer {
+  0%, 28% { opacity: 0; }
+  44%, 74% { opacity: 1; }
+  100% { opacity: 0; }
+}
+.svc-visual[data-svc-autoplay="true"] .svc-s {
+  animation: svc-autoplay-stack 5.8s var(--svc-ease) infinite;
+}
+.svc-visual[data-svc-autoplay="true"] .svc-s:not(:first-child) {
+  animation: svc-autoplay-stack 5.8s var(--svc-ease) infinite, svc-autoplay-layer 5.8s linear infinite;
+}
 @media (hover: hover) and (pointer: fine) {
-  .svc-visual:hover .svc-h {
-    transform: translate(var(--hx, 0%), var(--hy, 0%)) rotate(var(--hr, 0deg)) scale(1.015);
+  .svc-visual[data-svc-tilt="true"]:hover .svc-s {
+    transform: translate3d(0, 0, 0) scaleX(1) scaleY(1) rotate(var(--open-r));
+    opacity: 1;
   }
 }
 
-/* pointer micro-tilt — innermost image only */
-.svc-visual[data-svc-tilt="true"] .svc-img {
-  transform: perspective(800px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translate3d(var(--tx, 0px), var(--ty, 0px), 0);
-  transition: transform 520ms var(--svc-ease);
+/* Cursor movement tilts the complete card, matching the reference's depth. */
+.svc-visual[data-svc-tilt="true"] .svc-card {
+  transform: perspective(900px)
+    rotateX(calc(var(--rx, 0deg) * var(--depth)))
+    rotateY(calc(var(--ry, 0deg) * var(--depth)))
+    translate3d(
+      calc(var(--tx, 0px) * var(--depth)),
+      calc(var(--ty, 0px) * var(--depth)),
+      0
+    );
+  will-change: transform;
   transform-origin: center center;
 }
 
-/* scroll layers keep a stable origin */
-.svc-s { transform-origin: center center; }
+.svc-img { transform: scale(1.025); }
 
 @media (prefers-reduced-motion: reduce) {
-  .svc-h, .svc-visual[data-svc-tilt="true"] .svc-img { transition: none; }
+  .svc-s { animation: none !important; transition: none; }
+  .svc-visual[data-svc-tilt="true"]:hover .svc-s {
+    transform: translate3d(var(--closed-x), var(--closed-y), 0) scaleX(var(--closed-scale-x)) scaleY(var(--closed-scale-y)) rotate(var(--closed-r));
+  }
+  .svc-visual[data-svc-tilt="true"]:hover .svc-s:not(:first-child) { opacity: 0; }
 }
 `;
 

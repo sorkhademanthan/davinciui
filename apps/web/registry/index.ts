@@ -369,6 +369,14 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "motion-hamburger",
     addedAt: "2026-09-21",
   },
+  "liquid-chrome-button": {
+    title: "Liquid Chrome Button",
+    description:
+      "A circular WebGL liquid-metal button with a frosted glass lens, depth reflections, and springy hover feedback.",
+    category: "Motion",
+    slug: "liquid-chrome-button",
+    addedAt: "2026-09-25",
+  },
   "radial-fan-deck": {
     title: "Radial Fan Deck",
     description:
@@ -730,6 +738,41 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "ambient-audio-toggle",
     addedAt: "2026-09-15",
   },
+  "waveform-audio-player": {
+    title: "Waveform Audio Player",
+    description:
+      "A tactile audio player with waveform scrubbing, accurate playback time, and user-initiated sound.",
+    category: "Sound",
+    slug: "waveform-audio-player",
+    addedAt: "2026-09-25",
+  },
+  "voice-note": {
+    title: "Voice Note",
+    description:
+      "A message-style audio player with waveform scrubbing, playback speed, and familiar conversation context.",
+    category: "Sound",
+    slug: "voice-note",
+    addedAt: "2026-09-25",
+  },
+  "audio-spectrum": {
+    title: "Audio Spectrum",
+    description:
+      "A live frequency visualizer with real audio analysis, playback, and precise scrubbing.",
+    category: "Sound",
+    slug: "audio-spectrum",
+    addedAt: "2026-09-25",
+  },
+  "interaction-sound-kit": {
+    title: "Interaction Sound Kit",
+    description:
+      "System-style sound feedback for trash, drop, confirmation, and warning actions.",
+    category: "Sound",
+    slug: "interaction-sound-kit",
+    addedAt: "2026-09-25",
+  },
+  "voice-recorder": { title: "Voice Recorder", description: "Browser microphone capture with a recording timer, live waveform treatment, and playback.", category: "Sound", slug: "voice-recorder", addedAt: "2026-09-25" },
+  "keyboard-command-sounds": { title: "Keyboard & Command Sounds", description: "Optional keyboard and command feedback for focused productivity interfaces.", category: "Sound", slug: "keyboard-command-sounds", addedAt: "2026-09-25" },
+  "upload-sound-status": { title: "Upload Sound Status", description: "Transfer progress with a subtle completion cue and a reusable upload-state surface.", category: "Sound", slug: "upload-sound-status", addedAt: "2026-09-25" },
   "liquid-chrome": {
     title: "Liquid Chrome",
     description: "Premium fluid liquid metal shader background effect.",
@@ -789,14 +832,6 @@ export const components: Record<string, ComponentMetadata> = {
     addedAt: "2026-09-19",
   },
   // Visual Effects
-  "pixel-canvas": {
-    title: "Pixel Canvas",
-    description: "Canvas where pixels react to interaction.",
-    category: "Visual Effects",
-    slug: "pixel-canvas",
-    previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/visual-effects/pixelcanvas.webm",
-  },
   "pixel-wipe-carousel": {
     title: "Pixel Wipe Carousel",
     description:
@@ -812,6 +847,14 @@ export const components: Record<string, ComponentMetadata> = {
     category: "Visual Effects",
     slug: "segmented-image-carousel",
     addedAt: "2026-09-22",
+  },
+  "burn-plus": {
+    title: "Ash Reveal",
+    description:
+      "A WebGL organic burn/dissolve mask — warped multi-octave noise eats through a dark surface to reveal your media, driven by hover, scroll, tap, load, or direct control.",
+    category: "Visual Effects",
+    slug: "burn-plus",
+    addedAt: "2026-09-24",
   },
   "cinematic-card-carousel": {
     title: "Cinematic Card Carousel",
@@ -877,6 +920,14 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "animated-metric",
     addedAt: "2026-09-24",
   },
+  "kinetic-split-text": {
+    title: "Kinetic Split Text",
+    description:
+      "Staggered kinetic typography with character, word and line splitting, directional reveals, blur, 3D transforms and scroll-linked motion.",
+    category: "Motion",
+    slug: "kinetic-split-text",
+    addedAt: "2026-09-25",
+  },
   "nudge-button": {
     title: "Nudge Button",
     description:
@@ -893,13 +944,13 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "animated-pill-button",
     addedAt: "2026-09-24",
   },
-  "matrix-rain": {
-    title: "Matrix Rain",
-    description: "Classic Matrix digital rain effect.",
-    category: "Visual Effects",
-    slug: "matrix-rain",
-    previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/visual-effects/matrixrain.webm",
+  "team-slide-reveal": {
+    title: "Team Slide Reveal",
+    description:
+      "A click-to-reveal portrait card that slides into a compact testimonial summary, with an explicit return control and responsive single-footprint layout.",
+    category: "Interactions",
+    slug: "team-slide-reveal",
+    addedAt: "2026-09-24",
   },
   "character-field": {
     title: "Character Field",
