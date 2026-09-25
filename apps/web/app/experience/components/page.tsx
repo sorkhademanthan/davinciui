@@ -92,8 +92,18 @@ function hasLiveCardPreview(
   | "animated-metric"
   | "nudge-button"
   | "animated-pill-button"
+  | "burn-plus"
+  | "team-slide-reveal"
   | "ambient-audio-toggle"
+  | "waveform-audio-player"
+  | "voice-note"
+  | "audio-spectrum"
+  | "interaction-sound-kit"
+  | "voice-recorder"
+  | "keyboard-command-sounds"
+  | "upload-sound-status"
   | "motion-hamburger"
+  | "liquid-chrome-button"
   | "scroll-reveal-image"
   | "cms-scroll-gallery"
   | "interactive-media-accordion"
@@ -110,6 +120,7 @@ function hasLiveCardPreview(
   | "geometric-preloader"
   | "preloader-pro"
   | "wave-bars-loader"
+  | "kinetic-split-text"
   | "electric-vijdi-cursor"
   | "circle-cursor"
   | "tubes-cursor"
@@ -154,8 +165,18 @@ function hasLiveCardPreview(
     slug === "animated-metric" ||
     slug === "nudge-button" ||
     slug === "animated-pill-button" ||
+    slug === "burn-plus" ||
+    slug === "team-slide-reveal" ||
     slug === "ambient-audio-toggle" ||
+    slug === "waveform-audio-player" ||
+    slug === "voice-note" ||
+    slug === "audio-spectrum" ||
+    slug === "interaction-sound-kit" ||
+    slug === "voice-recorder" ||
+    slug === "keyboard-command-sounds" ||
+    slug === "upload-sound-status" ||
     slug === "motion-hamburger" ||
+    slug === "liquid-chrome-button" ||
     slug === "scroll-reveal-image" ||
     slug === "cms-scroll-gallery" ||
     slug === "interactive-media-accordion" ||
@@ -172,6 +193,7 @@ function hasLiveCardPreview(
     slug === "geometric-preloader" ||
     slug === "preloader-pro" ||
     slug === "wave-bars-loader" ||
+    slug === "kinetic-split-text" ||
     slug === "electric-vijdi-cursor" ||
     slug === "circle-cursor" ||
     slug === "tubes-cursor" ||
@@ -369,7 +391,7 @@ function ComponentsGallery() {
               </div>
               <div className="px-4 pb-4 pt-1">
                 <h3 className="text-sm font-medium flex items-center gap-1.5">
-                  {c.slug === "ambient-audio-toggle" ? (
+                  {c.category === "Sound" ? (
                     <Link href={`/experience/components/${c.slug}`} className="inline-flex items-center gap-1.5">
                       {c.title} <ArrowUpRight className="size-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
                     </Link>
@@ -383,7 +405,7 @@ function ComponentsGallery() {
               </div>
             </>
           )
-          return c.slug === "ambient-audio-toggle" ? (
+          return c.category === "Sound" ? (
             <div key={c.slug} className={cardClassName}>{cardContent}</div>
           ) : (
             <Link key={c.slug} href={`/experience/components/${c.slug}`} className={cardClassName}>

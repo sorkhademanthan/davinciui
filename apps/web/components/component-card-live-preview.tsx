@@ -288,6 +288,22 @@ const AnimatedPillButtonCardPreview = dynamic(
   { ssr: false },
 );
 
+const BurnPlusCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/burn-plus-card-preview").then(
+      (module) => module.BurnPlusCardPreview,
+    ),
+  { ssr: false },
+);
+
+const TeamSlideRevealCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/team-slide-reveal-card-preview").then(
+      (module) => module.TeamSlideRevealCardPreview,
+    ),
+  { ssr: false },
+);
+
 const AmbientAudioToggleCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/ambient-audio-toggle-card-preview").then(
@@ -296,10 +312,53 @@ const AmbientAudioToggleCardPreview = dynamic(
   { ssr: false },
 );
 
+const WaveformAudioPlayerCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/waveform-audio-player-card-preview").then(
+      (module) => module.WaveformAudioPlayerCardPreview,
+    ),
+  { ssr: false },
+);
+
+const VoiceNoteCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/voice-note-card-preview").then(
+      (module) => module.VoiceNoteCardPreview,
+    ),
+  { ssr: false },
+);
+
+const AudioSpectrumCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/audio-spectrum-card-preview").then(
+      (module) => module.AudioSpectrumCardPreview,
+    ),
+  { ssr: false },
+);
+
+const InteractionSoundKitCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/interaction-sound-kit-card-preview").then(
+      (module) => module.InteractionSoundKitCardPreview,
+    ),
+  { ssr: false },
+);
+const VoiceRecorderCardPreview = dynamic(() => import("@/components/docs/previews/voice-recorder-card-preview").then((module) => module.VoiceRecorderCardPreview), { ssr: false });
+const KeyboardCommandSoundsCardPreview = dynamic(() => import("@/components/docs/previews/keyboard-command-sounds-card-preview").then((module) => module.KeyboardCommandSoundsCardPreview), { ssr: false });
+const UploadSoundStatusCardPreview = dynamic(() => import("@/components/docs/previews/upload-sound-status-card-preview").then((module) => module.UploadSoundStatusCardPreview), { ssr: false });
+
 const MotionHamburgerCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/motion-hamburger-card-preview").then(
       (module) => module.MotionHamburgerCardPreview,
+    ),
+  { ssr: false },
+);
+
+const LiquidChromeButtonCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/liquid-chrome-button-card-preview").then(
+      (module) => module.LiquidChromeButtonCardPreview,
     ),
   { ssr: false },
 );
@@ -448,6 +507,14 @@ const WaveBarsLoaderCardPreview = dynamic(
   { ssr: false },
 );
 
+const KineticSplitTextCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/kinetic-split-text-card-preview").then(
+      (module) => module.KineticSplitTextCardPreview,
+    ),
+  { ssr: false },
+);
+
 const MediaTextHover = dynamic(
   () =>
     import("@workspace/ui/components/media-text-hover").then(
@@ -540,8 +607,18 @@ type ComponentCardLivePreviewProps = {
     | "animated-metric"
     | "nudge-button"
     | "animated-pill-button"
+    | "burn-plus"
+    | "team-slide-reveal"
     | "ambient-audio-toggle"
+    | "waveform-audio-player"
+    | "voice-note"
+    | "audio-spectrum"
+    | "interaction-sound-kit"
+    | "voice-recorder"
+    | "keyboard-command-sounds"
+    | "upload-sound-status"
     | "motion-hamburger"
+    | "liquid-chrome-button"
     | "scroll-reveal-image"
     | "cms-scroll-gallery"
     | "interactive-media-accordion"
@@ -558,6 +635,7 @@ type ComponentCardLivePreviewProps = {
     | "geometric-preloader"
     | "preloader-pro"
     | "wave-bars-loader"
+    | "kinetic-split-text"
     | BasicPreviewSlug;
 };
 
@@ -600,8 +678,10 @@ export function ComponentCardLivePreview({
   return (
     <div
       ref={hostRef}
-      aria-hidden={slug !== "ambient-audio-toggle"}
+      aria-hidden={slug !== "ambient-audio-toggle" && slug !== "waveform-audio-player" && slug !== "voice-note" && slug !== "audio-spectrum" && slug !== "interaction-sound-kit" && slug !== "voice-recorder" && slug !== "keyboard-command-sounds" && slug !== "upload-sound-status"}
       className={`absolute inset-0 flex items-center justify-center overflow-hidden ${
+        slug === "team-slide-reveal" ? "pointer-events-none " : ""
+      }${
         slug === "ambient-audio-toggle" ? "bg-[#eef4f0] dark:bg-[#101815]" : "bg-background"
       }`}
     >
@@ -629,9 +709,12 @@ export function ComponentCardLivePreview({
           slug !== "animated-metric" &&
           slug !== "nudge-button" &&
           slug !== "animated-pill-button" &&
+          slug !== "burn-plus" &&
           slug !== "ambient-audio-toggle" &&
           slug !== "motion-hamburger" &&
+          slug !== "liquid-chrome-button" &&
           slug !== "wave-bars-loader" &&
+          slug !== "kinetic-split-text" &&
           !isBasicPreviewSlug(slug)) ? (
         <span className="text-3xl font-black tracking-[-0.055em] text-foreground sm:text-4xl">
           {staticLabel}
@@ -798,10 +881,30 @@ export function ComponentCardLivePreview({
         <NudgeButtonCardPreview />
       ) : slug === "animated-pill-button" ? (
         <AnimatedPillButtonCardPreview />
+      ) : slug === "burn-plus" ? (
+        <BurnPlusCardPreview />
+      ) : slug === "team-slide-reveal" ? (
+        <TeamSlideRevealCardPreview />
       ) : slug === "ambient-audio-toggle" ? (
         <AmbientAudioToggleCardPreview />
+      ) : slug === "waveform-audio-player" ? (
+        <WaveformAudioPlayerCardPreview />
+      ) : slug === "voice-note" ? (
+        <VoiceNoteCardPreview />
+      ) : slug === "audio-spectrum" ? (
+        <AudioSpectrumCardPreview />
+      ) : slug === "interaction-sound-kit" ? (
+        <InteractionSoundKitCardPreview />
+      ) : slug === "voice-recorder" ? (
+        <VoiceRecorderCardPreview />
+      ) : slug === "keyboard-command-sounds" ? (
+        <KeyboardCommandSoundsCardPreview />
+      ) : slug === "upload-sound-status" ? (
+        <UploadSoundStatusCardPreview />
       ) : slug === "motion-hamburger" ? (
         <MotionHamburgerCardPreview />
+      ) : slug === "liquid-chrome-button" ? (
+        <LiquidChromeButtonCardPreview />
       ) : slug === "scroll-reveal-image" ? (
         <ScrollRevealImageCardPreview />
       ) : slug === "cms-scroll-gallery" ? (
@@ -834,6 +937,8 @@ export function ComponentCardLivePreview({
         <PreloaderProCardPreview />
       ) : slug === "wave-bars-loader" ? (
         <WaveBarsLoaderCardPreview />
+      ) : slug === "kinetic-split-text" ? (
+        <KineticSplitTextCardPreview />
       ) : isBasicPreviewSlug(slug) ? (
         <BasicComponentCardPreview slug={slug} />
       ) : slug === "text-video-mask" ? (
