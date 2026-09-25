@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "upload-sound-status",
+  "type": "registry:ui",
+  "title": "Upload Sound Status",
+  "dependencies": [],
+  "devDependencies": [],
+  "registryDependencies": [],
+  "description": "Component for upload-sound-status",
+  "files": [
+    {
+      "path": "components/ui/upload-sound-status.tsx",
+      "content": "\"use client\";\nimport * as React from \"react\";\nimport { cn } from \"../lib/utils\";\nexport interface UploadSoundStatusProps { duration?: number; compact?: boolean; className?: string; onComplete?: () => void; }\nexport function UploadSoundStatus({ duration = 2400, compact = false, className, onComplete }: UploadSoundStatusProps) {\n const [progress, setProgress] = React.useState(0); const [done, setDone] = React.useState(false); const context = React.useRef<AudioContext | null>(null);\n const ping = (frequency: number) => { const audio = context.current ?? (context.current = new AudioContext()); const osc = audio.createOscillator(); const gain = audio.createGain(); osc.frequency.value = frequency; gain.gain.setValueAtTime(.12, audio.currentTime); gain.gain.exponentialRampToValueAtTime(.001, audio.currentTime + .12); osc.connect(gain).connect(audio.destination); osc.start(); osc.stop(audio.currentTime + .13); };\n const start = async () => { setDone(false); setProgress(1); const startAt = performance.now(); const step = (now: number) => { const value = Math.min(100, Math.round(((now - startAt) / duration) * 100)); setProgress(value); if (value < 100) requestAnimationFrame(step); else { setDone(true); ping(760); onComplete?.(); } }; requestAnimationFrame(step); };\n return <div className={cn(\"w-full max-w-md rounded-[1.5rem] border border-[#dce3d2] bg-[#fbfcf7] p-4 text-[#1f271d] shadow-[0_20px_54px_rgba(53,70,40,.12)] dark:border-white/10 dark:bg-[#151a12] dark:text-white\", compact ? \"p-3\" : \"p-5 sm:p-6\", className)}><div className=\"flex items-center justify-between gap-3\"><div><p className=\"text-sm font-semibold\">Upload status</p>{!compact && <p className=\"mt-1 text-xs text-[#718067] dark:text-white/55\">Sound-backed feedback for transfer states.</p>}</div><span className={cn(\"grid size-9 place-items-center rounded-full\", done ? \"bg-[#dff3d5] text-[#36752f] dark:bg-[#75d766]/15 dark:text-[#a6ed9b]\" : \"bg-[#edf0e8] text-[#75806e] dark:bg-white/8 dark:text-white/50\")}>{done ? \"✓\" : \"↑\"}</span></div><div className=\"mt-5\"><div className=\"h-2 overflow-hidden rounded-full bg-[#e8ece1] dark:bg-white/10\"><div className=\"h-full rounded-full bg-[#6da55d] transition-[width] duration-100\" style={{ width: `${progress}%` }} /></div>{!compact && <div className=\"mt-2 flex justify-between text-[11px] tabular-nums text-[#718067] dark:text-white/55\"><span>{done ? \"Upload complete\" : progress ? \"Uploading…\" : \"Waiting to upload\"}</span><span>{progress}%</span></div>}</div><button type=\"button\" onClick={() => void start()} className=\"mt-4 w-full rounded-xl bg-[#2e5531] py-2.5 text-xs font-semibold text-white transition hover:bg-[#3d7040] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6da55d] focus-visible:ring-offset-2 active:scale-[.98] dark:focus-visible:ring-offset-[#151a12]\">{done ? \"Upload again\" : progress ? \"Uploading…\" : \"Start upload\"}</button></div>;\n}\nexport default UploadSoundStatus;\n",
+      "type": "registry:ui"
+    }
+  ]
+}

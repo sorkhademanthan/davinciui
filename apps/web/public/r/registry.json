@@ -37,6 +37,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "audio-spectrum",
+      "type": "registry:ui"
+    },
+    {
       "name": "auth-modal",
       "type": "registry:ui"
     },
@@ -58,6 +62,10 @@
     },
     {
       "name": "bubble",
+      "type": "registry:ui"
+    },
+    {
+      "name": "burn-plus",
       "type": "registry:ui"
     },
     {
@@ -241,6 +249,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "interaction-sound-kit",
+      "type": "registry:ui"
+    },
+    {
       "name": "interactive-hover-button",
       "type": "registry:ui"
     },
@@ -253,11 +265,23 @@
       "type": "registry:ui"
     },
     {
+      "name": "keyboard-command-sounds",
+      "type": "registry:ui"
+    },
+    {
+      "name": "kinetic-split-text",
+      "type": "registry:ui"
+    },
+    {
       "name": "liquid-blob",
       "type": "registry:ui"
     },
     {
       "name": "liquid-chrome",
+      "type": "registry:ui"
+    },
+    {
+      "name": "liquid-chrome-button",
       "type": "registry:ui"
     },
     {
@@ -270,10 +294,6 @@
     },
     {
       "name": "marker",
-      "type": "registry:ui"
-    },
-    {
-      "name": "matrix-rain",
       "type": "registry:ui"
     },
     {
@@ -326,10 +346,6 @@
     },
     {
       "name": "particle-galaxy",
-      "type": "registry:ui"
-    },
-    {
-      "name": "pixel-canvas",
       "type": "registry:ui"
     },
     {
@@ -493,6 +509,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "team-slide-reveal",
+      "type": "registry:ui"
+    },
+    {
       "name": "testimonial-marquee",
       "type": "registry:ui"
     },
@@ -529,11 +549,27 @@
       "type": "registry:ui"
     },
     {
+      "name": "upload-sound-status",
+      "type": "registry:ui"
+    },
+    {
       "name": "vertical-image-marquee",
       "type": "registry:ui"
     },
     {
+      "name": "voice-note",
+      "type": "registry:ui"
+    },
+    {
+      "name": "voice-recorder",
+      "type": "registry:ui"
+    },
+    {
       "name": "wave-bars-loader",
+      "type": "registry:ui"
+    },
+    {
+      "name": "waveform-audio-player",
       "type": "registry:ui"
     }
   ]
