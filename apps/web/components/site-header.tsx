@@ -154,7 +154,7 @@ export function SiteHeader({ sidebarToggle, landingGutter }: SiteHeaderProps) {
                 "fixed top-0 left-0 right-0 z-50 w-full transition-[background-color,border-color] duration-200",
                 landingGutter
                     ? isScrolled
-                        ? "border-b border-white/[0.06] bg-[#0a0a0a]"
+                        ? "border-b border-line bg-white/95 backdrop-blur-md dark:bg-background/95"
                         : "border-b border-transparent bg-transparent"
                     : "border-b border-line bg-white dark:bg-background"
             )}
@@ -179,14 +179,14 @@ export function SiteHeader({ sidebarToggle, landingGutter }: SiteHeaderProps) {
                         <ComponentryLogomark className="size-5 text-zinc-900 dark:text-white transition-opacity group-hover:opacity-80" />
                         <span className="text-[16px] font-bold font-display tracking-tight text-zinc-900 dark:text-white">DAVINCIUI</span>
                     </Link>
-                    <nav className="hidden items-center gap-0.5 text-sm font-normal sm:flex">
+                    <nav className="hidden items-center gap-0.5 text-sm font-normal lg:flex">
                         {navItems.map((item) => (
                             <Link
                                 key={item.href}
                                 href={item.href}
                                 aria-current={item.active ? "page" : undefined}
                                 className={cn(
-                                    "inline-flex h-8 items-center gap-1 px-1.5 transition-[color,opacity] duration-200 ease-out",
+                                    "inline-flex h-8 items-center gap-1 whitespace-nowrap px-1.5 transition-[color,opacity] duration-200 ease-out",
                                     item.active
                                         ? "text-foreground"
                                         : "text-foreground/55 hover:text-foreground/80"
@@ -248,13 +248,13 @@ export function SiteHeader({ sidebarToggle, landingGutter }: SiteHeaderProps) {
                         <div className="hidden h-4 w-px bg-foreground/15 dark:bg-foreground/20 sm:block" />
                         <Link
                             href="/docs/installation"
-                            className="hidden h-8 items-center justify-center rounded-lg bg-foreground px-3.5 text-sm font-medium text-background transition-opacity hover:opacity-90 sm:inline-flex"
+                            className="hidden h-8 items-center justify-center rounded-lg bg-foreground px-3.5 text-sm font-medium text-background transition-opacity hover:opacity-90 lg:inline-flex"
                         >
                             Get Started
                         </Link>
                         <button
                             type="button"
-                            className="group relative flex size-8 touch-manipulation flex-col items-center justify-center gap-1 rounded-md border-none transition-colors before:absolute before:-inset-x-2 before:-top-8 before:-bottom-1 active:scale-none aria-expanded:bg-accent sm:hidden"
+                            className="group relative flex size-8 touch-manipulation flex-col items-center justify-center gap-1 rounded-md border-none transition-colors before:absolute before:-inset-x-2 before:-top-8 before:-bottom-1 active:scale-none aria-expanded:bg-accent lg:hidden"
                             aria-label={mobileNavOpen ? "Close navigation" : "Open navigation"}
                             aria-expanded={mobileNavOpen}
                             onClick={() => setMobileNavOpen((open) => !open)}
@@ -277,7 +277,7 @@ export function SiteHeader({ sidebarToggle, landingGutter }: SiteHeaderProps) {
                 </div>
             </div>
             {mobileNavOpen && (
-                <div className="absolute right-4 top-[calc(100%+0.5rem)] z-50 flex w-60 origin-top-right flex-col gap-1 rounded-xl bg-popover p-1 text-sm text-popover-foreground shadow-md ring-1 ring-foreground/10 outline-hidden sm:hidden dark:ring-foreground/20">
+                <div className="absolute right-4 top-[calc(100%+0.5rem)] z-50 flex w-60 origin-top-right flex-col gap-1 rounded-xl bg-popover p-1 text-sm text-popover-foreground shadow-md ring-1 ring-foreground/10 outline-hidden lg:hidden dark:ring-foreground/20">
                     <nav className="flex flex-col" aria-label="Mobile navigation">
                         {navItems.map((item) => (
                             <Link
@@ -290,6 +290,10 @@ export function SiteHeader({ sidebarToggle, landingGutter }: SiteHeaderProps) {
                             </Link>
                         ))}
                         <div className="my-1 h-px bg-border" />
+                        <div className="flex min-h-11 items-center justify-between px-3 text-base">
+                            <span>Appearance</span>
+                            <ThemeToggle className="h-11 w-11" />
+                        </div>
                         {hasPersonalize && (
                             <button
                                 type="button"

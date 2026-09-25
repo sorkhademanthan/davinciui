@@ -1,176 +1,104 @@
 "use client"
 
-import React from "react"
 import Link from "next/link"
-import {
-  LandingContent,
-  landingGutterClass,
-} from "@/components/landing/landing-frame"
+import { ArrowUpRight, ArrowUp } from "lucide-react"
+import { LandingContent, landingGutterClass } from "@/components/landing/landing-frame"
 import { ComponentryLogomark } from "@/components/logos/componentry-logomark"
 
-const links = {
-  product: [
-    { label: "Components", href: "/docs" },
-    { label: "MCP Server", href: "/docs/mcp" },
-    { label: "Quick Start", href: "/docs" },
-  ],
-  resources: [
-    { label: "Documentation", href: "/docs" },
-    { label: "GitHub", href: "https://github.com/sorkhademanthan/davinciui", external: true },
-    { label: "Sponsor", href: "https://github.com/sponsors/sorkhademanthan", external: true },
-    { label: "Terms of Service", href: "/terms-of-service" },
-    { label: "Privacy Policy", href: "/privacy-policy" },
-  ],
-  connect: [
-    { label: "Twitter / X", href: "https://x.com/ManthanSorkhade", external: true },
-    { label: "LinkedIn", href: "https://www.linkedin.com/in/sorkhademanthan/", external: true },
-    { label: "Developer", href: "https://www.manthansorkhade.in/", external: true },
-  ],
-}
+const footerGroups = [
+  {
+    title: "Explore",
+    links: [
+      { label: "Components", href: "/experience/components" },
+      { label: "Blocks", href: "/blocks" },
+      { label: "Design system", href: "/design-system" },
+    ],
+  },
+  {
+    title: "Get started",
+    links: [
+      { label: "Documentation", href: "/docs" },
+      { label: "MCP server", href: "/docs/mcp" },
+      { label: "Sponsor the project", href: "/sponsors" },
+    ],
+  },
+  {
+    title: "Elsewhere",
+    links: [
+      { label: "GitHub", href: "https://github.com/sorkhademanthan/davinciui", external: true },
+      { label: "X / Twitter", href: "https://x.com/ManthanSorkhade", external: true },
+      { label: "LinkedIn", href: "https://www.linkedin.com/in/sorkhademanthan/", external: true },
+    ],
+  },
+] as const
 
 export function Footer() {
+  const scrollToTop = () => {
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    window.scrollTo({ top: 0, behavior: reduceMotion ? "instant" : "smooth" })
+  }
+
   return (
-    <footer className="relative flex w-full flex-col overflow-hidden border-t border-zinc-200/60 bg-white pt-18 text-[15px] dark:border-zinc-800/60 dark:bg-background">
-      <div className={`mx-auto w-full ${landingGutterClass}`}>
+    <footer className="relative isolate w-full overflow-hidden border-t border-zinc-200 bg-[#f4f4f1] text-zinc-950 dark:border-white/10 dark:bg-[#111214] dark:text-zinc-50">
+      <div className={`relative mx-auto w-full ${landingGutterClass}`}>
         <LandingContent>
-        <div className="z-10 grid w-full grid-cols-1 gap-12 pb-18 md:grid-cols-12 lg:gap-8 xl:gap-12">
-          {/* Brand and Description */}
-          <div className="flex flex-col items-start md:col-span-12 lg:col-span-5 xl:col-span-5">
-            <Link href="/" className="group mb-6 flex w-fit items-center gap-2.5">
-              <ComponentryLogomark className="size-7 text-zinc-900 transition-transform duration-300 group-hover:scale-105 dark:text-white" />
-              <span className="text-lg font-semibold tracking-tight text-zinc-900 dark:text-white">
-                DavinciUI
-              </span>
-            </Link>
-            <p className="mb-7 max-w-md text-base leading-7 text-zinc-500 dark:text-zinc-400">
-              Beautiful animated React components. Copy, paste, ship. Built for modern web applications with a focus on motion and usability.
+          <div className="grid gap-12 py-14 sm:py-16 lg:grid-cols-12 lg:gap-10 lg:py-20">
+            <div className="lg:col-span-5">
+              <Link href="/" className="group inline-flex items-center gap-3 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6366f1]">
+                <ComponentryLogomark className="size-8 transition-transform duration-300 group-hover:rotate-[-8deg]" />
+                <span className="text-lg font-semibold tracking-[-0.055em]">DavinciUI</span>
+              </Link>
+              <p className="mt-5 max-w-[21rem] text-sm leading-6 text-zinc-600 dark:text-zinc-400">
+                An open-source collection of animated React components. Made to be used, remixed, and made your own.
+              </p>
+            </div>
+
+            <nav aria-label="Footer navigation" className="grid grid-cols-2 gap-x-5 gap-y-10 sm:grid-cols-3 lg:col-span-7 lg:gap-8">
+              {footerGroups.map((group) => (
+                <div key={group.title}>
+                  <h3 className="font-mono text-[10px] font-medium uppercase tracking-[0.19em] text-zinc-500 dark:text-zinc-400 sm:text-xs">
+                    {group.title}
+                  </h3>
+                  <ul className="mt-5 space-y-3.5">
+                    {group.links.map((link) => (
+                      <li key={link.label}>
+                        <Link
+                          href={link.href}
+                          {...("external" in link ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                          className="group inline-flex min-h-6 items-center gap-1.5 rounded-sm text-sm font-medium text-zinc-700 transition-colors hover:text-[#4f46e5] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6366f1] dark:text-zinc-300 dark:hover:text-[#a5b4fc] sm:text-[15px]"
+                        >
+                          {link.label}
+                          {"external" in link && <ArrowUpRight className="size-3 opacity-45 transition-[transform,opacity] group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:opacity-100" aria-hidden="true" />}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </nav>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-between gap-x-8 gap-y-4 border-t border-zinc-950/15 py-6 text-xs text-zinc-600 dark:border-white/15 dark:text-zinc-400 sm:text-sm">
+            <p>© {new Date().getFullYear()} DavinciUI · Crafted by <a href="https://www.manthansorkhade.in/" target="_blank" rel="noopener noreferrer" className="underline decoration-zinc-400/60 underline-offset-4 transition-colors hover:text-zinc-950 dark:hover:text-white">Manthan Sorkhade</a></p>
+            <div className="flex items-center gap-5 sm:gap-7">
+              <Link href="/privacy-policy" className="transition-colors hover:text-zinc-950 dark:hover:text-white">Privacy</Link>
+              <Link href="/terms-of-service" className="transition-colors hover:text-zinc-950 dark:hover:text-white">Terms</Link>
+              <button type="button" onClick={scrollToTop} className="group inline-flex items-center gap-1.5 font-medium text-zinc-950 transition-colors hover:text-[#4f46e5] focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6366f1] dark:text-zinc-100 dark:hover:text-[#a5b4fc]">
+                Back to top <ArrowUp className="size-3.5 transition-transform group-hover:-translate-y-0.5" aria-hidden="true" />
+              </button>
+            </div>
+          </div>
+
+          <div className="border-t border-zinc-950/15 pb-4 pt-5 dark:border-white/15 sm:pb-7 sm:pt-7" aria-hidden="true">
+            <div className="flex items-center justify-between gap-4 font-mono text-[9px] uppercase tracking-[0.18em] text-zinc-500 dark:text-zinc-400 sm:text-[10px]">
+              <span>Made for the curious</span>
+              <span>Designed to move</span>
+            </div>
+            <p className="mt-5 select-none whitespace-nowrap text-center text-[clamp(3.15rem,13.9vw,13.3rem)] font-semibold leading-[0.8] tracking-[-0.095em] text-zinc-950 dark:text-zinc-50">
+              davinciui
             </p>
-            <div className="flex items-center gap-3">
-              <a
-                href="https://x.com/ManthanSorkhade"
-                target="_blank"
-                rel="noreferrer"
-                className="text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
-              >
-                <svg className="size-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                </svg>
-              </a>
-              <a
-                href="https://github.com/sorkhademanthan/davinciui"
-                target="_blank"
-                rel="noreferrer"
-                className="text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
-              >
-                <svg className="size-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
-                </svg>
-              </a>
-            </div>
           </div>
-
-          {/* Links - Pushed to the right using col-start */}
-          <div className="col-span-2 grid grid-cols-2 gap-9 sm:grid-cols-3 md:col-span-12 lg:col-span-6 lg:col-start-7 xl:col-span-6 xl:col-start-7">
-            <div className="flex flex-col gap-4">
-              <h3 className="text-[15px] font-semibold text-zinc-900 dark:text-zinc-100">Product</h3>
-              <ul className="flex flex-col gap-3.5">
-                {links.product.map((l) => (
-                  <li key={l.label}>
-                    <Link
-                      href={l.href}
-                      className="inline-flex items-center gap-1 text-[15px] leading-6 text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
-                    >
-                      {l.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="flex flex-col gap-4">
-              <h3 className="text-[15px] font-semibold text-zinc-900 dark:text-zinc-100">Resources</h3>
-              <ul className="flex flex-col gap-3.5">
-                {links.resources.map((l) => (
-                  <li key={l.label}>
-                    <Link
-                      href={l.href}
-                      {...(l.external ? { target: "_blank", rel: "noreferrer" } : {})}
-                      className="group inline-flex items-center gap-1 text-[15px] leading-6 text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
-                    >
-                      {l.label}
-                      {l.external && (
-                        <svg className="size-3 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M7 17L17 7" />
-                          <path d="M7 7h10v10" />
-                        </svg>
-                      )}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="flex flex-col gap-4">
-              <h3 className="text-[15px] font-semibold text-zinc-900 dark:text-zinc-100">Connect</h3>
-              <ul className="flex flex-col gap-3.5">
-                {links.connect.map((l) => (
-                  <li key={l.label}>
-                    <Link
-                      href={l.href}
-                      {...(l.external ? { target: "_blank", rel: "noreferrer" } : {})}
-                      className="group inline-flex items-center gap-1 text-[15px] leading-6 text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
-                    >
-                      {l.label}
-                      {l.external && (
-                        <svg className="size-3 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M7 17L17 7" />
-                          <path d="M7 7h10v10" />
-                        </svg>
-                      )}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <div className="z-10 flex flex-col items-center justify-between gap-4 pb-8 text-sm md:flex-row">
-          <p className="text-zinc-500 dark:text-zinc-400">
-            © {new Date().getFullYear()} DavinciUI. Created by{" "}
-            <a
-              href="https://x.com/ManthanSorkhade"
-              target="_blank"
-              rel="noreferrer"
-              className="text-zinc-900 dark:text-zinc-100 hover:underline underline-offset-4"
-            >
-              Manthan Sorkhade
-            </a>
-            .
-          </p>
-        </div>
         </LandingContent>
-      </div>
-
-      {/* Half-cut footer wordmark */}
-      <div className="pointer-events-none mt-8 flex w-full select-none justify-center overflow-hidden text-[#E5E5E5]">
-        <svg
-          viewBox="0 0 1440 136"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          aria-hidden="true"
-          className="h-auto w-full font-sans"
-        >
-          <text
-            x="720"
-            y="207"
-            fill="currentColor"
-            fontSize="260"
-            fontWeight="700"
-            letterSpacing="-10"
-            textAnchor="middle"
-          >
-            davinciui
-          </text>
-        </svg>
       </div>
     </footer>
   )
