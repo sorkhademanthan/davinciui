@@ -885,6 +885,14 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "nudge-button",
     addedAt: "2026-09-24",
   },
+  "animated-pill-button": {
+    title: "Animated Pill Button",
+    description:
+      "A black pill CTA with a directional liquid wipe — cyan bursts from the right-side dot with a curved leading edge while the dot morphs into an arrow circle and the label flips contrast inside the same mask.",
+    category: "Interactions",
+    slug: "animated-pill-button",
+    addedAt: "2026-09-24",
+  },
   "matrix-rain": {
     title: "Matrix Rain",
     description: "Classic Matrix digital rain effect.",

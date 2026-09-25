@@ -280,6 +280,14 @@ const NudgeButtonCardPreview = dynamic(
   { ssr: false },
 );
 
+const AnimatedPillButtonCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/animated-pill-button-card-preview").then(
+      (module) => module.AnimatedPillButtonCardPreview,
+    ),
+  { ssr: false },
+);
+
 const AmbientAudioToggleCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/ambient-audio-toggle-card-preview").then(
@@ -531,6 +539,7 @@ type ComponentCardLivePreviewProps = {
     | "liquid-reveal-button"
     | "animated-metric"
     | "nudge-button"
+    | "animated-pill-button"
     | "ambient-audio-toggle"
     | "motion-hamburger"
     | "scroll-reveal-image"
@@ -619,6 +628,7 @@ export function ComponentCardLivePreview({
           slug !== "liquid-reveal-button" &&
           slug !== "animated-metric" &&
           slug !== "nudge-button" &&
+          slug !== "animated-pill-button" &&
           slug !== "ambient-audio-toggle" &&
           slug !== "motion-hamburger" &&
           slug !== "wave-bars-loader" &&
@@ -786,6 +796,8 @@ export function ComponentCardLivePreview({
         <AnimatedMetricCardPreview />
       ) : slug === "nudge-button" ? (
         <NudgeButtonCardPreview />
+      ) : slug === "animated-pill-button" ? (
+        <AnimatedPillButtonCardPreview />
       ) : slug === "ambient-audio-toggle" ? (
         <AmbientAudioToggleCardPreview />
       ) : slug === "motion-hamburger" ? (

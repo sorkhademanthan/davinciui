@@ -91,6 +91,7 @@ function hasLiveCardPreview(
   | "liquid-reveal-button"
   | "animated-metric"
   | "nudge-button"
+  | "animated-pill-button"
   | "ambient-audio-toggle"
   | "motion-hamburger"
   | "scroll-reveal-image"
@@ -152,6 +153,7 @@ function hasLiveCardPreview(
     slug === "liquid-reveal-button" ||
     slug === "animated-metric" ||
     slug === "nudge-button" ||
+    slug === "animated-pill-button" ||
     slug === "ambient-audio-toggle" ||
     slug === "motion-hamburger" ||
     slug === "scroll-reveal-image" ||

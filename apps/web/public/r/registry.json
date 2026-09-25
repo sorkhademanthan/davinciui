@@ -29,6 +29,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "animated-pill-button",
+      "type": "registry:ui"
+    },
+    {
       "name": "attachment",
       "type": "registry:ui"
     },

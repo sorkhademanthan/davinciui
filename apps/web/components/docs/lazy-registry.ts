@@ -218,6 +218,10 @@ const docsImportMap: Record<
     import("@/components/docs/nudge-button").then((m) => ({
       default: m.NudgeButtonDocs,
     })),
+  "animated-pill-button": () =>
+    import("@/components/docs/animated-pill-button").then((m) => ({
+      default: m.AnimatedPillButtonDocs,
+    })),
   "ambient-audio-toggle": () =>
     import("@/components/docs/ambient-audio-toggle").then((m) => ({
       default: m.AmbientAudioToggleDocs,
