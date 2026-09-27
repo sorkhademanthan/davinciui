@@ -95,9 +95,6 @@ function hasLiveCardPreview(
   | "burn-plus"
   | "team-slide-reveal"
   | "ambient-audio-toggle"
-  | "waveform-audio-player"
-  | "voice-note"
-  | "audio-spectrum"
   | "interaction-sound-kit"
   | "voice-recorder"
   | "keyboard-command-sounds"
@@ -168,9 +165,6 @@ function hasLiveCardPreview(
     slug === "burn-plus" ||
     slug === "team-slide-reveal" ||
     slug === "ambient-audio-toggle" ||
-    slug === "waveform-audio-player" ||
-    slug === "voice-note" ||
-    slug === "audio-spectrum" ||
     slug === "interaction-sound-kit" ||
     slug === "voice-recorder" ||
     slug === "keyboard-command-sounds" ||

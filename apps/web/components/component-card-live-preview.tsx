@@ -312,30 +312,6 @@ const AmbientAudioToggleCardPreview = dynamic(
   { ssr: false },
 );
 
-const WaveformAudioPlayerCardPreview = dynamic(
-  () =>
-    import("@/components/docs/previews/waveform-audio-player-card-preview").then(
-      (module) => module.WaveformAudioPlayerCardPreview,
-    ),
-  { ssr: false },
-);
-
-const VoiceNoteCardPreview = dynamic(
-  () =>
-    import("@/components/docs/previews/voice-note-card-preview").then(
-      (module) => module.VoiceNoteCardPreview,
-    ),
-  { ssr: false },
-);
-
-const AudioSpectrumCardPreview = dynamic(
-  () =>
-    import("@/components/docs/previews/audio-spectrum-card-preview").then(
-      (module) => module.AudioSpectrumCardPreview,
-    ),
-  { ssr: false },
-);
-
 const InteractionSoundKitCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/interaction-sound-kit-card-preview").then(
@@ -610,9 +586,6 @@ type ComponentCardLivePreviewProps = {
     | "burn-plus"
     | "team-slide-reveal"
     | "ambient-audio-toggle"
-    | "waveform-audio-player"
-    | "voice-note"
-    | "audio-spectrum"
     | "interaction-sound-kit"
     | "voice-recorder"
     | "keyboard-command-sounds"
@@ -678,7 +651,7 @@ export function ComponentCardLivePreview({
   return (
     <div
       ref={hostRef}
-      aria-hidden={slug !== "ambient-audio-toggle" && slug !== "waveform-audio-player" && slug !== "voice-note" && slug !== "audio-spectrum" && slug !== "interaction-sound-kit" && slug !== "voice-recorder" && slug !== "keyboard-command-sounds" && slug !== "upload-sound-status"}
+      aria-hidden={slug !== "ambient-audio-toggle" && slug !== "interaction-sound-kit" && slug !== "voice-recorder" && slug !== "keyboard-command-sounds" && slug !== "upload-sound-status"}
       className={`absolute inset-0 flex items-center justify-center overflow-hidden ${
         slug === "team-slide-reveal" ? "pointer-events-none " : ""
       }${
@@ -887,12 +860,6 @@ export function ComponentCardLivePreview({
         <TeamSlideRevealCardPreview />
       ) : slug === "ambient-audio-toggle" ? (
         <AmbientAudioToggleCardPreview />
-      ) : slug === "waveform-audio-player" ? (
-        <WaveformAudioPlayerCardPreview />
-      ) : slug === "voice-note" ? (
-        <VoiceNoteCardPreview />
-      ) : slug === "audio-spectrum" ? (
-        <AudioSpectrumCardPreview />
       ) : slug === "interaction-sound-kit" ? (
         <InteractionSoundKitCardPreview />
       ) : slug === "voice-recorder" ? (
