@@ -126,35 +126,11 @@ export interface CMSScrollGalleryProps {
   reducedMotion?: boolean;
 }
 
-const UNSPLASH_PARAMS = "?q=80&w=1920&auto=format&fit=crop";
-
 const DEFAULT_ITEMS: CMSScrollGalleryItem[] = [
-  {
-    title: "Aurora",
-    media: `https://images.unsplash.com/photo-1531366936337-7c912a4589a7${UNSPLASH_PARAMS}`,
-    alt: "Aurora — violet and green northern lights over snowy peaks",
-  },
   {
     title: "Prism",
     media: "/images/spiral-3d-slider/prism-portrait.jpg",
     alt: "Prism — portrait illuminated by green light and a magenta prism",
-  },
-  {
-    title: "Tide",
-    media: "https://assets.mixkit.co/videos/44370/44370-720.mp4",
-    mediaType: "video",
-    alt: "Tide — gliding over the sea into a burning sunset",
-  },
-  {
-    title: "Dunes",
-    media: `https://images.unsplash.com/photo-1473580044384-7ba9967e16a0${UNSPLASH_PARAMS}`,
-    alt: "Dunes — footprints trailing across golden sand ripples",
-  },
-  {
-    title: "Neon",
-    media: "https://assets.mixkit.co/videos/4332/4332-720.mp4",
-    mediaType: "video",
-    alt: "Neon — Times Square glowing through rain at night",
   },
   {
     title: "Ember",
@@ -162,14 +138,34 @@ const DEFAULT_ITEMS: CMSScrollGalleryItem[] = [
     alt: "Ember — red fashion portrait swept through a long exposure",
   },
   {
+    title: "Azure",
+    media: "/images/spiral-3d-slider/blue-double.jpg",
+    alt: "Azure — blue double-exposure portrait",
+  },
+  {
+    title: "Oculus",
+    media: "/images/segmented-image-carousel/concrete-oculus.jpg",
+    alt: "Oculus — concrete oculus opening to the sky",
+  },
+  {
+    title: "Crimson",
+    media: "/images/spiral-3d-slider/crimson-profile.jpg",
+    alt: "Crimson — profile emerging from a deep green shadow",
+  },
+  {
+    title: "Verde",
+    media: "/images/spiral-3d-slider/green-portrait.jpg",
+    alt: "Verde — portrait washed in deep green light",
+  },
+  {
+    title: "Coast",
+    media: "/images/segmented-image-carousel/coastal-tree.jpg",
+    alt: "Coast — lone coastal tree against the sea",
+  },
+  {
     title: "Ghost",
     media: "/images/spiral-3d-slider/ghosted-portrait.jpg",
     alt: "Ghost — portrait layered in soft motion",
-  },
-  {
-    title: "Muse",
-    media: `https://images.unsplash.com/photo-1529139574466-a303027c1d8b${UNSPLASH_PARAMS}`,
-    alt: "Muse — bold editorial portrait against a teal sky",
   },
 ];
 

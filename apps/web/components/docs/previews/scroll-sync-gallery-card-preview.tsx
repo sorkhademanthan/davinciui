@@ -1,15 +1,15 @@
 "use client";
 
 import {
+  animate,
   motion,
+  useMotionValue,
   useMotionValueEvent,
   useReducedMotion,
-  useScroll,
-  useSpring,
   useTransform,
   type MotionValue,
 } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 interface MiniColumn {
   heights: number[];
@@ -19,14 +19,13 @@ const Q = "?q=80&w=300&auto=format&fit=crop";
 
 const LOCAL = (file: string) => `/images/spiral-3d-slider/${file}`;
 
-// Four columns with deliberately mismatched image heights — the editorial
+// Three columns with deliberately mismatched image heights — the editorial
 // collage look. Each column's heights are fixed pixels so the duplicated
 // content math stays deterministic at any card size.
 const COLUMNS: MiniColumn[] = [
-  { heights: [64, 44, 72, 52] },
-  { heights: [48, 76, 56, 60] },
-  { heights: [72, 52, 44, 68] },
-  { heights: [56, 64, 72, 48] },
+  { heights: [120, 84, 135] },
+  { heights: [90, 142, 104] },
+  { heights: [135, 96, 84] },
 ];
 
 const COLUMN_IMAGES: string[][] = [
@@ -34,25 +33,16 @@ const COLUMN_IMAGES: string[][] = [
     `https://images.unsplash.com/photo-1506905925346-21bda4d32df4${Q}`,
     LOCAL("blue-double.jpg"),
     `https://images.unsplash.com/photo-1529139574466-a303027c1d8b${Q}`,
-    LOCAL("prism-portrait.jpg"),
   ],
   [
     LOCAL("dark-glitch.jpg"),
     `https://images.unsplash.com/photo-1490481651871-ab68de25d43d${Q}`,
     LOCAL("red-echo.jpg"),
-    `https://images.unsplash.com/photo-1506794778202-cad84cf45f1d${Q}`,
   ],
   [
     `https://images.unsplash.com/photo-1469334031218-e382a71b716b${Q}`,
     LOCAL("crimson-profile.jpg"),
     `https://images.unsplash.com/photo-1501281668745-f7f57925c3b4${Q}`,
-    LOCAL("silver-motion.jpg"),
-  ],
-  [
-    LOCAL("ghosted-portrait.jpg"),
-    `https://images.unsplash.com/photo-1445205170230-053b83016050${Q}`,
-    LOCAL("blue-motion.jpg"),
-    `https://images.unsplash.com/photo-1531123897727-8f129e1688ce${Q}`,
   ],
 ];
 
@@ -62,7 +52,6 @@ const COLUMN_RANGES: Array<[number, number]> = [
   [24, -64],
   [-56, 20],
   [28, -72],
-  [-48, 24],
 ];
 
 const MINI_GAP = 3;
@@ -105,63 +94,29 @@ function MiniSyncColumn({
 }
 
 /**
- * Interactive mini Scroll Sync Gallery for gallery cards.
- * The card itself is the scroll container — scrolling over the card scrubs
- * four columns at different speeds and alternating directions via a sticky
- * stage, exactly like the full component.
+ * Auto-playing mini Scroll Sync Gallery for gallery cards.
+ * The columns drift continuously on their own — three columns at
+ * different speeds and alternating directions, mirroring the full
+ * component with no scrolling required.
  */
 export function ScrollSyncGalleryCardPreview() {
-  const containerRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion() ?? false;
-  const { scrollYProgress } = useScroll({ container: containerRef });
-  const progress = useSpring(scrollYProgress, {
-    stiffness: 180,
-    damping: 30,
-    mass: 0.5,
-    restDelta: 0.001,
-  });
+  const progress = useMotionValue(0);
   const [active, setActive] = useState(0);
-  // Measured stage height (the visible card media height) — the track is
-  // exactly 2.5 stages, no container-query units needed.
-  const [stageH, setStageH] = useState(192);
 
+  // Continuous back-and-forth drift (mirrored so the loop has no seam).
   useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    const update = () => {
-      if (el.clientHeight > 0) setStageH(el.clientHeight);
-    };
-    update();
-    const ro = new ResizeObserver(update);
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, []);
+    if (reduceMotion) return;
+    const controls = animate(progress, 1, {
+      duration: 7,
+      repeat: Infinity,
+      repeatType: "mirror",
+      ease: "easeInOut",
+    });
+    return () => controls.stop();
+  }, [progress, reduceMotion]);
 
-  // Capture wheel intent over the card so scrolling scrubs the preview
-  // instead of the page. Works even where overscroll-behavior is
-  // unsupported. Pinch-zoom (ctrlKey) is never intercepted.
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    const onWheel = (e: WheelEvent) => {
-      if (e.ctrlKey || e.metaKey) return;
-      const delta =
-        e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? 400 : 1);
-      if (delta === 0) return;
-      const max = el.scrollHeight - el.clientHeight;
-      const atTop = el.scrollTop <= 0;
-      const atBottom = el.scrollTop >= max - 1;
-      if ((delta > 0 && !atBottom) || (delta < 0 && !atTop)) {
-        e.preventDefault();
-        e.stopPropagation();
-        el.scrollTop += delta;
-      }
-    };
-    el.addEventListener("wheel", onWheel, { passive: false });
-    return () => el.removeEventListener("wheel", onWheel);
-  }, []);
-
-  useMotionValueEvent(scrollYProgress, "change", (v) => {
+  useMotionValueEvent(progress, "change", (v) => {
     const next = Math.min(2, Math.max(0, Math.floor(Math.min(0.999999, Math.max(0, v)) * 3)));
     setActive((prev) => (prev === next ? prev : next));
   });
@@ -188,35 +143,23 @@ export function ScrollSyncGalleryCardPreview() {
   }
 
   return (
-    <div
-      ref={containerRef}
-      className="absolute inset-0 overflow-y-auto overflow-x-hidden bg-[#0b0b0c] [&::-webkit-scrollbar]:hidden"
-      style={{
-        scrollbarWidth: "none",
-        overscrollBehaviorY: "contain",
-      }}
-    >
-      <div className="relative" style={{ height: 2.5 * stageH }}>
-        <div
-          className="sticky top-0 flex w-full overflow-hidden bg-[#0b0b0c]"
-          style={{ height: stageH, gap: MINI_GAP }}
-        >
-          {COLUMNS.map((_, i) => (
-            <MiniSyncColumn key={i} index={i} progress={progress} />
+    <div className="absolute inset-0 overflow-hidden bg-[#0b0b0c]">
+      <div className="flex h-full w-full" style={{ gap: MINI_GAP }}>
+        {COLUMNS.map((_, i) => (
+          <MiniSyncColumn key={i} index={i} progress={progress} />
+        ))}
+        {/* Drift position ticks */}
+        <div className="absolute bottom-2 left-1/2 z-20 flex -translate-x-1/2 gap-1">
+          {[0, 1, 2].map((i) => (
+            <span
+              key={i}
+              className={
+                i === active
+                  ? "h-1 w-4 rounded-full bg-white/90"
+                  : "h-1 w-1 rounded-full bg-white/50"
+              }
+            />
           ))}
-          {/* Scroll progress ticks */}
-          <div className="absolute bottom-2 left-1/2 z-20 flex -translate-x-1/2 gap-1">
-            {[0, 1, 2].map((i) => (
-              <span
-                key={i}
-                className={
-                  i === active
-                    ? "h-1 w-4 rounded-full bg-white/90"
-                    : "h-1 w-1 rounded-full bg-white/50"
-                }
-              />
-            ))}
-          </div>
         </div>
       </div>
     </div>
