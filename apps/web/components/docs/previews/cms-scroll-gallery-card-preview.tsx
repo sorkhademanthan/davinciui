@@ -18,18 +18,16 @@ interface MiniItem {
 
 const ITEMS: MiniItem[] = [
   {
-    title: "Aurora",
-    media:
-      "https://images.unsplash.com/photo-1531366936337-7c912a4589a7?q=80&w=600&auto=format&fit=crop",
-  },
-  {
     title: "Prism",
     media: "/images/spiral-3d-slider/prism-portrait.jpg",
   },
   {
-    title: "Dunes",
-    media:
-      "https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?q=80&w=600&auto=format&fit=crop",
+    title: "Azure",
+    media: "/images/spiral-3d-slider/blue-double.jpg",
+  },
+  {
+    title: "Ember",
+    media: "/images/spiral-3d-slider/red-echo.jpg",
   },
 ];
 
