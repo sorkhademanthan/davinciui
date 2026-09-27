@@ -52,6 +52,27 @@ export function InteractionSoundKit({ volume = 0.38, defaultMuted = false, compa
     oscillator.stop(start + duration + 0.02);
   };
 
+  // Short filtered-noise burst — the papery body of the trash sound.
+  const noiseBurst = (audio: AudioContext, start: number, duration: number, filterFrequency: number, gain: number, type: BiquadFilterType = "bandpass") => {
+    const length = Math.max(1, Math.floor(audio.sampleRate * duration));
+    const buffer = audio.createBuffer(1, length, audio.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < length; i++) data[i] = Math.random() * 2 - 1;
+    const source = audio.createBufferSource();
+    source.buffer = buffer;
+    const filter = audio.createBiquadFilter();
+    filter.type = type;
+    filter.frequency.value = filterFrequency;
+    filter.Q.value = 0.9;
+    const envelope = audio.createGain();
+    envelope.gain.setValueAtTime(0.0001, start);
+    envelope.gain.exponentialRampToValueAtTime(gain, start + 0.015);
+    envelope.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+    source.connect(filter).connect(envelope).connect(audio.destination);
+    source.start(start);
+    source.stop(start + duration + 0.02);
+  };
+
   const play = async (action: SoundAction) => {
     setActive(action);
     window.setTimeout(() => setActive(null), 240);
@@ -61,17 +82,22 @@ export function InteractionSoundKit({ volume = 0.38, defaultMuted = false, compa
     const now = audio.currentTime;
     const gain = safeVolume * 0.42;
     if (action === "trash") {
-      tone(audio, 250, now, 0.11, "triangle", gain, 120);
-      tone(audio, 145, now + 0.09, 0.16, "sine", gain * 0.8, 68);
+      // macOS trash: papery crumple over a soft bin thud.
+      noiseBurst(audio, now, 0.13, 1500, gain * 0.9);
+      tone(audio, 150, now + 0.02, 0.14, "sine", gain * 0.9, 68);
     } else if (action === "drop") {
-      tone(audio, 180, now, 0.075, "sine", gain, 98);
-      tone(audio, 92, now + 0.07, 0.1, "triangle", gain * 0.7, 65);
+      // Low placement thud with a felted knock.
+      tone(audio, 210, now, 0.11, "sine", gain, 78);
+      tone(audio, 105, now + 0.015, 0.13, "triangle", gain * 0.6, 62);
     } else if (action === "confirm") {
-      tone(audio, 523, now, 0.12, "sine", gain);
-      tone(audio, 784, now + 0.09, 0.18, "sine", gain * 0.9);
+      // Glass-like confirmation ping: fundamental + airy harmonics.
+      tone(audio, 840, now, 0.5, "sine", gain * 0.9);
+      tone(audio, 1260, now, 0.42, "sine", gain * 0.45);
+      tone(audio, 1680, now + 0.01, 0.34, "sine", gain * 0.22);
     } else {
-      tone(audio, 330, now, 0.07, "square", gain * 0.45);
-      tone(audio, 330, now + 0.12, 0.07, "square", gain * 0.45);
+      // Funk-style two-tone nudge, softened through triangle waves.
+      tone(audio, 622, now, 0.1, "triangle", gain * 0.9);
+      tone(audio, 466, now + 0.11, 0.14, "triangle", gain * 0.9);
     }
     onSoundPlay?.(action);
   };
