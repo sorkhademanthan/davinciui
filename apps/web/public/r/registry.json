@@ -37,10 +37,6 @@
       "type": "registry:ui"
     },
     {
-      "name": "audio-spectrum",
-      "type": "registry:ui"
-    },
-    {
       "name": "auth-modal",
       "type": "registry:ui"
     },
@@ -557,19 +553,11 @@
       "type": "registry:ui"
     },
     {
-      "name": "voice-note",
-      "type": "registry:ui"
-    },
-    {
       "name": "voice-recorder",
       "type": "registry:ui"
     },
     {
       "name": "wave-bars-loader",
-      "type": "registry:ui"
-    },
-    {
-      "name": "waveform-audio-player",
       "type": "registry:ui"
     }
   ]
