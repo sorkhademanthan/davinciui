@@ -6,14 +6,14 @@ import { CMSScrollGalleryPreview } from "@/components/docs/previews/cms-scroll-g
 const defaultCode = `import { CMSScrollGallery } from "@/components/ui/cms-scroll-gallery"
 
 const items = [
-  { title: "Aurora", media: "https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=1920&q=85" },
   { title: "Prism", media: "/images/spiral-3d-slider/prism-portrait.jpg" },
-  { title: "Tide", media: "https://assets.mixkit.co/videos/44370/44370-720.mp4", mediaType: "video" },
-  { title: "Dunes", media: "https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?w=1920&q=85" },
-  { title: "Neon", media: "https://assets.mixkit.co/videos/4332/4332-720.mp4", mediaType: "video" },
   { title: "Ember", media: "/images/spiral-3d-slider/red-echo.jpg" },
+  { title: "Azure", media: "/images/spiral-3d-slider/blue-double.jpg" },
+  { title: "Oculus", media: "/images/segmented-image-carousel/concrete-oculus.jpg" },
+  { title: "Crimson", media: "/images/spiral-3d-slider/crimson-profile.jpg" },
+  { title: "Verde", media: "/images/spiral-3d-slider/green-portrait.jpg" },
+  { title: "Coast", media: "/images/segmented-image-carousel/coastal-tree.jpg" },
   { title: "Ghost", media: "/images/spiral-3d-slider/ghosted-portrait.jpg" },
-  { title: "Muse", media: "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=1920&q=85" },
 ]
 
 export default function Demo() {
