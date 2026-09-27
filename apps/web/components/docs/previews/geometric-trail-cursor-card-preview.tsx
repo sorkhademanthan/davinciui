@@ -5,13 +5,13 @@ import { useTheme } from "next-themes";
 import { GeometricTrailCursor } from "@workspace/ui/components/geometric-trail-cursor";
 
 /**
- * Hover-driven card thumbnail. A lightweight ambient driver steers a
+ * Self-playing card thumbnail. A lightweight ambient driver steers a
  * virtual pointer along a Lissajous path by dispatching synthetic
- * pointermove events (which GeometricTrailCursor already listens for), so a
- * stationary hover still demonstrates the same trail renderer as the docs.
- * Real user input takes over momentarily: ambient motion pauses for a beat
+ * pointermove events (which GeometricTrailCursor already listens for), so
+ * the trail paints continuously with no hover or input required. Real
+ * user input takes over momentarily: ambient motion pauses for a beat
  * after any trusted pointer activity to avoid streaks between the virtual
- * and real positions.
+ * and real positions. Offscreen cards cost no frames.
  */
 export function GeometricTrailCursorCardPreview() {
   const previewRef = useRef<HTMLDivElement>(null);
@@ -24,14 +24,13 @@ export function GeometricTrailCursorCardPreview() {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     let raf = 0;
-    let hovering = false;
     let visible = true;
     let driving = false;
     let lastRealInput = 0;
     const start = performance.now();
 
     const updateDriving = () => {
-      const next = hovering && visible;
+      const next = visible;
       if (next === driving) return;
       driving = next;
       cancelAnimationFrame(raf);
@@ -47,17 +46,6 @@ export function GeometricTrailCursorCardPreview() {
       { threshold: 0.05 },
     );
     observer.observe(host);
-
-    const onEnter = () => {
-      hovering = true;
-      updateDriving();
-    };
-    const onLeave = () => {
-      hovering = false;
-      updateDriving();
-    };
-    host.addEventListener("pointerenter", onEnter);
-    host.addEventListener("pointerleave", onLeave);
 
     // Trusted (real) pointer activity pauses the ambient driver briefly so
     // user motion draws cleanly without connecting streaks.
@@ -95,8 +83,6 @@ export function GeometricTrailCursorCardPreview() {
       driving = false;
       cancelAnimationFrame(raf);
       observer.disconnect();
-      host.removeEventListener("pointerenter", onEnter);
-      host.removeEventListener("pointerleave", onLeave);
       host.removeEventListener("pointermove", onRealInput);
       host.removeEventListener("pointerdown", onRealInput);
     };
