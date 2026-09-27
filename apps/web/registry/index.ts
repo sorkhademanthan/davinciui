@@ -738,30 +738,6 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "ambient-audio-toggle",
     addedAt: "2026-09-15",
   },
-  "waveform-audio-player": {
-    title: "Waveform Audio Player",
-    description:
-      "A tactile audio player with waveform scrubbing, accurate playback time, and user-initiated sound.",
-    category: "Sound",
-    slug: "waveform-audio-player",
-    addedAt: "2026-09-25",
-  },
-  "voice-note": {
-    title: "Voice Note",
-    description:
-      "A message-style audio player with waveform scrubbing, playback speed, and familiar conversation context.",
-    category: "Sound",
-    slug: "voice-note",
-    addedAt: "2026-09-25",
-  },
-  "audio-spectrum": {
-    title: "Audio Spectrum",
-    description:
-      "A live frequency visualizer with real audio analysis, playback, and precise scrubbing.",
-    category: "Sound",
-    slug: "audio-spectrum",
-    addedAt: "2026-09-25",
-  },
   "interaction-sound-kit": {
     title: "Interaction Sound Kit",
     description:

@@ -234,18 +234,6 @@ const docsImportMap: Record<
     import("@/components/docs/ambient-audio-toggle").then((m) => ({
       default: m.AmbientAudioToggleDocs,
     })),
-  "waveform-audio-player": () =>
-    import("@/components/docs/waveform-audio-player").then((m) => ({
-      default: m.WaveformAudioPlayerDocs,
-    })),
-  "voice-note": () =>
-    import("@/components/docs/voice-note").then((m) => ({
-      default: m.VoiceNoteDocs,
-    })),
-  "audio-spectrum": () =>
-    import("@/components/docs/audio-spectrum").then((m) => ({
-      default: m.AudioSpectrumDocs,
-    })),
   "interaction-sound-kit": () =>
     import("@/components/docs/interaction-sound-kit").then((m) => ({
       default: m.InteractionSoundKitDocs,
