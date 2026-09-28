@@ -1,0 +1,102 @@
+{
+  "title": "The details builders notice",
+  "description": "A glimpse at how DavinciUI could fit into a creative workflow. These are AI-generated examples until real community feedback comes in.",
+  "testimonials": [
+    {
+      "id": "preview-first",
+      "name": "Frontend developer",
+      "role": "Component discovery",
+      "initials": "FD",
+      "sample": true,
+      "quote": "Seeing the animation before opening the docs makes it so much easier to find the right component for a page."
+    },
+    {
+      "id": "motion-details",
+      "name": "Design engineer",
+      "role": "Interaction design",
+      "initials": "DE",
+      "sample": true,
+      "quote": "The little motion details make the interface feel considered. I can start with a working interaction and tune it to match the rest of the product."
+    },
+    {
+      "id": "copy-paste",
+      "name": "React builder",
+      "role": "Product development",
+      "initials": "RB",
+      "sample": true,
+      "quote": "I like being able to inspect a component, add it to my project, and still own every line of the result."
+    },
+    {
+      "id": "showcase",
+      "name": "Creative developer",
+      "role": "Portfolio projects",
+      "initials": "CD",
+      "sample": true,
+      "quote": "This is the kind of library I would reach for when a portfolio needs one memorable moment, not a whole page of effects."
+    },
+    {
+      "id": "time-saved",
+      "name": "Independent maker",
+      "role": "Shipping a new site",
+      "initials": "IM",
+      "sample": true,
+      "quote": "A polished carousel usually takes me a weekend of edge cases. Having the behavior and styling together would let me spend that time on the content instead."
+    },
+    {
+      "id": "visual-range",
+      "name": "UI designer",
+      "role": "Visual exploration",
+      "initials": "UI",
+      "sample": true,
+      "quote": "The range of previews gives me ideas without making every interface look like the same template."
+    },
+    {
+      "id": "documentation",
+      "name": "Frontend lead",
+      "role": "Team workflow",
+      "initials": "FL",
+      "sample": true,
+      "quote": "A live preview and a clear install path are exactly what my team needs to evaluate an interaction quickly."
+    },
+    {
+      "id": "customization",
+      "name": "Product engineer",
+      "role": "React applications",
+      "initials": "PE",
+      "sample": true,
+      "quote": "The best part is that the components feel like a starting point. I can adjust the motion, copy, and layout instead of working around a black box."
+    },
+    {
+      "id": "hover",
+      "name": "Motion designer",
+      "role": "Microinteractions",
+      "initials": "MD",
+      "sample": true,
+      "quote": "The hover states are subtle, but they give each card a little personality."
+    },
+    {
+      "id": "rapid-prototype",
+      "name": "Startup designer",
+      "role": "Rapid prototyping",
+      "initials": "SD",
+      "sample": true,
+      "quote": "I could move from a rough idea to a believable prototype much faster with these previews as a starting point."
+    },
+    {
+      "id": "craft",
+      "name": "Web developer",
+      "role": "Interface craft",
+      "initials": "WD",
+      "sample": true,
+      "quote": "It is refreshing to see animation treated as part of the component rather than something pasted on afterward."
+    },
+    {
+      "id": "discoverability",
+      "name": "Design systems engineer",
+      "role": "Component libraries",
+      "initials": "DS",
+      "sample": true,
+      "quote": "Being able to compare real interactions in one place makes discovery feel effortless. The source can then be adapted to the system I am already using."
+    }
+  ]
+}
