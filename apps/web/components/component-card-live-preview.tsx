@@ -256,6 +256,22 @@ const GlassSceneDockCardPreview = dynamic(
   { ssr: false },
 );
 
+const LensDriftGridCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/lens-drift-grid-card-preview").then(
+      (module) => module.LensDriftGridCardPreview,
+    ),
+  { ssr: false },
+);
+
+const OrbitSpiralGalleryCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/orbit-spiral-gallery-card-preview").then(
+      (module) => module.OrbitSpiralGalleryCardPreview,
+    ),
+  { ssr: false },
+);
+
 const LiquidRevealButtonCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/liquid-reveal-button-card-preview").then(
@@ -383,14 +399,6 @@ const ScrollMediaExpandCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/scroll-media-expand-card-preview").then(
       (module) => module.ScrollMediaExpandCardPreview,
-    ),
-  { ssr: false },
-);
-
-const ScrollBlurOverlayCardPreview = dynamic(
-  () =>
-    import("@/components/docs/previews/scroll-blur-overlay-card-preview").then(
-      (module) => module.ScrollBlurOverlayCardPreview,
     ),
   { ssr: false },
 );
@@ -578,7 +586,9 @@ type ComponentCardLivePreviewProps = {
     | "hover-cards"
     | "profile-carousel"
     | "services-showcase"
-    | "glass-scene-dock"
+      | "glass-scene-dock"
+      | "lens-drift-grid"
+      | "orbit-spiral-gallery"
     | "liquid-reveal-button"
     | "animated-metric"
     | "nudge-button"
@@ -599,7 +609,6 @@ type ComponentCardLivePreviewProps = {
     | "scroll-sync-gallery"
     | "horizontal-scroll-gallery"
     | "scroll-media-expand"
-    | "scroll-blur-overlay"
     | "scroll-timeline"
     | "fill-preloader"
     | "staircase-preloader"
@@ -653,8 +662,6 @@ export function ComponentCardLivePreview({
       ref={hostRef}
       aria-hidden={slug !== "ambient-audio-toggle" && slug !== "interaction-sound-kit" && slug !== "voice-recorder" && slug !== "keyboard-command-sounds" && slug !== "upload-sound-status"}
       className={`absolute inset-0 flex items-center justify-center overflow-hidden ${
-        slug === "team-slide-reveal" ? "pointer-events-none " : ""
-      }${
         slug === "ambient-audio-toggle" ? "bg-[#eef4f0] dark:bg-[#101815]" : "bg-background"
       }`}
     >
@@ -677,6 +684,8 @@ export function ComponentCardLivePreview({
           slug !== "vertical-image-marquee" &&
           slug !== "hover-cards" &&
           slug !== "services-showcase" &&
+          slug !== "lens-drift-grid" &&
+          slug !== "orbit-spiral-gallery" &&
           slug !== "glass-scene-dock" &&
           slug !== "liquid-reveal-button" &&
           slug !== "animated-metric" &&
@@ -846,6 +855,10 @@ export function ComponentCardLivePreview({
         <ServicesShowcaseCardPreview />
       ) : slug === "glass-scene-dock" ? (
         <GlassSceneDockCardPreview />
+      ) : slug === "lens-drift-grid" ? (
+        <LensDriftGridCardPreview />
+      ) : slug === "orbit-spiral-gallery" ? (
+        <OrbitSpiralGalleryCardPreview />
       ) : slug === "liquid-reveal-button" ? (
         <LiquidRevealButtonCardPreview />
       ) : slug === "animated-metric" ? (
@@ -886,8 +899,6 @@ export function ComponentCardLivePreview({
         <HorizontalScrollGalleryCardPreview />
       ) : slug === "scroll-media-expand" ? (
         <ScrollMediaExpandCardPreview />
-      ) : slug === "scroll-blur-overlay" ? (
-        <ScrollBlurOverlayCardPreview />
       ) : slug === "scroll-timeline" ? (
         <ScrollTimelineCardPreview />
       ) : slug === "fill-preloader" ? (
