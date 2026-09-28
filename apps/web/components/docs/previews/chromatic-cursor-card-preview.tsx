@@ -2,9 +2,16 @@
 
 import { useRef } from "react";
 import { ChromaticCursor } from "@workspace/ui/components/chromatic-cursor";
+import { useAmbientCursorDrive } from "./use-ambient-cursor-drive";
 
+/**
+ * Self-playing card thumbnail. The ambient driver steers a virtual pointer
+ * so the RGB trails paint continuously with no hover required.
+ */
 export function ChromaticCursorCardPreview() {
   const previewRef = useRef<HTMLDivElement>(null);
+
+  useAmbientCursorDrive(previewRef, { phase: 0.7 });
 
   return (
     <div
