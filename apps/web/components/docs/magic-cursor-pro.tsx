@@ -28,6 +28,7 @@ export async function MagicCursorProDocs() {
     { name: "disableOnPortrait", type: "boolean", default: "true", description: "Disable on portrait screens in addition to touch devices." },
     { name: "zIndex", type: "number", default: "9999", description: "Overlay stacking order." },
     { name: "disabled", type: "boolean", default: "false", description: "Disable without unmounting." },
+    { name: "disableManualInput", type: "boolean", default: "false", description: "Ignore real pointer input; follow only synthetic/programmatic movement (self-playing previews)." },
     { name: "containerRef", type: "RefObject<HTMLElement>", description: "Optionally constrain pointer tracking and rendering to a positioned host." },
     { name: "className", type: "string", description: "Classes for the cursor wrapper." },
   ]} />;

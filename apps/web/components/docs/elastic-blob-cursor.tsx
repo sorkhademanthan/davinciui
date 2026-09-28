@@ -43,6 +43,7 @@ export async function ElasticBlobCursorDocs() {
         { name: "hideNativeCursor", type: "boolean", default: "true", description: "Hide the browser cursor while active on fine-pointer devices." },
         { name: "zIndex", type: "number", default: "9999", description: "Overlay stacking order." },
         { name: "disabled", type: "boolean", default: "false", description: "Turn the cursor off without unmounting it." },
+        { name: "disableManualInput", type: "boolean", default: "false", description: "Ignore real pointer input; follow only synthetic/programmatic movement (self-playing previews)." },
         { name: "containerRef", type: "RefObject<HTMLElement>", description: "Host that constrains tracking/rendering. Required for container mode." },
         { name: "className", type: "string", description: "Additional class name applied to the cursor element." },
       ]}
