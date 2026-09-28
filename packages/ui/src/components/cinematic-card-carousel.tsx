@@ -27,6 +27,8 @@ export interface CinematicCardCarouselProps
   items: CinematicCardItem[];
   initialIndex?: number;
   loop?: boolean;
+  /** Advance automatically every N milliseconds. Disabled by default and when reduced motion is requested. */
+  autoPlayInterval?: number;
   onIndexChange?: (index: number) => void;
   /**
    * Wheel / trackpad-scroll navigation.
@@ -291,6 +293,7 @@ export function CinematicCardCarousel({
   items,
   initialIndex = 0,
   loop = true,
+  autoPlayInterval,
   onIndexChange,
   wheelNavigation = "horizontal",
   showArrows = true,
@@ -362,6 +365,20 @@ export function CinematicCardCarousel({
     setActiveIndex(clampedInitial);
   }, [clampedInitial, position]);
 
+  const previousLoop = React.useRef(loop);
+  React.useEffect(() => {
+    if (previousLoop.current === loop) return;
+    previousLoop.current = loop;
+    if (count === 0) return;
+
+    // Looping can leave the motion value beyond the first cycle. Normalize it
+    // before non-looping distances are calculated so the active card stays visible.
+    const normalized = mod(Math.round(position.get()), count);
+    position.set(normalized);
+    activeRef.current = normalized;
+    setActiveIndex(normalized);
+  }, [count, loop, position]);
+
   const goTo = React.useCallback(
     (index: number) => {
       if (count === 0) return;
@@ -400,6 +417,18 @@ export function CinematicCardCarousel({
     },
     [count, goTo, loop, position],
   );
+
+  React.useEffect(() => {
+    if (!autoPlayInterval || autoPlayInterval < 500 || reduceMotion || count < 2) return;
+
+    const timer = window.setInterval(() => {
+      if (document.visibilityState !== "visible" || dragState.current) return;
+      if (!loop && Math.round(position.get()) >= count - 1) return;
+      step(1);
+    }, autoPlayInterval);
+
+    return () => window.clearInterval(timer);
+  }, [autoPlayInterval, count, loop, position, reduceMotion, step]);
 
   // Wheel / trackpad-scroll navigation. Native non-passive listener —
   // React's root wheel listener is passive, so preventDefault would be

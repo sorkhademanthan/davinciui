@@ -5,14 +5,23 @@ import { readComponentSource } from "@/lib/source-code";
 const usageCode = `import { GlassSceneDock } from "@/components/ui/glass-scene-dock"
 
 const scenes = [
-  { id: "ember", image: "/images/ember.jpg", alt: "Warm portrait haze" },
-  { id: "prism", image: "/images/prism.jpg", alt: "Prism portrait" },
+  {
+    id: "ember",
+    title: "Ember glow",
+    background: "linear-gradient(158deg, #fff8f0, #ffd8c0)",
+    darkBackground: "linear-gradient(158deg, #1c0f08, #150a07)",
+  },
+  {
+    id: "prism",
+    title: "Prism drift",
+    background: "linear-gradient(162deg, #f6f3ff, #d6ecff)",
+    darkBackground: "linear-gradient(162deg, #120e24, #0a1830)",
+  },
   { id: "tide", image: "/images/tide.jpg", alt: "Blue profile" },
-  { id: "dune", image: "/images/dune.jpg", alt: "Teal echo" },
-  { id: "mono", image: "/images/mono.jpg", alt: "Monochrome portrait" },
 ]
 
 export default function SceneSection() {
+  // Omit image for pure-CSS gradient scenes — pass image to use photography.
   return <GlassSceneDock scenes={scenes} />
 }`;
 
@@ -24,7 +33,7 @@ export async function GlassSceneDockDocs() {
   return (
     <DocsPageLayout
       title="Glass Scene Dock"
-      description="A floating glass navigation dock pinned over scroll-driven photographic scenes — a travelling glass highlight glides between icons while scrolling crossfades the cinematic backdrop. One container-query component adapts to card, side-panel, and fullscreen sizes."
+      description="A floating glass navigation dock pinned over scroll-driven gradient scenes — no image files needed. A travelling glass highlight glides between icons while scrolling crossfades the backdrop. Pass image per scene to use photography instead. Fully light/dark aware."
       preview={<GlassSceneDockPreview />}
       previewCode={usageCode}
       usageCode={usageCode}
@@ -39,7 +48,7 @@ export async function GlassSceneDockDocs() {
           name: "scenes",
           type: "GlassScene[]",
           description:
-            "Background scenes in order. Each scene needs id + image, optional alt. The dock shows one item per scene.",
+            "Background scenes in order: id plus either image (+ optional alt) for photography, or background / darkBackground CSS gradients — no files needed. Optional title for screen readers. The dock shows one item per scene.",
         },
         {
           name: "items",

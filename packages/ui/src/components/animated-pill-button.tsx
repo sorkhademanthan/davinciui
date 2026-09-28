@@ -216,19 +216,21 @@ export function AnimatedPillButton({
   const inner = (
     <>
       <span ref={fillRef} aria-hidden="true" className="apb-fill" />
+      <span aria-hidden="true" className="apb-shine" />
       <span className="apb-white">{content}</span>
       <span ref={darkRef} aria-hidden="true" className="apb-dark">
         <span className="apb-dark-label">{content}</span>
         <span aria-hidden="true" className="apb-spacer" />
       </span>
       <span aria-hidden="true" className="apb-icon">
+        <span className="apb-ring" />
         <span className="apb-dot" />
         <svg
           className="apb-arrow"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
-          strokeWidth={1.8}
+          strokeWidth={2}
           strokeLinecap="round"
           strokeLinejoin="round"
           focusable="false"
@@ -270,16 +272,19 @@ export function AnimatedPillButton({
 
 const APB_CSS = `
 .apb-root {
-  --apb-ease: cubic-bezier(0.76, 0, 0.24, 1);
+  --apb-ease: cubic-bezier(0.65, 0, 0.35, 1);
+  --apb-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
   --apb-anchor: 2.55em;
   --apb-bg: #000000;
   --apb-active: #19CBEA;
   --apb-txt: #FFFFFF;
   --apb-active-txt: #000000;
+  --apb-ring: color-mix(in srgb, #ffffff 14%, transparent);
   position: relative;
+  isolation: isolate;
   display: inline-flex;
   align-items: center;
-  gap: 1.1em;
+  gap: 1em;
   max-width: 100%;
   overflow: hidden;
   white-space: nowrap;
@@ -289,34 +294,82 @@ const APB_CSS = `
   border: none;
   border-radius: 9999px;
   font-family: inherit;
-  font-weight: 550;
+  font-weight: 500;
   font-size: calc(clamp(13px, 4.5cqi, 19px) * var(--apb-scale, 1));
-  letter-spacing: 0.01em;
+  letter-spacing: -0.005em;
   line-height: 1.15;
-  padding: 1em 1.2em 1em 2em;
+  padding: 0.95em 1.05em 0.95em 1.9em;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
+  box-shadow:
+    inset 0 0 0 1px var(--apb-ring),
+    inset 0 1px 0 0 color-mix(in srgb, #ffffff 10%, transparent),
+    0 10px 28px -12px color-mix(in srgb, #000000 45%, transparent),
+    0 2px 6px -2px color-mix(in srgb, #000000 30%, transparent);
   opacity: 0;
   translate: 0 14px;
+  filter: blur(6px);
+  transition:
+    translate 450ms var(--apb-ease),
+    scale 300ms var(--apb-ease),
+    box-shadow 450ms var(--apb-ease),
+    background-color 300ms ease,
+    filter 500ms ease,
+    opacity 500ms ease;
 }
 .apb-root[data-inview="true"] {
   opacity: 1;
   translate: 0 0;
-  transition: opacity 500ms ease, translate 500ms ease;
+  filter: blur(0);
 }
+.apb-root[data-active="true"] {
+  translate: 0 -1px;
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, #000000 12%, transparent),
+    inset 0 1px 0 0 color-mix(in srgb, #ffffff 25%, transparent),
+    0 18px 38px -14px color-mix(in srgb, var(--apb-active, #19CBEA) 55%, #000000),
+    0 4px 10px -4px color-mix(in srgb, #000000 35%, transparent);
+}
+.apb-root:active { translate: 0 0; scale: 0.97; }
 /* Theme-aware defaults: reference black pill in light mode,
    auto-inverted white pill in dark mode. Explicit color props
    (inline vars) always take precedence over both. */
 .dark .apb-root {
   --apb-bg: #FAFAF9;
   --apb-txt: #0A0A0A;
+  --apb-ring: color-mix(in srgb, #000000 10%, transparent);
 }
-.apb-root:disabled { cursor: not-allowed; opacity: 0.55; }
+.apb-root:disabled { cursor: not-allowed; opacity: 0.55; filter: none; }
 .apb-root:focus { outline: none; }
-.apb-root:focus-visible { outline: 2px solid var(--apb-active, #19CBEA); outline-offset: 4px; }
+.apb-root:focus-visible {
+  outline: 2px solid var(--apb-active, #19CBEA);
+  outline-offset: 4px;
+  box-shadow:
+    inset 0 0 0 1px var(--apb-ring),
+    0 0 0 5px color-mix(in srgb, var(--apb-active, #19CBEA) 28%, transparent),
+    0 10px 28px -12px color-mix(in srgb, #000000 45%, transparent);
+}
+
+/* top gloss — quiet glass highlight that sells the material */
+.apb-root::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  border-radius: inherit;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0) 42%);
+  opacity: 0.7;
+  pointer-events: none;
+  transition: opacity 400ms ease;
+}
+.apb-root[data-active="true"]::after { opacity: 0.35; }
+.dark .apb-root::after {
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0) 45%);
+}
 
 /* cyan expansion layer — oversized circle centered on the interaction
-   point (written imperatively per entry; left/top carry no transition). */
+   point (written imperatively per entry; left/top carry no transition).
+   Luminous rim + radial core make the curved leading edge read liquid. */
 .apb-fill {
   position: absolute;
   z-index: 1;
@@ -327,20 +380,48 @@ const APB_CSS = `
   transform: translate(-50%, -50%);
   scale: 0;
   border-radius: 50%;
-  background: var(--apb-active, #19CBEA);
+  background:
+    radial-gradient(circle at 50% 42%, color-mix(in srgb, #ffffff 26%, var(--apb-active, #19CBEA)) 0%, var(--apb-active, #19CBEA) 58%);
+  box-shadow:
+    0 0 0 1.5px color-mix(in srgb, #ffffff 55%, transparent),
+    0 0 44px 6px color-mix(in srgb, var(--apb-active, #19CBEA) 65%, transparent);
   pointer-events: none;
   will-change: scale;
-  transition: scale 550ms var(--apb-ease);
+  transition: scale 620ms var(--apb-ease);
 }
 .apb-root[data-active="true"] .apb-fill { scale: 1; }
 
-/* base label above the fill */
+/* gloss sweep — skewed light band chasing the wipe, sells "liquid" */
+.apb-shine {
+  position: absolute;
+  z-index: 2;
+  top: -20%;
+  bottom: -20%;
+  left: 0;
+  width: 34%;
+  background: linear-gradient(100deg, transparent 20%, rgba(255, 255, 255, 0.5) 50%, transparent 80%);
+  transform: translateX(-140%) skewX(-14deg);
+  opacity: 0;
+  pointer-events: none;
+}
+.apb-root[data-active="true"] .apb-shine {
+  opacity: 1;
+  transform: translateX(340%) skewX(-14deg);
+  transition: transform 750ms var(--apb-ease) 90ms, opacity 200ms ease 90ms;
+}
+.apb-root:not([data-active="true"]) .apb-shine {
+  transition: transform 500ms var(--apb-ease), opacity 300ms ease;
+}
+
+/* base label above the fill — drifts toward the arrow on hover */
 .apb-white {
   position: relative;
   z-index: 2;
   color: var(--apb-txt, #FFFFFF);
   user-select: none;
+  transition: transform 450ms var(--apb-ease), letter-spacing 450ms var(--apb-ease);
 }
+.apb-root[data-active="true"] .apb-white { transform: translateX(3px); letter-spacing: 0.005em; }
 
 /* dark duplicate revealed by the same circular mask */
 .apb-dark {
@@ -349,8 +430,8 @@ const APB_CSS = `
   z-index: 3;
   display: flex;
   align-items: center;
-  gap: 1.1em;
-  padding: 1em 1.2em 1em 2em;
+  gap: 1em;
+  padding: 0.95em 1.05em 0.95em 1.9em;
   color: var(--apb-active-txt, #000000);
   font: inherit;
   letter-spacing: inherit;
@@ -358,11 +439,16 @@ const APB_CSS = `
   white-space: nowrap;
   pointer-events: none;
   clip-path: circle(0 at var(--apb-ox, calc(100% - var(--apb-anchor))) var(--apb-oy, 50%));
-  transition: clip-path 550ms var(--apb-ease);
+  transition: clip-path 620ms var(--apb-ease);
   will-change: clip-path;
 }
 .apb-root[data-active="true"] .apb-dark { clip-path: circle(220% at var(--apb-ox, calc(100% - var(--apb-anchor))) var(--apb-oy, 50%)); }
-.apb-dark-label { user-select: none; }
+.apb-dark-label {
+  user-select: none;
+  transform: translateX(0);
+  transition: transform 450ms var(--apb-ease);
+}
+.apb-root[data-active="true"] .apb-dark-label { transform: translateX(3px); }
 .apb-spacer { flex: none; width: 2.7em; height: 2.7em; visibility: hidden; }
 
 /* morphing dot → arrow circle */
@@ -376,36 +462,59 @@ const APB_CSS = `
   place-items: center;
   pointer-events: none;
 }
+.apb-ring {
+  grid-area: 1 / 1;
+  width: 2.35em;
+  height: 2.35em;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, currentColor 28%, transparent);
+  opacity: 0.9;
+  scale: 1;
+  transition: opacity 350ms ease, scale 500ms var(--apb-spring);
+}
+.apb-root[data-active="true"] .apb-ring { opacity: 0; scale: 0.7; }
 .apb-dot {
   grid-area: 1 / 1;
   width: 0.62em;
   height: 0.62em;
   border-radius: 50%;
   background: var(--apb-active, #19CBEA);
+  box-shadow: 0 0 12px 1px color-mix(in srgb, var(--apb-active, #19CBEA) 70%, transparent);
   scale: 1;
-  transition: scale 450ms var(--apb-ease), background-color 300ms ease;
+  transition: scale 500ms var(--apb-spring), background-color 300ms ease, box-shadow 300ms ease;
   will-change: scale;
 }
-.apb-root[data-active="true"] .apb-dot { scale: 4.35; background: #0B0B0C; }
+.apb-root[data-active="true"] .apb-dot {
+  scale: 4.35;
+  background: #0B0B0C;
+  box-shadow: 0 6px 16px -6px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
 .apb-arrow {
   grid-area: 1 / 1;
-  width: 1.25em;
-  height: 1.25em;
+  width: 1.3em;
+  height: 1.3em;
   color: #FFFFFF;
   opacity: 0;
-  transform: rotate(135deg) scale(0.5);
-  transition: opacity 220ms ease 150ms, transform 300ms var(--apb-ease) 150ms;
+  transform: translate(-0.45em, 0.45em) scale(0.5);
+  transition: opacity 200ms ease 120ms, transform 480ms var(--apb-spring) 120ms;
   will-change: transform, opacity;
 }
-.apb-root[data-active="true"] .apb-arrow { opacity: 1; transform: rotate(0deg) scale(1); }
+.apb-root[data-active="true"] .apb-arrow { opacity: 1; transform: translate(0, 0) scale(1); }
+.apb-root[data-active="true"] .apb-icon { animation: apb-nudge 480ms var(--apb-spring) 200ms; }
+@keyframes apb-nudge {
+  0% { transform: translateX(0); }
+  40% { transform: translateX(2.5px); }
+  100% { transform: translateX(0); }
+}
 
 @media (prefers-reduced-motion: reduce) {
-  .apb-root { opacity: 1; translate: none; transition: none; }
-  .apb-fill, .apb-dark { display: none; }
-  .apb-dot, .apb-arrow { transition-duration: 120ms; transition-delay: 0ms; }
+  .apb-root { opacity: 1; translate: none; filter: none; transition: none; }
+  .apb-root::after, .apb-fill, .apb-dark, .apb-shine { display: none; }
+  .apb-icon { animation: none; }
+  .apb-dot, .apb-arrow, .apb-white { transition-duration: 120ms; transition-delay: 0ms; }
   .apb-root[data-active="true"] { background: var(--apb-active, #19CBEA); color: var(--apb-active-txt, #000000); transition: background-color 120ms ease, color 120ms ease; }
-  .apb-root[data-active="true"] .apb-white { color: var(--apb-active-txt, #000000); }
-  .apb-root[data-active="true"] .apb-dot { background: #0B0B0C; }
+  .apb-root[data-active="true"] .apb-white { color: var(--apb-active-txt, #000000); transform: none; }
+  .apb-root[data-active="true"] .apb-dot { background: #0B0B0C; box-shadow: none; }
 }
 `;
 

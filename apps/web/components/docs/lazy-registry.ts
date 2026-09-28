@@ -297,10 +297,6 @@ const docsImportMap: Record<
     import("@/components/docs/scroll-media-expand").then((m) => ({
       default: m.ScrollMediaExpandDocs,
     })),
-  "scroll-blur-overlay": () =>
-    import("@/components/docs/scroll-blur-overlay").then((m) => ({
-      default: m.ScrollBlurOverlayDocs,
-    })),
   "scroll-timeline": () =>
     import("@/components/docs/scroll-timeline").then((m) => ({
       default: m.ScrollTimelineDocs,
@@ -397,17 +393,17 @@ const docsImportMap: Record<
     import("@/components/docs/sheet").then((m) => ({
       default: m.SheetDocs,
     })),
-  "fisheye-infinite-grid": () =>
-    import("@/components/docs/fisheye-infinite-grid").then((m) => ({
-      default: m.FisheyeInfiniteGridDocs,
+  "lens-drift-grid": () =>
+    import("@/components/docs/lens-drift-grid").then((m) => ({
+      default: m.LensDriftGridDocs,
     })),
   "radial-fan-deck": () =>
     import("@/components/docs/radial-fan-deck").then((m) => ({
       default: m.RadialFanDeckDocs,
     })),
-  "spiral-3d-slider": () =>
-    import("@/components/docs/spiral-3d-slider").then((m) => ({
-      default: m.Spiral3DSliderDocs,
+  "orbit-spiral-gallery": () =>
+    import("@/components/docs/orbit-spiral-gallery").then((m) => ({
+      default: m.OrbitSpiralGalleryDocs,
     })),
   "navigation-menu": () =>
     import("@/components/docs/navigation-menu").then((m) => ({

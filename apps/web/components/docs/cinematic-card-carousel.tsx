@@ -102,6 +102,12 @@ import {
             "Wrap past the last card back to the first (and vice versa) with no visible reset.",
         },
         {
+          name: "autoPlayInterval",
+          type: "number",
+          description:
+            "Advance the deck automatically every N milliseconds. Disabled by default and when reduced motion is requested.",
+        },
+        {
           name: "onIndexChange",
           type: "(index: number) => void",
           description: "Callback fired when the active card changes.",

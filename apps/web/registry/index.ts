@@ -581,15 +581,13 @@ export const components: Record<string, ComponentMetadata> = {
     addedAt: "2026-09-04",
   },
   // Components
-  "fisheye-infinite-grid": {
-    title: "Fisheye Infinite Grid",
+  "lens-drift-grid": {
+    title: "Lens Drift Grid",
     description:
-      "A dense draggable image wall warped as one continuous fisheye surface with weighted momentum.",
+      "A dense draggable image wall warped as one continuous fisheye surface with weighted momentum and a gentle idle auto-drift.",
     category: "Premium Components",
-    slug: "fisheye-infinite-grid",
+    slug: "lens-drift-grid",
     addedAt: "2026-08-08",
-    previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/component-animations/fisheyeinfinitegrid.webm",
   },
   "cms-scroll-gallery": {
     title: "CMS Scroll Gallery",
@@ -647,14 +645,6 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "scroll-media-expand",
     addedAt: "2026-09-16",
   },
-  "scroll-blur-overlay": {
-    title: "Scroll Blur Overlay",
-    description:
-      "A scroll-reactive frosted-glass sheet — real backdrop blur driven continuously by scroll position, with an extendAbove mode that diffuses the outgoing section.",
-    category: "Premium Components",
-    slug: "scroll-blur-overlay",
-    addedAt: "2026-09-17",
-  },
   "scroll-timeline": {
     title: "Scroll Timeline",
     description:
@@ -663,15 +653,13 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "scroll-timeline",
     addedAt: "2026-09-17",
   },
-  "spiral-3d-slider": {
-    title: "Spiral 3D Slider",
+  "orbit-spiral-gallery": {
+    title: "Orbit Spiral Gallery",
     description:
       "A compact, autoplaying image gallery that responds to scroll along a smooth 3D spiral.",
     category: "Premium Components",
-    slug: "spiral-3d-slider",
+    slug: "orbit-spiral-gallery",
     addedAt: "2026-08-08",
-    previewVideo: "/preview-videos/component-animations/spiral3dslider.webm",
-    previewImage: "/images/spiral-3d-slider/catalog-preview.jpg",
   },
   // Hero Backgrounds
   "silk-aurora": {
@@ -875,7 +863,7 @@ export const components: Record<string, ComponentMetadata> = {
   "glass-scene-dock": {
     title: "Glass Scene Dock",
     description:
-      "A floating glass navigation dock pinned over scroll-driven photographic scenes — a travelling glass highlight glides between icons while scrolling crossfades the cinematic backdrop.",
+      "A floating glass navigation dock pinned over scroll-driven gradient scenes with zero image dependencies — a travelling glass highlight glides between icons while scrolling crossfades the backdrop. Light/dark aware, photography optional per scene.",
     category: "Interactions",
     slug: "glass-scene-dock",
     addedAt: "2026-09-24",

@@ -151,10 +151,11 @@ function ServiceVisual({
               ["--closed-r" as string]: `${geo.closedRotation}deg`,
               ["--open-r" as string]: `${geo.openRotation}deg`,
               ["--depth" as string]: geo.depth,
+              ["--i" as string]: slot,
             }}
           >
             <div className="svc-card h-full w-full">
-              <div className="svc-rest h-full w-full overflow-hidden rounded-[22px] bg-muted">
+              <div className="svc-rest h-full w-full overflow-hidden rounded-[clamp(12px,4.5cqi,22px)] bg-muted">
                 <img
                   src={image.src}
                   alt={image.alt}
@@ -274,7 +275,7 @@ export function ServicesShowcase({
     >
       <style>{SVC_CSS}</style>
 
-      <div className="svc-stage mx-auto flex h-full min-h-[360px] w-full max-w-[760px] items-center justify-center overflow-visible px-8 py-14 sm:min-h-[520px] sm:px-12 sm:py-20">
+      <div className="svc-stage mx-auto flex h-full min-h-[300px] w-full max-w-[560px] items-center justify-center overflow-visible px-6 py-10 sm:min-h-[400px] sm:px-10 sm:py-14">
         <ServiceVisual
           images={images}
           geometry={STACK_GEOMETRY}
@@ -292,18 +293,19 @@ export function ServicesShowcase({
 const SVC_CSS = `
 .svc-root {
   --svc-ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --closed-scale-x: 1.28;
-  --closed-scale-y: 0.78;
+  --closed-scale-x: 1;
+  --closed-scale-y: 0.86;
 }
 /* The gallery keeps the same stack, but gives its miniature more breathing room. */
 .svc-root[data-density="compact"] {
-  --closed-scale-x: 1.14;
-  --closed-scale-y: 0.74;
+  --closed-scale-x: 0.92;
+  --closed-scale-y: 0.82;
 }
-.svc-root[data-density="compact"] .svc-stage { min-height: 100%; padding: 1rem; }
+.svc-root[data-density="compact"] .svc-stage { min-height: 100%; padding: 0.75rem; }
+/* Gallery cards are short (h-48) — the visual is sized to fit the height
+   instead of the width so the stack is never cropped. */
 .svc-root[data-density="compact"] .svc-visual {
-  width: 88%;
-  transform: translateY(-8%);
+  width: 56%;
 }
 
 /* The reference starts as one broad pile, then unfolds into three portraits. */
@@ -339,9 +341,14 @@ const SVC_CSS = `
   animation: svc-autoplay-stack 5.8s var(--svc-ease) infinite, svc-autoplay-layer 5.8s linear infinite;
 }
 @media (hover: hover) and (pointer: fine) {
+  /* Unfold cascades front-to-back; refold cascades back-to-front. */
+  .svc-visual[data-svc-tilt="true"] .svc-s {
+    transition-delay: calc((2 - var(--i, 0)) * 65ms), 0ms;
+  }
   .svc-visual[data-svc-tilt="true"]:hover .svc-s {
     transform: translate3d(0, 0, 0) scaleX(1) scaleY(1) rotate(var(--open-r));
     opacity: 1;
+    transition-delay: calc(var(--i, 0) * 65ms), 0ms;
   }
 }
 

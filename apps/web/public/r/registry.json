@@ -269,6 +269,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "lens-drift-grid",
+      "type": "registry:ui"
+    },
+    {
       "name": "liquid-blob",
       "type": "registry:ui"
     },
@@ -337,6 +341,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "orbit-spiral-gallery",
+      "type": "registry:ui"
+    },
+    {
       "name": "pagination",
       "type": "registry:ui"
     },
@@ -402,10 +410,6 @@
     },
     {
       "name": "scroll-area",
-      "type": "registry:ui"
-    },
-    {
-      "name": "scroll-blur-overlay",
       "type": "registry:ui"
     },
     {

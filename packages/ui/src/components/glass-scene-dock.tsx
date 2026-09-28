@@ -19,8 +19,22 @@ import { cn } from "@workspace/ui/lib/utils";
 
 export interface GlassScene {
   id: string;
-  image: string;
+  /**
+   * Optional photographic background. When omitted the scene renders as a
+   * pure-CSS gradient (no image files needed) using `background` /
+   * `darkBackground`.
+   */
+  image?: string;
   alt?: string;
+  /** Short label for the scene, announced to screen readers. */
+  title?: string;
+  /** CSS `background` for the gradient scene in light mode. */
+  background?: string;
+  /**
+   * CSS `background` for the gradient scene in dark mode.
+   * Falls back to `background` when omitted.
+   */
+  darkBackground?: string;
 }
 
 export interface GlassDockItem {
@@ -50,28 +64,43 @@ export interface GlassSceneDockProps
 const DEFAULT_SCENES: GlassScene[] = [
   {
     id: "ember",
-    image: "/images/spiral-3d-slider/orange-haze.jpg",
-    alt: "Portrait wrapped in warm orange haze",
+    title: "Ember glow",
+    background:
+      "radial-gradient(120% 100% at 18% 8%, #ffe7c4 0%, transparent 55%), radial-gradient(130% 120% at 88% 92%, #ffc4ad 0%, transparent 58%), linear-gradient(158deg, #fff8f0 0%, #ffead7 46%, #ffd8c0 100%)",
+    darkBackground:
+      "radial-gradient(120% 100% at 18% 8%, rgba(255,122,60,0.5) 0%, transparent 55%), radial-gradient(130% 120% at 88% 92%, rgba(255,64,120,0.38) 0%, transparent 58%), linear-gradient(158deg, #1c0f08 0%, #261109 46%, #150a07 100%)",
   },
   {
     id: "prism",
-    image: "/images/spiral-3d-slider/prism-portrait.jpg",
-    alt: "Portrait refracted through a glass prism",
+    title: "Prism drift",
+    background:
+      "radial-gradient(115% 95% at 82% 12%, #d9c8ff 0%, transparent 56%), radial-gradient(125% 115% at 12% 88%, #bfe9ff 0%, transparent 58%), linear-gradient(162deg, #f6f3ff 0%, #e6e2ff 48%, #d6ecff 100%)",
+    darkBackground:
+      "radial-gradient(115% 95% at 82% 12%, rgba(168,130,255,0.5) 0%, transparent 56%), radial-gradient(125% 115% at 12% 88%, rgba(56,190,255,0.42) 0%, transparent 58%), linear-gradient(162deg, #120e24 0%, #171233 48%, #0a1830 100%)",
   },
   {
     id: "tide",
-    image: "/images/spiral-3d-slider/blue-profile.jpg",
-    alt: "Profile drawn in saturated electric blue",
+    title: "Tide line",
+    background:
+      "radial-gradient(120% 100% at 15% 85%, #a9e6d8 0%, transparent 56%), radial-gradient(120% 100% at 85% 15%, #bcd8ff 0%, transparent 56%), linear-gradient(160deg, #f0faf7 0%, #dcf2ec 48%, #cfdffa 100%)",
+    darkBackground:
+      "radial-gradient(120% 100% at 15% 85%, rgba(45,212,180,0.42) 0%, transparent 56%), radial-gradient(120% 100% at 85% 15%, rgba(80,140,255,0.45) 0%, transparent 56%), linear-gradient(160deg, #06231f 0%, #0a2a30 48%, #0a1a3a 100%)",
   },
   {
     id: "dune",
-    image: "/images/spiral-3d-slider/teal-echo.jpg",
-    alt: "Teal echo portrait still",
+    title: "Dune light",
+    background:
+      "radial-gradient(125% 105% at 80% 80%, #f4d9a8 0%, transparent 57%), radial-gradient(115% 95% at 15% 15%, #cde8c9 0%, transparent 55%), linear-gradient(155deg, #fbf6e9 0%, #f2e8cd 48%, #e3d9b8 100%)",
+    darkBackground:
+      "radial-gradient(125% 105% at 80% 80%, rgba(230,170,80,0.4) 0%, transparent 57%), radial-gradient(115% 95% at 15% 15%, rgba(90,200,150,0.36) 0%, transparent 55%), linear-gradient(155deg, #211a0c 0%, #241f10 48%, #141207 100%)",
   },
   {
     id: "mono",
-    image: "/images/spiral-3d-slider/silver-motion.jpg",
-    alt: "Monochrome editorial portrait in motion",
+    title: "Mono study",
+    background:
+      "radial-gradient(120% 100% at 50% 0%, #ffffff 0%, transparent 60%), radial-gradient(130% 120% at 50% 110%, #c9c9d2 0%, transparent 60%), linear-gradient(180deg, #fafafa 0%, #e4e4e7 55%, #d4d4d8 100%)",
+    darkBackground:
+      "radial-gradient(120% 100% at 50% 0%, rgba(255,255,255,0.14) 0%, transparent 60%), radial-gradient(130% 120% at 50% 110%, rgba(120,120,140,0.3) 0%, transparent 60%), linear-gradient(180deg, #17171a 0%, #101013 55%, #0b0b0d 100%)",
   },
 ];
 
@@ -144,16 +173,31 @@ function SceneLayer({
       className="gsd-scene pointer-events-none absolute inset-0 will-change-transform"
       style={{ opacity, scale, y, zIndex: active ? 1 : 0 }}
     >
-      <img
-        src={scene.image}
-        alt={scene.alt ?? ""}
-        draggable={false}
-        loading={priority ? "eager" : "lazy"}
-        decoding="async"
-        fetchPriority={priority ? "high" : "auto"}
-        className="block h-full w-full select-none object-cover"
-        style={{ objectPosition: "50% 50%", transform: "translateZ(0)" }}
-      />
+      {scene.image ? (
+        <img
+          src={scene.image}
+          alt={scene.alt ?? ""}
+          draggable={false}
+          loading={priority ? "eager" : "lazy"}
+          decoding="async"
+          fetchPriority={priority ? "high" : "auto"}
+          className="block h-full w-full select-none object-cover"
+          style={{ objectPosition: "50% 50%", transform: "translateZ(0)" }}
+        />
+      ) : (
+        <>
+          <div
+            aria-hidden
+            className="gsd-gradient block h-full w-full dark:hidden"
+            style={{ background: scene.background ?? "transparent" }}
+          />
+          <div
+            aria-hidden
+            className="gsd-gradient hidden h-full w-full dark:block"
+            style={{ background: scene.darkBackground ?? scene.background ?? "transparent" }}
+          />
+        </>
+      )}
     </motion.div>
   );
 }
@@ -196,7 +240,7 @@ function DockItem({
       onClick={onSelect}
       className={cn(
         "gsd-btn relative flex shrink-0 cursor-pointer items-center justify-center rounded-full outline-none",
-        "focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
+        "focus-visible:ring-2 focus-visible:ring-zinc-900/50 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent dark:focus-visible:ring-white/80",
       )}
       style={{ WebkitTapHighlightColor: "transparent" }}
     >
@@ -211,7 +255,9 @@ function DockItem({
       <span
         className={cn(
           "gsd-icon relative z-10 flex items-center justify-center transition-all duration-200",
-          highlighted ? "scale-[1.05] text-white" : "text-white/60",
+          highlighted
+            ? "scale-[1.05] text-zinc-900 dark:text-white"
+            : "text-zinc-500 dark:text-white/60",
           dimmed && !highlighted && "opacity-70",
         )}
       >
@@ -269,12 +315,17 @@ export function GlassSceneDock({
     setPinnedIndex((prev) => clamp(prev, 0, count - 1));
   }, [count]);
 
-  /* ---- preload every scene so transitions never flash empty ---- */
+  /* ---- preload photographic scenes so transitions never flash empty ---- */
+  /* ---- (gradient scenes need no loading) ---- */
   React.useEffect(() => {
     let cancelled = false;
     const loaders = visibleScenes.map(
       (s) =>
         new Promise<void>((resolve) => {
+          if (!s.image) {
+            resolve();
+            return;
+          }
           const img = new Image();
           img.onload = () => resolve();
           img.onerror = () => resolve();
@@ -432,7 +483,7 @@ export function GlassSceneDock({
       data-mode={mode}
       aria-roledescription="scroll-driven scene gallery"
       className={cn(
-        "gsd-root relative h-full w-full overflow-hidden bg-[#0b0b0d] text-white",
+        "gsd-root relative h-full w-full overflow-hidden bg-zinc-200 text-zinc-950 dark:bg-[#0b0b0d] dark:text-white",
         className,
       )}
       style={{ containerType: "inline-size", containerName: "gsd", ...style }}
@@ -456,11 +507,11 @@ export function GlassSceneDock({
             className="gsd-stage sticky top-0 w-full overflow-hidden"
             style={{ height: stageH > 0 ? stageH : "100%" }}
           >
-            {/* neutral dark placeholder — never white, no layout shift */}
+            {/* neutral placeholder — theme-matched, never white-flash, no layout shift */}
             <div
               aria-hidden
               className={cn(
-                "absolute inset-0 bg-[#0b0b0d] transition-opacity duration-500",
+                "absolute inset-0 bg-zinc-200 transition-opacity duration-500 dark:bg-[#0b0b0d]",
                 firstLoaded ? "opacity-0" : "opacity-100",
               )}
               style={{ zIndex: 0 }}
@@ -482,15 +533,11 @@ export function GlassSceneDock({
               ))}
             </div>
 
-            {/* soft legibility veil */}
+            {/* soft legibility veil — light and dark variants */}
             <div
               aria-hidden
-              className="pointer-events-none absolute inset-0"
-              style={{
-                zIndex: 10,
-                background:
-                  "radial-gradient(120% 90% at 50% 50%, transparent 55%, rgba(0,0,0,0.28) 100%)",
-              }}
+              className="gsd-veil pointer-events-none absolute inset-0"
+              style={{ zIndex: 10 }}
             />
 
             {/* floating glass dock — pinned to the stage, never to a scene */}
@@ -531,7 +578,8 @@ export function GlassSceneDock({
 
             {/* screen-reader scene announcer */}
             <span className="sr-only" aria-live="polite">
-              {visibleScenes[activeIndex]?.alt ??
+              {visibleScenes[activeIndex]?.title ??
+                visibleScenes[activeIndex]?.alt ??
                 `Scene ${activeIndex + 1} of ${count}`}
             </span>
           </div>
@@ -544,16 +592,33 @@ export function GlassSceneDock({
 const GSD_CSS = `
 .gsd-scroll { scrollbar-width: none; -ms-overflow-style: none; }
 .gsd-scroll::-webkit-scrollbar { display: none; }
-.gsd-scene img { background: #0b0b0d; }
+.gsd-scene img { background: #e4e4e7; }
+.dark .gsd-scene img { background: #0b0b0d; }
 
-/* floating glass pill */
+/* soft legibility veil — light, then dark */
+.gsd-veil {
+  background: radial-gradient(120% 90% at 50% 50%, transparent 58%, rgba(24, 24, 30, 0.16) 100%);
+}
+.dark .gsd-veil {
+  background: radial-gradient(120% 90% at 50% 50%, transparent 55%, rgba(0, 0, 0, 0.28) 100%);
+}
+
+/* floating glass pill — light frosted, then dark glass */
 .gsd-pill {
   padding: clamp(4px, 1.6cqi, 8px);
   gap: clamp(2px, 1cqi, 6px);
   border-radius: 999px;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  border: 1px solid rgba(20, 20, 28, 0.1);
+  box-shadow:
+    0 8px 32px rgba(30, 30, 45, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    inset 0 -1px 0 rgba(20, 20, 30, 0.06);
+}
+.dark .gsd-pill {
   background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(12px) saturate(130%);
-  -webkit-backdrop-filter: blur(12px) saturate(130%);
   border: 1px solid rgba(255, 255, 255, 0.4);
   box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.22),
@@ -573,9 +638,17 @@ const GSD_CSS = `
 
 /* travelling glass highlight — a small glass layer inside the pill */
 .gsd-highlight {
+  background: rgba(24, 24, 30, 0.08);
+  backdrop-filter: blur(8px) saturate(150%);
+  -webkit-backdrop-filter: blur(8px) saturate(150%);
+  border: 1px solid rgba(20, 20, 28, 0.12);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    inset 0 -1px 0 rgba(20, 20, 30, 0.05),
+    0 2px 12px rgba(30, 30, 45, 0.12);
+}
+.dark .gsd-highlight {
   background: rgba(255, 255, 255, 0.16);
-  backdrop-filter: blur(8px) saturate(140%);
-  -webkit-backdrop-filter: blur(8px) saturate(140%);
   border: 1px solid rgba(255, 255, 255, 0.38);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.35),
