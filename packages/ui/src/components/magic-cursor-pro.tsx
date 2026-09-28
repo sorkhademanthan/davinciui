@@ -31,6 +31,12 @@ export interface MagicCursorProProps {
   zIndex?: number;
   /** Turn the cursor off without unmounting it. */
   disabled?: boolean;
+  /**
+   * Ignore real (trusted) pointer input and follow only programmatic /
+   * synthetic pointer movement. Useful for self-playing previews where the
+   * effect should demo itself without stealing the visitor's cursor.
+   */
+  disableManualInput?: boolean;
   /** Optional host that constrains pointer tracking and cursor rendering. */
   containerRef?: React.RefObject<HTMLElement | null>;
   /** Additional class name applied to the cursor wrapper. */
@@ -100,6 +106,7 @@ export function MagicCursorPro({
   disableOnPortrait = true,
   zIndex = 9999,
   disabled = false,
+  disableManualInput = false,
   containerRef,
   className,
 }: MagicCursorProProps) {
@@ -176,6 +183,7 @@ export function MagicCursorPro({
 
     const move = (event: PointerEvent) => {
       if (shouldDisable()) return;
+      if (disableManualInput && event.isTrusted) return;
       const bounds = container?.getBoundingClientRect();
       targetX = event.clientX - (bounds?.left ?? 0);
       targetY = event.clientY - (bounds?.top ?? 0);
@@ -189,7 +197,8 @@ export function MagicCursorPro({
       cursor.style.opacity = "0";
     };
 
-    const press = () => {
+    const press = (event: PointerEvent) => {
+      if (disableManualInput && event.isTrusted) return;
       if (!settingsRef.current.clickSquish || shouldDisable()) return;
       icon.style.transform = "scale(0.76, 1.14)";
     };
@@ -240,7 +249,7 @@ export function MagicCursorPro({
       portrait.removeEventListener("change", updateAvailability);
       reducedMotion.removeEventListener("change", updateAvailability);
     };
-  }, [containerRef, disabled, disableOnPortrait, hideSystemCursor]);
+  }, [containerRef, disabled, disableManualInput, disableOnPortrait, hideSystemCursor]);
 
   // Dark arrow on light stages, light arrow on dark stages; the contrasting
   // outline keeps the icon readable while the spring settles across blends.

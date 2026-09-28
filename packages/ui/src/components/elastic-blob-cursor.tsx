@@ -36,6 +36,12 @@ export interface ElasticBlobCursorProps {
   zIndex?: number;
   /** Turn the cursor off without unmounting it. */
   disabled?: boolean;
+  /**
+   * Ignore real (trusted) pointer input and follow only programmatic /
+   * synthetic pointer movement. Useful for self-playing previews where the
+   * effect should demo itself without stealing the visitor's cursor.
+   */
+  disableManualInput?: boolean;
   /** Host that constrains tracking/rendering. Required for `mode="container"`. */
   containerRef?: React.RefObject<HTMLElement | null>;
   /** Additional class name applied to the cursor element. */
@@ -142,6 +148,7 @@ export function ElasticBlobCursor({
   hideNativeCursor = true,
   zIndex = 9999,
   disabled = false,
+  disableManualInput = false,
   containerRef,
   className,
 }: ElasticBlobCursorProps) {
@@ -321,6 +328,7 @@ export function ElasticBlobCursor({
 
     const move = (event: PointerEvent) => {
       if (isUnavailable()) return;
+      if (disableManualInput && event.isTrusted) return;
       if (event.pointerType !== "mouse" && event.pointerType !== "pen") return;
       pointToTarget(event.clientX, event.clientY);
       if (!hasPointer) {
@@ -333,6 +341,7 @@ export function ElasticBlobCursor({
 
     const handleEnter = (event: PointerEvent) => {
       if (isUnavailable()) return;
+      if (disableManualInput && event.isTrusted) return;
       pointToTarget(event.clientX, event.clientY);
       snapToTarget();
       show();
@@ -362,6 +371,7 @@ export function ElasticBlobCursor({
     };
     const handleMouseOver = (event: MouseEvent) => {
       if (isUnavailable()) return;
+      if (disableManualInput && event.isTrusted) return;
       if (!visible && hasPointer) {
         pointToTarget(event.clientX, event.clientY);
         snapToTarget();
@@ -397,7 +407,7 @@ export function ElasticBlobCursor({
       finePointer.removeEventListener("change", updateAvailability);
       reducedMotion.removeEventListener("change", updateAvailability);
     };
-  }, [containerRef, disabled, hideNativeCursor, mode]);
+  }, [containerRef, disabled, disableManualInput, hideNativeCursor, mode]);
 
   return (
     <div

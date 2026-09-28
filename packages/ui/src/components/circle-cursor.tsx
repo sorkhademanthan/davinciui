@@ -23,6 +23,12 @@ export interface CircleCursorProps {
   zIndex?: number;
   /** Turn the cursor off without unmounting it. */
   disabled?: boolean;
+  /**
+   * Ignore real (trusted) pointer input and follow only programmatic /
+   * synthetic pointer movement. Useful for self-playing previews where the
+   * effect should demo itself without stealing the visitor's cursor.
+   */
+  disableManualInput?: boolean;
   /** Optional host that constrains pointer tracking and cursor rendering. */
   containerRef?: React.RefObject<HTMLElement | null>;
   /** Additional class name applied to the cursor element. */
@@ -99,6 +105,7 @@ export function CircleCursor({
   hideNativeCursor = true,
   zIndex = 9999,
   disabled = false,
+  disableManualInput = false,
   containerRef,
   className,
 }: CircleCursorProps) {
@@ -195,6 +202,7 @@ export function CircleCursor({
 
     const move = (event: PointerEvent) => {
       if (isUnavailable()) return;
+      if (disableManualInput && event.isTrusted) return;
       if (event.pointerType !== "mouse" && event.pointerType !== "pen") return;
       const bounds = container?.getBoundingClientRect();
       targetX = event.clientX - (bounds?.left ?? 0);
@@ -211,6 +219,7 @@ export function CircleCursor({
 
     const handleEnter = (event: PointerEvent) => {
       if (isUnavailable()) return;
+      if (disableManualInput && event.isTrusted) return;
       const bounds = container?.getBoundingClientRect();
       targetX = event.clientX - (bounds?.left ?? 0);
       targetY = event.clientY - (bounds?.top ?? 0);
@@ -243,6 +252,7 @@ export function CircleCursor({
     };
     const handleMouseOver = (event: MouseEvent) => {
       if (isUnavailable()) return;
+      if (disableManualInput && event.isTrusted) return;
       if (!visible && hasPointer) {
         targetX = event.clientX - (container?.getBoundingClientRect().left ?? 0);
         targetY = event.clientY - (container?.getBoundingClientRect().top ?? 0);
@@ -279,7 +289,7 @@ export function CircleCursor({
       finePointer.removeEventListener("change", updateAvailability);
       reducedMotion.removeEventListener("change", updateAvailability);
     };
-  }, [containerRef, disabled, hideNativeCursor]);
+  }, [containerRef, disabled, disableManualInput, hideNativeCursor]);
 
   return (
     <div
