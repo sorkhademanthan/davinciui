@@ -16,7 +16,6 @@ const BASIC_ALL = Object.values(BASIC_SLUGS).flat()
 
 // Scroll-driven experiences showcased under Components > Scroll.
 const SCROLL_SLUGS = new Set([
-  "scroll-blur-overlay",
   "scroll-media-expand",
   "cms-scroll-gallery",
   "interactive-media-accordion",
@@ -88,6 +87,8 @@ function hasLiveCardPreview(
   | "profile-carousel"
   | "services-showcase"
   | "glass-scene-dock"
+  | "lens-drift-grid"
+  | "orbit-spiral-gallery"
   | "liquid-reveal-button"
   | "animated-metric"
   | "nudge-button"
@@ -108,7 +109,6 @@ function hasLiveCardPreview(
   | "scroll-sync-gallery"
   | "horizontal-scroll-gallery"
   | "scroll-media-expand"
-  | "scroll-blur-overlay"
   | "scroll-timeline"
   | "fill-preloader"
   | "staircase-preloader"
@@ -158,6 +158,8 @@ function hasLiveCardPreview(
     slug === "profile-carousel" ||
     slug === "services-showcase" ||
     slug === "glass-scene-dock" ||
+    slug === "lens-drift-grid" ||
+    slug === "orbit-spiral-gallery" ||
     slug === "liquid-reveal-button" ||
     slug === "animated-metric" ||
     slug === "nudge-button" ||
@@ -178,7 +180,6 @@ function hasLiveCardPreview(
     slug === "scroll-sync-gallery" ||
     slug === "horizontal-scroll-gallery" ||
     slug === "scroll-media-expand" ||
-    slug === "scroll-blur-overlay" ||
     slug === "scroll-timeline" ||
     slug === "fill-preloader" ||
     slug === "staircase-preloader" ||

@@ -1,111 +1,90 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { ArrowUpRight, Mail } from "lucide-react";
 import { CopyButton } from "@/components/copy-button";
 import { LandingContent } from "@/components/landing/landing-frame";
 import posthog from "posthog-js";
 
 const emailAddress = "sorkhademanthan@gmail.com";
+const emailHref = `mailto:${emailAddress}?subject=Custom%20design%20work`;
 
-const XIcon = () => (
-  <svg className="size-4" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-  </svg>
-);
-
-const contactCardClass =
-  "relative flex min-h-[210px] flex-col overflow-hidden rounded-[1.35rem] bg-white/70 p-5 text-left shadow-[0_0_0_1px_rgba(0,0,0,0.06),inset_0_8px_18px_-20px_color-mix(in_oklch,var(--foreground)_45%,transparent),inset_0_-8px_18px_-22px_color-mix(in_oklch,var(--foreground)_40%,transparent)] backdrop-blur-xl dark:bg-white/[0.045] dark:shadow-[0_0_0_1px_rgba(255,255,255,0.085),inset_0_8px_18px_-20px_color-mix(in_oklch,var(--foreground)_45%,transparent),inset_0_-8px_18px_-22px_color-mix(in_oklch,var(--foreground)_40%,transparent)] sm:p-6";
+function XIcon() {
+  return (
+    <svg className="size-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+    </svg>
+  );
+}
 
 export function CustomWorkCta() {
   return (
     <LandingContent>
-      <motion.section
-        initial={{ opacity: 0, y: 18, filter: "blur(4px)" }}
-        whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-        viewport={{ once: true, margin: "-80px" }}
-        transition={{ duration: 0.55, ease: [0.23, 1, 0.32, 1] }}
-        className="relative py-16 sm:py-20"
-      >
-        <div className="mx-auto max-w-4xl text-center">
-          <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-zinc-400 dark:text-zinc-600">
-            Contact
-          </p>
-          <h2 className="text-3xl font-bold tracking-tighter text-zinc-900 dark:text-zinc-100 sm:text-4xl">
-            Need something custom?
-          </h2>
-          <p className="mx-auto mt-2.5 max-w-2xl text-sm font-medium leading-6 tracking-tight text-zinc-500 text-pretty dark:text-zinc-500 sm:text-base sm:leading-7">
-            Want a tailored block, landing page, or interactive product
-            section? Reach out, I reply personally.
-          </p>
+      <section className="py-20 sm:py-28" aria-labelledby="custom-work-heading">
+        <div className="relative overflow-hidden rounded-[28px] border border-zinc-200 bg-[#f7f7f6] px-6 py-8 dark:border-white/[0.08] dark:bg-[#141414] sm:px-10 sm:py-12 lg:px-14 lg:py-14">
+          <div className="pointer-events-none absolute -right-28 -top-44 size-[430px] rounded-full bg-white/75 blur-3xl dark:bg-white/[0.025]" aria-hidden="true" />
 
-          <div className="mx-auto mt-5 grid max-w-4xl grid-cols-1 gap-2 text-left md:grid-cols-2">
-            <div className={contactCardClass}>
-              <div className="flex size-10 items-center justify-center rounded-full bg-zinc-950 text-white shadow-[0_1px_1px_rgba(0,0,0,0.10),0_8px_20px_-12px_rgba(0,0,0,0.45)] dark:bg-white dark:text-zinc-950">
-                <Mail className="size-4" />
-              </div>
+          <div className="relative grid items-center gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-16">
+            <div>
+              <p className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-zinc-500 dark:text-zinc-400">
+                Custom work
+              </p>
+              <h2 id="custom-work-heading" className="max-w-[580px] text-[clamp(2.25rem,4.2vw,3.75rem)] font-medium leading-[1.06] tracking-[-0.055em] text-zinc-950 dark:text-white">
+                Have an idea that needs its own motion?
+              </h2>
+              <p className="mt-5 max-w-[520px] text-base leading-7 text-zinc-600 dark:text-zinc-400">
+                From a tailored component to a full landing page, tell me what you are building. I will reply personally.
+              </p>
 
-              <div className="mt-7">
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-400 dark:text-zinc-600">
-                  Email
-                </p>
-                <p className="mt-2 break-words text-lg font-semibold tracking-[-0.02em] text-zinc-900 dark:text-zinc-100 sm:text-xl">
-                  {emailAddress}
-                </p>
-                <p className="mt-2 text-sm leading-6 text-zinc-500 text-pretty dark:text-zinc-500">
-                  For custom work, partnerships, and anything detailed.
-                </p>
-              </div>
+              <a
+                href={emailHref}
+                onClick={() => posthog.capture("custom_work_contact_started")}
+                className="group mt-8 inline-flex min-h-11 items-center justify-center gap-3 rounded-full bg-zinc-950 px-5 text-sm font-semibold text-white transition-[background-color,transform] hover:-translate-y-0.5 hover:bg-zinc-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 focus-visible:ring-offset-2 focus-visible:ring-offset-[#f7f7f6] dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200 dark:focus-visible:ring-offset-[#141414]"
+              >
+                Tell me about it
+                <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true" />
+              </a>
+            </div>
 
-              <div className="mt-auto flex items-center gap-2 pt-6">
-                <a
-                  href={`mailto:${emailAddress}?subject=Custom%20design%20work`}
-                  onClick={() => posthog.capture("custom_work_contact_started")}
-                  className="group inline-flex h-9 items-center justify-center gap-2 rounded-full bg-foreground px-3.5 text-sm font-medium text-background transition-opacity hover:opacity-90"
-                >
-                  Send an email
-                  <ArrowUpRight className="size-3.5 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-                </a>
+            <div className="overflow-hidden rounded-[20px] border border-zinc-200 bg-white shadow-[0_14px_35px_-28px_rgba(0,0,0,0.24)] dark:border-white/[0.09] dark:bg-[#1b1b1b]">
+              <div className="grid grid-cols-[44px_minmax(0,1fr)_36px] items-center gap-x-3 gap-y-3 border-b border-zinc-100 px-5 py-6 dark:border-white/[0.07] sm:flex sm:gap-4 sm:px-6">
+                <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-zinc-100 text-zinc-800 dark:bg-white/[0.08] dark:text-zinc-100">
+                  <Mail className="size-5" aria-hidden="true" />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">For projects and detailed ideas</p>
+                  <a href={emailHref} className="mt-1 hidden truncate text-sm font-semibold text-zinc-900 underline-offset-4 hover:underline focus-visible:underline dark:text-white sm:block sm:text-base">
+                    {emailAddress}
+                  </a>
+                </div>
                 <CopyButton
                   code={emailAddress}
                   absolute={false}
-                  className="flex size-9 items-center justify-center rounded-full border border-black/[0.07] bg-white/55 p-0 text-zinc-400 transition-colors hover:border-black/10 hover:bg-white hover:text-zinc-950 dark:border-white/[0.085] dark:bg-white/[0.035] dark:text-zinc-500 dark:hover:border-white/12 dark:hover:bg-white/[0.07] dark:hover:text-white/80"
+                  className="flex size-9 shrink-0 items-center justify-center rounded-full border border-zinc-200 p-0 text-zinc-500 transition-colors hover:border-zinc-400 hover:text-zinc-950 dark:border-white/[0.12] dark:text-zinc-400 dark:hover:border-white/30 dark:hover:text-white"
                 />
-              </div>
-            </div>
-
-            <div className={contactCardClass}>
-              <div className="flex size-10 items-center justify-center rounded-full bg-zinc-950 text-white shadow-[0_1px_1px_rgba(0,0,0,0.10),0_8px_20px_-12px_rgba(0,0,0,0.45)] dark:bg-white dark:text-zinc-950">
-                <XIcon />
-              </div>
-
-              <div className="mt-7">
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-400 dark:text-zinc-600">
-                  X / Twitter
-                </p>
-                <p className="mt-2 text-lg font-semibold tracking-[-0.02em] text-zinc-900 dark:text-zinc-100 sm:text-xl">
-                  @ManthanSorkhade
-                </p>
-                <p className="mt-2 text-sm leading-6 text-zinc-500 text-pretty dark:text-zinc-500">
-                  DMs are best for quick questions and early ideas.
-                </p>
-              </div>
-
-              <div className="mt-auto flex items-center gap-2 pt-6">
-                <a
-                  href="https://x.com/ManthanSorkhade"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="group inline-flex h-9 items-center justify-center gap-2 rounded-full bg-foreground px-3.5 text-sm font-medium text-background transition-opacity hover:opacity-90"
-                >
-                  Open profile
-                  <ArrowUpRight className="size-3.5 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                <a href={emailHref} className="col-span-3 break-all text-[13px] font-semibold text-zinc-900 underline-offset-4 hover:underline focus-visible:underline dark:text-white sm:hidden">
+                  {emailAddress}
                 </a>
               </div>
+
+              <a
+                href="https://x.com/ManthanSorkhade"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex min-h-[92px] items-center gap-4 px-5 py-6 transition-colors hover:bg-zinc-50 focus-visible:bg-zinc-50 focus-visible:outline-none dark:hover:bg-white/[0.04] dark:focus-visible:bg-white/[0.04] sm:px-6"
+              >
+                <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-zinc-100 text-zinc-800 dark:bg-white/[0.08] dark:text-zinc-100">
+                  <XIcon />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-xs font-medium text-zinc-500 dark:text-zinc-400">For a quick hello</span>
+                  <span className="mt-1 block truncate text-sm font-semibold text-zinc-900 dark:text-white sm:text-base">@ManthanSorkhade</span>
+                </span>
+                <ArrowUpRight className="size-4 shrink-0 text-zinc-400 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 dark:text-zinc-500" aria-hidden="true" />
+              </a>
             </div>
           </div>
         </div>
-      </motion.section>
+      </section>
     </LandingContent>
   );
 }
