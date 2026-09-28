@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <div className="w-full max-w-[840px] px-6 lg:px-8 py-6">
+    <div className="mx-auto w-full max-w-[860px] px-4 py-8 sm:px-6 lg:px-8">
       <Breadcrumbs className="mb-4" />
       <DocsPage />
     </div>

@@ -19,7 +19,7 @@ const items = [
 
 export default function Page(){
   return (
-    <div className="w-full max-w-[840px] px-6 lg:px-8 py-6">
+    <div className="mx-auto w-full max-w-[860px] px-4 py-8 sm:px-6 lg:px-8">
       <Breadcrumbs className="mb-4" />
       <h1 className="text-3xl font-semibold tracking-tight">Foundations</h1>
       <p className="mt-2 text-sm text-muted-foreground">The visual rules that define the system.</p>
