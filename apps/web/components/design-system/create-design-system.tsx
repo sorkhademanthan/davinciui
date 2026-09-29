@@ -11,9 +11,25 @@ import {
   Sparkles,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
-import { createDesignSystem, presets } from "@/lib/design-system/domain";
+import { useMemo, useReducer } from "react";
+import type { Density } from "@/lib/design-system/domain";
 import { browserDesignSystems } from "@/lib/design-system/repository";
+import { STARTERS, getStarter, getStarterDefaults } from "@/lib/design-system/starters";
+import {
+  buildCreateInput,
+  canContinueFromStep,
+  createInitialOnboardingState,
+  densityLabel,
+  isColorValid,
+  isNameValid,
+  isValidHexColor,
+  maxReachableStep,
+  nameErrorFor,
+  normalizeHexInput,
+  onboardingReducer,
+  slugPreview,
+  type OnboardingStep,
+} from "@/lib/design-system/onboarding";
 
 const steps = [
   {
@@ -23,14 +39,14 @@ const steps = [
     icon: LayoutTemplate,
   },
   {
-    title: "Brand details",
+    title: "System details",
     heading: "Give the system a home",
     description:
       "These details make the system recognisable when you return to it or export documentation.",
     icon: PenLine,
   },
   {
-    title: "Initial style",
+    title: "Initial direction",
     heading: "Set the visual direction",
     description:
       "Set just enough direction now. You can tune every token in the builder next.",
@@ -45,7 +61,8 @@ const steps = [
   },
 ] as const;
 
-const fontOptions = ["Inter", "Manrope", "DM Sans", "Space Grotesk"];
+const curatedFonts = ["Inter", "Manrope", "DM Sans", "Space Grotesk"];
+
 const colorSwatches = [
   "#635bff",
   "#0f766e",
@@ -55,75 +72,73 @@ const colorSwatches = [
   "#18181b",
 ];
 
-function isHex(value: string) {
-  return /^#[0-9a-fA-F]{6}$/.test(value.trim());
-}
+const densityOptions = [
+  { id: "compact", hint: "Tighter spacing" },
+  { id: "comfortable", hint: "Balanced spacing" },
+  { id: "spacious", hint: "Roomier spacing" },
+] as const;
 
 export function CreateDesignSystem() {
   const router = useRouter();
-  const [step, setStep] = useState(1);
-  const [presetId, setPresetId] = useState("saas");
-  const preset = presets.find((item) => item.id === presetId) ?? presets[2]!;
-  const [name, setName] = useState("");
-  const [brand, setBrand] = useState("");
-  const [description, setDescription] = useState("");
-  const [color, setColor] = useState<string>(preset.color);
-  const [font, setFont] = useState<string>(preset.font);
-  const [density, setDensity] =
-    useState<"compact" | "comfortable">(preset.density);
-  const [touched, setTouched] = useState(false);
+  const [state, dispatch] = useReducer(onboardingReducer, "saas", createInitialOnboardingState);
+  const { step } = state;
 
-  const nameError = touched && !name.trim() ? "Give your system a name to continue." : null;
-  const colorValid = isHex(color);
-  const canContinue =
-    step === 2 ? name.trim().length > 0 : step === 3 ? colorValid : true;
+  const starter = getStarter(state.starterId);
+  const starterDefaults = getStarterDefaults(state.starterId);
+  const colorValid = isValidHexColor(state.color);
+  const nameError = nameErrorFor(state);
+  const canContinue = canContinueFromStep(step, state);
+  const reachable = maxReachableStep(state);
+  const effectiveColor = colorValid
+    ? normalizeHexInput(state.color)
+    : (starterDefaults.color ?? "#71717a");
+  const slug = useMemo(() => slugPreview(state.name), [state.name]);
+
+  const fontOptions = useMemo(() => {
+    if (starterDefaults.font && !curatedFonts.includes(starterDefaults.font)) {
+      return [starterDefaults.font, ...curatedFonts];
+    }
+    return curatedFonts;
+  }, [starterDefaults.font]);
 
   const blockers = useMemo(() => {
-    if (step === 2 && !name.trim()) return "Add a system name to continue";
+    if (step === 2 && !isNameValid(state)) return "Enter a name to continue.";
     if (step === 3 && !colorValid) return "Use a 6-digit hex color (e.g. #635BFF)";
     return null;
-  }, [step, name, colorValid]);
+  }, [step, state, colorValid]);
 
   const selectPreset = (nextId: string) => {
-    const next = presets.find((item) => item.id === nextId)!;
-    setPresetId(nextId);
-    setColor(next.color);
-    setFont(next.font);
-    setDensity(next.density);
+    dispatch({ type: "select-starter", starterId: nextId });
   };
 
   const next = () => {
-    if (step === 2) setTouched(true);
-    if (!canContinue) return;
-    setStep((current) => Math.min(4, current + 1));
+    dispatch({ type: "next" });
   };
 
-  const back = () => setStep((current) => Math.max(1, current - 1));
+  const back = () => dispatch({ type: "back" });
+
+  const goTo = (target: OnboardingStep) => {
+    dispatch({ type: "goto", step: target });
+  };
 
   const finish = () => {
-    const system = createDesignSystem({
-      name: name.trim() || "Untitled system",
-      brand,
-      description,
-      presetId,
-      color: colorValid ? color : preset.color,
-      font,
-      density,
-    });
-    browserDesignSystems.save(system);
-    router.push(`/design-system/${system.id}/colors`);
+    if (state.isCreating) return;
+    if (!isNameValid(state) || !isColorValid(state)) {
+      dispatch({ type: "create-start" });
+      return;
+    }
+    dispatch({ type: "create-start" });
+    // 1. Starter factory input + overrides, 2. saved via the repository,
+    // 3. then routed into the Colors builder. State is retained on failure.
+    const result = browserDesignSystems.create(buildCreateInput(state));
+    if (!result.ok) {
+      dispatch({ type: "create-failure", error: result.error });
+      return;
+    }
+    router.push(`/design-system/${result.system.id}/colors`);
   };
 
   const progress = (step / steps.length) * 100;
-  const slug = useMemo(
-    () =>
-      name
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/(^-|-$)/g, "")
-        .slice(0, 40) || "untitled-system",
-    [name],
-  );
 
   return (
     <main className="min-h-[calc(100svh-3.5rem)] min-w-0 bg-background px-5 py-7 sm:px-8 sm:py-9 lg:px-10 lg:py-10">
@@ -132,7 +147,7 @@ export function CreateDesignSystem() {
         <div className="flex items-center justify-between gap-4">
           <Link
             href="/design-system"
-            className="inline-flex min-h-10 items-center gap-2 rounded-lg px-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="inline-flex min-h-11 items-center gap-2 rounded-lg px-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             <ArrowLeft aria-hidden="true" className="size-4" />
             All design systems
@@ -140,7 +155,7 @@ export function CreateDesignSystem() {
           <button
             type="button"
             onClick={() => router.push("/design-system")}
-            className="min-h-10 rounded-lg px-3 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="min-h-11 rounded-lg px-3 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             Exit setup
           </button>
@@ -153,30 +168,30 @@ export function CreateDesignSystem() {
             aria-label="Setup progress"
           >
             {steps.map((s, i) => {
-              const n = i + 1;
+              const n = (i + 1) as OnboardingStep;
               const done = n < step;
               const active = n === step;
+              const available = n <= reachable;
               const Icon = s.icon;
               return (
                 <li key={s.title}>
                   <button
                     type="button"
                     onClick={() => {
-                      // allow going back freely, forward only if valid
-                      if (n < step) setStep(n);
+                      if (available) goTo(n);
                     }}
-                    disabled={n > step}
+                    disabled={!available}
                     aria-current={active ? "step" : undefined}
-                    className={`flex w-full items-center gap-3 rounded-xl border p-3 text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                    className={`flex w-full items-center gap-3 rounded-xl border p-3 text-left motion-safe:transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                       active
                         ? "border-foreground/30 bg-muted/70"
                         : done
                           ? "border-border hover:border-foreground/30 hover:bg-muted/40"
                           : "border-transparent opacity-55"
-                    } ${n > step ? "cursor-default" : "cursor-pointer"}`}
+                    } ${!available ? "cursor-default" : "cursor-pointer"}`}
                   >
                     <span
-                      className={`grid size-9 shrink-0 place-items-center rounded-lg transition-colors ${
+                      className={`grid size-9 shrink-0 place-items-center rounded-lg motion-safe:transition-colors ${
                         done
                           ? "bg-emerald-500 text-white"
                           : active
@@ -212,7 +227,7 @@ export function CreateDesignSystem() {
             aria-label={`Step ${step} of 4`}
           >
             <div
-              className="h-full rounded-full bg-foreground transition-all duration-500 ease-out"
+              className="h-full rounded-full bg-foreground motion-safe:transition-all motion-safe:duration-500 motion-safe:ease-out"
               style={{ width: `${progress}%` }}
             />
           </div>
@@ -235,45 +250,55 @@ export function CreateDesignSystem() {
 
             <div key={`body-${step}`} className="mt-7">
               {step === 1 && (
-                <TemplateStep selected={presetId} onSelect={selectPreset} />
+                <TemplateStep selected={state.starterId} onSelect={selectPreset} />
               )}
               {step === 2 && (
                 <BrandStep
-                  name={name}
-                  brand={brand}
-                  description={description}
+                  name={state.name}
+                  brand={state.brand}
+                  description={state.description}
                   slug={slug}
                   nameError={nameError}
-                  setName={setName}
-                  setBrand={setBrand}
-                  setDescription={setDescription}
+                  setName={(value) => dispatch({ type: "set-field", field: "name", value })}
+                  setBrand={(value) => dispatch({ type: "set-field", field: "brand", value })}
+                  setDescription={(value) => dispatch({ type: "set-field", field: "description", value })}
+                  onBlurName={() => dispatch({ type: "blur-name" })}
                 />
               )}
               {step === 3 && (
                 <StyleStep
-                  color={color}
-                  font={font}
-                  density={density}
-                  setColor={setColor}
-                  setFont={setFont}
-                  setDensity={setDensity}
+                  color={state.color}
+                  font={state.font}
+                  density={state.density}
+                  fontOptions={fontOptions}
+                  setColor={(value) => dispatch({ type: "set-field", field: "color", value })}
+                  setFont={(value) => dispatch({ type: "set-field", field: "font", value })}
+                  setDensity={(value) => dispatch({ type: "set-field", field: "density", value })}
                 />
               )}
               {step === 4 && (
                 <ReviewStep
-                  name={name}
-                  brand={brand}
-                  description={description}
-                  preset={preset.name}
-                  color={colorValid ? color : preset.color}
-                  font={font}
-                  density={density}
-                  onEdit={setStep}
+                  name={state.name}
+                  brand={state.brand}
+                  description={state.description}
+                  preset={starter.label}
+                  color={effectiveColor}
+                  font={state.font}
+                  density={state.density}
+                  onEdit={goTo}
                 />
               )}
             </div>
 
             {/* Footer nav */}
+            {state.createError && (
+              <p
+                role="alert"
+                className="mt-6 rounded-xl border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm leading-6 text-destructive"
+              >
+                {state.createError} Your entries are kept — try again.
+              </p>
+            )}
             <div className="mt-8 flex flex-col gap-3 border-t border-border pt-5 sm:flex-row sm:items-center sm:justify-between">
               <button
                 onClick={back}
@@ -292,7 +317,10 @@ export function CreateDesignSystem() {
                 {step < 4 ? (
                   <button
                     onClick={next}
-                    disabled={!canContinue}
+                    // Step 2 stays clickable so a Continue attempt reveals the
+                    // name error; the color error on step 3 is always visible
+                    // inline, so that Continue stays disabled until valid.
+                    disabled={step !== 2 && !canContinue}
                     className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-lg bg-foreground px-6 text-sm font-medium text-background transition-all hover:bg-foreground/85 disabled:cursor-not-allowed disabled:opacity-40 sm:flex-none"
                   >
                     Continue
@@ -301,10 +329,12 @@ export function CreateDesignSystem() {
                 ) : (
                   <button
                     onClick={finish}
-                    className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-lg bg-foreground px-6 text-sm font-medium text-background transition-all hover:bg-foreground/85 sm:flex-none"
+                    disabled={state.isCreating}
+                    aria-busy={state.isCreating}
+                    className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-lg bg-foreground px-6 text-sm font-medium text-background transition-all hover:bg-foreground/85 disabled:cursor-not-allowed disabled:opacity-60 sm:flex-none"
                   >
-                    Create design system
-                    <ArrowRight aria-hidden="true" className="size-4" />
+                    {state.isCreating ? "Creating…" : "Create design system"}
+                    {!state.isCreating && <ArrowRight aria-hidden="true" className="size-4" />}
                   </button>
                 )}
               </div>
@@ -325,27 +355,27 @@ export function CreateDesignSystem() {
               <div className="border-b border-border px-5 py-4">
                 <p className="flex items-center gap-2 text-sm font-medium">
                   <span className="relative flex size-2">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
+                    <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60 motion-safe:animate-ping" />
                     <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
                   </span>
                   Live summary
                 </p>
                 <p className="mt-0.5 text-xs text-muted-foreground">
-                  Updates as you type.
+                  Unsaved choices so far. Palettes, themes, and components are set up in the builder.
                 </p>
               </div>
               <div className="space-y-4 p-5">
                 <div className="flex items-center gap-3">
                   <span
-                    className="grid size-11 shrink-0 place-items-center rounded-xl text-lg font-semibold text-white transition-colors duration-300"
-                    style={{ backgroundColor: colorValid ? color : preset.color }}
+                    className="grid size-11 shrink-0 place-items-center rounded-xl text-lg font-semibold text-white motion-safe:transition-colors motion-safe:duration-300"
+                    style={{ backgroundColor: effectiveColor }}
                     aria-hidden="true"
                   >
-                    {(name.trim()[0] || brand.trim()[0] || "D").toUpperCase()}
+                    {(state.name.trim()[0] || state.brand.trim()[0] || "D").toUpperCase()}
                   </span>
                   <div className="min-w-0">
                     <p className="truncate text-sm font-semibold">
-                      {name.trim() || "Untitled system"}
+                      {state.name.trim() || "Untitled system"}
                     </p>
                     <p className="truncate font-mono text-[11px] text-muted-foreground">
                       /{slug}
@@ -355,12 +385,12 @@ export function CreateDesignSystem() {
                 <dl className="space-y-2.5 rounded-xl bg-muted/50 p-3.5 text-[13px]">
                   <div className="flex items-center justify-between gap-3">
                     <dt className="text-muted-foreground">Starter</dt>
-                    <dd className="font-medium">{preset.name}</dd>
+                    <dd className="font-medium">{starter.label}</dd>
                   </div>
                   <div className="flex items-center justify-between gap-3">
                     <dt className="text-muted-foreground">Brand</dt>
                     <dd className="max-w-[140px] truncate font-medium">
-                      {brand.trim() || "—"}
+                      {state.brand.trim() || "—"}
                     </dd>
                   </div>
                   <div className="flex items-center justify-between gap-3">
@@ -369,40 +399,40 @@ export function CreateDesignSystem() {
                       <span
                         className="size-4 rounded ring-1 ring-black/10 dark:ring-white/20"
                         style={{
-                          backgroundColor: colorValid ? color : preset.color,
+                          backgroundColor: effectiveColor,
                         }}
                       />
-                      {(colorValid ? color : preset.color).toUpperCase()}
+                      {effectiveColor.toUpperCase()}
                     </dd>
                   </div>
                   <div className="flex items-center justify-between gap-3">
                     <dt className="text-muted-foreground">Type</dt>
-                    <dd className="font-medium" style={{ fontFamily: font }}>
-                      {font}
+                    <dd className="font-medium" style={{ fontFamily: state.font }}>
+                      {state.font}
                     </dd>
                   </div>
                   <div className="flex items-center justify-between gap-3">
                     <dt className="text-muted-foreground">Density</dt>
-                    <dd className="font-medium capitalize">{density}</dd>
+                    <dd className="font-medium">{densityLabel(state.density)}</dd>
                   </div>
                 </dl>
                 {/* Mini preview */}
                 <div className="rounded-xl border border-border p-3.5">
                   <p
                     className="text-base font-semibold tracking-tight"
-                    style={{ fontFamily: font }}
+                    style={{ fontFamily: state.font }}
                   >
                     Project overview
                   </p>
                   <p className="mt-0.5 text-xs leading-5 text-muted-foreground">
                     Styled by your tokens.
                   </p>
-                  <div className={`mt-3 flex gap-2 ${density === "compact" ? "[&>*]:h-7 [&>*]:text-[11px]" : "[&>*]:h-9 [&>*]:text-xs"}`}>
+                  <div className={`mt-3 flex gap-2 ${state.density === "compact" ? "[&>*]:h-7 [&>*]:text-[11px]" : "[&>*]:h-9 [&>*]:text-xs"}`}>
                     <span
-                      className="inline-flex items-center rounded-md px-3 font-semibold text-white transition-all"
+                      className="inline-flex items-center rounded-md px-3 font-semibold text-white motion-safe:transition-all"
                       style={{
-                        backgroundColor: colorValid ? color : preset.color,
-                        fontFamily: font,
+                        backgroundColor: effectiveColor,
+                        fontFamily: state.font,
                       }}
                     >
                       New project
@@ -440,7 +470,7 @@ function TemplateStep({
       role="radiogroup"
       aria-label="Choose a starter preset"
     >
-      {presets.map((item) => {
+      {STARTERS.map((item) => {
         const active = selected === item.id;
         return (
           <button
@@ -449,7 +479,7 @@ function TemplateStep({
             role="radio"
             aria-checked={active}
             onClick={() => onSelect(item.id)}
-            className={`group relative flex min-h-28 items-start gap-3.5 overflow-hidden rounded-2xl border p-4 text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
+            className={`group relative flex min-h-28 items-start gap-3.5 overflow-hidden rounded-2xl border p-4 text-left motion-safe:transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
               active
                 ? "border-foreground bg-muted/60 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.15)]"
                 : "border-border bg-card hover:border-foreground/40 hover:bg-muted/30 hover:shadow-sm"
@@ -458,7 +488,7 @@ function TemplateStep({
             <span
               aria-hidden="true"
               className="relative mt-0.5 block size-10 shrink-0 overflow-hidden rounded-xl ring-1 ring-black/10 dark:ring-white/15"
-              style={{ background: item.color }}
+              style={{ background: getStarterDefaults(item.id).color ?? "#71717a" }}
             >
               <span className="absolute inset-x-2 bottom-1.5 space-y-1">
                 <i className="block h-1 rounded-full bg-white/80" />
@@ -467,7 +497,7 @@ function TemplateStep({
             </span>
             <span className="min-w-0 flex-1">
               <span className="flex items-center justify-between gap-2">
-                <span className="text-sm font-semibold">{item.name}</span>
+                <span className="text-sm font-semibold">{item.label}</span>
                 {active && (
                   <span className="grid size-5 place-items-center rounded-full bg-foreground text-background">
                     <Check aria-hidden="true" className="size-3" />
@@ -477,12 +507,17 @@ function TemplateStep({
               <span className="mt-1 block text-[13px] leading-5 text-muted-foreground">
                 {item.description}
               </span>
+              {item.id === "blank" && (
+                <span className="mt-1.5 block text-xs leading-5 text-muted-foreground">
+                  Neutral baseline. Stays fully configurable in the builder.
+                </span>
+              )}
               <span className="mt-2.5 flex flex-wrap gap-1.5">
                 <span className="rounded-md bg-muted px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">
-                  {item.font}
+                  {getStarterDefaults(item.id).font}
                 </span>
-                <span className="rounded-md bg-muted px-1.5 py-0.5 font-mono text-[10px] capitalize text-muted-foreground">
-                  {item.density}
+                <span className="rounded-md bg-muted px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">
+                  {densityLabel(getStarterDefaults(item.id).density)}
                 </span>
               </span>
             </span>
@@ -502,6 +537,7 @@ function BrandStep({
   setName,
   setBrand,
   setDescription,
+  onBlurName,
 }: {
   name: string;
   brand: string;
@@ -511,6 +547,7 @@ function BrandStep({
   setName: (value: string) => void;
   setBrand: (value: string) => void;
   setDescription: (value: string) => void;
+  onBlurName: () => void;
 }) {
   return (
     <div className="max-w-2xl rounded-2xl border border-border bg-card p-5 sm:p-7">
@@ -524,6 +561,7 @@ function BrandStep({
             autoFocus
             value={name}
             onChange={(event) => setName(event.target.value)}
+            onBlur={onBlurName}
             placeholder="e.g. Acme product system"
             aria-invalid={!!nameError}
             aria-describedby={nameError ? "ds-name-error" : "ds-name-hint"}
@@ -531,20 +569,22 @@ function BrandStep({
               nameError ? "border-destructive" : "border-border focus:border-foreground"
             }`}
           />
-          {nameError ? (
-            <span id="ds-name-error" className="mt-1.5 block text-xs font-medium text-destructive">
-              {nameError}
-            </span>
-          ) : (
-            <span id="ds-name-hint" className="mt-1.5 flex items-center justify-between text-xs text-muted-foreground">
-              <span>Use a name your team will recognise later.</span>
-              <span className="font-mono">/{slug}</span>
-            </span>
-          )}
+          <div className="mt-1.5 min-h-5">
+            {nameError ? (
+              <span id="ds-name-error" role="alert" className="block text-xs font-medium text-destructive">
+                {nameError}
+              </span>
+            ) : (
+              <span id="ds-name-hint" className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
+                <span>Use a name your team will recognise later.</span>
+                <span className="shrink-0 font-mono">/{slug}</span>
+              </span>
+            )}
+          </div>
         </div>
         <div>
           <label htmlFor="ds-brand" className="text-sm font-semibold">
-            Brand or team
+            Team or brand
             <span className="ml-2 text-xs font-normal text-muted-foreground">Optional</span>
           </label>
           <input
@@ -584,31 +624,33 @@ function StyleStep({
   color,
   font,
   density,
+  fontOptions,
   setColor,
   setFont,
   setDensity,
 }: {
   color: string;
   font: string;
-  density: "compact" | "comfortable";
+  density: Density;
+  fontOptions: string[];
   setColor: (value: string) => void;
   setFont: (value: string) => void;
-  setDensity: (value: "compact" | "comfortable") => void;
+  setDensity: (value: Density) => void;
 }) {
-  const valid = isHex(color);
+  const valid = isValidHexColor(color);
   return (
     <div className="grid max-w-3xl gap-4">
-      <section className="rounded-2xl border border-border bg-card p-5 sm:p-6">
+      <section className="rounded-2xl border border-border bg-card p-5 sm:p-6" aria-labelledby="ds-color-heading">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h3 className="font-semibold">Primary color</h3>
+            <h3 id="ds-color-heading" className="font-semibold">Primary color</h3>
             <p className="mt-1 text-sm text-muted-foreground">
               This becomes the initial brand palette — shades generate automatically.
             </p>
           </div>
           <span
-            className="hidden size-12 shrink-0 rounded-xl shadow-inner ring-1 ring-black/10 dark:ring-white/15 transition-colors duration-300 sm:block"
-            style={{ backgroundColor: valid ? color : "#635bff" }}
+            className="hidden size-12 shrink-0 rounded-xl shadow-inner ring-1 ring-black/10 motion-safe:transition-colors motion-safe:duration-300 dark:ring-white/15 sm:block"
+            style={{ backgroundColor: valid ? normalizeHexInput(color) : "#635bff" }}
           />
         </div>
         <div className="mt-5 flex flex-wrap gap-2" role="group" aria-label="Suggested colors">
@@ -620,22 +662,22 @@ function StyleStep({
               aria-label={`Use ${sw}`}
               aria-pressed={color.toLowerCase() === sw.toLowerCase()}
               onClick={() => setColor(sw)}
-              className={`size-10 rounded-full ring-offset-2 ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+              className={`size-11 rounded-full ring-offset-2 ring-offset-background motion-safe:transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                 color.toLowerCase() === sw.toLowerCase()
-                  ? "ring-2 ring-foreground scale-105"
-                  : "hover:scale-105 ring-1 ring-black/10 dark:ring-white/15"
+                  ? "scale-105 ring-2 ring-foreground"
+                  : "ring-1 ring-black/10 hover:scale-105 dark:ring-white/15"
               }`}
               style={{ backgroundColor: sw }}
             />
           ))}
           <label
-            className="relative grid size-10 cursor-pointer place-items-center overflow-hidden rounded-full bg-gradient-to-br from-red-400 via-violet-500 to-emerald-400 text-[10px] font-bold text-white ring-1 ring-black/10"
+            className="relative grid size-11 cursor-pointer place-items-center overflow-hidden rounded-full bg-gradient-to-br from-red-400 via-violet-500 to-emerald-400 text-[10px] font-bold text-white ring-1 ring-black/10"
             title="Custom color"
           >
             <input
               aria-label="Pick a custom primary color"
               type="color"
-              value={valid ? color : "#635bff"}
+              value={valid ? normalizeHexInput(color) : "#635bff"}
               onChange={(event) => setColor(event.target.value)}
               className="absolute inset-0 cursor-pointer opacity-0"
             />
@@ -643,31 +685,34 @@ function StyleStep({
           </label>
         </div>
         <div className="mt-4 flex max-w-xs items-center gap-2">
-          <span className="font-mono text-sm text-muted-foreground">#</span>
+          <span className="font-mono text-sm text-muted-foreground" aria-hidden="true">#</span>
           <input
-            value={color.replace(/^#/, "")}
+            value={color.replace(/^#+/, "")}
             onChange={(event) => setColor(`#${event.target.value}`)}
             spellCheck={false}
             maxLength={6}
             aria-label="Primary color hex value"
             aria-invalid={!valid}
+            aria-describedby="ds-color-error"
             placeholder="635BFF"
             className={`min-h-11 w-full flex-1 rounded-lg border bg-transparent px-3 font-mono text-sm uppercase outline-none transition-colors placeholder:text-muted-foreground/50 focus:border-foreground ${
               valid ? "border-border" : "border-destructive"
             }`}
           />
         </div>
-        {!valid && (
-          <p className="mt-2 text-xs font-medium text-destructive" role="alert">
-            Enter a 6-digit hex value, e.g. #635BFF.
-          </p>
-        )}
+        <div className="mt-2 min-h-5">
+          {!valid && (
+            <p id="ds-color-error" className="text-xs font-medium text-destructive" role="alert">
+              Enter a 6-digit hex value, e.g. #635BFF.
+            </p>
+          )}
+        </div>
       </section>
 
-      <section className="rounded-2xl border border-border bg-card p-5 sm:p-6">
-        <h3 className="font-semibold">Typeface</h3>
+      <section className="rounded-2xl border border-border bg-card p-5 sm:p-6" aria-labelledby="ds-type-heading">
+        <h3 id="ds-type-heading" className="font-semibold">Typeface</h3>
         <p className="mt-1 text-sm text-muted-foreground">
-          Sets headings, body, and the type scale in the builder.
+          Sets the starting body and interface typeface. Display, headings, and the full type scale are tuned in the builder.
         </p>
         <div className="mt-4 grid gap-2 sm:grid-cols-2" role="radiogroup" aria-label="Choose a typeface">
           {fontOptions.map((item) => {
@@ -679,7 +724,7 @@ function StyleStep({
                 role="radio"
                 aria-checked={active}
                 onClick={() => setFont(item)}
-                className={`flex items-center gap-3 rounded-xl border p-3.5 text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                className={`flex min-h-11 items-center gap-3 rounded-xl border p-3.5 text-left motion-safe:transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                   active
                     ? "border-foreground bg-muted/60"
                     : "border-border hover:border-foreground/40 hover:bg-muted/30"
@@ -707,35 +752,39 @@ function StyleStep({
         </div>
       </section>
 
-      <section className="rounded-2xl border border-border bg-card p-5 sm:p-6">
-        <h3 className="font-semibold">Interface density</h3>
+      <section className="rounded-2xl border border-border bg-card p-5 sm:p-6" aria-labelledby="ds-density-heading">
+        <h3 id="ds-density-heading" className="font-semibold">Interface density</h3>
         <p className="mt-1 text-sm text-muted-foreground">
-          Controls spacing and control height across components.
+          Controls spacing and control height across components. Spacing scales stay adjustable in the builder.
         </p>
-        <div className="mt-4 grid grid-cols-2 gap-2 rounded-xl bg-muted/50 p-1.5" role="radiogroup" aria-label="Choose density">
-          {(["comfortable", "compact"] as const).map((item) => {
-            const active = density === item;
+        <div className="mt-4 grid gap-2 rounded-xl bg-muted/50 p-1.5 sm:grid-cols-3" role="radiogroup" aria-label="Choose density">
+          {densityOptions.map((item) => {
+            const active = density === item.id;
             return (
               <button
-                key={item}
+                key={item.id}
                 type="button"
                 role="radio"
                 aria-checked={active}
-                onClick={() => setDensity(item)}
-                className={`rounded-lg px-4 py-3 text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                onClick={() => setDensity(item.id)}
+                className={`min-h-11 rounded-lg px-4 py-3 text-left motion-safe:transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                   active ? "bg-background shadow-sm ring-1 ring-border" : "hover:bg-background/60"
                 }`}
               >
-                <span className="block text-sm font-semibold capitalize">{item}</span>
+                <span className="block text-sm font-semibold">{densityLabel(item.id)}</span>
+                <span className="mt-0.5 block text-xs text-muted-foreground">{item.hint}</span>
                 <span className="mt-2 block space-y-1" aria-hidden="true">
-                  <i className={`block rounded bg-foreground/15 ${item === "compact" ? "h-1.5" : "h-2.5"}`} />
-                  <i className={`block w-2/3 rounded bg-foreground/15 ${item === "compact" ? "h-1.5" : "h-2.5"}`} />
+                  <i className={`block rounded bg-foreground/15 ${item.id === "compact" ? "h-1.5" : item.id === "comfortable" ? "h-2.5" : "h-3.5"}`} />
+                  <i className={`block w-2/3 rounded bg-foreground/15 ${item.id === "compact" ? "h-1.5" : item.id === "comfortable" ? "h-2.5" : "h-3.5"}`} />
                 </span>
               </button>
             );
           })}
         </div>
       </section>
+      <p className="text-xs leading-5 text-muted-foreground">
+        Display and heading type, extra palettes, spacing, and themes are configured after creation in the builder.
+      </p>
     </div>
   );
 }
@@ -757,13 +806,13 @@ function ReviewStep({
   color: string;
   font: string;
   density: string;
-  onEdit: (step: number) => void;
+  onEdit: (step: OnboardingStep) => void;
 }) {
-  const rows: Array<[string, string, number, string]> = [
+  const rows: Array<[string, string, OnboardingStep, string]> = [
     ["Starting point", preset, 1, "Change starter"],
     ["Primary color", color.toUpperCase(), 3, "Change color"],
     ["Typeface", font, 3, "Change type"],
-    ["Density", density, 3, "Change density"],
+    ["Density", densityLabel(density), 3, "Change density"],
   ];
   return (
     <div className="grid max-w-3xl gap-4">
@@ -788,7 +837,8 @@ function ReviewStep({
           <button
             type="button"
             onClick={() => onEdit(2)}
-            className="shrink-0 rounded-lg px-3 py-2 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            aria-label="Edit system details"
+            className="inline-flex min-h-11 shrink-0 items-center rounded-lg px-3 py-2 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             Edit details
           </button>
@@ -816,7 +866,7 @@ function ReviewStep({
                   type="button"
                   aria-label={action}
                   onClick={() => onEdit(target)}
-                  className="rounded-md px-2 py-1 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-md px-3 py-1 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   Edit
                 </button>

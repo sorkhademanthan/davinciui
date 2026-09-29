@@ -20,20 +20,20 @@ import { browserDesignSystems } from "@/lib/design-system/repository";
 export function DesignSystemLanding() {
   const [systems, setSystems] = useState<DesignSystemConfig[]>([]);
 
-  useEffect(() => setSystems(browserDesignSystems.list()), []);
+  useEffect(() => {
+    setSystems(browserDesignSystems.list());
+    return browserDesignSystems.subscribe(() => setSystems(browserDesignSystems.list()));
+  }, []);
 
   const duplicate = (system: DesignSystemConfig) => {
-    const copy = structuredClone(system);
-    copy.id = `${system.id}-copy-${crypto.randomUUID().slice(0, 4)}`;
-    copy.meta.name = `${system.meta.name} copy`;
-    browserDesignSystems.save(copy);
-    setSystems(browserDesignSystems.list());
+    const result = browserDesignSystems.duplicate(system.id);
+    if (result.ok) setSystems(browserDesignSystems.list());
   };
 
   const remove = (id: string) => {
     if (!window.confirm("Delete this design system from this browser?")) return;
-    browserDesignSystems.remove(id);
-    setSystems(browserDesignSystems.list());
+    const result = browserDesignSystems.remove(id);
+    if (result.removed) setSystems(browserDesignSystems.list());
   };
 
   return (
@@ -520,7 +520,7 @@ function SystemsSection({
             <div className="flex items-start justify-between">
               <span
                 className="size-9 rounded-lg border border-white/10"
-                style={{ background: system.foundation.colors[0]?.base }}
+                style={{ background: system.foundations.colors.palettes[0]?.base }}
               />
               <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
                 <Check aria-hidden="true" className="size-3 text-emerald-500" />
