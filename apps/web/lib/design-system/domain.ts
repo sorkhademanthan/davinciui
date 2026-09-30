@@ -206,10 +206,40 @@ export interface BreakpointsFoundations {
   scale: BreakpointToken[];
 }
 
-export interface GridFoundations {
+export interface GridBreakpointProfile {
+  /** Stable breakpoint id this profile activates at (e.g. "base", "md"). */
+  breakpointId: string;
+  /** Column count, 1–12. */
   columns: number;
+  /** Spacing token reference for page/container gutter, e.g. "space-4". */
   gutter: string;
+  /** Spacing token reference for column gap. */
+  columnGap: string;
+  /** Spacing token reference for row gap. */
+  rowGap: string;
+}
+
+export interface GridContainer {
+  id: string;
+  label: string;
+  /** Canonical width: "<number>px", "<number>rem", or "100%" for full-bleed. */
+  value: string;
+  description?: string;
+}
+
+export interface GridFoundations {
+  /** Legacy flat columns; preserved for migration, still the fallback. */
+  columns: number;
+  /** Legacy flat gutter; preserved for migration. */
+  gutter: string;
+  /** Legacy flat max-width; preserved for migration. */
   maxWidth: string;
+  /** Named container widths. Seeded when absent (legacy systems). */
+  containers: GridContainer[];
+  /** Responsive values keyed by stable breakpoint ids. Seeded when absent. */
+  profiles: GridBreakpointProfile[];
+  /** Default container id. Defaults to "standard" when absent. */
+  defaultContainer?: string;
 }
 
 export interface Foundations {
@@ -298,6 +328,16 @@ export interface DesignSystemExportMeta {
   generator: string;
 }
 
+/**
+ * Component-library curation state (Step 10A). Lists manifest ids approved
+ * into this system's kit (Preview gallery, future export/docs). Optional so
+ * older stored systems stay loadable: absence means "all Core UI included".
+ * Never deletes source components — it only curates per system.
+ */
+export interface ComponentLibraryState {
+  included: string[];
+}
+
 export interface DesignSystemConfig {
   schemaVersion: typeof DESIGN_SYSTEM_VERSION;
   id: string;
@@ -307,6 +347,7 @@ export interface DesignSystemConfig {
   semanticTokens: SemanticToken[];
   themes: Theme[];
   components: ComponentTokens[];
+  library?: ComponentLibraryState;
   exportMeta?: DesignSystemExportMeta;
 }
 
@@ -573,7 +614,27 @@ export function defaultIcons(): IconFoundations {
 }
 
 export function defaultGrid(): GridFoundations {
-  return { columns: 12, gutter: "24px", maxWidth: "1200px" };
+  return {
+    columns: 12,
+    gutter: "24px",
+    maxWidth: "1200px",
+    containers: [
+      { id: "narrow", label: "Narrow", value: "640px", description: "Compact content and small dialogs." },
+      { id: "reading", label: "Reading", value: "768px", description: "Comfortable text measure." },
+      { id: "standard", label: "Standard", value: "1200px", description: "Default page container." },
+      { id: "wide", label: "Wide", value: "1440px", description: "Data-heavy dashboards." },
+      { id: "full", label: "Full", value: "100%", description: "Full-bleed sections." },
+    ],
+    profiles: [
+      { breakpointId: "base", columns: 4, gutter: "space-4", columnGap: "space-4", rowGap: "space-4" },
+      { breakpointId: "sm", columns: 6, gutter: "space-4", columnGap: "space-4", rowGap: "space-4" },
+      { breakpointId: "md", columns: 8, gutter: "space-5", columnGap: "space-4", rowGap: "space-5" },
+      { breakpointId: "lg", columns: 12, gutter: "space-6", columnGap: "space-5", rowGap: "space-5" },
+      { breakpointId: "xl", columns: 12, gutter: "space-6", columnGap: "space-5", rowGap: "space-5" },
+      { breakpointId: "2xl", columns: 12, gutter: "space-6", columnGap: "space-5", rowGap: "space-5" },
+    ],
+    defaultContainer: "standard",
+  };
 }
 
 export function defaultBreakpoints(): BreakpointsFoundations {
@@ -589,8 +650,19 @@ export function defaultBreakpoints(): BreakpointsFoundations {
   };
 }
 
-/** Semantic defaults required to render a basic interface. */
+/**
+ * Semantic defaults required to render a basic interface (Step 8 baseline).
+ * Every value resolves with only a neutral palette present, so neutral-only
+ * starters (Blank, Minimal, Editorial) validate cleanly. Starters with richer
+ * palettes override status/action values with foundation references in
+ * starters.ts — raw fallbacks here are never a duplicate of existing
+ * foundation data, they are the universally-resolvable baseline.
+ * `background.surface` is retained as a legacy alias (themes and the Card
+ * component reference it); new systems should prefer `surface.*`.
+ */
 export function defaultSemanticTokens(actionBackground: string): SemanticToken[] {
+  const branded = actionBackground !== "neutral.900";
+  const hover = branded ? "brand.700" : "neutral.800";
   return [
     { id: "background.canvas", label: "Canvas background", category: "background", value: "#ffffff" },
     {
@@ -598,14 +670,41 @@ export function defaultSemanticTokens(actionBackground: string): SemanticToken[]
       label: "Surface background",
       category: "surface",
       value: "#fafafa",
-      description: "Cards and raised surfaces in light mode.",
+      description: "Legacy alias kept for themes and Card. Prefer surface.default for new work.",
     },
+    { id: "background.subtle", label: "Subtle background", category: "background", value: "neutral.100" },
+    { id: "background.inverse", label: "Inverse background", category: "background", value: "neutral.950" },
+    { id: "surface.default", label: "Default surface", category: "surface", value: "neutral.50" },
+    { id: "surface.raised", label: "Raised surface", category: "surface", value: "#ffffff" },
+    { id: "surface.sunken", label: "Sunken surface", category: "surface", value: "neutral.100" },
     { id: "text.primary", label: "Primary text", category: "text", value: "neutral.900" },
+    { id: "text.secondary", label: "Secondary text", category: "text", value: "neutral.700" },
     { id: "text.muted", label: "Muted text", category: "text", value: "neutral.500" },
+    { id: "text.inverse", label: "Inverse text", category: "text", value: "#ffffff" },
+    { id: "border.subtle", label: "Subtle border", category: "border", value: "neutral.100" },
     { id: "border.default", label: "Default border", category: "border", value: "neutral.200" },
+    { id: "border.strong", label: "Strong border", category: "border", value: "neutral.300" },
     { id: "action.primary.background", label: "Primary action background", category: "action", value: actionBackground },
     { id: "action.primary.foreground", label: "Primary action foreground", category: "action", value: "#ffffff" },
+    { id: "action.primary.hover", label: "Primary action hover", category: "action", value: hover },
+    { id: "action.secondary.background", label: "Secondary action background", category: "action", value: "neutral.100" },
+    { id: "action.secondary.foreground", label: "Secondary action foreground", category: "action", value: "text.primary" },
     { id: "focus.ring", label: "Focus ring", category: "focus", value: actionBackground },
+    { id: "status.success.foreground", label: "Success foreground", category: "status", value: "#16a34a" },
+    { id: "status.success.background", label: "Success background", category: "status", value: "#f0fdf4" },
+    { id: "status.warning.foreground", label: "Warning foreground", category: "status", value: "#d97706" },
+    { id: "status.warning.background", label: "Warning background", category: "status", value: "#fffbeb" },
+    { id: "status.danger.foreground", label: "Danger foreground", category: "status", value: "#dc2626" },
+    { id: "status.danger.background", label: "Danger background", category: "status", value: "#fef2f2" },
+    { id: "status.info.foreground", label: "Info foreground", category: "status", value: "#0284c7" },
+    { id: "status.info.background", label: "Info background", category: "status", value: "#f0f9ff" },
+    {
+      id: "overlay.scrim",
+      label: "Overlay scrim",
+      category: "overlay",
+      value: "#000000",
+      description: "Dimming layer behind dialogs and overlays.",
+    },
   ];
 }
 
@@ -630,9 +729,31 @@ export function defaultThemes(): Theme[] {
       overrides: {
         "background.canvas": "#09090b",
         "background.surface": "#18181b",
+        // The canonical surface scale must track the legacy alias above:
+        // previews resolve surface.* directly, and an un-overridden light
+        // base would leak a white tile into the dark theme.
+        "background.subtle": "#18181b",
+        "surface.default": "#18181b",
+        "surface.raised": "#27272a",
+        "surface.sunken": "#09090b",
         "text.primary": "#fafafa",
+        "text.secondary": "#d4d4d8",
         "text.muted": "#a1a1aa",
+        "background.inverse": "#f4f4f5",
+        "text.inverse": "#18181b",
+        "border.subtle": "#1e1e24",
         "border.default": "#27272a",
+        "border.strong": "#52525b",
+        "action.secondary.background": "#27272a",
+        "focus.ring": "#e4e4e7",
+        "status.success.foreground": "#4ade80",
+        "status.success.background": "#052e16",
+        "status.warning.foreground": "#fbbf24",
+        "status.warning.background": "#451a03",
+        "status.danger.foreground": "#f87171",
+        "status.danger.background": "#450a0a",
+        "status.info.foreground": "#38bdf8",
+        "status.info.background": "#082f49",
       },
     },
   ];
@@ -1124,6 +1245,30 @@ export function validateDesignSystem(system: DesignSystemConfig): ValidationIssu
     // editor normalizes those on load, so only arrays are checked here.
     if (Array.isArray(foundations.breakpoints?.scale)) {
       checkScale(foundations.breakpoints.scale, "foundations.breakpoints.scale", "Breakpoint", idOf);
+    }
+    // Grid: legacy flat systems (no containers/profiles) are valid and are
+    // defaulted by ensureGrid. Only present arrays are checked here.
+    if (Array.isArray((foundations.grid as { containers?: unknown })?.containers)) {
+      checkScale(
+        (foundations.grid as { containers?: unknown[] }).containers,
+        "foundations.grid.containers",
+        "Grid container",
+        idOf,
+      );
+    }
+    if (Array.isArray((foundations.grid as { profiles?: unknown })?.profiles)) {
+      const profiles = (foundations.grid as { profiles?: Array<{ breakpointId?: string }> }).profiles ?? [];
+      const seenBp = new Set<string>();
+      profiles.forEach((profile, index) => {
+        const bp = profile?.breakpointId ?? "";
+        pushUniqueIdIssue(
+          issues,
+          seenBp,
+          bp,
+          `foundations.grid.profiles[${index}].breakpointId`,
+          "Grid profile",
+        );
+      });
     }
     checkScale(system.components, "components", "Component", (item) => (item as { component?: string } | null)?.component);
 

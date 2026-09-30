@@ -33,6 +33,7 @@ import {
   type Theme,
   type TypographyFoundations,
 } from "./domain";
+import { CORE_COMPONENT_IDS } from "./component-manifest";
 
 // ---------------------------------------------------------------------------
 // Starter metadata
@@ -210,6 +211,24 @@ function statusPalettes(): ExtraPaletteSpec[] {
   }));
 }
 
+/**
+ * Step 8 baseline wiring: point the canonical status tokens at real
+ * foundation shades wherever the starter ships status palettes, instead of
+ * duplicating raw hex. Roles without a palette keep the raw domain defaults.
+ */
+function statusTokenRefs(
+  fgShade: "600" | "400",
+  bgShade: "100" | "950",
+  roles: Array<"success" | "warning" | "danger" | "info"> = ["success", "warning", "danger", "info"],
+): Record<string, string> {
+  const refs: Record<string, string> = {};
+  for (const role of roles) {
+    refs[`status.${role}.foreground`] = `${role}.${fgShade}`;
+    refs[`status.${role}.background`] = `${role}.${bgShade}`;
+  }
+  return refs;
+}
+
 const SCRIM_EXTRA: SemanticExtra = {
   id: "overlay.scrim",
   label: "Overlay scrim",
@@ -265,7 +284,7 @@ const SPECS: Record<StarterId, StarterSpec> = {
     strongBorders: false,
     motionScale: "default",
     semanticExtras: [SCRIM_EXTRA, ...statusExtras("600")],
-    semanticBase: null,
+    semanticBase: statusTokenRefs("600", "100"),
     lightOverrides: null,
     darkOverrides: null,
     componentExtras: [],
@@ -282,7 +301,7 @@ const SPECS: Record<StarterId, StarterSpec> = {
     strongBorders: true,
     motionScale: "fast",
     semanticExtras: [SCRIM_EXTRA, ...statusExtras("600")],
-    semanticBase: null,
+    semanticBase: statusTokenRefs("600", "100"),
     lightOverrides: null,
     darkOverrides: null,
     componentExtras: [],
@@ -346,7 +365,8 @@ const SPECS: Record<StarterId, StarterSpec> = {
       },
       { id: "action.checkout.foreground", label: "Checkout action foreground", category: "action", value: "#ffffff" },
     ],
-    semanticBase: null,
+    // E-commerce ships every status palette except info; info keeps raw defaults.
+    semanticBase: statusTokenRefs("600", "100", ["success", "warning", "danger"]),
     lightOverrides: null,
     darkOverrides: null,
     componentExtras: [
@@ -370,27 +390,60 @@ const SPECS: Record<StarterId, StarterSpec> = {
     semanticBase: {
       "background.canvas": "#0e0e11",
       "background.surface": "#17171c",
+      "background.subtle": "#17171c",
+      "background.inverse": "#f4f4f5",
+      "surface.default": "#17171c",
+      "surface.raised": "#1f1f25",
+      "surface.sunken": "#0e0e11",
       "text.primary": "#f4f4f5",
+      "text.secondary": "#d4d4d8",
       "text.muted": "#a8a8b3",
+      "text.inverse": "#0e0e11",
+      "border.subtle": "#1e1e24",
       "border.default": "#27272e",
+      "border.strong": "#3a3a44",
       "action.primary.background": "brand.400",
       "action.primary.foreground": "neutral.950",
+      "action.primary.hover": "brand.500",
+      "action.secondary.background": "#27272e",
+      "action.secondary.foreground": "text.primary",
       "focus.ring": "brand.400",
+      ...statusTokenRefs("400", "950"),
     },
     lightOverrides: {
       "background.canvas": "#ffffff",
       "background.surface": "#f6f6f7",
+      "background.subtle": "#f6f6f7",
+      "background.inverse": "#141417",
+      "surface.default": "#f6f6f7",
+      "surface.raised": "#ffffff",
+      "surface.sunken": "#eeeef1",
       "text.primary": "#141417",
+      "text.secondary": "#3f3f46",
       "text.muted": "#5c5c66",
+      "text.inverse": "#ffffff",
+      "border.subtle": "#eeeef1",
       "border.default": "#e3e3e8",
+      "border.strong": "#d4d4d8",
       "action.primary.background": "brand.600",
       "action.primary.foreground": "#ffffff",
+      "action.primary.hover": "brand.700",
+      "action.secondary.background": "#eeeef1",
+      "action.secondary.foreground": "text.primary",
       "focus.ring": "brand.500",
       "overlay.scrim": "#000000",
       "status.success": "success.600",
       "status.warning": "warning.600",
       "status.danger": "danger.600",
       "status.info": "info.600",
+      "status.success.foreground": "success.600",
+      "status.success.background": "success.100",
+      "status.warning.foreground": "warning.600",
+      "status.warning.background": "warning.100",
+      "status.danger.foreground": "danger.600",
+      "status.danger.background": "danger.100",
+      "status.info.foreground": "info.600",
+      "status.info.background": "info.100",
     },
     darkOverrides: {
       "background.canvas": "#0e0e11",
@@ -613,6 +666,8 @@ export function createSystemFromStarter(input: CreateFromStarterInput): DesignSy
     semanticTokens: buildSemanticTokens(actionBackground, spec),
     themes: buildThemes(spec),
     components: buildComponents(spec),
+    // New systems begin with all Core UI included; premium stays discoverable.
+    library: { included: [...CORE_COMPONENT_IDS] },
     exportMeta: { version: "1.0", generator: "davinciui-starters" },
   };
 }
