@@ -9,6 +9,7 @@ import {
   type EasingToken,
   type ReducedMotionPolicy,
 } from "@/lib/design-system/domain"
+import { usePreviewTheme } from "@/components/design-system/use-preview-theme"
 import {
   canDeleteMotionToken,
   canDisableMotionToken,
@@ -1220,6 +1221,7 @@ function MotionPreview({ system }: { system: DesignSystemConfig }) {
   const [toastVisible, setToastVisible] = useState(false)
   const [progress, setProgress] = useState(0)
   const [loading, setLoading] = useState(false)
+  const { themeOptions, activeThemeId, selectTheme } = usePreviewTheme(system)
 
   useEffect(() => {
     if (!toastVisible) return
@@ -1227,13 +1229,13 @@ function MotionPreview({ system }: { system: DesignSystemConfig }) {
     return () => window.clearTimeout(timer)
   }, [toastVisible])
 
-  const textColor = previewColor(system, "text.primary", "#18181b")
-  const mutedColor = previewColor(system, "text.muted", "#71717a")
-  const canvasColor = previewColor(system, "background.canvas", "#ffffff")
-  const surfaceColor = previewColor(system, "background.surface", "#fafafa")
-  const borderColor = previewColor(system, "border.default", "#e4e4e7")
-  const actionBg = previewColor(system, "action.primary.background", "#18181b")
-  const actionFg = previewColor(system, "action.primary.foreground", "#ffffff")
+  const textColor = previewColor(system, "text.primary", "#18181b", activeThemeId)
+  const mutedColor = previewColor(system, "text.muted", "#71717a", activeThemeId)
+  const canvasColor = previewColor(system, "background.canvas", "#ffffff", activeThemeId)
+  const surfaceColor = previewColor(system, "background.surface", "#fafafa", activeThemeId)
+  const borderColor = previewColor(system, "border.default", "#e4e4e7", activeThemeId)
+  const actionBg = previewColor(system, "action.primary.background", "#18181b", activeThemeId)
+  const actionFg = previewColor(system, "action.primary.foreground", "#ffffff", activeThemeId)
 
   const press = pickPair(system, ["fast", "normal", "instant"], ["standard", "linear"])
   const panel = pickPair(system, ["slow", "normal", "fast"], ["standard", "enter"])
@@ -1277,10 +1279,22 @@ function MotionPreview({ system }: { system: DesignSystemConfig }) {
         {reduced ? `Reduced motion active — ${mode === "reduced" ? "preview override" : policy.reason}.` : `Full motion — ${mode === "full" ? "preview override" : policy.reason}.`}
         {mode === "auto" && ` OS reports ${osReduced ? "reduced" : "full"} motion.`}
       </p>
+      <div className="mt-2 flex flex-wrap gap-1.5" role="group" aria-label="Preview theme">
+        {themeOptions.map((theme) => (
+          <button
+            key={theme.id}
+            aria-pressed={activeThemeId === theme.id}
+            onClick={() => selectTheme(theme.id)}
+            className={`inline-flex min-h-11 items-center rounded-lg border px-2.5 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none ${activeThemeId === theme.id ? "border-foreground bg-muted" : "border-border hover:bg-muted/60"}`}
+          >
+            {theme.label} · {theme.mode}
+          </button>
+        ))}
+      </div>
 
       <div className="mt-3 space-y-4 rounded-lg border border-border p-4" style={{ background: canvasColor, color: textColor }}>
         <section aria-label="Button press preview">
-          <p className="text-xs font-semibold tracking-wider text-muted-foreground">BUTTON PRESS · {caption(press)}</p>
+          <p className="text-xs font-semibold tracking-wider" style={{ color: mutedColor }}>BUTTON PRESS · {caption(press)}</p>
           <button
             onPointerDown={() => setPressed(true)}
             onPointerUp={() => setPressed(false)}
@@ -1290,11 +1304,12 @@ function MotionPreview({ system }: { system: DesignSystemConfig }) {
             }}
             onKeyUp={() => setPressed(false)}
             onBlur={() => setPressed(false)}
-            className="mt-2 inline-flex min-h-11 items-center gap-2 rounded-lg px-4 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="mt-2 inline-flex min-h-11 items-center gap-2 rounded-lg px-4 text-sm font-medium focus-visible:outline-none focus-visible:ring-2"
             style={{
               background: pressed ? actionBg : "transparent",
               color: pressed ? actionFg : textColor,
               border: `1px solid ${borderColor}`,
+              ["--tw-ring-color" as string]: textColor,
               transform: pressed && renderMode === "full" ? "scale(0.97)" : "none",
               ...transitionFor(press, "transform, background-color, color"),
             }}
@@ -1305,12 +1320,12 @@ function MotionPreview({ system }: { system: DesignSystemConfig }) {
         </section>
 
         <section aria-label="Panel open preview">
-          <p className="text-xs font-semibold tracking-wider text-muted-foreground">PANEL · {caption(panel)}</p>
+          <p className="text-xs font-semibold tracking-wider" style={{ color: mutedColor }}>PANEL · {caption(panel)}</p>
           <button
             aria-expanded={panelOpen}
             onClick={() => setPanelOpen((open) => !open)}
-            className="mt-2 inline-flex min-h-11 items-center rounded-lg border px-4 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            style={{ borderColor }}
+            className="mt-2 inline-flex min-h-11 items-center rounded-lg border px-4 text-sm font-medium focus-visible:outline-none focus-visible:ring-2"
+            style={{ borderColor, ["--tw-ring-color" as string]: textColor }}
           >
             {panelOpen ? "Close panel" : "Open panel"}
           </button>
@@ -1333,17 +1348,18 @@ function MotionPreview({ system }: { system: DesignSystemConfig }) {
         </section>
 
         <section aria-label="Input focus preview">
-          <p className="text-xs font-semibold tracking-wider text-muted-foreground">INPUT FOCUS · {caption(focus)}</p>
+          <p className="text-xs font-semibold tracking-wider" style={{ color: mutedColor }}>INPUT FOCUS · {caption(focus)}</p>
           <label className="mt-2 block text-xs font-medium" htmlFor="motion-preview-email">
             Email address
           </label>
           <input
             id="motion-preview-email"
             placeholder="you@example.com"
-            className="mt-1.5 block min-h-11 w-full rounded-lg bg-transparent px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="mt-1.5 block min-h-11 w-full rounded-lg bg-transparent px-3 text-sm outline-none focus-visible:ring-2"
             style={{
               border: `1px solid ${borderColor}`,
               color: textColor,
+              ["--tw-ring-color" as string]: textColor,
               ...transitionFor(focus, "border-color, box-shadow"),
             }}
           />
@@ -1351,11 +1367,11 @@ function MotionPreview({ system }: { system: DesignSystemConfig }) {
 
         <section aria-label="Toast preview">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <p className="text-xs font-semibold tracking-wider text-muted-foreground">TOAST · {caption(toast)}</p>
+            <p className="text-xs font-semibold tracking-wider" style={{ color: mutedColor }}>TOAST · {caption(toast)}</p>
             <button
               onClick={() => setToastVisible(true)}
-              className="inline-flex min-h-11 items-center rounded-lg border px-3 text-xs font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              style={{ borderColor }}
+              className="inline-flex min-h-11 items-center rounded-lg border px-3 text-xs font-medium focus-visible:outline-none focus-visible:ring-2"
+              style={{ borderColor, ["--tw-ring-color" as string]: textColor }}
             >
               Show toast
             </button>
@@ -1379,22 +1395,22 @@ function MotionPreview({ system }: { system: DesignSystemConfig }) {
 
         <section aria-label="Progress preview">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <p className="text-xs font-semibold tracking-wider text-muted-foreground">PROGRESS · {caption(loader)}</p>
+            <p className="text-xs font-semibold tracking-wider" style={{ color: mutedColor }}>PROGRESS · {caption(loader)}</p>
             <div className="flex gap-2">
               <button
                 onClick={() => {
                   setProgress(0)
                   window.setTimeout(() => setProgress(100), 60)
                 }}
-                className="inline-flex min-h-11 items-center rounded-lg border px-3 text-xs font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                style={{ borderColor }}
+                className="inline-flex min-h-11 items-center rounded-lg border px-3 text-xs font-medium focus-visible:outline-none focus-visible:ring-2"
+                style={{ borderColor, ["--tw-ring-color" as string]: textColor }}
               >
                 Start
               </button>
               <button
                 onClick={() => setProgress(0)}
-                className="inline-flex min-h-11 items-center rounded-lg border px-3 text-xs font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                style={{ borderColor }}
+                className="inline-flex min-h-11 items-center rounded-lg border px-3 text-xs font-medium focus-visible:outline-none focus-visible:ring-2"
+                style={{ borderColor, ["--tw-ring-color" as string]: textColor }}
               >
                 Reset
               </button>
@@ -1415,13 +1431,13 @@ function MotionPreview({ system }: { system: DesignSystemConfig }) {
         </section>
 
         <section aria-label="Loading preview">
-          <p className="text-xs font-semibold tracking-wider text-muted-foreground">LOADING · {caption(loader)}</p>
+          <p className="text-xs font-semibold tracking-wider" style={{ color: mutedColor }}>LOADING · {caption(loader)}</p>
           <div className="mt-2 flex items-center gap-3">
             <button
               aria-pressed={loading}
               onClick={() => setLoading((value) => !value)}
-              className="inline-flex min-h-11 items-center gap-2 rounded-lg border px-4 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              style={{ borderColor }}
+              className="inline-flex min-h-11 items-center gap-2 rounded-lg border px-4 text-sm font-medium focus-visible:outline-none focus-visible:ring-2"
+              style={{ borderColor, ["--tw-ring-color" as string]: textColor }}
             >
               {loading ? <Pause aria-hidden="true" className="size-4" /> : <Play aria-hidden="true" className="size-4" />}
               {loading ? "Stop loader" : "Start loader"}
@@ -1469,9 +1485,9 @@ function MotionPreview({ system }: { system: DesignSystemConfig }) {
   )
 }
 
-function previewColor(system: DesignSystemConfig, reference: string, fallback: string): string {
+function previewColor(system: DesignSystemConfig, reference: string, fallback: string, themeId?: string): string {
   try {
-    const resolved = resolveToken(system, reference)
+    const resolved = resolveToken(system, reference, themeId)
     return resolved.status === "resolved" ? resolved.value : fallback
   } catch {
     return fallback

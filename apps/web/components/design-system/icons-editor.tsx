@@ -10,6 +10,7 @@ import {
   type IconLineJoin,
   type IconSizeToken,
 } from "@/lib/design-system/domain"
+import { usePreviewTheme } from "@/components/design-system/use-preview-theme"
 import { resolveBorderRecipe } from "@/lib/design-system/borders"
 import { radiusValueFor } from "@/lib/design-system/radius"
 import {
@@ -25,6 +26,7 @@ import {
   hasCustomIconEdits,
   iconColorOptions,
   iconColorRoleLabel,
+  iconExportSummary,
   ICON_COLOR_ROLES,
   iconIssues,
   iconSizePx,
@@ -67,6 +69,7 @@ export function IconsEditor({
       <div className="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
         <div className="min-w-0 space-y-4">
           <RestoreSection system={system} save={save} />
+          <IconSpecificationSection system={system} />
           <SourceSection system={system} save={save} />
           <SizesSection system={system} save={save} selectedId={selectedId} onSelect={setSelectedId} />
           <StyleSection system={system} save={save} />
@@ -75,6 +78,45 @@ export function IconsEditor({
         <IconsPreview system={system} selectedId={selectedId} />
       </div>
     </>
+  )
+}
+
+function IconSpecificationSection({ system }: { system: DesignSystemConfig }) {
+  const summary = useMemo(() => iconExportSummary(system), [system])
+  return (
+    <section aria-label="Icon export specification" className="rounded-xl border border-border bg-background p-5">
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <div>
+          <h2 className="font-medium">Icon specification</h2>
+          <p className="mt-1 text-xs leading-5 text-muted-foreground">This is the clean summary that will appear in your exported documentation.</p>
+        </div>
+        <span className="rounded-full bg-muted px-2.5 py-1 text-xs font-medium">{summary.source.label}</span>
+      </div>
+      <dl className="mt-4 grid gap-3 sm:grid-cols-3">
+        <div className="rounded-lg border border-border p-3">
+          <dt className="text-xs text-muted-foreground">Everyday size</dt>
+          <dd className="mt-1 text-sm font-medium">{summary.defaultSize.label} · {summary.defaultSize.value}</dd>
+        </div>
+        <div className="rounded-lg border border-border p-3">
+          <dt className="text-xs text-muted-foreground">Visual weight</dt>
+          <dd className="mt-1 text-sm font-medium">{summary.stroke.label} · {summary.stroke.width}px</dd>
+        </div>
+        <div className="rounded-lg border border-border p-3">
+          <dt className="text-xs text-muted-foreground">Line style</dt>
+          <dd className="mt-1 text-sm font-medium">{summary.stroke.lineCap} ends · {summary.stroke.lineJoin} corners</dd>
+        </div>
+      </dl>
+      <div className="mt-4 border-t border-border pt-4">
+        <p className="text-xs font-medium text-muted-foreground">SIZE LADDER</p>
+        <div className="mt-2 flex flex-wrap gap-2">
+          {summary.sizes.map((size) => (
+            <span key={size.id} title={size.usage} className="rounded-md border border-border px-2.5 py-1.5 text-xs">
+              <span className="font-medium text-foreground">{size.label}</span> <span className="text-muted-foreground">{size.value}</span>
+            </span>
+          ))}
+        </div>
+      </div>
+    </section>
   )
 }
 
@@ -1054,32 +1096,40 @@ function useIconRender(system: DesignSystemConfig) {
 
 function IconsPreview({ system, selectedId }: { system: DesignSystemConfig; selectedId: string | null }) {
   const render = useIconRender(system)
+  const { themeOptions, activeThemeId, selectTheme } = usePreviewTheme(system)
   const textColor = (() => {
-    const resolved = resolveToken(system, "text.primary")
+    const resolved = resolveToken(system, "text.primary", activeThemeId)
     return resolved.status === "resolved" ? resolved.value : "#18181b"
   })()
   const mutedColor = (() => {
-    const resolved = resolveToken(system, "text.muted")
+    const resolved = resolveToken(system, "text.muted", activeThemeId)
     return resolved.status === "resolved" ? resolved.value : "#71717a"
   })()
   const surface = (() => {
-    const resolved = resolveToken(system, "background.surface")
+    const resolved = resolveToken(system, "background.surface", activeThemeId)
     if (resolved.status === "resolved") return resolved.value
-    const canvas = resolveToken(system, "background.canvas")
+    const canvas = resolveToken(system, "background.canvas", activeThemeId)
     return canvas.status === "resolved" ? canvas.value : "#fafafa"
   })()
   const radius = radiusValueFor(system, "md") ?? "8px"
   const border = (() => {
-    const resolved = resolveBorderRecipe(system, "border.default")
+    const resolved = resolveBorderRecipe(system, "border.default", activeThemeId)
     return resolved ? resolved.css : "1px solid #e4e4e7"
   })()
 
   const colorFor = (role: Parameters<typeof resolveIconColor>[1]): string => {
-    const hex = resolveIconColor(system, role)
+    const hex = resolveIconColor(system, role, activeThemeId)
     if (hex) return hex
-    const fallback = resolveToken(system, "text.primary")
+    const fallback = resolveToken(system, "text.primary", activeThemeId)
     return fallback.status === "resolved" ? fallback.value : "#18181b"
   }
+
+  // Button text pairs with the action background — never a hardcoded white,
+  // which fails on light custom action colors.
+  const actionFg = (() => {
+    const resolved = resolveToken(system, "action.primary.foreground", activeThemeId)
+    return resolved.status === "resolved" ? resolved.value : "#ffffff"
+  })()
 
   const mark = (usedId: string | null) =>
     selectedId && usedId === selectedId
@@ -1118,6 +1168,18 @@ function IconsPreview({ system, selectedId }: { system: DesignSystemConfig; sele
           <> · Select a size to highlight where it applies.</>
         )}
       </p>
+      <div className="mt-2 flex flex-wrap gap-1.5" role="group" aria-label="Preview theme">
+        {themeOptions.map((theme) => (
+          <button
+            key={theme.id}
+            aria-pressed={activeThemeId === theme.id}
+            onClick={() => selectTheme(theme.id)}
+            className={`inline-flex min-h-11 items-center rounded-lg border px-2.5 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none ${activeThemeId === theme.id ? "border-foreground bg-muted" : "border-border hover:bg-muted/60"}`}
+          >
+            {theme.label} · {theme.mode}
+          </button>
+        ))}
+      </div>
 
       {!render.rendered ? (
         <div role="status" className="mt-4 rounded-lg border border-dashed border-border p-4">
@@ -1145,7 +1207,7 @@ function IconsPreview({ system, selectedId }: { system: DesignSystemConfig; sele
             <button
               tabIndex={-1}
               className="mt-2 inline-flex min-h-11 items-center gap-2 rounded-lg px-4 text-sm font-medium"
-              style={{ background: colorFor("action"), color: "#ffffff", borderRadius: radius }}
+              style={{ background: colorFor("action"), color: actionFg, borderRadius: radius }}
             >
               <Bell aria-hidden="true" {...iconProps("icon-md")} />
               Notifications
