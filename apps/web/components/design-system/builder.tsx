@@ -13,7 +13,13 @@ import { BordersEditor } from "@/components/design-system/borders-editor"
 import { ShadowsEditor } from "@/components/design-system/shadows-editor"
 import { MotionEditor } from "@/components/design-system/motion-editor"
 import { IconsEditor } from "@/components/design-system/icons-editor"
+import { GridEditor } from "@/components/design-system/grid-editor"
 import { BreakpointsEditor } from "@/components/design-system/breakpoints-editor"
+import { SemanticTokensEditor } from "@/components/design-system/semantic-tokens-editor"
+import { ThemesEditor } from "@/components/design-system/themes-editor"
+import { DesignSystemPreview } from "@/components/design-system/design-system-preview"
+import { ComponentLibraryEditor } from "@/components/design-system/component-library-editor"
+import { DesignSystemValidation } from "@/components/design-system/design-system-validation"
 
 const foundations = ["Colors", "Typography", "Spacing", "Radius", "Borders", "Shadows", "Motion", "Icons", "Grid", "Breakpoints"]
 const systemSections: Array<[string, string]> = [["Semantic Tokens", "tokens"], ["Themes", "themes"], ["Components", "components"], ["Preview", "preview"], ["Validate", "validate"], ["Export", "export"]]
@@ -44,7 +50,13 @@ function SectionEditor({ system, section, save }: { system: DesignSystemConfig; 
   if (section === "shadows") return <ShadowsEditor system={system} save={save} />
   if (section === "motion") return <MotionEditor system={system} save={save} />
   if (section === "icons") return <IconsEditor system={system} save={save} />
+  if (section === "grid") return <GridEditor system={system} save={save} />
   if (section === "breakpoints") return <BreakpointsEditor system={system} save={save} />
+  if (section === "tokens") return <SemanticTokensEditor system={system} save={save} />
+  if (section === "themes") return <ThemesEditor system={system} save={save} />
+  if (section === "preview") return <DesignSystemPreview system={system} />
+  if (section === "components") return <ComponentLibraryEditor system={system} save={save} />
+  if (section === "validate") return <DesignSystemValidation system={system} />
   const title = foundations.find((item) => item.toLowerCase() === section) || systemSections.find(([, path]) => path === section)?.[0] || "Overview"
   return <><PageHeader eyebrow="Design System" title={title} description="This configuration area is ready for the next builder slice." /><div className="mt-6 rounded-xl border border-dashed border-border p-8 text-sm text-muted-foreground">{title} will inherit the same saved configuration model as Colors, Typography, Spacing and Radius.</div></>
 }
