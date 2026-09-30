@@ -9,6 +9,7 @@ import {
   type ShadowToken,
 } from "@/lib/design-system/domain"
 import { resolveBorderRecipe } from "@/lib/design-system/borders"
+import { usePreviewTheme } from "@/components/design-system/use-preview-theme"
 import { radiusValueFor } from "@/lib/design-system/radius"
 import {
   addShadowLayer,
@@ -926,42 +927,43 @@ function AddRecipeForm({
 }
 
 function ShadowPreview({ system, selectedId }: { system: DesignSystemConfig; selectedId: string | null }) {
+  const { themeOptions, activeThemeId, selectTheme } = usePreviewTheme(system)
   const surfaceFor = (ids: string[]): { id: string; css: string } | null => {
     for (const id of ids) {
-      const resolved = resolveShadow(system, id)
+      const resolved = resolveShadow(system, id, activeThemeId)
       if (resolved) return { id, css: resolved.css }
     }
     return null
   }
 
   const ink = (() => {
-    const resolved = resolveToken(system, "text.primary")
+    const resolved = resolveToken(system, "text.primary", activeThemeId)
     return resolved.status === "resolved" ? resolved.value : "#18181b"
   })()
   const muted = (() => {
-    const resolved = resolveToken(system, "text.muted")
+    const resolved = resolveToken(system, "text.muted", activeThemeId)
     return resolved.status === "resolved" ? resolved.value : "#71717a"
   })()
   const canvas = (() => {
-    const resolved = resolveToken(system, "background.canvas")
+    const resolved = resolveToken(system, "background.canvas", activeThemeId)
     return resolved.status === "resolved" ? resolved.value : "#ffffff"
   })()
   const cardBg = (() => {
-    const resolved = resolveToken(system, "background.surface")
+    const resolved = resolveToken(system, "background.surface", activeThemeId)
     if (resolved.status === "resolved") return resolved.value
-    const fallback = resolveToken(system, "background.canvas")
+    const fallback = resolveToken(system, "background.canvas", activeThemeId)
     return fallback.status === "resolved" ? fallback.value : "#fafafa"
   })()
   const line = (() => {
-    const resolved = resolveToken(system, "border.default")
+    const resolved = resolveToken(system, "border.default", activeThemeId)
     return resolved.status === "resolved" ? resolved.value : "#e4e4e7"
   })()
   const actionBg = (() => {
-    const resolved = resolveToken(system, "action.primary.background")
+    const resolved = resolveToken(system, "action.primary.background", activeThemeId)
     return resolved.status === "resolved" ? resolved.value : "#18181b"
   })()
   const actionFg = (() => {
-    const resolved = resolveToken(system, "action.primary.foreground")
+    const resolved = resolveToken(system, "action.primary.foreground", activeThemeId)
     return resolved.status === "resolved" ? resolved.value : "#ffffff"
   })()
   const radiusFor = (id: string): string => {
@@ -973,7 +975,7 @@ function ShadowPreview({ system, selectedId }: { system: DesignSystemConfig; sel
     return "8px"
   }
   const borderFor = (id: string): string => {
-    const resolved = resolveBorderRecipe(system, id)
+    const resolved = resolveBorderRecipe(system, id, activeThemeId)
     return resolved ? resolved.css : `1px solid ${line}`
   }
 
@@ -991,8 +993,15 @@ function ShadowPreview({ system, selectedId }: { system: DesignSystemConfig; sel
 
   const mark = (usedId: string | null) =>
     selectedId && usedId === selectedId
-      ? "ring-2 ring-foreground ring-offset-2 ring-offset-background"
+      ? "ring-2 ring-offset-2"
       : ""
+
+  // Selection rings render on the system-colored canvas, so they must use
+  // system ink/canvas — never the application-chrome ring tokens.
+  const markStyle = (usedId: string | null): CSSProperties =>
+    selectedId && usedId === selectedId
+      ? { ["--tw-ring-color" as string]: ink, ["--tw-ring-offset-color" as string]: canvas }
+      : {}
 
   const missing: string[] = []
   const slots: Array<[string, { id: string; css: string } | null]> = [
@@ -1018,10 +1027,22 @@ function ShadowPreview({ system, selectedId }: { system: DesignSystemConfig; sel
           <> Select a recipe to highlight where it applies.</>
         )}
       </p>
+      <div className="mt-2 flex flex-wrap gap-1.5" role="group" aria-label="Preview theme">
+        {themeOptions.map((theme) => (
+          <button
+            key={theme.id}
+            aria-pressed={activeThemeId === theme.id}
+            onClick={() => selectTheme(theme.id)}
+            className={`inline-flex min-h-11 items-center rounded-lg border px-2.5 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none ${activeThemeId === theme.id ? "border-foreground bg-muted" : "border-border hover:bg-muted/60"}`}
+          >
+            {theme.label} · {theme.mode}
+          </button>
+        ))}
+      </div>
 
       <div className="mt-4 space-y-4" style={{ background: canvas, color: ink }}>
-        <section aria-label="Flat surface preview" className={`rounded-lg ${mark(flat?.id ?? null)}`}>
-          <p className="text-xs font-semibold tracking-wider text-muted-foreground">
+        <section aria-label="Flat surface preview" className={`rounded-lg ${mark(flat?.id ?? null)}`} style={markStyle(flat?.id ?? null)}>
+          <p className="text-xs font-semibold tracking-wider" style={{ color: muted }}>
             FLAT · {flat ? flat.id : "unconfigured"}
           </p>
           <div
@@ -1034,8 +1055,8 @@ function ShadowPreview({ system, selectedId }: { system: DesignSystemConfig; sel
           </div>
         </section>
 
-        <section aria-label="Card preview" className={`rounded-lg ${mark(card?.id ?? null)}`}>
-          <p className="text-xs font-semibold tracking-wider text-muted-foreground">
+        <section aria-label="Card preview" className={`rounded-lg ${mark(card?.id ?? null)}`} style={markStyle(card?.id ?? null)}>
+          <p className="text-xs font-semibold tracking-wider" style={{ color: muted }}>
             CARD · {card ? card.id : "unconfigured"}
           </p>
           <div
@@ -1048,8 +1069,8 @@ function ShadowPreview({ system, selectedId }: { system: DesignSystemConfig; sel
           </div>
         </section>
 
-        <section aria-label="Elevated card preview" className={`rounded-lg ${mark(elevated?.id ?? null)}`}>
-          <p className="text-xs font-semibold tracking-wider text-muted-foreground">
+        <section aria-label="Elevated card preview" className={`rounded-lg ${mark(elevated?.id ?? null)}`} style={markStyle(elevated?.id ?? null)}>
+          <p className="text-xs font-semibold tracking-wider" style={{ color: muted }}>
             ELEVATED CARD · {elevated ? elevated.id : "unconfigured"}
           </p>
           <div
@@ -1062,8 +1083,8 @@ function ShadowPreview({ system, selectedId }: { system: DesignSystemConfig; sel
           </div>
         </section>
 
-        <section aria-label="Popover preview" className={`rounded-lg ${mark(popover?.id ?? null)}`}>
-          <p className="text-xs font-semibold tracking-wider text-muted-foreground">
+        <section aria-label="Popover preview" className={`rounded-lg ${mark(popover?.id ?? null)}`} style={markStyle(popover?.id ?? null)}>
+          <p className="text-xs font-semibold tracking-wider" style={{ color: muted }}>
             POPOVER · {popover ? popover.id : "unconfigured"}
           </p>
           <div
@@ -1076,8 +1097,8 @@ function ShadowPreview({ system, selectedId }: { system: DesignSystemConfig; sel
           </div>
         </section>
 
-        <section aria-label="Dialog preview" className={`rounded-lg ${mark(dialog?.id ?? null)}`}>
-          <p className="text-xs font-semibold tracking-wider text-muted-foreground">
+        <section aria-label="Dialog preview" className={`rounded-lg ${mark(dialog?.id ?? null)}`} style={markStyle(dialog?.id ?? null)}>
+          <p className="text-xs font-semibold tracking-wider" style={{ color: muted }}>
             DIALOG · {dialog ? dialog.id : "unconfigured"}
           </p>
           <div
@@ -1090,15 +1111,15 @@ function ShadowPreview({ system, selectedId }: { system: DesignSystemConfig; sel
           </div>
         </section>
 
-        <section aria-label="Floating action preview" className={`rounded-lg ${mark(floating?.id ?? null)}`}>
-          <p className="text-xs font-semibold tracking-wider text-muted-foreground">
+        <section aria-label="Floating action preview" className={`rounded-lg ${mark(floating?.id ?? null)}`} style={markStyle(floating?.id ?? null)}>
+          <p className="text-xs font-semibold tracking-wider" style={{ color: muted }}>
             FLOATING ACTION · {floating ? floating.id : "unconfigured"}
           </p>
           <div className="mt-2">
             <button
               tabIndex={-1}
               aria-label="Floating action example"
-              className="grid size-12 place-items-center text-lg font-semibold text-white"
+              className="grid size-12 place-items-center text-lg font-semibold"
               style={{ boxShadow: floating?.css ?? "none", background: actionBg, color: actionFg, borderRadius: "9999px" }}
               title={floating ? `${floating.id} · ${floating.css}` : "unconfigured"}
             >
@@ -1108,7 +1129,7 @@ function ShadowPreview({ system, selectedId }: { system: DesignSystemConfig; sel
         </section>
 
         <section aria-label="Layered stack preview">
-          <p className="text-xs font-semibold tracking-wider text-muted-foreground">LAYERED STACK</p>
+          <p className="text-xs font-semibold tracking-wider" style={{ color: muted }}>LAYERED STACK</p>
           <div className="relative mt-2 h-36">
             {stack.map((slot, index) => (
               <div
@@ -1133,7 +1154,7 @@ function ShadowPreview({ system, selectedId }: { system: DesignSystemConfig; sel
         </section>
 
         <section aria-label="Dark surface preview" className="rounded-lg">
-          <p className="text-xs font-semibold tracking-wider text-muted-foreground">DARK SURFACE CHECK</p>
+          <p className="text-xs font-semibold tracking-wider" style={{ color: muted }}>DARK SURFACE CHECK</p>
           <div
             className="mt-2 rounded-lg p-4"
             style={{ background: "#101014", border: "1px solid #2a2a31" }}

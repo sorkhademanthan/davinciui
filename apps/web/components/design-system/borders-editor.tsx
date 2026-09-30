@@ -8,6 +8,7 @@ import {
   type DesignSystemConfig,
 } from "@/lib/design-system/domain"
 import { ensureRadiusScale } from "@/lib/design-system/radius"
+import { usePreviewTheme } from "@/components/design-system/use-preview-theme"
 import {
   applyBorderPreset,
   availableStyles,
@@ -1328,27 +1329,28 @@ function AddRecipeForm({
 
 function BordersPreview({ system, selectedId }: { system: DesignSystemConfig; selectedId: string | null }) {
   const [focusedInput, setFocusedInput] = useState(false);
+  const { themeOptions, activeThemeId, selectTheme } = usePreviewTheme(system);
 
   const recipeFor = (ids: string[]): { id: string; css: string } | null => {
     for (const id of ids) {
-      const resolved = resolveBorderRecipe(system, id);
+      const resolved = resolveBorderRecipe(system, id, activeThemeId);
       if (resolved) return { id, css: resolved.css };
     }
     return null;
   };
 
   const textColor = (() => {
-    const resolved = resolveToken(system, "text.primary");
+    const resolved = resolveToken(system, "text.primary", activeThemeId);
     return resolved.status === "resolved" ? resolved.value : "#18181b";
   })();
   const mutedColor = (() => {
-    const resolved = resolveToken(system, "text.muted");
+    const resolved = resolveToken(system, "text.muted", activeThemeId);
     return resolved.status === "resolved" ? resolved.value : "#71717a";
   })();
   const surface = (() => {
-    const resolved = resolveToken(system, "background.surface");
+    const resolved = resolveToken(system, "background.surface", activeThemeId);
     if (resolved.status === "resolved") return resolved.value;
-    const canvas = resolveToken(system, "background.canvas");
+    const canvas = resolveToken(system, "background.canvas", activeThemeId);
     return canvas.status === "resolved" ? canvas.value : "#fafafa";
   })();
   const radiusFor = (id: string): string => {
@@ -1366,7 +1368,7 @@ function BordersPreview({ system, selectedId }: { system: DesignSystemConfig; se
   const card = recipeFor(["border.default", "border.subtle"]);
   const dialog = recipeFor(["border.strong", "border.default"]);
   const dashed = [...(system.foundations.borders?.tokens ?? [])]
-    .map((token) => ({ token, resolved: resolveBorderRecipe(system, token.id) }))
+    .map((token) => ({ token, resolved: resolveBorderRecipe(system, token.id, activeThemeId) }))
     .find((entry) => entry.resolved && (entry.resolved.style === "dashed" || entry.resolved.style === "dotted"));
 
   const mark = (usedId: string | null) =>
@@ -1397,6 +1399,18 @@ function BordersPreview({ system, selectedId }: { system: DesignSystemConfig; se
           <> Select a recipe to highlight where it applies.</>
         )}
       </p>
+      <div className="mt-2 flex flex-wrap gap-1.5" role="group" aria-label="Preview theme">
+        {themeOptions.map((theme) => (
+          <button
+            key={theme.id}
+            aria-pressed={activeThemeId === theme.id}
+            onClick={() => selectTheme(theme.id)}
+            className={`inline-flex min-h-11 items-center rounded-lg border px-2.5 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none ${activeThemeId === theme.id ? "border-foreground bg-muted" : "border-border hover:bg-muted/60"}`}
+          >
+            {theme.label} · {theme.mode}
+          </button>
+        ))}
+      </div>
 
       <div className="mt-4 space-y-4">
         <section aria-label="Default input preview" className={`rounded-lg ${mark(input?.id ?? null)}`}>
@@ -1414,6 +1428,7 @@ function BordersPreview({ system, selectedId }: { system: DesignSystemConfig; se
               border: input ? input.css : "1px dashed #a1a1aa",
               borderRadius: radiusFor("md"),
               color: textColor,
+              background: surface,
             }}
           />
         </section>
@@ -1434,6 +1449,7 @@ function BordersPreview({ system, selectedId }: { system: DesignSystemConfig; se
               border: focus ? focus.css : "1px dashed #a1a1aa",
               borderRadius: radiusFor("md"),
               color: textColor,
+              background: surface,
               boxShadow: focusedInput && focus ? `0 0 0 3px ${focus.css.split(" ").slice(2).join(" ")}55` : undefined,
             }}
           >
@@ -1452,6 +1468,7 @@ function BordersPreview({ system, selectedId }: { system: DesignSystemConfig; se
               border: error ? error.css : "1px dashed #a1a1aa",
               borderRadius: radiusFor("md"),
               color: textColor,
+              background: surface,
             }}
           >
             <p className="flex items-center gap-2 font-medium">
@@ -1479,12 +1496,12 @@ function BordersPreview({ system, selectedId }: { system: DesignSystemConfig; se
           <p className="text-xs font-semibold tracking-wider text-muted-foreground">DIVIDER</p>
           <hr
             className="mt-2 border-0"
-            style={{
-              borderTop: (() => {
-                const subtle = resolveBorderRecipe(system, "border.subtle") ?? card;
-                return subtle ? subtle.css : "1px solid #e4e4e7";
-              })(),
-            }}
+              style={{
+                borderTop: (() => {
+                  const subtle = resolveBorderRecipe(system, "border.subtle", activeThemeId) ?? card;
+                  return subtle ? subtle.css : "1px solid #e4e4e7";
+                })(),
+              }}
             title="border.subtle"
           />
         </section>
