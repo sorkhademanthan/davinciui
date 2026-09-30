@@ -26,6 +26,7 @@ import {
   type Palette,
   type PaletteRole,
 } from "@/lib/design-system/domain"
+import { usePreviewTheme } from "@/components/design-system/use-preview-theme"
 
 export function ColorsEditor({
   system,
@@ -791,30 +792,31 @@ interface PreviewColor {
   configured: boolean
 }
 
-function previewColor(system: DesignSystemConfig, candidates: string[]): PreviewColor {
+function previewColor(system: DesignSystemConfig, candidates: string[], themeId?: string): PreviewColor {
   for (const candidate of candidates) {
-    const resolved = resolveToken(system, candidate)
+    const resolved = resolveToken(system, candidate, themeId)
     if (resolved.status === "resolved") return { value: resolved.value, token: candidate, configured: true }
   }
   return { value: null, token: candidates[0] ?? "", configured: false }
 }
 
 function ColorPreview({ system, palette }: { system: DesignSystemConfig; palette: Palette }) {
-  const actionBg = previewColor(system, ["action.primary.background"])
-  const actionFg = previewColor(system, ["action.primary.foreground"])
-  const border = previewColor(system, ["border.default"])
-  const ring = previewColor(system, ["focus.ring"])
-  const link = previewColor(system, ["action.primary.background", "brand.600"])
-  const canvas = previewColor(system, ["background.canvas"])
-  const surface = previewColor(system, ["background.surface"])
-  const text = previewColor(system, ["text.primary"])
-  const muted = previewColor(system, ["text.muted"])
+  const { themeOptions, activeThemeId, selectTheme } = usePreviewTheme(system)
+  const actionBg = previewColor(system, ["action.primary.background"], activeThemeId)
+  const actionFg = previewColor(system, ["action.primary.foreground"], activeThemeId)
+  const border = previewColor(system, ["border.default"], activeThemeId)
+  const ring = previewColor(system, ["focus.ring"], activeThemeId)
+  const link = previewColor(system, ["action.primary.background", "brand.600"], activeThemeId)
+  const canvas = previewColor(system, ["background.canvas"], activeThemeId)
+  const surface = previewColor(system, ["background.surface"], activeThemeId)
+  const text = previewColor(system, ["text.primary"], activeThemeId)
+  const muted = previewColor(system, ["text.muted"], activeThemeId)
   const [focused, setFocused] = useState(false)
 
   const badges = (["success", "warning", "danger", "info"] as const).map((kind) => ({
     kind,
     label: kind[0]!.toUpperCase() + kind.slice(1),
-    ...previewColor(system, [`status.${kind}`, `${kind}.600`, `${kind}.500`]),
+    ...previewColor(system, [`status.${kind}`, `${kind}.600`, `${kind}.500`], activeThemeId),
   }))
 
   const sources: Array<{ element: string; token: string; value: string }> = []
@@ -838,7 +840,19 @@ function ColorPreview({ system, palette }: { system: DesignSystemConfig; palette
   return (
     <aside aria-label="Token-driven preview" className="h-fit rounded-xl border border-border bg-background p-5">
       <p className="text-xs font-semibold tracking-wider text-muted-foreground">LIVE PREVIEW</p>
-      <p className="mt-1 text-xs text-muted-foreground">Resolves live system tokens (base values).</p>
+      <p className="mt-1 text-xs text-muted-foreground">Resolves live system tokens through the selected theme.</p>
+      <div className="mt-2 flex flex-wrap gap-1.5" role="group" aria-label="Preview theme">
+        {themeOptions.map((theme) => (
+          <button
+            key={theme.id}
+            aria-pressed={activeThemeId === theme.id}
+            onClick={() => selectTheme(theme.id)}
+            className={`inline-flex min-h-11 items-center rounded-lg border px-2.5 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none ${activeThemeId === theme.id ? "border-foreground bg-muted" : "border-border hover:bg-muted/60"}`}
+          >
+            {theme.label} · {theme.mode}
+          </button>
+        ))}
+      </div>
 
       <div className="mt-5 space-y-4 rounded-lg border border-border p-4">
         {actionBg.configured ? (

@@ -24,6 +24,7 @@ import {
   type RadiusPreset,
   type RadiusUnit,
 } from "@/lib/design-system/radius"
+import { usePreviewTheme } from "@/components/design-system/use-preview-theme"
 import { resolveToken } from "@/lib/design-system/domain"
 
 export function RadiusEditor({
@@ -668,6 +669,7 @@ function AddTokenForm({
 }
 
 function RadiusPreview({ system, selectedId }: { system: DesignSystemConfig; selectedId: string | null }) {
+  const { themeOptions, activeThemeId, selectTheme } = usePreviewTheme(system)
   const radiusFor = (ids: string[]): { id: string; value: string } | null => {
     for (const id of ids) {
       const token = currentScale(system).find((entry) => entry.id === id)
@@ -686,7 +688,7 @@ function RadiusPreview({ system, selectedId }: { system: DesignSystemConfig; sel
 
   const fg = (() => {
     try {
-      const resolved = resolveToken(system, "text.primary")
+      const resolved = resolveToken(system, "text.primary", activeThemeId)
       return resolved.status === "resolved" ? resolved.value : "#18181b"
     } catch {
       return "#18181b"
@@ -694,9 +696,9 @@ function RadiusPreview({ system, selectedId }: { system: DesignSystemConfig; sel
   })()
   const surface = (() => {
     try {
-      const resolved = resolveToken(system, "background.surface")
+      const resolved = resolveToken(system, "background.surface", activeThemeId)
       if (resolved.status === "resolved") return resolved.value
-      const canvas = resolveToken(system, "background.canvas")
+      const canvas = resolveToken(system, "background.canvas", activeThemeId)
       return canvas.status === "resolved" ? canvas.value : "#fafafa"
     } catch {
       return "#fafafa"
@@ -704,10 +706,20 @@ function RadiusPreview({ system, selectedId }: { system: DesignSystemConfig; sel
   })()
   const actionBg = (() => {
     try {
-      const resolved = resolveToken(system, "action.primary.background")
+      const resolved = resolveToken(system, "action.primary.background", activeThemeId)
       return resolved.status === "resolved" ? resolved.value : "#18181b"
     } catch {
       return "#18181b"
+    }
+  })()
+  // Button/avatar text pairs with the action background — never a hardcoded
+  // white, which fails on light custom action colors.
+  const actionFg = (() => {
+    try {
+      const resolved = resolveToken(system, "action.primary.foreground", activeThemeId)
+      return resolved.status === "resolved" ? resolved.value : "#ffffff"
+    } catch {
+      return "#ffffff"
     }
   })()
 
@@ -741,6 +753,18 @@ function RadiusPreview({ system, selectedId }: { system: DesignSystemConfig; sel
           <> Select a token to highlight where it applies.</>
         )}
       </p>
+      <div className="mt-2 flex flex-wrap gap-1.5" role="group" aria-label="Preview theme">
+        {themeOptions.map((theme) => (
+          <button
+            key={theme.id}
+            aria-pressed={activeThemeId === theme.id}
+            onClick={() => selectTheme(theme.id)}
+            className={`inline-flex min-h-11 items-center rounded-lg border px-2.5 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none ${activeThemeId === theme.id ? "border-foreground bg-muted" : "border-border hover:bg-muted/60"}`}
+          >
+            {theme.label} · {theme.mode}
+          </button>
+        ))}
+      </div>
 
       <div className="mt-4 space-y-4">
         <section aria-label="Button and input preview" className={`rounded-lg ${mark(button?.id ?? input?.id ?? null)}`}>
@@ -748,8 +772,8 @@ function RadiusPreview({ system, selectedId }: { system: DesignSystemConfig; sel
           <div className="mt-2 flex max-w-full flex-wrap items-center gap-2">
             <button
               tabIndex={-1}
-              className="inline-flex min-h-11 items-center px-4 text-sm font-medium text-white"
-              style={{ borderRadius: button?.value ?? "0px", background: actionBg }}
+              className="inline-flex min-h-11 items-center px-4 text-sm font-medium"
+              style={{ borderRadius: button?.value ?? "0px", background: actionBg, color: actionFg }}
               title={button ? `${button.id} · ${button.value}` : "unconfigured"}
             >
               Continue
@@ -806,8 +830,8 @@ function RadiusPreview({ system, selectedId }: { system: DesignSystemConfig; sel
               role="img"
               aria-label={avatar ? `Avatar, ${avatar.id}, ${avatar.value}` : "Avatar unconfigured"}
               title={avatar ? `${avatar.id} · ${avatar.value}` : "unconfigured"}
-              className={`grid size-12 place-items-center text-sm font-semibold text-white ${mark(avatar?.id ?? null)}`}
-              style={{ borderRadius: avatar?.value ?? "0px", background: actionBg }}
+              className={`grid size-12 place-items-center text-sm font-semibold ${mark(avatar?.id ?? null)}`}
+              style={{ borderRadius: avatar?.value ?? "0px", background: actionBg, color: actionFg }}
             >
               M
             </span>
@@ -819,8 +843,8 @@ function RadiusPreview({ system, selectedId }: { system: DesignSystemConfig; sel
               Badge
             </span>
             <span
-              className={`inline-flex min-h-11 items-center px-4 text-xs font-medium text-white ${mark(pill?.id ?? null)}`}
-              style={{ borderRadius: pill?.value ?? "0px", background: actionBg }}
+              className={`inline-flex min-h-11 items-center px-4 text-xs font-medium ${mark(pill?.id ?? null)}`}
+              style={{ borderRadius: pill?.value ?? "0px", background: actionBg, color: actionFg }}
               title={pill ? `${pill.id} · ${pill.value}` : "unconfigured"}
             >
               New tag
