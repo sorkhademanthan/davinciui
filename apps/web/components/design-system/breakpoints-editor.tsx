@@ -30,6 +30,7 @@ import {
   type BreakpointPreset,
   type BreakpointUnit,
 } from "@/lib/design-system/breakpoints"
+import { effectiveProfile, ensureGridForSystem, resolveGridForWidth } from "@/lib/design-system/grid"
 
 export function BreakpointsEditor({
   system,
@@ -218,11 +219,11 @@ function ScaleDiffSummary({
 }
 
 function GridSummary({ system }: { system: DesignSystemConfig }) {
-  const grid = system.foundations.grid
+  const scale = currentScale(system)
   return (
     <div className="rounded-lg border border-border bg-muted/40 p-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h3 className="text-sm font-medium">Grid configuration (shared)</h3>
+        <h3 className="text-sm font-medium">Grid profiles by breakpoint</h3>
         <a
           href={`/design-system/${system.id}/grid`}
           className="inline-flex min-h-11 items-center rounded-lg border border-border bg-background px-3 text-xs font-medium transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
@@ -230,12 +231,19 @@ function GridSummary({ system }: { system: DesignSystemConfig }) {
           Open Grid
         </a>
       </div>
-      <p className="mt-1 font-mono text-[11px] text-muted-foreground">
-        {grid.columns} columns · gutter {grid.gutter} · max-width {grid.maxWidth}
-      </p>
-      <p className="mt-1 text-xs leading-5 text-muted-foreground">
-        Thresholds below decide <em>when</em> layouts switch. Column, gutter, and gap values
-        live in Grid and are never changed here.
+      <ul className="mt-2 space-y-1 font-mono text-[11px] text-muted-foreground">
+        {scale.map((token) => {
+          const profile = effectiveProfile(system, token.id)
+          return (
+            <li key={token.id}>
+              {token.id} ≥{token.value}: {profile.columns} cols · {profile.gutter}/{profile.columnGap}/{profile.rowGap}
+            </li>
+          )
+        })}
+      </ul>
+      <p className="mt-2 text-xs leading-5 text-muted-foreground">
+        Thresholds below decide <em>when</em> each Grid profile activates. Column, gutter, and gap values
+        live in Grid and are never changed here — editing a threshold only moves the switch point.
       </p>
     </div>
   )
@@ -622,10 +630,25 @@ function TokenRow({
             {guard.reasons[0]} {guard.references.length > 0 && <>({guard.references.map((reference) => reference.pointer).join(", ")})</>}
           </p>
         ) : (
-          <p className="font-mono text-[11px] text-muted-foreground">= {token.value} min-width</p>
+          <GridProfileLine system={system} breakpointId={token.id} value={token.value} />
         )}
       </div>
     </li>
+  )
+}
+
+function GridProfileLine({ system, breakpointId, value }: { system: DesignSystemConfig; breakpointId: string; value: string }) {
+  const profile = effectiveProfile(system, breakpointId)
+  return (
+    <p className="font-mono text-[11px] text-muted-foreground">
+      = {value} min-width · Grid {profile.columns} cols · {profile.gutter}/{profile.columnGap}/{profile.rowGap} activate here ·{" "}
+      <a
+        href={`/design-system/${system.id}/grid`}
+        className="underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        Open Grid
+      </a>
+    </p>
   )
 }
 
@@ -796,9 +819,14 @@ function BreakpointPreview({ system, selectedId }: { system: DesignSystemConfig;
   const [widthError, setWidthError] = useState<string | null>(null);
 
   const active = activeBreakpoint(system, previewWidth);
-  const grid = system.foundations.grid;
+  const resolved = resolveGridForWidth(system, previewWidth);
+  const grid = ensureGridForSystem(system);
+  // Responsive Grid drives the layout: the stored profile for the active
+  // breakpoint decides columns/gaps, so editing a threshold visibly moves the
+  // switch point without discarding any Grid values.
+  const previewCols = Math.min(resolved.profile.columns, 3);
+  const isCompactLayout = resolved.profile.columns <= 6;
   const gap = firstAvailablePx(system, "spacing", ["space-4", "space-3", "space-2"]);
-  const cardPad = firstAvailablePx(system, "spacing", ["space-4", "space-3"]);
   const radius = radiusValueFor(system, "md") ?? "8px";
   const borderDefault = resolveBorderRecipe(system, "border.default");
   const borderSubtle = resolveBorderRecipe(system, "border.subtle");
@@ -817,9 +845,9 @@ function BreakpointPreview({ system, selectedId }: { system: DesignSystemConfig;
     setPreviewWidth(Math.round(parsed));
   };
 
-  const columns = Math.max(1, grid.columns);
-  const shownColumns = Math.min(columns, 6);
-  const gridMax = parseGridMaxWidth(grid.maxWidth);
+  const columns = resolved.profile.columns;
+  const container = grid.containers.find((c) => c.id === grid.defaultContainer) ?? grid.containers[0]!;
+  const gridMax = parseGridMaxWidth(container?.value ?? grid.maxWidth);
 
   return (
     <aside aria-label="Breakpoint preview" className="h-fit rounded-xl border border-border bg-background p-5">
@@ -885,6 +913,15 @@ function BreakpointPreview({ system, selectedId }: { system: DesignSystemConfig;
           <span className="font-mono text-muted-foreground"> ≥{active.value}</span>
           <span className="text-muted-foreground"> at {previewWidth}px</span>
         </p>
+        <p className="w-full text-xs text-muted-foreground">
+          Grid: {columns} cols · {resolved.profile.gutter}/{resolved.profile.columnGap}/{resolved.profile.rowGap} · {previewCols}-up cards active here.{" "}
+          <a
+            href={`/design-system/${system.id}/grid`}
+            className="font-medium underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            Open Grid
+          </a>
+        </p>
       </div>
 
       <div className="mt-3 overflow-x-auto rounded-lg border border-border bg-muted/30 p-3">
@@ -906,7 +943,7 @@ function BreakpointPreview({ system, selectedId }: { system: DesignSystemConfig;
               style={{ borderColor: "inherit", gap: gap ? `${Math.min(gap.px, 24)}px` : undefined }}
             >
               <span className="grid size-8 shrink-0 place-items-center rounded-md bg-foreground font-mono text-[10px] font-bold text-background" aria-hidden="true">
-                {previewWidth >= 768 ? "▦" : "☰"}
+                {isCompactLayout ? "☰" : "▦"}
               </span>
               <span className="min-w-0 flex-1 truncate text-[13px] font-semibold">Project overview</span>
               <span className="shrink-0 rounded-md bg-foreground px-2.5 py-1 text-[11px] font-medium text-background">
@@ -919,7 +956,7 @@ function BreakpointPreview({ system, selectedId }: { system: DesignSystemConfig;
             <div
               className="grid gap-2 p-3"
               style={{
-                gridTemplateColumns: `repeat(${Math.min(columns, previewWidth < 640 ? 1 : previewWidth < 1024 ? 2 : 3)}, minmax(0, 1fr))`,
+                gridTemplateColumns: `repeat(${Math.min(columns, previewCols)}, minmax(0, 1fr))`,
                 gap: gap ? `${Math.min(gap.px, 24)}px` : undefined,
               }}
             >
@@ -962,7 +999,7 @@ function BreakpointPreview({ system, selectedId }: { system: DesignSystemConfig;
               />
             </label>
             <div className="flex min-w-0 flex-wrap" style={{ gap: gap ? `${Math.min(gap.px, 16)}px` : undefined }}>
-              <span className="inline-flex min-h-11 items-center rounded-lg bg-foreground px-4 text-sm font-medium text-white" style={{ borderRadius: radius }}>
+              <span className="inline-flex min-h-11 items-center rounded-lg bg-foreground px-4 text-sm font-medium text-background" style={{ borderRadius: radius }}>
                 Save changes
               </span>
               <span className="inline-flex min-h-11 items-center rounded-lg border px-4 text-sm font-medium" style={{ border: cardBorder, borderRadius: radius }}>
