@@ -40,6 +40,8 @@ export const FONT_CATALOG: readonly FontCatalogEntry[] = [
   { family: "Plus Jakarta Sans", category: "sans", fallbacks: SANS_FALLBACK },
   { family: "Space Grotesk", category: "display", fallbacks: SANS_FALLBACK },
   { family: "Geist", category: "sans", fallbacks: SANS_FALLBACK },
+  { family: "Roboto", category: "sans", fallbacks: SANS_FALLBACK },
+  { family: "Open Sans", category: "sans", fallbacks: SANS_FALLBACK },
   { family: "Georgia", category: "serif", fallbacks: SERIF_FALLBACK, note: "System serif" },
   // Additional sans.
   { family: "IBM Plex Sans", category: "sans", fallbacks: SANS_FALLBACK },
