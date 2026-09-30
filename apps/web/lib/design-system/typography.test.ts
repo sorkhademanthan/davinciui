@@ -7,6 +7,7 @@ import { createDesignSystemsStore, type StorageLike } from "./repository";
 import { createSystemFromStarter } from "./starters";
 import {
   applyFamilyToRoleStyles,
+  assignFontFamily,
   ensureTextStyles,
   parseFallbackStack,
   parseFamilyName,
@@ -62,6 +63,22 @@ test("editing Body does not mutate Display, Heading, Label, or Mono", () => {
   }
   // The input system is untouched (pure update).
   assert.equal(before.foundations.typography.roles.body.fontFamily, "Inter");
+});
+
+test("a font assignment updates its related roles and styles without changing the others", () => {
+  const before = manthan();
+  const after = assignFontFamily(
+    before,
+    ["display", "heading"],
+    "Roboto",
+    ["system-ui", "sans-serif"],
+  );
+  assert.equal(after.foundations.typography.roles.display.fontFamily, "Roboto");
+  assert.equal(after.foundations.typography.roles.heading.fontFamily, "Roboto");
+  assert.equal(after.foundations.typography.roles.body.fontFamily, before.foundations.typography.roles.body.fontFamily);
+  assert.equal(ensureTextStyles(after).find((style) => style.id === "h1")?.fontFamily, "Roboto");
+  assert.equal(ensureTextStyles(after).find((style) => style.id === "body")?.fontFamily, before.foundations.typography.roles.body.fontFamily);
+  assert.deepEqual(validateDesignSystem(after), []);
 });
 
 test("editing h1 does not mutate h2 or body styles", () => {

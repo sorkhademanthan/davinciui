@@ -199,6 +199,46 @@ export function applyFamilyToRoleStyles(system: DesignSystemConfig, role: Typogr
   };
 }
 
+/**
+ * Apply one deliberate font assignment to a related set of roles and their
+ * styles in a single immutable update. This powers the beginner-friendly
+ * pairing picker while leaving individual role/style editing available.
+ */
+export function assignFontFamily(
+  system: DesignSystemConfig,
+  roles: readonly TypographyRole[],
+  fontFamily: string,
+  fallback: readonly string[],
+): DesignSystemConfig {
+  const selectedRoles = new Set(roles);
+  const typography = system.foundations.typography;
+  const styles = ensureTextStyles(system);
+  return {
+    ...system,
+    foundations: {
+      ...system.foundations,
+      typography: {
+        ...typography,
+        primary: selectedRoles.has("body") ? fontFamily : typography.primary,
+        roles: {
+          ...typography.roles,
+          ...Object.fromEntries(
+            roles.map((role) => [
+              role,
+              { ...typography.roles[role], fontFamily, fallback: [...fallback] },
+            ]),
+          ),
+        },
+        styles: styles.map((style) =>
+          selectedRoles.has(style.role)
+            ? { ...style, fontFamily, fallback: [...fallback] }
+            : style,
+        ),
+      },
+    },
+  };
+}
+
 export interface OverrideReport {
   overridden: boolean;
   fields: SpecField[];
