@@ -33,6 +33,48 @@ export const ICON_COLOR_ROLES: ReadonlyArray<{ id: IconColorRole; label: string 
   { id: "danger", label: "Danger" },
 ];
 
+/** A presentation-ready icon specification for documentation and PDF export. */
+export interface IconExportSummary {
+  source: { label: string; rendered: boolean };
+  defaultSize: { id: string; label: string; value: string; px: number | null };
+  sizes: Array<{ id: string; label: string; value: string; px: number | null; usage: string }>;
+  stroke: { label: string; width: number; lineCap: IconLineCap; lineJoin: IconLineJoin };
+  colors: Array<{ id: IconColorRole; label: string; reference: string; value: string | null }>;
+}
+
+const ICON_EXPORT_USAGE: Record<string, string> = {
+  "icon-xs": "Dense metadata",
+  "icon-sm": "Buttons and inputs",
+  "icon-md": "Everyday interface",
+  "icon-lg": "Navigation and features",
+  "icon-xl": "Empty states and heroes",
+};
+
+export function iconExportSummary(system: DesignSystemConfig, themeId?: string): IconExportSummary {
+  const icons = system.foundations.icons;
+  const sizes = sizesOf(system);
+  const defaultSize = sizes.find((size) => size.id === icons.defaultSize) ?? sizes[0]!;
+  const preset = STROKE_PRESETS.find((entry) => entry.width === icons.strokeWidth);
+  return {
+    source: { label: icons.library === "lucide" ? "Lucide" : "Custom SVG", rendered: isRenderedSource(icons.library) },
+    defaultSize: { id: defaultSize.id, label: defaultSize.label, value: defaultSize.value, px: pxOfIconSize(defaultSize) },
+    sizes: sizes.map((size) => ({
+      id: size.id,
+      label: size.label,
+      value: size.value,
+      px: pxOfIconSize(size),
+      usage: size.description ?? ICON_EXPORT_USAGE[size.id] ?? "Custom icon size",
+    })),
+    stroke: { label: preset?.label ?? "Custom", width: icons.strokeWidth, lineCap: icons.lineCap ?? "round", lineJoin: icons.lineJoin ?? "round" },
+    colors: ICON_COLOR_ROLES.map((role) => ({
+      id: role.id,
+      label: role.label,
+      reference: colorsOf(system)[role.id],
+      value: resolveIconColor(system, role.id, themeId),
+    })),
+  };
+}
+
 export function iconColorRoleLabel(role: IconColorRole): string {
   return ICON_COLOR_ROLES.find((entry) => entry.id === role)?.label ?? role;
 }

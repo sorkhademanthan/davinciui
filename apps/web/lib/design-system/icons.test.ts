@@ -19,6 +19,7 @@ import {
   formatIconSize,
   hasCustomIconEdits,
   humanIconLabel,
+  iconExportSummary,
   iconColorOptions,
   iconIssues,
   iconSizePx,
@@ -109,6 +110,17 @@ test("Lucide is the default supported rendered source", () => {
   // Unsupported libraries are rejected, never selectable.
   assert.equal(setIconSource(system, "font-awesome").ok, false);
   assert.equal(setIconSource(system, "").ok, false);
+});
+
+test("export summary is presentation-ready and retains source token references", () => {
+  const system = manthanSystem();
+  const summary = iconExportSummary(system, "light");
+  assert.equal(summary.source.label, "Lucide");
+  assert.equal(summary.defaultSize.id, "icon-md");
+  assert.equal(summary.stroke.label, "Standard");
+  assert.ok(summary.sizes.some((size) => size.id === "icon-sm" && size.usage.length > 0));
+  assert.equal(summary.colors.length, 6);
+  assert.equal(summary.colors.find((color) => color.id === "default")?.reference, system.foundations.icons.colors.default);
 });
 
 test("icon size and color role updates persist after reload", () => {
