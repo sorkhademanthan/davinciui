@@ -235,13 +235,15 @@ test("effective active-breakpoint resolution is correct across widths", () => {
 test("deleting a Grid-referenced breakpoint is blocked", () => {
   const system = manthanSystem();
   const references = findBreakpointReferences(system, "md");
-  assert.equal(references.length, 1);
-  assert.equal(references[0]?.kind, "component");
-  assert.equal(references[0]?.pointer, "Card.columns");
+  // Manthan wires "md" to a Card override and every canonical breakpoint now
+  // carries a responsive Grid profile keyed by the same stable id.
+  assert.ok(references.some((ref) => ref.kind === "component" && ref.pointer === "Card.columns"));
+  assert.ok(references.some((ref) => ref.kind === "grid"));
   const guard = canDeleteBreakpoint(system, "md");
   assert.equal(guard.ok, false);
   if (guard.ok) return;
-  assert.ok(guard.reasons[0]?.includes("md is used by 1 token (Card.columns)"));
+  assert.ok(guard.reasons[0]?.includes("md is used by"));
+  assert.ok(guard.reasons[0]?.includes("Card.columns"));
   assert.deepEqual(guard.references, references);
 
   const solo: DesignSystemConfig = {

@@ -154,9 +154,9 @@ export function SiteHeader({ sidebarToggle, landingGutter }: SiteHeaderProps) {
                 "fixed top-0 left-0 right-0 z-50 w-full transition-[background-color,border-color] duration-200",
                 landingGutter
                     ? isScrolled
-                        ? "border-b border-line bg-white/95 backdrop-blur-md dark:bg-background/95"
+                        ? "border-b border-line bg-background/95 backdrop-blur-md"
                         : "border-b border-transparent bg-transparent"
-                    : "border-b border-line bg-white dark:bg-background"
+                    : "border-b border-line bg-background"
             )}
         >
             <div
