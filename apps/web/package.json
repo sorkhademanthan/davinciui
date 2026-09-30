@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "eslint . --max-warnings 0",
     "lint:fix": "eslint . --fix",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test:focus": "node ../../scripts/run-design-system-tests.mjs"
   },
   "dependencies": {
     "@paper-design/shaders-react": "0.0.80",
