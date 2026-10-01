@@ -361,7 +361,7 @@ export function CreateDesignSystem() {
                   Live summary
                 </p>
                 <p className="mt-0.5 text-xs text-muted-foreground">
-                  Unsaved choices so far. Palettes, themes, and components are set up in the builder.
+                  Unsaved choices so far. Refine colours, type, and themes after creating the system.
                 </p>
               </div>
               <div className="space-y-4 p-5">

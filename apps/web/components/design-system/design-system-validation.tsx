@@ -224,6 +224,7 @@ function severityMeta(severity: ValidationSeverity): { Icon: typeof Info; label:
 
 function FindingCard({ finding }: { finding: ValidationFinding }) {
   const { Icon, label, className } = severityMeta(finding.severity)
+  const opensComponentCatalog = finding.route === "/experience/components"
   return (
     <li className="rounded-xl border border-border bg-background p-4">
       <div className="flex flex-wrap items-center gap-2">
@@ -242,7 +243,7 @@ function FindingCard({ finding }: { finding: ValidationFinding }) {
           href={finding.route}
           className="ml-auto inline-flex min-h-9 items-center gap-1 rounded-lg border border-border px-3 text-xs font-medium transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
-          Open in editor
+          {opensComponentCatalog ? "Open component catalog" : "Open in editor"}
           <ArrowRight className="size-3.5" aria-hidden="true" />
         </Link>
       </div>

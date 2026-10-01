@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils"
 type SidebarSection = { title: string; items: Array<{ title: string; href: string }> }
 
 const builderFoundations = ["Colors", "Typography", "Spacing", "Radius", "Borders", "Shadows", "Motion", "Icons", "Grid", "Breakpoints"]
-const builderSystem: Array<[string, string]> = [["Semantic Tokens", "tokens"], ["Themes", "themes"], ["Components", "components"], ["Preview", "preview"], ["Validate", "validate"], ["Export", "export"]]
+const builderSystem: Array<[string, string]> = [["Semantic Tokens", "tokens"], ["Themes", "themes"], ["Preview", "preview"], ["Validate", "validate"], ["Export", "export"]]
 
 function SidebarItem({ title, href, active }: { title: string; href: string; active?: boolean }) {
   return <Link href={href} aria-current={active ? "page" : undefined} className={cn("flex items-center justify-between gap-2 rounded-md px-2 py-1.5 text-[13.5px] leading-5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none", active ? "bg-foreground text-background font-medium shadow-sm" : "text-muted-foreground hover:bg-muted hover:text-foreground")}><span className="truncate">{title}</span></Link>
