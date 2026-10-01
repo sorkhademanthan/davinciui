@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { components } from "@/registry"
+import { components, sortByFeatured } from "@/registry"
 
 export const metadata: Metadata = {
   title: "Components — DavinciUI",
@@ -37,9 +37,9 @@ export default function ComponentsIndexPage() {
 
       <div className="mt-10 space-y-12">
         {categoryOrder.map((category) => {
-          const items = Object.values(components)
-            .filter((c) => c.category === category)
-            .sort((a, b) => a.title.localeCompare(b.title))
+          const items = sortByFeatured(
+            Object.values(components).filter((c) => c.category === category),
+          )
           if (items.length === 0) return null
           return (
             <section key={category}>
