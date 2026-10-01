@@ -16,6 +16,7 @@ import { useMemo, useState, type ReactNode } from "react"
 import type { DesignSystemConfig, Theme } from "@/lib/design-system/domain"
 import { isHexColor, resolveToken } from "@/lib/design-system/domain"
 import { categoryLabel, groupTokensByCategory } from "@/lib/design-system/semantic-tokens"
+import { contrastRatio } from "@/lib/design-system/validation"
 import {
   canDeleteTheme,
   clearThemeOverrides,
@@ -59,13 +60,14 @@ export function ThemesEditor({
   return (
     <>
       <PageHeader
-        eyebrow="Design System / System"
+        eyebrow="Design System / Themes"
         title="Themes"
-        description="Configure Light, Dark, and custom themes as override layers over base semantic tokens. Foundations and base values are never touched here."
+        description="Keep the same colour roles across your product, then choose how those roles look in Light, Dark, or a custom theme."
       />
       <div className="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
         <div className="min-w-0 space-y-4">
           <MissingThemesBanner system={system} save={save} />
+          <ThemeGuide />
           <ThemeCards
             system={system}
             save={save}
@@ -73,12 +75,50 @@ export function ThemesEditor({
             onSelect={setSelectedId}
           />
           {selected && (
-            <OverrideTable key={selected.id} system={system} save={save} theme={selected} />
+            <>
+              <ThemeEssentials key={`essentials-${selected.id}`} system={system} save={save} theme={selected} />
+              <details className="rounded-xl border border-border bg-background">
+                <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 px-5 py-3 text-sm font-medium marker:content-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                  <span>Advanced theme settings</span>
+                  <span className="text-xs font-normal text-muted-foreground">
+                    Search and change any colour role
+                  </span>
+                </summary>
+                <div className="border-t border-border p-3 sm:p-5">
+                  <OverrideTable key={selected.id} system={system} save={save} theme={selected} />
+                </div>
+              </details>
+            </>
           )}
         </div>
         {selected && <ThemePreview system={system} theme={selected} />}
       </div>
     </>
+  )
+}
+
+function ThemeGuide() {
+  return (
+    <section aria-label="How themes work" className="rounded-xl border border-border bg-muted/20 p-5">
+      <h2 className="text-base font-semibold">One interface, different appearances</h2>
+      <p className="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">
+        The purpose of each colour stays the same. A theme only changes the colour used for that purpose.
+      </p>
+      <div className="mt-4 grid gap-3 sm:grid-cols-3">
+        <div>
+          <p className="text-sm font-medium">1. Keep the role</p>
+          <p className="mt-1 text-xs leading-5 text-muted-foreground">“Main text” always means readable primary content.</p>
+        </div>
+        <div>
+          <p className="text-sm font-medium">2. Change its colour</p>
+          <p className="mt-1 text-xs leading-5 text-muted-foreground">Light may use dark text; Dark may use light text.</p>
+        </div>
+        <div>
+          <p className="text-sm font-medium">3. Components follow</p>
+          <p className="mt-1 text-xs leading-5 text-muted-foreground">Buttons, cards, inputs, and alerts update together.</p>
+        </div>
+      </div>
+    </section>
   )
 }
 
@@ -145,7 +185,10 @@ function ThemeCards({
   return (
     <section aria-label="Themes" className="rounded-xl border border-border bg-background p-5">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h2 className="font-medium">Themes ({themes.length})</h2>
+        <div>
+          <h2 className="font-medium">Choose a theme</h2>
+          <p className="mt-1 text-xs leading-5 text-muted-foreground">Light and Dark are ready to use. Create another only when your product needs a distinct appearance.</p>
+        </div>
         <button
           onClick={() => setShowCreate((open) => !open)}
           aria-expanded={showCreate}
@@ -190,20 +233,28 @@ function ThemeCards({
                     </span>
                   )}
                 </span>
-                <span className="mt-0.5 block font-mono text-[11px] text-muted-foreground">
-                  {theme.id} · {theme.mode}
+                <span className="mt-0.5 block text-[11px] capitalize text-muted-foreground">{theme.mode} appearance</span>
+                <span className="mt-2 flex overflow-hidden rounded-md border border-border" aria-hidden="true">
+                  {["background.canvas", "surface.default", "text.primary", "action.primary.background"].map((id) => (
+                    <span key={id} className="h-7 flex-1" style={{ backgroundColor: resolveThemeColor(system, id, theme.id) }} />
+                  ))}
                 </span>
                 <span className="mt-1 block text-[11px] text-muted-foreground">
                   {summary
                     ? summary.invalid > 0
-                      ? `${summary.invalid} invalid · ${summary.overridden} overridden`
+                      ? `${summary.invalid} colour ${summary.invalid === 1 ? "needs" : "need"} attention`
                       : summary.overridden === 0
-                        ? "Fully inherited"
-                        : `${summary.overridden} overridden · ${summary.inherited} inherited`
+                        ? "Uses all base colours"
+                        : `${summary.overridden} customised colours`
                     : ""}
                 </span>
               </button>
-              <ThemeCardActions system={system} save={save} theme={theme} onSelect={onSelect} />
+              <details className="mt-2 border-t border-border pt-1">
+                <summary className="inline-flex min-h-10 cursor-pointer items-center text-xs font-medium text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                  Theme options
+                </summary>
+                <ThemeCardActions system={system} save={save} theme={theme} onSelect={onSelect} />
+              </details>
             </div>
           )
         })}
@@ -507,6 +558,170 @@ function CreateThemeForm({
   )
 }
 
+const THEME_ESSENTIALS = [
+  { id: "background.canvas", label: "Page background", description: "The colour behind the whole interface" },
+  { id: "surface.default", label: "Cards and panels", description: "The main surface placed on the page" },
+  { id: "text.primary", label: "Main text", description: "Headings, labels, and important content" },
+  { id: "text.secondary", label: "Supporting text", description: "Paragraphs and descriptions" },
+  { id: "action.primary.background", label: "Main button", description: "The background of the primary action" },
+  { id: "action.primary.foreground", label: "Main button text", description: "Text and icons on the primary action" },
+  { id: "border.default", label: "Borders", description: "Cards, inputs, and quiet dividers" },
+  { id: "focus.ring", label: "Keyboard focus", description: "The outline around the active control" },
+] as const
+
+function ThemeEssentials({
+  system,
+  save,
+  theme,
+}: {
+  system: DesignSystemConfig
+  save: (next: DesignSystemConfig) => void
+  theme: Theme
+}) {
+  return (
+    <section aria-label={`Essential colours for ${theme.label}`} className="rounded-xl border border-border bg-background p-5">
+      <div>
+        <p className="text-xs text-muted-foreground">Editing {theme.label}</p>
+        <h2 className="mt-1 text-lg font-semibold">Set the colours people notice most</h2>
+        <p className="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">
+          Start with these eight roles. Any role you leave unchanged continues using its shared base colour.
+        </p>
+      </div>
+      <ul className="mt-5 grid gap-2 lg:grid-cols-2">
+        {THEME_ESSENTIALS.map((role) => (
+          <ThemeRoleCard key={role.id} system={system} save={save} theme={theme} {...role} />
+        ))}
+      </ul>
+      <ThemeContrastSummary system={system} theme={theme} />
+    </section>
+  )
+}
+
+function ThemeRoleCard({
+  system,
+  save,
+  theme,
+  id,
+  label,
+  description,
+}: {
+  system: DesignSystemConfig
+  save: (next: DesignSystemConfig) => void
+  theme: Theme
+  id: string
+  label: string
+  description: string
+}) {
+  const [showPicker, setShowPicker] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const state = tokenThemeState(system, theme.id, id)
+  if (!state) return null
+  const resolution = resolveToken(system, id, theme.id)
+  const current = resolution.status === "resolved" ? resolution.value : null
+
+  const choose = (value: string) => {
+    const result = setOverride(system, theme.id, id, value)
+    if (!result.ok) {
+      setError(result.error)
+      return
+    }
+    setError(null)
+    setShowPicker(false)
+    save(result.system)
+  }
+
+  return (
+    <li className="rounded-lg border border-border p-3">
+      <div className="flex min-w-0 items-center gap-3">
+        <ResolvedDot system={system} themeId={theme.id} tokenId={id} />
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-medium">{label}</p>
+          <p className="mt-0.5 text-xs leading-5 text-muted-foreground">{description}</p>
+        </div>
+        <button
+          onClick={() => setShowPicker((open) => !open)}
+          aria-expanded={showPicker}
+          aria-label={`Change ${label} in ${theme.label}`}
+          className="inline-flex min-h-11 shrink-0 items-center rounded-lg border border-border px-3 text-xs font-medium transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none"
+        >
+          Change
+        </button>
+      </div>
+      <div className="mt-2 flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
+        <p>
+          {state.override === null ? "Using base colour" : "Theme colour"}: {" "}
+          <span className="font-medium text-foreground">{friendlyThemeColour(state.override ?? state.baseValue)}</span>
+        </p>
+        {state.override !== null && (
+          <button
+            onClick={() => save(removeOverride(system, theme.id, id))}
+            className="inline-flex min-h-9 items-center rounded-md px-2 font-medium text-foreground hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            Use base colour
+          </button>
+        )}
+      </div>
+      {showPicker && (
+        <OverridePicker
+          system={system}
+          themeId={theme.id}
+          tokenId={id}
+          current={state.override}
+          onPick={choose}
+          onClose={() => {
+            setShowPicker(false)
+            setError(null)
+          }}
+        />
+      )}
+      {error && <p role="alert" className="mt-2 text-xs font-medium text-destructive">{error}</p>}
+      {current && <span className="sr-only">Resolved colour {current}</span>}
+    </li>
+  )
+}
+
+function friendlyThemeColour(value: string): string {
+  const rawHex: boolean = isHexColor(value)
+  if (rawHex) return value.toUpperCase()
+  const shade = value.match(/^([a-z0-9-]+)\.(\d+)$/i)
+  if (shade) return `${shade[1]![0]!.toUpperCase()}${shade[1]!.slice(1)} ${shade[2]}`
+  return "Matches another shared colour"
+}
+
+function ThemeContrastSummary({ system, theme }: { system: DesignSystemConfig; theme: Theme }) {
+  const pairs = [
+    { label: "Main text on page", foreground: "text.primary", background: "background.canvas" },
+    { label: "Main button text", foreground: "action.primary.foreground", background: "action.primary.background" },
+  ].map((pair) => {
+    const foreground = resolveThemeColor(system, pair.foreground, theme.id)
+    const background = resolveThemeColor(system, pair.background, theme.id)
+    return { ...pair, ratio: contrastRatio(foreground, background) }
+  })
+
+  return (
+    <div className="mt-5 border-t border-border pt-4">
+      <h3 className="text-sm font-semibold">Quick readability check</h3>
+      <p className="mt-1 text-xs leading-5 text-muted-foreground">
+        Normal text should reach at least 4.5:1. Full accessibility review remains available in Validate.
+      </p>
+      <ul className="mt-3 grid gap-2 sm:grid-cols-2">
+        {pairs.map((pair) => {
+          const passes = pair.ratio !== null && pair.ratio >= 4.5
+          return (
+            <li key={pair.label} className="flex min-h-11 items-center justify-between gap-3 rounded-lg border border-border px-3 py-2">
+              <span className="text-xs font-medium">{pair.label}</span>
+              <span className={`inline-flex items-center gap-1.5 text-xs font-medium ${passes ? "text-foreground" : "text-amber-700 dark:text-amber-300"}`}>
+                {passes ? <Check className="size-4" aria-hidden="true" /> : <AlertTriangle className="size-4" aria-hidden="true" />}
+                {pair.ratio === null ? "Could not check" : `${pair.ratio.toFixed(2)}:1 ${passes ? "Pass" : "Needs attention"}`}
+              </span>
+            </li>
+          )
+        })}
+      </ul>
+    </div>
+  )
+}
+
 function OverrideTable({
   system,
   save,
@@ -541,7 +756,7 @@ function OverrideTable({
   }, [groups, needle, overriddenOnly, theme.overrides])
 
   return (
-    <section aria-label={`Overrides for theme ${theme.label}`} className="rounded-xl border border-border bg-background p-5">
+    <section aria-label={`Overrides for theme ${theme.label}`} className="p-1">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 className="font-medium">
           Overrides · {theme.label}{" "}
@@ -935,8 +1150,8 @@ function ThemePreview({ system, theme }: { system: DesignSystemConfig; theme: Th
   ]
 
   return (
-    <aside aria-label={`Theme preview for ${theme.label}`} className="h-fit rounded-xl border border-border bg-background p-5">
-      <p className="text-xs font-semibold tracking-wider text-muted-foreground">LIVE PREVIEW</p>
+    <aside aria-label={`Theme preview for ${theme.label}`} className="h-fit rounded-xl border border-border bg-background p-5 xl:sticky xl:top-20 xl:max-h-[calc(100vh-6rem)] xl:overflow-y-auto">
+      <p className="text-sm font-semibold">Live preview</p>
       <div
         role="status"
         aria-label={`Previewing theme ${theme.label} in ${theme.mode} mode`}
@@ -1061,8 +1276,7 @@ function ThemePreview({ system, theme }: { system: DesignSystemConfig; theme: Th
       </details>
 
       <p className="mt-2 text-[11px] leading-4 text-muted-foreground">
-        Note: complete contrast analysis belongs to the later Validate phase; this preview checks
-        theme wiring and states, not contrast ratios.
+        The quick checks cover the most important text pairs. Validate reviews the complete system and provides detailed accessibility guidance.
       </p>
     </aside>
   )

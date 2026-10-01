@@ -52,19 +52,216 @@ export function SemanticTokensEditor({
   return (
     <>
       <PageHeader
-        eyebrow="Design System / System"
-        title="Semantic Tokens"
-        description="Translate raw foundation values into stable, meaningful aliases. Themes and components build on these ids — labels edit freely, ids never change."
+        eyebrow="Design System / Semantic tokens"
+        title="Colour roles"
+        description="Give the colours you already chose a job: page background, main text, buttons, borders, and messages. Your components will use these roles everywhere."
       />
       <div className="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
         <div className="min-w-0 space-y-4">
           <MissingDefaultsBanner system={system} save={save} />
-          <TokenGroups system={system} save={save} />
+          <EssentialsBoard system={system} save={save} />
+          <details className="rounded-xl border border-border bg-background">
+            <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 px-5 py-3 text-sm font-medium marker:content-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+              <span>Advanced token settings</span>
+              <span className="text-xs font-normal text-muted-foreground">
+                Add custom roles, edit names, or see technical references
+              </span>
+            </summary>
+            <div className="border-t border-border p-3 sm:p-5">
+              <TokenGroups system={system} save={save} />
+            </div>
+          </details>
         </div>
         <SemanticPreview system={system} />
       </div>
     </>
   )
+}
+
+const STARTER_TOKEN_CHOICES = [
+  { id: "background.canvas", label: "Page background", purpose: "The colour behind your whole website" },
+  { id: "text.primary", label: "Main text", purpose: "Headings, labels, and important copy" },
+  { id: "action.primary.background", label: "Main button", purpose: "The colour of the primary action people click" },
+  { id: "action.primary.foreground", label: "Main button text", purpose: "Text that stays readable on the main button" },
+  { id: "border.default", label: "Card and input border", purpose: "The quiet edge around cards, inputs, and sections" },
+] as const
+
+const MORE_TOKEN_GROUPS = [
+  {
+    title: "Cards and page layers",
+    tokens: [
+      { id: "surface.default", purpose: "Cards, panels, and menus" },
+      { id: "surface.raised", purpose: "Floating cards and dialogs" },
+      { id: "surface.sunken", purpose: "Inset areas and pressed surfaces" },
+      { id: "background.subtle", purpose: "Quiet page sections" },
+      { id: "background.inverse", purpose: "Dark or inverted sections" },
+      { id: "text.inverse", purpose: "Text on dark or inverted sections" },
+    ],
+  },
+  {
+    title: "Supporting text and actions",
+    tokens: [
+      { id: "text.secondary", purpose: "Paragraphs and supporting copy" },
+      { id: "text.muted", purpose: "Hints, captions, and metadata" },
+      { id: "action.secondary.background", purpose: "Secondary button background" },
+      { id: "action.secondary.foreground", purpose: "Text on secondary buttons" },
+      { id: "focus.ring", purpose: "The visible keyboard focus outline" },
+    ],
+  },
+  {
+    title: "Success, warning, error, and information",
+    tokens: [
+      { id: "status.success.background", purpose: "Success message background" },
+      { id: "status.success.foreground", purpose: "Success message text and icon" },
+      { id: "status.warning.background", purpose: "Warning message background" },
+      { id: "status.warning.foreground", purpose: "Warning message text and icon" },
+      { id: "status.danger.background", purpose: "Error message background" },
+      { id: "status.danger.foreground", purpose: "Error message text and icon" },
+      { id: "status.info.background", purpose: "Information message background" },
+      { id: "status.info.foreground", purpose: "Information message text and icon" },
+    ],
+  },
+] as const
+
+function EssentialsBoard({
+  system,
+  save,
+}: {
+  system: DesignSystemConfig
+  save: (next: DesignSystemConfig) => void
+}) {
+  const tokensById = new Map((system.semanticTokens ?? []).map((token) => [token.id, token]))
+  const starterChoices = STARTER_TOKEN_CHOICES.map((entry) => ({
+    ...entry,
+    token: tokensById.get(entry.id),
+  })).filter((entry): entry is (typeof STARTER_TOKEN_CHOICES)[number] & { token: SemanticToken } => Boolean(entry.token))
+  const moreGroups = MORE_TOKEN_GROUPS.map((group) => ({
+    ...group,
+    tokens: group.tokens
+      .map((entry) => ({ ...entry, token: tokensById.get(entry.id) }))
+      .filter((entry): entry is (typeof group.tokens)[number] & { token: SemanticToken } => Boolean(entry.token)),
+  })).filter((group) => group.tokens.length > 0)
+
+  return (
+    <section aria-label="Everyday colour roles" className="rounded-xl border border-border bg-background p-5">
+      <div className="max-w-2xl">
+        <h2 className="text-lg font-semibold">Start with five colour choices</h2>
+        <p className="mt-1 text-sm leading-6 text-muted-foreground">
+          These five choices are enough to make a clear, usable interface. Everything else already has sensible starter values.
+        </p>
+      </div>
+      <ul className="mt-5 grid gap-2 lg:grid-cols-2">
+        {starterChoices.map(({ token, label, purpose }) => (
+          <SimpleTokenCard key={token.id} system={system} save={save} token={{ ...token, label }} purpose={purpose} />
+        ))}
+      </ul>
+      {starterChoices.length === 0 && (
+        <p className="rounded-lg border border-dashed border-border p-4 text-sm text-muted-foreground">
+          Add the missing defaults above to start choosing your everyday colour roles.
+        </p>
+      )}
+      <details className="mt-5 border-t border-border pt-3">
+        <summary className="inline-flex min-h-11 cursor-pointer items-center text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+          Fine-tune more colours
+        </summary>
+        <p className="mt-1 text-xs leading-5 text-muted-foreground">
+          Optional: adjust card layers, secondary actions, and message states when your product needs them.
+        </p>
+        <div className="mt-4 space-y-5">
+          {moreGroups.map((group) => (
+            <section key={group.title}>
+              <h3 className="text-sm font-semibold">{group.title}</h3>
+              <ul className="mt-2 grid gap-2 lg:grid-cols-2">
+                {group.tokens.map(({ token, purpose }) => (
+                  <SimpleTokenCard key={token.id} system={system} save={save} token={token} purpose={purpose} />
+                ))}
+              </ul>
+            </section>
+          ))}
+        </div>
+      </details>
+      <details className="mt-3 text-xs text-muted-foreground">
+        <summary className="inline-flex min-h-11 cursor-pointer items-center font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+          Need separate Light and Dark colours?
+        </summary>
+        <p className="mt-1 leading-5">
+          First choose your shared base colours here. Then open Themes to give only the colours that need it a different Dark value.
+        </p>
+      </details>
+    </section>
+  )
+}
+
+function SimpleTokenCard({
+  system,
+  save,
+  token,
+  purpose,
+}: {
+  system: DesignSystemConfig
+  save: (next: DesignSystemConfig) => void
+  token: SemanticToken
+  purpose: string
+}) {
+  const [showPicker, setShowPicker] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const resolution = resolveToken(system, token.id)
+  const resolved = resolution.status === "resolved" ? resolution.value : null
+
+  const choose = (value: string) => {
+    const result = updateTokenValue(system, token.id, value)
+    if (!result.ok) {
+      setError(result.error)
+      return
+    }
+    setError(null)
+    setShowPicker(false)
+    save(result.system)
+  }
+
+  return (
+    <li className="rounded-lg border border-border p-3">
+      <div className="flex min-w-0 items-center gap-3">
+        <ResolvedSwatch resolution={resolution} />
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-medium">{token.label}</p>
+          <p className="mt-0.5 text-xs leading-5 text-muted-foreground">{purpose}</p>
+        </div>
+        <button
+          onClick={() => setShowPicker((open) => !open)}
+          aria-expanded={showPicker}
+          aria-label={`Choose a colour for ${token.label}`}
+          className="inline-flex min-h-11 shrink-0 items-center rounded-lg border border-border px-3 text-xs font-medium transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none"
+        >
+          Change
+        </button>
+      </div>
+      <p className="mt-2 text-xs text-muted-foreground" title={resolved ?? token.value}>
+        Current colour: <span className="font-medium text-foreground">{friendlyColourName(token.value)}</span>
+      </p>
+      {showPicker && (
+        <ReferencePicker
+          system={system}
+          excludeId={token.id}
+          current={token.value}
+          onPick={choose}
+          onClose={() => {
+            setShowPicker(false)
+            setError(null)
+          }}
+        />
+      )}
+      {error && <p role="alert" className="mt-2 text-xs font-medium text-destructive">{error}</p>}
+    </li>
+  )
+}
+
+function friendlyColourName(value: string): string {
+  const isRawHex: boolean = isHexColor(value)
+  if (isRawHex) return `Custom ${value.toUpperCase()}`
+  const shade = value.match(/^([a-z0-9-]+)\.(\d+)$/i)
+  if (shade) return `${shade[1]![0]!.toUpperCase()}${shade[1]!.slice(1)} ${shade[2]}`
+  return "Matches another shared colour"
 }
 
 function MissingDefaultsBanner({
@@ -787,9 +984,13 @@ function resolvePreviewColor(system: DesignSystemConfig, id: string, themeId?: s
 }
 
 function SemanticPreview({ system }: { system: DesignSystemConfig }) {
-  // The chrome picks a comfortable initial system theme; users can always
-  // inspect any saved system theme explicitly from the selector.
-  const { themeOptions, activeThemeId, selectTheme } = usePreviewTheme(system)
+  const { themeOptions } = usePreviewTheme(system)
+  // Base is intentional: this page edits base semantic values, so the first
+  // thing people see must reflect their most recent choice. Theme comparison
+  // stays one explicit click away instead of silently masking an edit.
+  const [previewMode, setPreviewMode] = useState<string>("base")
+  const activeThemeId = previewMode === "base" ? undefined : previewMode
+  const activeTheme = themeOptions.find((theme) => theme.id === activeThemeId)
   const canvas = resolvePreviewColor(system, "background.canvas", activeThemeId)
   const surface = resolvePreviewColor(system, "surface.default", activeThemeId)
   const cardBorder = resolvePreviewColor(system, "border.default", activeThemeId)
@@ -822,20 +1023,32 @@ function SemanticPreview({ system }: { system: DesignSystemConfig }) {
     <aside aria-label="Semantic token preview" className="h-fit rounded-xl border border-border bg-background p-5">
       <p className="text-xs font-semibold tracking-wider text-muted-foreground">LIVE PREVIEW</p>
       <p className="mt-1 text-xs leading-5 text-muted-foreground">
-        Every surface below resolves through semantic tokens — never directly from Colors.
+        Changes on the left appear here immediately. Compare Light or Dark only when you are ready.
       </p>
       <div className="mt-2 flex flex-wrap gap-1.5" role="group" aria-label="Preview theme">
+        <button
+          aria-pressed={previewMode === "base"}
+          onClick={() => setPreviewMode("base")}
+          className={`inline-flex min-h-11 items-center rounded-lg border px-2.5 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none ${previewMode === "base" ? "border-foreground bg-muted" : "border-border hover:bg-muted/60"}`}
+        >
+          Base colours
+        </button>
         {themeOptions.map((theme) => (
           <button
             key={theme.id}
-            aria-pressed={activeThemeId === theme.id}
-            onClick={() => selectTheme(theme.id)}
-            className={`inline-flex min-h-11 items-center rounded-lg border px-2.5 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none ${activeThemeId === theme.id ? "border-foreground bg-muted" : "border-border hover:bg-muted/60"}`}
+            aria-pressed={previewMode === theme.id}
+            onClick={() => setPreviewMode(theme.id)}
+            className={`inline-flex min-h-11 items-center rounded-lg border px-2.5 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none ${previewMode === theme.id ? "border-foreground bg-muted" : "border-border hover:bg-muted/60"}`}
           >
             {theme.label} · {theme.mode}
           </button>
         ))}
       </div>
+      <p className="mt-2 text-[11px] leading-4 text-muted-foreground" role="status">
+        {activeTheme
+          ? `Showing ${activeTheme.label}. Theme-specific colours can differ from your base choices.`
+          : "Showing base colours. Every colour you change on this page updates this preview."}
+      </p>
 
       <div className="mt-3 overflow-hidden rounded-lg border" style={{ borderColor: cardBorder, backgroundColor: canvas, ["--sys-ph" as string]: muted }}>
         <div className="border-b px-3 py-2" style={{ borderColor: cardBorder, backgroundColor: subtleBg }}>
