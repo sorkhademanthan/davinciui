@@ -52,7 +52,7 @@ export interface InteractiveMediaAccordionProps extends Omit<
   fit?: InteractiveMediaAccordionFit;
   /** Subtle bottom gradient behind the active text. @default true */
   textGradient?: boolean;
-  /** Gradient strength 0–1. @default 0.55 */
+  /** Gradient strength 0–1. @default 0.8 */
   gradientStrength?: number;
   /** Inactive media brightness 0–2 (1 = original). @default 1 */
   inactiveBrightness?: number;
@@ -257,7 +257,7 @@ export function InteractiveMediaAccordion({
   outerPadding = 0,
   fit = "cover",
   textGradient = true,
-  gradientStrength = 0.55,
+  gradientStrength = 0.8,
   inactiveBrightness = 1,
   inactiveSaturation = 1,
   titleFont = "Inter, system-ui, -apple-system, sans-serif",
@@ -304,6 +304,7 @@ export function InteractiveMediaAccordion({
       ? clamp(controlledIndex, 0, Math.max(0, count - 1))
       : clamp(internalIndex, 0, Math.max(0, count - 1));
   const activeRef = React.useRef(active);
+  const scrollRootRef = React.useRef<HTMLElement | Window | null>(null);
 
   React.useEffect(() => {
     activeRef.current = active;
@@ -312,6 +313,7 @@ export function InteractiveMediaAccordion({
   const setActive = React.useCallback(
     (index: number) => {
       const next = clamp(index, 0, Math.max(0, count - 1));
+      activeRef.current = next;
       if (controlledIndex === undefined) setInternalIndex(next);
       onActiveChange?.(next);
     },
@@ -344,6 +346,7 @@ export function InteractiveMediaAccordion({
       }
       parent = parent.parentElement;
     }
+    scrollRootRef.current = scrollRoot;
 
     let frame = 0;
     const update = () => {
@@ -375,6 +378,7 @@ export function InteractiveMediaAccordion({
     window.addEventListener("resize", requestUpdate, { passive: true });
 
     return () => {
+      scrollRootRef.current = null;
       if (frame) window.cancelAnimationFrame(frame);
       scrollRoot.removeEventListener("scroll", requestUpdate);
       window.removeEventListener("resize", requestUpdate);
@@ -395,22 +399,32 @@ export function InteractiveMediaAccordion({
   const isCompact = containerWidth > 0 && containerWidth < 560;
   const isTablet =
     containerWidth > 0 && containerWidth >= 560 && containerWidth < 900;
-  const effectiveCollapsed = isCompact
-    ? mobileCollapsedWidth
-    : isTablet
-      ? tabletCollapsedWidth
-      : collapsedWidth;
+  const stageWidth = Math.max(0, containerWidth - outerPadding * 2);
   const effectiveGap = isCompact
     ? Math.min(gap, 8)
     : isTablet
       ? Math.min(gap, 12)
       : gap;
+  // Reserve room for the active image before assigning widths to the pills.
+  // Large galleries can still overflow horizontally with 24px minimum pills.
+  const compactPillLimit = count > 1
+    ? Math.floor((stageWidth - Math.max(140, stageWidth * 0.58) - effectiveGap * (count - 1)) / (count - 1))
+    : mobileCollapsedWidth;
+  const effectiveCollapsed = isCompact
+    ? Math.max(24, Math.min(mobileCollapsedWidth, compactPillLimit))
+    : isTablet
+      ? tabletCollapsedWidth
+      : collapsedWidth;
+  const compactActiveWidth = Math.max(
+    140,
+    stageWidth - (count - 1) * (effectiveCollapsed + effectiveGap),
+  );
   const effectiveRadius = reduceMotion ? Math.min(radius, 24) : radius;
   // Pill capsule by default: radius is half the pill width.
   const effectiveCollapsedRadius =
     collapsedRadius ?? Math.round(effectiveCollapsed / 2);
   const effectiveTitleSize = isCompact
-    ? Math.round(titleSize * 0.68)
+    ? Math.round(titleSize * 0.62)
     : isTablet
       ? Math.round(titleSize * 0.82)
       : titleSize;
@@ -462,6 +476,17 @@ export function InteractiveMediaAccordion({
 
   const activate = (index: number) => {
     if (index !== active) setActive(index);
+  };
+
+  const activateFromClick = (index: number) => {
+    activate(index);
+    if (!scrollDriven) return;
+    const element = containerRef.current;
+    const root = scrollRootRef.current;
+    if (!element || !root) return;
+    const rootTop = root === window ? 0 : (root as HTMLElement).getBoundingClientRect().top;
+    const currentDistance = rootTop + stickyTop - element.getBoundingClientRect().top;
+    root.scrollBy({ top: index * Math.max(1, scrollStep) - currentDistance, behavior: "instant" });
   };
 
   return (
@@ -531,28 +556,22 @@ export function InteractiveMediaAccordion({
                   : undefined
               }
               onFocus={() => activate(index)}
-              onClick={() => activate(index)}
+              onClick={() => activateFromClick(index)}
               data-state={isActive ? "active" : "inactive"}
               data-testid={`interactive-media-accordion-item-${index}`}
               className="group relative block shrink-0 cursor-pointer border-0 bg-zinc-200 p-0 outline-none focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:bg-[#111] dark:focus-visible:ring-offset-black"
               style={{
-                // Width redistribution: the active card takes every free
-                // pixel (flex 1 1 0%), pills hold a fixed basis. Because
-                // these are real flex values with one shared transition,
-                // collapse and expansion always happen simultaneously and
-                // rapid hovers simply redirect mid-interpolation.
-                flexGrow: isActive ? 1 : 0,
-                flexShrink: isActive ? 1 : 0,
-                flexBasis: isActive
-                  ? single
-                    ? "100%"
-                    : "0%"
-                  : `${effectiveCollapsed}px`,
-                minWidth: isActive
-                  ? isCompact
-                    ? "min(78%, 320px)"
-                    : 0
-                  : `${effectiveCollapsed}px`,
+                // In compact layouts both the outgoing and incoming bands
+                // animate between pixel widths. Their total stays constant,
+                // so neither card jumps when the active item changes.
+                flexGrow: isCompact ? 0 : isActive ? 1 : 0,
+                flexShrink: isCompact ? 0 : isActive ? 1 : 0,
+                flexBasis: isCompact
+                  ? `${single ? stageWidth : isActive ? compactActiveWidth : effectiveCollapsed}px`
+                  : isActive
+                    ? single ? "100%" : "0px"
+                    : `${effectiveCollapsed}px`,
+                minWidth: isCompact ? "0px" : isActive ? "0px" : `${effectiveCollapsed}px`,
                 maxWidth: "100%",
                 height: "100%",
                 overflow: "hidden",
@@ -634,17 +653,19 @@ export function InteractiveMediaAccordion({
                   transform: showText ? "translateY(0)" : "translateY(10px)",
                   transition: showText
                     ? `opacity 380ms ${easing} ${Math.round(effectiveDuration * 0.38)}ms, transform 480ms ${easing} ${Math.round(effectiveDuration * 0.38)}ms`
-                    : `opacity 160ms ${easing}, transform 200ms ${easing}`,
-                  whiteSpace: "nowrap",
+                    : `opacity 90ms ${easing}, transform 140ms ${easing}`,
+                  whiteSpace: isCompact ? "normal" : "nowrap",
                 }}
               >
                 {item.title ? (
                   <span
                     style={{
-                      display: "block",
+                      display: isCompact ? "-webkit-box" : "block",
                       overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
+                      textOverflow: isCompact ? undefined : "ellipsis",
+                      WebkitLineClamp: isCompact ? 2 : undefined,
+                      WebkitBoxOrient: isCompact ? "vertical" : undefined,
+                      whiteSpace: isCompact ? "normal" : "nowrap",
                       fontFamily: titleFont,
                       fontSize: effectiveTitleSize,
                       fontWeight: 600,
@@ -659,10 +680,12 @@ export function InteractiveMediaAccordion({
                 {item.description ? (
                   <span
                     style={{
-                      display: "block",
+                      display: isCompact ? "-webkit-box" : "block",
                       overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
+                      textOverflow: isCompact ? undefined : "ellipsis",
+                      WebkitLineClamp: isCompact ? 2 : undefined,
+                      WebkitBoxOrient: isCompact ? "vertical" : undefined,
+                      whiteSpace: isCompact ? "normal" : "nowrap",
                       marginTop: item.title ? textGap : 0,
                       fontFamily: descriptionFont,
                       fontSize: effectiveDescriptionSize,
