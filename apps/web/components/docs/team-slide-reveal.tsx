@@ -25,7 +25,7 @@ export async function TeamSlideRevealDocs() {
   return (
     <DocsPageLayout
       title="Team Slide Reveal"
-      description="A portrait-led profile card that slides into a compact testimonial summary on click, then returns with an explicit back control. It retains a single stable footprint from catalog card to fullscreen preview."
+      description="An editorial portrait card that reveals a personal story in a rising sheet. Open the full card, then use the back control to return to the profile."
       preview={<TeamSlideRevealPreview />}
       previewCode={usageCode}
       usageCode={usageCode}
@@ -45,7 +45,7 @@ export async function TeamSlideRevealDocs() {
         { name: "defaultOpen", type: "boolean", default: "false", description: "Initial summary state when uncontrolled." },
         { name: "onOpenChange", type: "(open: boolean) => void", description: "Called when the user opens or closes the summary." },
         { name: "radius", type: "number", default: "14", description: "Outer corner radius in pixels." },
-        { name: "duration", type: "number", default: "560", description: "Swap transition duration in milliseconds." },
+        { name: "duration", type: "number", default: "480", description: "Sheet transition duration in milliseconds." },
         { name: "compact", type: "boolean", default: "false", description: "Uses the denser layout for compact preview cards." },
       ]}
     />
