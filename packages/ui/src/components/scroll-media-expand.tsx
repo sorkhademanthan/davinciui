@@ -65,7 +65,7 @@ export interface ScrollMediaExpandProps {
 /* --------------------------------- helpers -------------------------------- */
 
 const DEFAULT_SRC =
-  "https://images.unsplash.com/photo-1517796931930-443b6f13cf65?auto=format&fit=crop&w=2400&q=85";
+  "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=2400&q=85";
 
 /* Phase boundaries (normalized progress 0 → 1). Width leads, height follows,
    radius decays slightly delayed, CTA arrives once the card is readable,
@@ -149,6 +149,7 @@ export function ScrollMediaExpand({
   const labelLeftRef = useRef<HTMLSpanElement>(null);
   const labelRightRef = useRef<HTMLSpanElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
+  const scrimRef = useRef<HTMLDivElement>(null);
   const hintRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -324,10 +325,17 @@ export function ScrollMediaExpand({
         labelBlur <= 0.01 ? "blur(0px)" : `blur(${labelBlur.toFixed(2)}px)`;
     }
 
-    // Center CTA arrives only once the media is a readable card.
+    // Center CTA arrives only once the media is a readable card, over a
+    // soft radial scrim so it stays legible on bright imagery.
     const overlay = overlayRef.current;
+    const scrim = scrimRef.current;
+    const overlayP = smootherstep(OVERLAY_IN[0], OVERLAY_IN[1], p);
+    if (scrim && cfg.showOverlay) {
+      scrim.style.opacity = (0.9 * overlayP).toFixed(3);
+      scrim.style.visibility = overlayP <= 0 ? "hidden" : "visible";
+    }
     if (overlay && cfg.showOverlay) {
-      const o = smootherstep(OVERLAY_IN[0], OVERLAY_IN[1], p);
+      const o = overlayP;
       overlay.style.opacity = o.toFixed(3);
       overlay.style.transform = `translate(-50%, calc(-50% + ${(8 * (1 - o)).toFixed(2)}px)) scale(${(0.96 + 0.04 * o).toFixed(3)})`;
       overlay.style.filter =
@@ -525,7 +533,20 @@ export function ScrollMediaExpand({
             )}
           </div>
 
-          {/* Center CTA — revealed once the media is a readable card. */}
+          {/* Readability scrim — soft center vignette under the CTA. */}
+          <div
+            ref={scrimRef}
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0"
+            style={{
+              opacity: 0,
+              visibility: "hidden",
+              background:
+                "radial-gradient(ellipse at center, rgba(0,0,0,0.42) 0%, rgba(0,0,0,0.12) 45%, rgba(0,0,0,0) 68%)",
+            }}
+          />
+
+          {/* Center CTA — glass pill revealed once the media is readable. */}
           {showOverlay ? (
             <div
               ref={overlayRef}
@@ -533,12 +554,12 @@ export function ScrollMediaExpand({
               className="absolute left-1/2 top-1/2 z-10"
               style={{ opacity: 0, visibility: "hidden" }}
             >
-              <div className="flex items-center gap-2">
-                <span className="whitespace-nowrap text-[13px] font-medium tracking-wide text-white/60">
-                  {overlayText}
+              <div className="flex items-center gap-2.5 rounded-full bg-black/35 py-1.5 pl-1.5 pr-4 ring-1 ring-white/25 backdrop-blur-md">
+                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white">
+                  <Play className="h-3 w-3 fill-zinc-950 text-zinc-950" />
                 </span>
-                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-black/80 ring-1 ring-white/15">
-                  <Play className="h-2.5 w-2.5 fill-white text-white" />
+                <span className="whitespace-nowrap text-[13px] font-medium tracking-wide text-white">
+                  {overlayText}
                 </span>
               </div>
             </div>
@@ -549,7 +570,7 @@ export function ScrollMediaExpand({
         <span
           ref={labelLeftRef}
           aria-hidden="true"
-          className="pointer-events-none absolute left-1/2 top-1/2 z-10 shrink-0 whitespace-nowrap text-[12px] font-medium tracking-wide md:text-[13px]"
+          className="pointer-events-none absolute left-1/2 top-1/2 z-10 shrink-0 whitespace-nowrap text-[12px] font-semibold uppercase tracking-[0.18em] md:text-[13px]"
           style={{ color: foreground, willChange: "transform, opacity" }}
         >
           {leftLabel}
@@ -557,7 +578,7 @@ export function ScrollMediaExpand({
         <span
           ref={labelRightRef}
           aria-hidden="true"
-          className="pointer-events-none absolute left-1/2 top-1/2 z-10 shrink-0 whitespace-nowrap text-[12px] font-medium tracking-wide md:text-[13px]"
+          className="pointer-events-none absolute left-1/2 top-1/2 z-10 shrink-0 whitespace-nowrap text-[12px] font-semibold uppercase tracking-[0.18em] md:text-[13px]"
           style={{ color: foreground, willChange: "transform, opacity" }}
         >
           {rightLabel}
