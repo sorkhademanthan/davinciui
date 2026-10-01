@@ -27,6 +27,7 @@ import {
   type PaletteRole,
 } from "@/lib/design-system/domain"
 import { usePreviewTheme } from "@/components/design-system/use-preview-theme"
+import { FoundationPreviewShell } from "@/components/design-system/foundation-preview-shell"
 
 export function ColorsEditor({
   system,
@@ -838,10 +839,10 @@ function ColorPreview({ system, palette }: { system: DesignSystemConfig; palette
   const sampleText = bestTextOn(sampleShade)
 
   return (
-    <aside aria-label="Token-driven preview" className="h-fit rounded-xl border border-border bg-background p-5">
-      <p className="text-xs font-semibold tracking-wider text-muted-foreground">LIVE PREVIEW</p>
-      <p className="mt-1 text-xs text-muted-foreground">Resolves live system tokens through the selected theme.</p>
-      <div className="mt-2 flex flex-wrap gap-1.5" role="group" aria-label="Preview theme">
+    <FoundationPreviewShell
+      label="Live preview"
+      description="See your saved colour roles on a small product interface."
+      toolbar={<div role="group" aria-label="Preview theme" className="flex flex-wrap gap-1.5">
         {themeOptions.map((theme) => (
           <button
             key={theme.id}
@@ -852,9 +853,11 @@ function ColorPreview({ system, palette }: { system: DesignSystemConfig; palette
             {theme.label} · {theme.mode}
           </button>
         ))}
-      </div>
+      </div>}
+      inspector={<ul className="space-y-1">{sources.map((source) => <li key={source.element} className="font-mono text-[11px]">{source.element} ← {source.token} · <span className="uppercase">{source.value}</span></li>)}</ul>}
+    >
 
-      <div className="mt-5 space-y-4 rounded-lg border border-border p-4">
+      <div className="space-y-4 rounded-lg border border-border p-4">
         {actionBg.configured ? (
           <button
             className="inline-flex min-h-11 items-center rounded-md px-4 py-2 text-sm font-medium"
@@ -942,19 +945,7 @@ function ColorPreview({ system, palette }: { system: DesignSystemConfig; palette
         </button>
       </div>
 
-      <details className="mt-4 text-xs text-muted-foreground">
-        <summary className="inline-flex min-h-11 cursor-pointer items-center font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-          Preview token sources
-        </summary>
-        <ul className="mt-2 space-y-1">
-          {sources.map((source) => (
-            <li key={source.element} className="font-mono text-[11px]">
-              {source.element} ← {source.token} · <span className="uppercase">{source.value}</span>
-            </li>
-          ))}
-        </ul>
-      </details>
-    </aside>
+    </FoundationPreviewShell>
   )
 }
 

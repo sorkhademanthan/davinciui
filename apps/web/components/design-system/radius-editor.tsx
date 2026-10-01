@@ -743,7 +743,7 @@ function RadiusPreview({ system, selectedId }: { system: DesignSystemConfig; sel
       : ""
 
   return (
-    <aside aria-label="Radius preview" className="h-fit rounded-xl border border-border bg-background p-5">
+    <aside aria-label="Radius preview" className="h-fit rounded-xl border border-border bg-background p-5 xl:sticky xl:top-20 xl:max-h-[calc(100vh-6rem)] xl:overflow-y-auto">
       <p className="text-xs font-semibold tracking-wider text-muted-foreground">LIVE PREVIEW</p>
       <p className="mt-1 text-xs leading-5 text-muted-foreground">
         Primitive geometry from saved radius tokens — not component overrides.
