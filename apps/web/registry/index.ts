@@ -1033,3 +1033,103 @@ export const components: Record<string, ComponentMetadata> = {
 export function getComponent(slug: string) {
   return components[slug];
 }
+
+// ─────────────────────────────────────────────────────────────
+// Featured order — best components first, everywhere.
+// Cinematic Card Carousel stays #1. The rest is a fixed shuffled
+// mix so categories don't clump (Premium / Visual / Text / Hero /
+// Cursor / Preloader interleaved). Anything not listed falls back
+// to alphabetical after the featured set.
+// ─────────────────────────────────────────────────────────────
+export const FEATURED_SLUGS = [
+  "cinematic-card-carousel",
+  "lens-drift-grid",
+  "tubes-cursor",
+  "text-video-mask",
+  "neon-mesh-bg",
+  "horizontal-scroll-gallery",
+  "shake-text",
+  "pixel-preloader",
+  "scroll-sync-gallery",
+  "hover-cards",
+  "silk-aurora",
+  "rolling-text",
+  "orbit-spiral-gallery",
+  "fluid-cursor",
+  "media-text-hover",
+  "sunlight-effect",
+  "stacked-scroll-gallery",
+  "pixel-wipe-carousel",
+  "gsap-text",
+  "soft-fluid-gradient",
+  "profile-carousel",
+  "scroll-timeline",
+  "electric-vijdi-cursor",
+  "random-text-reveal",
+  "scroll-reveal-image",
+  "fill-preloader",
+  "geometric-trail-cursor",
+  // ── Shuffled tail — every remaining component in a fixed mixed
+  // order so categories stay interleaved after the top 27.
+  "scroll-media-expand",
+  "burn-plus",
+  "kinetic-split-text",
+  "pixel-flow",
+  "chromatic-cursor",
+  "text-morph",
+  "preloader-pro",
+  "liquid-reveal-button",
+  "interaction-sound-kit",
+  "interactive-media-accordion",
+  "services-showcase",
+  "radial-fan-deck",
+  "ink-flow",
+  "magic-cursor-pro",
+  "shader-text",
+  "staircase-preloader",
+  "glass-scene-dock",
+  "voice-recorder",
+  "cms-scroll-gallery",
+  "segmented-image-carousel",
+  "motion-hamburger",
+  "character-field",
+  "circle-cursor",
+  "fluid-particle-text",
+  "geometric-preloader",
+  "nudge-button",
+  "ambient-audio-toggle",
+  "hover-transition",
+  "vertical-image-marquee",
+  "liquid-chrome-button",
+  "spectra-noise",
+  "elastic-blob-cursor",
+  "encrypted-text",
+  "editorial-wipe-preloader",
+  "team-slide-reveal",
+  "upload-sound-status",
+  "animated-metric",
+  "animated-pill-button",
+  "glitch-liquid-text",
+  "text-reveal",
+  "noiser",
+  "keyboard-command-sounds",
+  "wave-bars-loader",
+] as const;
+
+const FEATURED_RANK = new Map<string, number>(
+  FEATURED_SLUGS.map((slug, index) => [slug, index]),
+);
+
+export function getFeaturedRank(slug: string): number {
+  return FEATURED_RANK.get(slug) ?? Number.MAX_SAFE_INTEGER;
+}
+
+export function sortByFeatured<T extends { slug: string; title: string }>(
+  items: T[],
+): T[] {
+  return [...items].sort((a, b) => {
+    const rankDiff = getFeaturedRank(a.slug) - getFeaturedRank(b.slug);
+    if (rankDiff !== 0) return rankDiff;
+    return a.title.localeCompare(b.title);
+  });
+}
