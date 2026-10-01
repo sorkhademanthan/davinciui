@@ -48,7 +48,7 @@ export default function HoverTransitionDemo() {
     <HoverTransition
       effect="wipe"
       direction="right"
-      duration={0.72}
+      duration={1.15}
       defaultComponent={<DefaultCard />}
       hoverComponent={<HoverCard />}
       className="aspect-[4/5] w-full max-w-sm rounded-3xl"
@@ -105,13 +105,13 @@ export async function HoverTransitionDocs() {
         {
           name: "duration",
           type: "number",
-          default: "0.72",
+          default: "1.15",
           description: "Animation duration in seconds.",
         },
         {
           name: "easing",
           type: "string",
-          default: '"cubic-bezier(0.22, 1, 0.36, 1)"',
+          default: '"cubic-bezier(0.16, 1, 0.3, 1)"',
           description: "Any valid CSS easing value.",
         },
         {

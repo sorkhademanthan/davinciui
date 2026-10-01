@@ -80,9 +80,9 @@ type Person = (typeof PEOPLE)[number];
 type PersonId = Person["id"];
 
 const EASINGS = {
-  smooth: "cubic-bezier(0.22, 1, 0.36, 1)",
+  smooth: "cubic-bezier(0.16, 1, 0.3, 1)",
   soft: "cubic-bezier(0.4, 0, 0.2, 1)",
-  snappy: "cubic-bezier(0.16, 1, 0.3, 1)",
+  snappy: "cubic-bezier(0.22, 1, 0.36, 1)",
 } as const;
 
 type EasingName = keyof typeof EASINGS;
@@ -124,7 +124,7 @@ const DEFAULT_CONFIG: HoverTransitionConfig = {
       color: "#62d6e8",
     },
   },
-  duration: 0.72,
+  duration: 1.15,
   easing: "smooth",
 };
 
@@ -232,11 +232,11 @@ function PortraitCard({
         backgroundPosition: person.position,
       }}
     >
-      <div className="absolute inset-x-0 bottom-0 px-[clamp(10px,5cqw,18px)] pb-[clamp(10px,5cqw,18px)] text-[#151515]">
-        <p className="text-[clamp(14px,7cqw,24px)] font-medium leading-none tracking-[-0.04em]">
+      <div className="absolute inset-x-0 bottom-0 px-[clamp(14px,5cqw,22px)] pb-[clamp(14px,5cqw,22px)] text-[#151515]">
+        <p className="text-[clamp(18px,7cqw,28px)] font-medium leading-none tracking-[-0.045em]">
           {person.name}
         </p>
-        <p className="mt-1 text-[clamp(9px,3.2cqw,12px)] uppercase leading-none tracking-[-0.02em] text-black/60">
+        <p className="mt-1.5 text-[clamp(10px,3.2cqw,12px)] uppercase leading-none tracking-[-0.02em] text-black/65">
           {person.role}
         </p>
       </div>
@@ -258,23 +258,31 @@ function PersonDetails({
 }) {
   return (
     <article
-      className="flex h-full w-full flex-col justify-between p-[clamp(12px,5cqw,22px)] text-[#111]"
+      className="relative flex h-full w-full flex-col justify-between overflow-hidden p-[clamp(16px,5cqw,24px)] text-[#111]"
       style={{
         backgroundColor: color,
         backgroundImage:
           "radial-gradient(circle at 85% 5%, rgba(255,255,255,.42), transparent 34%), linear-gradient(145deg, rgba(255,255,255,.12), transparent 58%)",
       }}
     >
-      <div>
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-[length:400%_200%] bg-no-repeat opacity-[0.13] grayscale [mix-blend-mode:multiply] [mask-image:linear-gradient(to_bottom,transparent_8%,black_65%)]"
+        style={{
+          backgroundImage: "url('/images/hover-transition-team.jpg')",
+          backgroundPosition: person.position,
+        }}
+      />
+      <div className="relative">
         <div className="flex translate-y-2 justify-end blur-[2px] opacity-0 transition-[transform,filter,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-data-[active=true]/hover-card:translate-y-0 group-data-[active=true]/hover-card:blur-none group-data-[active=true]/hover-card:opacity-100 group-data-[active=true]/hover-card:delay-75 motion-reduce:translate-y-0 motion-reduce:blur-none motion-reduce:opacity-100 motion-reduce:transition-none font-mono text-[clamp(8px,3cqw,10px)] uppercase tracking-[0.1em] text-black/55">
           <span>{effect}</span>
         </div>
-        <p className="mt-[clamp(14px,6cqw,28px)] max-w-[29ch] translate-y-3 blur-[3px] opacity-0 transition-[transform,filter,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-data-[active=true]/hover-card:translate-y-0 group-data-[active=true]/hover-card:blur-none group-data-[active=true]/hover-card:opacity-100 group-data-[active=true]/hover-card:delay-100 motion-reduce:translate-y-0 motion-reduce:blur-none motion-reduce:opacity-100 motion-reduce:transition-none text-[clamp(12px,5.2cqw,19px)] font-medium leading-[1.18] tracking-[-0.035em]">
+        <p className="mt-[clamp(16px,6cqw,30px)] max-w-[25ch] translate-y-3 blur-[3px] opacity-0 transition-[transform,filter,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-data-[active=true]/hover-card:translate-y-0 group-data-[active=true]/hover-card:blur-none group-data-[active=true]/hover-card:opacity-100 group-data-[active=true]/hover-card:delay-100 motion-reduce:translate-y-0 motion-reduce:blur-none motion-reduce:opacity-100 motion-reduce:transition-none text-[clamp(16px,6cqw,22px)] font-medium leading-[1.16] tracking-[-0.04em]">
           {person.bio}
         </p>
       </div>
-      <div className="translate-y-3 blur-[2px] opacity-0 transition-[transform,filter,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-data-[active=true]/hover-card:translate-y-0 group-data-[active=true]/hover-card:blur-none group-data-[active=true]/hover-card:opacity-100 group-data-[active=true]/hover-card:delay-150 motion-reduce:translate-y-0 motion-reduce:blur-none motion-reduce:opacity-100 motion-reduce:transition-none">
-        <p className="text-[clamp(12px,5cqw,17px)] font-semibold leading-none tracking-[-0.035em]">
+      <div className="relative translate-y-3 border-t border-black/25 pt-[clamp(12px,4cqw,18px)] blur-[2px] opacity-0 transition-[transform,filter,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-data-[active=true]/hover-card:translate-y-0 group-data-[active=true]/hover-card:blur-none group-data-[active=true]/hover-card:opacity-100 group-data-[active=true]/hover-card:delay-150 motion-reduce:translate-y-0 motion-reduce:blur-none motion-reduce:opacity-100 motion-reduce:transition-none">
+        <p className="text-[clamp(14px,5cqw,18px)] font-semibold leading-none tracking-[-0.035em]">
           {person.name}
         </p>
         <p className="mt-1 text-[clamp(8px,3cqw,10px)] uppercase tracking-[0.08em] text-black/55">
