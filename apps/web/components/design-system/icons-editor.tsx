@@ -63,21 +63,154 @@ export function IconsEditor({
     <>
       <PageHeader
         eyebrow="Design System / Foundations"
-        title="Icons"
-        description="Define your icon source, size scale, stroke treatment, and palette-driven color roles, then see them in realistic interface previews."
+        title="Icon rules"
+        description="Set a small set of rules once. Your product can then use any icon from the chosen library without adding every icon to this design system."
       />
       <div className="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
         <div className="min-w-0 space-y-4">
-          <RestoreSection system={system} save={save} />
+          <IconRulesSetup system={system} save={save} />
           <IconSpecificationSection system={system} />
-          <SourceSection system={system} save={save} />
-          <SizesSection system={system} save={save} selectedId={selectedId} onSelect={setSelectedId} />
-          <StyleSection system={system} save={save} />
-          <ColorsSection system={system} save={save} />
+          <details className="group rounded-xl border border-border bg-background">
+            <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 px-5 text-sm font-medium marker:content-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+              <span>
+                Advanced developer controls
+                <span className="mt-0.5 block text-xs font-normal text-muted-foreground">Custom sizes, stroke ends, palette references, and starter reset.</span>
+              </span>
+              <span aria-hidden="true" className="text-lg text-muted-foreground transition-transform group-open:rotate-45">+</span>
+            </summary>
+            <div className="space-y-4 border-t border-border p-4 sm:p-5">
+              <SourceSection system={system} save={save} />
+              <SizesSection system={system} save={save} selectedId={selectedId} onSelect={setSelectedId} />
+              <StyleSection system={system} save={save} />
+              <ColorsSection system={system} save={save} />
+              <RestoreSection system={system} save={save} />
+            </div>
+          </details>
         </div>
         <IconsPreview system={system} selectedId={selectedId} />
       </div>
     </>
+  )
+}
+
+function IconRulesSetup({
+  system,
+  save,
+}: {
+  system: DesignSystemConfig
+  save: (next: DesignSystemConfig) => void
+}) {
+  const icons = system.foundations.icons
+  const sizes = sizesOf(system)
+  const everydaySizes = ["icon-sm", "icon-md", "icon-lg"]
+    .map((id) => sizes.find((size) => size.id === id))
+    .filter((size): size is IconSizeToken => Boolean(size))
+  const weightChoices = STROKE_PRESETS.filter((preset) => [1.5, 2, 2.5].includes(preset.width))
+  const quickColors = ICON_COLOR_ROLES.filter((role) => ["default", "muted", "action", "danger"].includes(role.id))
+
+  return (
+    <section aria-label="Icon rules setup" className="overflow-hidden rounded-xl border border-border bg-background">
+      <div className="border-b border-border px-5 py-5">
+        <h2 className="text-lg font-semibold tracking-tight">Set the essentials</h2>
+        <p className="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">Most teams only need these three decisions. You can refine the technical details later, without changing how people use icons day to day.</p>
+      </div>
+
+      <div className="space-y-7 p-5">
+        <fieldset>
+          <legend className="text-sm font-semibold">1. Icon library</legend>
+          <p className="mt-1 text-xs leading-5 text-muted-foreground">Choose one visual family so icons feel like they belong together.</p>
+          <div className="mt-3 grid gap-3 sm:grid-cols-2" role="radiogroup" aria-label="Icon library">
+            <button
+              type="button"
+              role="radio"
+              aria-checked={icons.library === "lucide"}
+              onClick={() => {
+                const result = setIconSource(system, "lucide")
+                if (result.ok) save(result.system)
+              }}
+              className={`rounded-lg border p-4 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${icons.library === "lucide" ? "border-foreground bg-muted/60" : "border-border hover:bg-muted/60"}`}
+            >
+              <span className="flex items-center gap-2 text-sm font-medium"><Bell aria-hidden="true" className="size-5" />Lucide {icons.library === "lucide" && <Check aria-hidden="true" className="ml-auto size-4" />}</span>
+              <span className="mt-1 block text-xs leading-5 text-muted-foreground">Clean outline icons. Ready to browse and use now.</span>
+            </button>
+            <div className="rounded-lg border border-dashed border-border p-4 text-left">
+              <span className="text-sm font-medium">Custom icon set</span>
+              <span className="mt-1 block text-xs leading-5 text-muted-foreground">Keep custom SVG configuration in Advanced controls. It will not render until an SVG pipeline is connected.</span>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend className="text-sm font-semibold">2. Everyday icon size</legend>
+          <p className="mt-1 text-xs leading-5 text-muted-foreground">This is the size used for buttons, inputs, menus, and most interface actions.</p>
+          <div className="mt-3 grid gap-2 sm:grid-cols-3" role="radiogroup" aria-label="Everyday icon size">
+            {everydaySizes.map((size) => {
+              const selected = icons.defaultSize === size.id
+              return (
+                <button
+                  type="button"
+                  key={size.id}
+                  role="radio"
+                  aria-checked={selected}
+                  onClick={() => {
+                    const result = setDefaultSize(system, size.id)
+                    if (result.ok) save(result.system)
+                  }}
+                  className={`flex min-h-24 items-center gap-3 rounded-lg border p-4 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${selected ? "border-foreground bg-muted/60" : "border-border hover:bg-muted/60"}`}
+                >
+                  <Bell aria-hidden="true" style={{ width: pxOfIconSize(size) ?? 20, height: pxOfIconSize(size) ?? 20, strokeWidth: icons.strokeWidth }} />
+                  <span><span className="block text-sm font-medium">{size.label}</span><span className="mt-0.5 block text-xs text-muted-foreground">{size.value}</span></span>
+                  {selected && <Check aria-hidden="true" className="ml-auto size-4" />}
+                </button>
+              )
+            })}
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend className="text-sm font-semibold">3. Visual weight</legend>
+          <p className="mt-1 text-xs leading-5 text-muted-foreground">Use one stroke weight across the product. Balanced works well for most interfaces.</p>
+          <div className="mt-3 grid gap-2 sm:grid-cols-3" role="radiogroup" aria-label="Icon visual weight">
+            {weightChoices.map((preset) => {
+              const selected = icons.strokeWidth === preset.width
+              return (
+                <button
+                  type="button"
+                  key={preset.id}
+                  role="radio"
+                  aria-checked={selected}
+                  onClick={() => {
+                    const result = setStrokeWidth(system, preset.width)
+                    if (result.ok) save(result.system)
+                  }}
+                  className={`flex min-h-20 items-center gap-3 rounded-lg border p-3.5 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${selected ? "border-foreground bg-muted/60" : "border-border hover:bg-muted/60"}`}
+                >
+                  <Home aria-hidden="true" className="size-6" style={{ strokeWidth: preset.width }} />
+                  <span><span className="block text-sm font-medium">{preset.label}</span><span className="block text-xs text-muted-foreground">{preset.width}px stroke</span></span>
+                  {selected && <Check aria-hidden="true" className="ml-auto size-4" />}
+                </button>
+              )
+            })}
+          </div>
+        </fieldset>
+
+        <section aria-labelledby="icon-colour-behaviour-heading">
+          <h3 id="icon-colour-behaviour-heading" className="text-sm font-semibold">4. Colour behaviour</h3>
+          <p className="mt-1 text-xs leading-5 text-muted-foreground">Icons inherit these semantic roles. The exact palette shades stay editable in Advanced controls.</p>
+          <ul className="mt-3 grid gap-2 sm:grid-cols-2">
+            {quickColors.map((role) => {
+              const color = resolveIconColor(system, role.id)
+              return (
+                <li key={role.id} className="flex min-h-14 items-center gap-3 rounded-lg border border-border px-3">
+                  <span aria-hidden="true" className="grid size-8 place-items-center rounded-md border border-black/10 bg-muted dark:border-white/10" style={{ color: color ?? undefined }}><Bell className="size-4" /></span>
+                  <span className="min-w-0"><span className="block text-sm font-medium">{role.label}</span><span className="block truncate font-mono text-[11px] text-muted-foreground">{color ?? "Needs a palette shade"}</span></span>
+                </li>
+              )
+            })}
+          </ul>
+        </section>
+      </div>
+    </section>
   )
 }
 
@@ -1158,7 +1291,7 @@ function IconsPreview({ system, selectedId }: { system: DesignSystemConfig; sele
   const selectedToken = selectedId ? sizes.find((entry) => entry.id === selectedId) ?? null : null
 
   return (
-    <aside aria-label="Icon preview" className="h-fit rounded-xl border border-border bg-background p-5">
+    <aside aria-label="Icon preview" className="h-fit rounded-xl border border-border bg-background p-5 xl:sticky xl:top-20 xl:max-h-[calc(100vh-6rem)] xl:overflow-y-auto">
       <p className="text-xs font-semibold tracking-wider text-muted-foreground">LIVE PREVIEW</p>
       <p className="mt-1 text-xs leading-5 text-muted-foreground">
         Source: <span className="font-medium text-foreground">{render.rendered ? "Lucide (rendered)" : "Custom (metadata only)"}</span>

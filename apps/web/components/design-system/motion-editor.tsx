@@ -49,19 +49,64 @@ export function MotionEditor({
     <>
       <PageHeader
         eyebrow="Design System / Foundations"
-        title="Motion"
-        description="Define a restrained motion language — named durations, easings, and a reduced-motion policy — then test it through user-triggered previews."
+        title="Motion style"
+        description="Set a calm, consistent feel for interactions while respecting people who prefer less movement."
       />
       <div className="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
         <div className="min-w-0 space-y-4">
-          <RestoreSection system={system} save={save} />
-          <DurationSection system={system} save={save} />
-          <EasingSection system={system} save={save} />
-          <ReducedMotionSection system={system} save={save} />
+          <MotionEssentials system={system} save={save} />
+          <details className="group rounded-xl border border-border bg-background">
+            <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 px-5 text-sm font-medium marker:content-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+              <span>Advanced motion controls<span className="mt-0.5 block text-xs font-normal text-muted-foreground">Edit exact timings, easing curves, individual motion tokens, or restore the starter settings.</span></span>
+              <span aria-hidden="true" className="text-lg text-muted-foreground transition-transform group-open:rotate-45">+</span>
+            </summary>
+            <div className="space-y-4 border-t border-border p-4 sm:p-5">
+              <DurationSection system={system} save={save} />
+              <EasingSection system={system} save={save} />
+              <ReducedMotionSection system={system} save={save} />
+              <RestoreSection system={system} save={save} />
+            </div>
+          </details>
         </div>
         <MotionPreview system={system} />
       </div>
     </>
+  )
+}
+
+function MotionEssentials({ system, save }: { system: DesignSystemConfig; save: (next: DesignSystemConfig) => void }) {
+  const durations = durationsOf(system)
+  const easings = easingsOf(system)
+  const useCases = [
+    { duration: "fast", easing: "standard", label: "Buttons and focus", detail: "Quick feedback, so the interface feels responsive." },
+    { duration: "normal", easing: "standard", label: "Everyday changes", detail: "Tabs, cards, and small interface updates." },
+    { duration: "slow", easing: "enter", label: "Panels and menus", detail: "A little more time for larger elements entering view." },
+  ]
+  const valueFor = (id: string) => durations.find((token) => token.id === id)?.value ?? "—"
+  const easingFor = (id: string) => easings.find((token) => token.id === id)?.label ?? id
+  const policy = system.foundations.motion.reducedMotion
+  return (
+    <section aria-label="Motion essentials" className="rounded-xl border border-border bg-background p-5">
+      <h2 className="text-lg font-semibold tracking-tight">Your motion style</h2>
+      <p className="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">Most products can keep these defaults. They make feedback feel immediate, keep larger changes easy to follow, and avoid distracting movement.</p>
+      <div className="mt-4 grid gap-2 sm:grid-cols-3">
+        {useCases.map((item) => <div key={item.label} className="rounded-lg border border-border p-3"><p className="text-sm font-semibold">{item.label}</p><p className="mt-1 text-sm"><span className="font-medium">{valueFor(item.duration)}</span><span className="text-muted-foreground"> · {easingFor(item.easing)}</span></p><p className="mt-1 text-xs leading-5 text-muted-foreground">{item.detail}</p></div>)}
+      </div>
+      <div className="mt-5 border-t border-border pt-4">
+        <h3 className="text-sm font-semibold">People who prefer less motion</h3>
+        <p className="mt-1 text-xs leading-5 text-muted-foreground">This choice is always respected. No option forces animation on a person who has asked their device for less movement.</p>
+        <div role="radiogroup" aria-label="Motion accessibility preference" className="mt-3 grid gap-2 sm:grid-cols-3">
+          {REDUCED_MOTION_POLICIES.map((option) => {
+            const active = policy === option.id
+            return <button key={option.id} type="button" role="radio" aria-checked={active} onClick={() => { const result = setReducedMotionPolicy(system, option.id); if (result.ok) save(result.system) }} className={`min-h-28 rounded-lg border p-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${active ? "border-foreground bg-muted/60" : "border-border hover:bg-muted/60"}`}><span className="flex items-center gap-2 text-sm font-medium">{option.label}{active && <Check aria-hidden="true" className="ml-auto size-4" />}</span><span className="mt-1 block text-xs leading-5 text-muted-foreground">{option.description}</span></button>
+          })}
+        </div>
+      </div>
+      <details className="mt-4 border-t border-border pt-3">
+        <summary className="inline-flex min-h-11 cursor-pointer items-center text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">View PDF handoff summary</summary>
+        <p className="mt-1 text-xs leading-5 text-muted-foreground">The exported design system will document the motion roles, their exact timings, and the accessibility policy.</p>
+      </details>
+    </section>
   )
 }
 
@@ -1257,7 +1302,7 @@ function MotionPreview({ system }: { system: DesignSystemConfig }) {
     pair ? `${pair.durationId} · ${pair.ms}ms / ${pair.easingId}` : "unconfigured tokens"
 
   return (
-    <aside aria-label="Motion preview" className="h-fit rounded-xl border border-border bg-background p-5">
+    <aside aria-label="Motion preview" className="h-fit rounded-xl border border-border bg-background p-5 xl:sticky xl:top-20 xl:max-h-[calc(100vh-6rem)] xl:overflow-y-auto">
       <p className="text-xs font-semibold tracking-wider text-muted-foreground">MOTION PREVIEW</p>
       <p className="mt-1 text-xs leading-5 text-muted-foreground">
         User-triggered examples using saved tokens. Nothing plays on its own.
