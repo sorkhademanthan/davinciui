@@ -30,6 +30,12 @@ export interface HoverCardsProps extends Omit<
   clearOnLeave?: boolean;
   /** Blur radius for the full-bleed active image, in px. */
   backdropBlur?: number;
+  /** Auto-advance through cards on a timer. @default false */
+  autoPlay?: boolean;
+  /** Auto-play interval in ms. @default 3000 */
+  autoPlayInterval?: number;
+  /** Pause auto-play while the pointer hovers or focus is inside. @default true */
+  pauseAutoPlayOnHover?: boolean;
 }
 
 const clampIndex = (index: number | null | undefined, count: number) => {
@@ -45,13 +51,21 @@ export function HoverCards({
   onActiveIndexChange,
   clearOnLeave = true,
   backdropBlur = 44,
+  autoPlay = false,
+  autoPlayInterval = 3000,
+  pauseAutoPlayOnHover = true,
   className,
   style,
+  onPointerEnter,
   onPointerLeave,
+  onFocus,
   onBlur,
   ...props
 }: HoverCardsProps) {
   const rootRef = React.useRef<HTMLDivElement>(null);
+  const holdUntilRef = React.useRef(0);
+  const [autoPaused, setAutoPaused] = React.useState(false);
+  const paused = pauseAutoPlayOnHover && autoPaused;
   const [uncontrolledIndex, setUncontrolledIndex] = React.useState<
     number | null
   >(() => clampIndex(initialActiveIndex, items.length));
@@ -78,6 +92,46 @@ export function HoverCards({
     }
   }, [controlled, items.length]);
 
+  /* Auto-play: advance on a timer while visible. Real hover, focus, or tap
+     takes over — the timer yields while paused and for a beat after a tap. */
+  React.useEffect(() => {
+    if (!autoPlay || paused || reducedMotion || items.length <= 1) return;
+    const root = rootRef.current;
+    let visible = true;
+    let io: IntersectionObserver | null = null;
+    if (root && typeof IntersectionObserver !== "undefined") {
+      io = new IntersectionObserver(
+        ([entry]) => {
+          visible = entry?.isIntersecting ?? true;
+        },
+        { threshold: 0.05 },
+      );
+      io.observe(root);
+    }
+    const id = window.setInterval(
+      () => {
+        if (!visible || document.hidden) return;
+        if (Date.now() < holdUntilRef.current) return;
+        setActive(
+          resolvedIndex == null ? 0 : (resolvedIndex + 1) % items.length,
+        );
+      },
+      Math.max(800, autoPlayInterval),
+    );
+    return () => {
+      window.clearInterval(id);
+      io?.disconnect();
+    };
+  }, [
+    autoPlay,
+    autoPlayInterval,
+    paused,
+    reducedMotion,
+    items.length,
+    resolvedIndex,
+    setActive,
+  ]);
+
   const textIsLight = activeItem?.textTone !== "dark";
   const transitionDuration = reducedMotion ? "0ms" : "680ms";
   const transition = `${transitionDuration} cubic-bezier(0.22, 1, 0.36, 1)`;
@@ -92,12 +146,24 @@ export function HoverCards({
         className,
       )}
       style={{ containerType: "size", ...style }}
+      onPointerEnter={(event) => {
+        setAutoPaused(true);
+        onPointerEnter?.(event);
+      }}
       onPointerLeave={(event) => {
+        setAutoPaused(false);
         if (clearOnLeave && event.pointerType === "mouse") setActive(null);
         onPointerLeave?.(event);
       }}
+      onFocus={(event) => {
+        setAutoPaused(true);
+        onFocus?.(event);
+      }}
       onBlur={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget)) setActive(null);
+        if (!event.currentTarget.contains(event.relatedTarget)) {
+          setAutoPaused(false);
+          setActive(null);
+        }
         onBlur?.(event);
       }}
       {...props}
@@ -181,7 +247,12 @@ export function HoverCards({
                   if (event.pointerType === "mouse") setActive(index);
                 }}
                 onFocus={() => setActive(index)}
-                onClick={() => setActive(index)}
+                onClick={() => {
+                  // Lend control to the tap for a beat so auto-play
+                  // doesn't immediately advance away from it.
+                  holdUntilRef.current = Date.now() + 4000;
+                  setActive(index);
+                }}
                 className={cn(
                   "group/card block w-full min-w-0 cursor-pointer appearance-none border-0 bg-transparent p-0 text-left outline-none",
                   "focus-visible:ring-2 focus-visible:ring-current focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
