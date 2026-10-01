@@ -28,6 +28,7 @@ import {
   restoreThemeToStarter,
   setOverride,
   summarizeTheme,
+  themeHandoffSummary,
   themeIssues,
   tokenThemeState,
   unresolvedOverrides,
@@ -175,6 +176,31 @@ test("editing one custom theme never mutates its source or another theme", () =>
   const retinted = updateThemeMode(system, first.theme.id, "light");
   assert.equal(findTheme(retinted, first.theme.id)?.mode, "light");
   assert.equal(findTheme(retinted, "dark")?.mode, "dark");
+});
+
+test("required theme modes stay fixed while custom theme modes remain editable", () => {
+  const system = manthanSystem();
+  assert.equal(findTheme(updateThemeMode(system, "light", "dark"), "light")?.mode, "light");
+  assert.equal(findTheme(updateThemeMode(system, "dark", "light"), "dark")?.mode, "dark");
+  const created = createTheme(system, { label: "Evening", mode: "dark", fromThemeId: "dark" });
+  assert.equal(created.ok, true);
+  if (!created.ok) return;
+  const withCustom = insertTheme(system, created.theme);
+  assert.equal(findTheme(updateThemeMode(withCustom, created.theme.id, "light"), created.theme.id)?.mode, "light");
+});
+
+test("theme handoff summary contains resolved essential roles and provenance", () => {
+  const system = manthanSystem();
+  const summary = themeHandoffSummary(system, "dark");
+  assert.ok(summary);
+  assert.equal(summary?.mode, "dark");
+  assert.equal(summary?.roles.length, 8);
+  const canvas = summary?.roles.find((role) => role.id === "background.canvas");
+  assert.equal(canvas?.source, "theme");
+  assert.equal(canvas?.value, resolveToken(system, "background.canvas", "dark").value);
+  const focus = summary?.roles.find((role) => role.id === "focus.ring");
+  assert.ok(focus?.value);
+  assert.equal(themeHandoffSummary(system, "ghost"), null);
 });
 
 test("valid palette-shade and semantic-alias overrides resolve", () => {

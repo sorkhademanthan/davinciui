@@ -35,8 +35,8 @@ import {
   resetOverrideToStarter,
   restoreThemeToStarter,
   setOverride,
-  slugifyThemeId,
   summarizeTheme,
+  themeHandoffSummary,
   themeIssues,
   tokenThemeState,
   updateThemeLabel,
@@ -307,18 +307,24 @@ function ThemeCardActions({
         />
       </div>
       <div className="mt-2 flex flex-wrap items-center gap-1.5" role="group" aria-label={`Mode for theme ${theme.id}`}>
-        {(["light", "dark"] as const).map((entry) => (
-          <button
-            key={entry}
-            aria-pressed={theme.mode === entry}
-            onClick={() => {
-              if (theme.mode !== entry) save(updateThemeMode(system, theme.id, entry))
-            }}
-            className={`inline-flex min-h-11 items-center rounded-lg border px-2.5 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none ${theme.mode === entry ? "border-foreground bg-muted" : "border-border hover:bg-muted/60"}`}
-          >
-            {entry === "light" ? "Light" : "Dark"}
-          </button>
-        ))}
+        {required ? (
+          <span className="inline-flex min-h-11 items-center rounded-lg border border-border bg-muted/50 px-3 text-xs font-medium capitalize">
+            {theme.mode} appearance · fixed
+          </span>
+        ) : (
+          (["light", "dark"] as const).map((entry) => (
+            <button
+              key={entry}
+              aria-pressed={theme.mode === entry}
+              onClick={() => {
+                if (theme.mode !== entry) save(updateThemeMode(system, theme.id, entry))
+              }}
+              className={`inline-flex min-h-11 items-center rounded-lg border px-2.5 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none ${theme.mode === entry ? "border-foreground bg-muted" : "border-border hover:bg-muted/60"}`}
+            >
+              {entry === "light" ? "Light" : "Dark"}
+            </button>
+          ))
+        )}
         <button
           onClick={() => {
             const copy = duplicateTheme(system, theme.id)
@@ -456,8 +462,6 @@ function CreateThemeForm({
   const [mode, setMode] = useState<"light" | "dark">("dark")
   const [fromThemeId, setFromThemeId] = useState("dark")
   const [error, setError] = useState<string | null>(null)
-  const existingIds = listThemes(system).map((theme) => theme.id)
-  const previewId = label.trim() ? slugifyThemeId(label.trim(), existingIds) : "—"
 
   const handleCreate = () => {
     const result = createTheme(system, { label, mode, fromThemeId })
@@ -499,6 +503,7 @@ function CreateThemeForm({
                 aria-pressed={mode === entry}
                 onClick={() => {
                   setMode(entry)
+                  setFromThemeId(entry)
                   setError(null)
                 }}
                 className={`inline-flex min-h-11 flex-1 items-center justify-center rounded-lg border px-3 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none ${mode === entry ? "border-foreground bg-muted" : "border-border hover:bg-muted/60"}`}
@@ -510,7 +515,7 @@ function CreateThemeForm({
         </div>
         <div>
           <label htmlFor="create-theme-from" className="text-sm font-medium">
-            Clone overrides from
+            Start from
           </label>
           <select
             id="create-theme-from"
@@ -523,15 +528,12 @@ function CreateThemeForm({
           >
             {listThemes(system).map((theme) => (
               <option key={theme.id} value={theme.id}>
-                {theme.label} ({Object.keys(theme.overrides ?? {}).length} overrides)
+                {theme.label} appearance
               </option>
             ))}
           </select>
         </div>
       </div>
-      <p className="mt-2 font-mono text-[11px] text-muted-foreground" aria-live="polite">
-        Stable id preview: {previewId} (generated once; labels stay editable)
-      </p>
       <div className="mt-1 min-h-5" aria-live="polite">
         {error && (
           <p role="alert" className="text-xs font-medium text-destructive">
@@ -593,6 +595,7 @@ function ThemeEssentials({
         ))}
       </ul>
       <ThemeContrastSummary system={system} theme={theme} />
+      <ThemeHandoff system={system} theme={theme} />
     </section>
   )
 }
@@ -719,6 +722,56 @@ function ThemeContrastSummary({ system, theme }: { system: DesignSystemConfig; t
         })}
       </ul>
     </div>
+  )
+}
+
+function ThemeHandoff({ system, theme }: { system: DesignSystemConfig; theme: Theme }) {
+  const summary = themeHandoffSummary(system, theme.id)
+  if (!summary) return null
+  return (
+    <details className="mt-4 border-t border-border pt-3">
+      <summary className="inline-flex min-h-11 cursor-pointer items-center text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+        View PDF and developer handoff
+      </summary>
+      <p className="mt-1 text-xs leading-5 text-muted-foreground">
+        This is the compact specification that will appear in the exported design-system document.
+      </p>
+      <div className="mt-3 overflow-x-auto rounded-lg border border-border">
+        <table className="w-full min-w-[520px] border-collapse text-left text-xs">
+          <caption className="sr-only">Essential colour roles for {summary.label}</caption>
+          <thead className="bg-muted/50 text-muted-foreground">
+            <tr>
+              <th className="px-3 py-2 font-medium">Role</th>
+              <th className="px-3 py-2 font-medium">Source</th>
+              <th className="px-3 py-2 font-medium">Reference</th>
+              <th className="px-3 py-2 font-medium">Resolved colour</th>
+            </tr>
+          </thead>
+          <tbody>
+            {summary.roles.map((role) => (
+              <tr key={role.id} className="border-t border-border">
+                <td className="px-3 py-2.5">
+                  <span className="block font-medium">{role.label}</span>
+                  <span className="font-mono text-[11px] text-muted-foreground">{role.id}</span>
+                </td>
+                <td className="px-3 py-2.5 capitalize">{role.source === "base" ? "Shared base" : role.source}</td>
+                <td className="px-3 py-2.5 font-mono text-[11px]">{role.reference}</td>
+                <td className="px-3 py-2.5">
+                  <span className="inline-flex items-center gap-2 font-mono text-[11px]">
+                    <span className="size-4 rounded-full border border-border" style={{ backgroundColor: role.value ?? "transparent" }} aria-hidden="true" />
+                    {role.value ?? "Unresolved"}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p className="mt-2 text-[11px] text-muted-foreground">
+        {summary.overridden} theme colours · {summary.inherited} shared base colours
+        {summary.invalid > 0 ? ` · ${summary.invalid} need attention` : ""}
+      </p>
+    </details>
   )
 }
 

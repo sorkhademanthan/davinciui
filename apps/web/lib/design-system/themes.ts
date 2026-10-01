@@ -291,6 +291,62 @@ export interface ThemeSummary {
   required: boolean;
 }
 
+export const THEME_HANDOFF_ROLE_IDS: readonly string[] = [
+  "background.canvas",
+  "surface.default",
+  "text.primary",
+  "text.secondary",
+  "action.primary.background",
+  "action.primary.foreground",
+  "border.default",
+  "focus.ring",
+];
+
+export interface ThemeHandoffRole {
+  id: string;
+  label: string;
+  reference: string;
+  value: string | null;
+  source: "base" | "theme" | "invalid";
+}
+
+export interface ThemeHandoffSummary {
+  id: string;
+  label: string;
+  mode: "light" | "dark";
+  overridden: number;
+  inherited: number;
+  invalid: number;
+  roles: ThemeHandoffRole[];
+}
+
+/** Presentation-ready theme specification for UI documentation and PDF export. */
+export function themeHandoffSummary(system: DesignSystemConfig, themeId: string): ThemeHandoffSummary | null {
+  const theme = themesOf(system).find((entry) => entry.id === themeId);
+  const summary = summarizeTheme(system, themeId);
+  if (!theme || !summary) return null;
+  const labels = new Map((system.semanticTokens ?? []).map((token) => [token.id, token.label]));
+  return {
+    id: theme.id,
+    label: theme.label,
+    mode: theme.mode,
+    overridden: summary.overridden,
+    inherited: summary.inherited,
+    invalid: summary.invalid,
+    roles: THEME_HANDOFF_ROLE_IDS.flatMap((id) => {
+      const state = tokenThemeState(system, themeId, id);
+      if (!state) return [];
+      return [{
+        id,
+        label: labels.get(id) ?? id,
+        reference: state.override ?? state.baseValue,
+        value: state.effectiveValue,
+        source: state.status === "invalid" ? "invalid" : state.override === null ? "base" : "theme",
+      }];
+    }),
+  };
+}
+
 /** Card/tab summary: mode, override counts, and inheritance status. */
 export function summarizeTheme(system: DesignSystemConfig, themeId: string): ThemeSummary | null {
   const theme = themesOf(system).find((entry) => entry.id === themeId);
@@ -374,6 +430,8 @@ export function updateThemeMode(
   mode: "light" | "dark",
 ): DesignSystemConfig {
   if (mode !== "light" && mode !== "dark") return system;
+  if (id === "light" && mode !== "light") return system;
+  if (id === "dark" && mode !== "dark") return system;
   return withThemes(
     system,
     themesOf(system).map((theme) => (theme.id === id ? { ...theme, mode } : theme)),
