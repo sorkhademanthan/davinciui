@@ -7,7 +7,7 @@ import { Search, ArrowUpRight } from "lucide-react"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import { ComponentCardLivePreview } from "@/components/component-card-live-preview"
 import { isBasicPreviewSlug, type BasicPreviewSlug } from "@/components/docs/previews/basic-component-card-slugs"
-import { components } from "@/registry"
+import { components, sortByFeatured, getFeaturedRank } from "@/registry"
 import { BASIC_GROUPS, BASIC_SUBS } from "@/lib/component-groups"
 import { cn } from "@/lib/utils"
 
@@ -30,21 +30,22 @@ const TOP_FILTERS = ["All", "Basic", "Text Animations", "Premium Components", "H
 
 const BASIC_SUBS_ALL: readonly string[] = BASIC_SUBS
 
-// One intentionally shuffled, stable order for the Text Animations gallery.
-// Keeping it fixed avoids cards jumping to new positions on every render.
+// Featured-first order for the Text Animations gallery.
+// Mirrors the global FEATURED_SLUGS relative order so the shuffled
+// mix stays consistent across All + Text tabs.
 const TEXT_ANIMATION_ORDER = [
-  "gsap-text",
-  "media-text-hover",
-  "shake-text",
-  "random-text-reveal",
   "text-video-mask",
-  "encrypted-text",
-  "text-reveal",
-  "fluid-particle-text",
+  "shake-text",
+  "rolling-text",
+  "media-text-hover",
+  "gsap-text",
+  "random-text-reveal",
   "text-morph",
   "shader-text",
+  "fluid-particle-text",
+  "encrypted-text",
   "glitch-liquid-text",
-  "rolling-text",
+  "text-reveal",
 ] as const
 
 const TEXT_ANIMATION_RANK = new Map<string, number>(
@@ -238,7 +239,7 @@ function ComponentsGallery() {
     })
   }, [activeTop, activeSub, pathname, router])
 
-  const all = useMemo(() => Object.values(components).sort((a, b) => a.title.localeCompare(b.title)), [])
+  const all = useMemo(() => sortByFeatured(Object.values(components)), [])
 
   // Slugs hidden from the gallery grid. The components themselves (docs,
   // registry, source) stay intact — they just don't get a card here.
@@ -280,7 +281,13 @@ function ComponentsGallery() {
       })
     }
 
-    return matches
+    // Every other tab (including "All") leads with the featured best,
+    // then falls back to alphabetical — so your top 27 always show first.
+    return [...matches].sort((a, b) => {
+      const rankDiff = getFeaturedRank(a.slug) - getFeaturedRank(b.slug)
+      if (rankDiff !== 0) return rankDiff
+      return a.title.localeCompare(b.title)
+    })
   }, [q, activeTop, activeSub, all, HIDDEN_SLUGS])
 
   const handleTopChange = (t: TopFilter) => {
