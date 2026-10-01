@@ -15,6 +15,7 @@ import {
   diffGrids,
   effectiveProfile,
   ensureGridForSystem,
+  gridExportSummary,
   gridIssues,
   hasCustomGridEdits,
   insertContainer,
@@ -46,24 +47,100 @@ export function GridEditor({
     <>
       <PageHeader
         eyebrow="Design System / Foundations"
-        title="Grid"
-        description="Configure responsive layout geometry per breakpoint, then watch each profile activate at its threshold."
+        title="Page layout"
+        description="Choose how your pages arrange content on phones, tablets, and desktops. Everyone on the team will follow the same layout plan."
       />
       <div className="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
         <div className="min-w-0 space-y-4">
           <PresetSection system={system} save={save} />
-          <ProfileSection
-            system={system}
-            save={save}
-            selected={selectedBreakpoint}
-            onSelect={setSelectedBreakpoint}
-          />
-          <ContainerSection system={system} save={save} />
+          <GridSpecificationSection system={system} />
+          <details className="group rounded-xl border border-border bg-background">
+            <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 px-5 text-sm font-medium marker:content-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+              <span>
+                Advanced layout controls
+                <span className="mt-0.5 block text-xs font-normal text-muted-foreground">Change individual screen rules, name content widths, or add a custom width.</span>
+              </span>
+              <span aria-hidden="true" className="text-lg text-muted-foreground transition-transform group-open:rotate-45">+</span>
+            </summary>
+            <div className="space-y-4 border-t border-border p-4 sm:p-5">
+              <ProfileSection
+                system={system}
+                save={save}
+                selected={selectedBreakpoint}
+                onSelect={setSelectedBreakpoint}
+              />
+              <ContainerSection system={system} save={save} />
+            </div>
+          </details>
         </div>
         <GridPreview system={system} />
       </div>
     </>
   )
+}
+
+function GridSpecificationSection({ system }: { system: DesignSystemConfig }) {
+  const summary = useMemo(() => gridExportSummary(system), [system])
+  const phone = summary.profiles.find((profile) => profile.breakpointId === "base") ?? summary.profiles[0]
+  const tablet = summary.profiles.find((profile) => profile.breakpointId === "md") ?? summary.profiles[Math.min(1, summary.profiles.length - 1)]
+  const desktop = summary.profiles.find((profile) => profile.breakpointId === "lg") ?? summary.profiles[summary.profiles.length - 1]
+  return (
+    <section aria-label="Your page layout" className="rounded-xl border border-border bg-background p-5">
+      <div className="flex flex-wrap items-baseline justify-between gap-3">
+        <div>
+          <h2 className="text-lg font-semibold tracking-tight">Your page layout</h2>
+          <p className="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">This is the result your team will see. It keeps content comfortable to read and lets the page grow naturally with the screen.</p>
+        </div>
+        <span className="rounded-full bg-muted px-2.5 py-1 text-xs font-medium">{summary.defaultContainer.label} content width</span>
+      </div>
+
+      <div className="mt-4 grid gap-2 sm:grid-cols-3">
+        <LayoutFact label="Main content" value={`${summary.defaultContainer.label} · ${summary.defaultContainer.value}`} detail={summary.defaultContainer.description ?? "The usual width for pages."} />
+        <LayoutFact label="On a phone" value={`${phone?.columns ?? "—"} columns`} detail={`Content stays inside ${phone?.gutter.value ?? phone?.gutter.token ?? "the page edge"} margins.`} />
+        <LayoutFact label="On a laptop" value={`${desktop?.columns ?? "—"} columns`} detail="More room for side-by-side cards, tables, and navigation." />
+      </div>
+
+      <div className="mt-5">
+        <h3 className="text-sm font-semibold">How it adapts</h3>
+        <p className="mt-1 text-xs leading-5 text-muted-foreground">You do not need to set every screen size manually. These rules apply automatically as the screen grows.</p>
+        <ol className="mt-3 grid gap-2 sm:grid-cols-3">
+          <LayoutStage label="Phone" profile={phone} />
+          <LayoutStage label="Tablet" profile={tablet} />
+          <LayoutStage label="Laptop and larger" profile={desktop} />
+        </ol>
+      </div>
+
+      <details className="mt-5 border-t border-border pt-3">
+        <summary className="inline-flex min-h-11 cursor-pointer items-center text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">View PDF and developer handoff details</summary>
+        <p className="mt-1 text-xs leading-5 text-muted-foreground">These exact values will appear in the exported design-system documentation. Most designers can leave them alone.</p>
+        <div className="mt-3 overflow-x-auto">
+          <table className="w-full min-w-[560px] border-separate border-spacing-0 text-left text-xs">
+            <caption className="sr-only">Responsive grid layout plan</caption>
+            <thead className="text-muted-foreground"><tr><th className="border-b border-border px-3 py-2 font-medium">From screen width</th><th className="border-b border-border px-3 py-2 font-medium">Columns</th><th className="border-b border-border px-3 py-2 font-medium">Page edge</th><th className="border-b border-border px-3 py-2 font-medium">Between columns</th><th className="border-b border-border px-3 py-2 font-medium">Between rows</th></tr></thead>
+            <tbody>{summary.profiles.map((profile) => <tr key={profile.breakpointId}><th scope="row" className="border-b border-border px-3 py-3 font-medium"><span className="block">{breakpointLabel(profile.breakpointId)}</span><span className="block font-normal text-muted-foreground">from {profile.threshold}</span></th><td className="border-b border-border px-3 py-3 font-medium">{profile.columns}</td><td className="border-b border-border px-3 py-3"><TokenValue token={profile.gutter.token} value={profile.gutter.value} /></td><td className="border-b border-border px-3 py-3"><TokenValue token={profile.columnGap.token} value={profile.columnGap.value} /></td><td className="border-b border-border px-3 py-3"><TokenValue token={profile.rowGap.token} value={profile.rowGap.value} /></td></tr>)}</tbody>
+          </table>
+        </div>
+        <div className="mt-3 grid gap-2 sm:grid-cols-2">{summary.containers.map((container) => <div key={container.id} className={`rounded-lg border p-3 ${container.id === summary.defaultContainer.id ? "border-foreground bg-muted/50" : "border-border"}`}><p className="text-sm font-medium">{container.label} <span className="font-mono text-xs font-normal text-muted-foreground">{container.value}</span></p><p className="mt-0.5 text-xs leading-5 text-muted-foreground">{container.description ?? "Named layout width."}</p></div>)}</div>
+      </details>
+    </section>
+  )
+}
+
+function LayoutFact({ label, value, detail }: { label: string; value: string; detail: string }) {
+  return <div className="rounded-lg border border-border p-3"><p className="text-xs text-muted-foreground">{label}</p><p className="mt-1 text-sm font-semibold">{value}</p><p className="mt-1 text-xs leading-5 text-muted-foreground">{detail}</p></div>
+}
+
+function LayoutStage({ label, profile }: { label: string; profile: ReturnType<typeof gridExportSummary>["profiles"][number] | undefined }) {
+  const columns = profile?.columns ?? 1
+  return <li className="rounded-lg border border-border p-3"><div className="flex items-center justify-between gap-2"><span className="text-sm font-medium">{label}</span><span className="text-xs text-muted-foreground">from {profile?.threshold ?? "—"}</span></div><div aria-hidden="true" className="mt-3 grid gap-1" style={{ gridTemplateColumns: `repeat(${Math.min(columns, 6)}, minmax(0, 1fr))` }}>{Array.from({ length: Math.min(columns, 6) }, (_, index) => <span key={index} className="block h-6 rounded-[3px] bg-foreground/15" />)}</div><p className="mt-2 text-xs text-muted-foreground"><span className="font-medium text-foreground">{columns} columns</span> · {profile?.gutter.value ?? profile?.gutter.token ?? "—"} page edge</p></li>
+}
+
+function TokenValue({ token, value }: { token: string; value: string | null }) {
+  return <><span className="font-medium">{value ?? "Missing value"}</span><span className="ml-1 font-mono text-[11px] text-muted-foreground">{token}</span></>
+}
+
+function breakpointLabel(id: string) {
+  return ({ base: "Phone", sm: "Large phone", md: "Tablet", lg: "Laptop", xl: "Desktop", "2xl": "Wide desktop" } as Record<string, string>)[id] ?? id
 }
 
 function spacingOptions(system: DesignSystemConfig): Array<{ id: string; value: string }> {
@@ -98,31 +175,42 @@ function PresetSection({
     setPending(null)
   }
 
+  const presetIsActive = (preset: GridPreset) => {
+    const candidate = {
+      ...grid,
+      containers: preset.containers.map((container) => ({ ...container })),
+      profiles: preset.profiles.map((profile) => ({ ...profile })),
+      defaultContainer: preset.defaultContainer,
+    }
+    const diff = diffGrids(grid, candidate)
+    return diff.profilesChanged.length === 0 && diff.containersChanged.length === 0 && diff.containersAdded.length === 0 && diff.containersRemoved.length === 0 && grid.defaultContainer === candidate.defaultContainer
+  }
+
   return (
-    <section aria-label="Grid presets" className="rounded-xl border border-border bg-background p-5">
-      <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h2 className="font-medium">Grid presets</h2>
-        <p className="text-xs text-muted-foreground">
-          <span className={`font-medium ${customEdits ? "text-amber-600 dark:text-amber-400" : "text-emerald-600 dark:text-emerald-400"}`}>
-            {customEdits ? "Custom grid" : "Starter grid"}
-          </span>
-        </p>
+    <section aria-label="Choose a layout" className="overflow-hidden rounded-xl border border-border bg-background">
+      <div className="border-b border-border px-5 py-5">
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
+          <div>
+            <h2 className="text-lg font-semibold tracking-tight">Choose a layout starting point</h2>
+            <p className="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">Pick the page rhythm closest to your product. It sets the columns, page edges, and spacing at every screen size.</p>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            <span className={`font-medium ${customEdits ? "text-amber-600 dark:text-amber-400" : "text-emerald-600 dark:text-emerald-400"}`}>
+              {customEdits ? "Custom layout" : "Starter layout"}
+            </span>
+          </p>
+        </div>
       </div>
-      <p className="mt-1 text-xs text-muted-foreground">
-        Presets replace containers and breakpoint profiles only — breakpoint thresholds are never touched.
-      </p>
-      <div className="mt-4 grid gap-2 sm:grid-cols-2">
+      <div className="p-5">
+      <div className="grid gap-2 sm:grid-cols-2">
         {GRID_PRESETS.map((preset) => (
           <button
             key={preset.id}
             onClick={() => request(preset)}
-            className="min-h-11 rounded-lg border border-border p-3 text-left transition-colors hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            aria-pressed={presetIsActive(preset)}
+            className={`min-h-32 rounded-lg border p-4 text-left transition-colors hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${presetIsActive(preset) ? "border-foreground bg-muted/60" : "border-border"}`}
           >
-            <span className="block text-sm font-medium">{preset.label}</span>
-            <span className="mt-0.5 block text-xs text-muted-foreground">{preset.description}</span>
-            <span className="mt-1 block font-mono text-[11px] text-muted-foreground">
-              {preset.profiles.map((p) => `${p.breakpointId}:${p.columns}`).join(" · ")}
-            </span>
+            <span className="flex items-start gap-3"><PresetDiagram preset={preset} /><span className="min-w-0"><span className="flex items-center gap-2"><span className="text-sm font-medium">{preset.label}</span>{presetIsActive(preset) && <span className="rounded-full bg-foreground px-2 py-0.5 text-[10px] font-medium text-background">Selected</span>}</span><span className="mt-1 block text-xs leading-5 text-muted-foreground">{preset.description}</span><span className="mt-1.5 block text-xs text-muted-foreground">Mobile {preset.profiles[0]?.columns ?? "—"} columns · Desktop {preset.profiles.find((profile) => profile.breakpointId === "lg")?.columns ?? "—"} columns</span></span></span>
           </button>
         ))}
       </div>
@@ -136,8 +224,15 @@ function PresetSection({
       {pending && (
         <PresetConfirm system={system} grid={grid} preset={pending} onConfirm={() => applyChoice(pending)} onCancel={() => setPending(null)} />
       )}
+      </div>
     </section>
   )
+}
+
+function PresetDiagram({ preset }: { preset: GridPreset }) {
+  const desktop = preset.profiles.find((profile) => profile.breakpointId === "lg")?.columns ?? 12
+  const blocks = Math.min(desktop, 6)
+  return <span aria-hidden="true" className="grid w-14 shrink-0 grid-cols-3 gap-1 rounded-md border border-border bg-background p-2">{Array.from({ length: blocks }, (_, index) => <span key={index} className="block h-3 rounded-[2px] bg-foreground/20" />)}</span>
 }
 
 function PresetConfirm({
@@ -810,7 +905,7 @@ function GridPreview({ system }: { system: DesignSystemConfig }) {
   const isCompact = columns <= 6
 
   return (
-    <aside aria-label="Grid preview" className="h-fit rounded-xl border border-border bg-background p-5">
+    <aside aria-label="Grid preview" className="h-fit rounded-xl border border-border bg-background p-5 xl:sticky xl:top-20 xl:max-h-[calc(100vh-6rem)] xl:overflow-y-auto">
       <p className="text-xs font-semibold tracking-wider text-muted-foreground">LIVE PREVIEW</p>
       <p className="mt-1 text-xs leading-5 text-muted-foreground">
         Effective grid resolves from the active breakpoint — edit a profile and watch this stage update.

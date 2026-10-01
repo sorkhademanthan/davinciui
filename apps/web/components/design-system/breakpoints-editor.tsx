@@ -45,17 +45,58 @@ export function BreakpointsEditor({
     <>
       <PageHeader
         eyebrow="Design System / Foundations"
-        title="Breakpoints"
-        description="Define your mobile-first viewport thresholds, then see exactly when each layout activates."
+        title="Screen sizes"
+        description="Choose when your layout changes from phone to tablet to desktop. The page layout and components follow these rules automatically."
       />
       <div className="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
         <div className="min-w-0 space-y-4">
           <PresetSection system={system} save={save} />
-          <TokenSection system={system} save={save} selectedId={selectedId} onSelect={setSelectedId} />
+          <BreakpointStory system={system} />
+          <details className="group rounded-xl border border-border bg-background">
+            <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 px-5 text-sm font-medium marker:content-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+              <span>Advanced screen-size controls<span className="mt-0.5 block text-xs font-normal text-muted-foreground">Edit exact pixel values, add a custom screen size, or see every connected rule.</span></span>
+              <span aria-hidden="true" className="text-lg text-muted-foreground transition-transform group-open:rotate-45">+</span>
+            </summary>
+            <div className="border-t border-border p-4 sm:p-5"><TokenSection system={system} save={save} selectedId={selectedId} onSelect={setSelectedId} /></div>
+          </details>
         </div>
         <BreakpointPreview system={system} selectedId={selectedId} />
       </div>
     </>
+  )
+}
+
+function BreakpointStory({ system }: { system: DesignSystemConfig }) {
+  const scale = currentScale(system)
+  const stages = [
+    { id: "base", name: "Phone", explanation: "Single-hand use and compact content." },
+    { id: "md", name: "Tablet", explanation: "More room for side-by-side content." },
+    { id: "lg", name: "Laptop and larger", explanation: "Full workspace layout for larger screens." },
+  ].map((stage) => {
+    const token = scale.find((entry) => entry.id === stage.id) ?? scale[0]!
+    const profile = effectiveProfile(system, token.id)
+    return { ...stage, token, profile }
+  })
+  return (
+    <section aria-label="How the layout adapts" className="rounded-xl border border-border bg-background p-5">
+      <h2 className="text-lg font-semibold tracking-tight">How your layout adapts</h2>
+      <p className="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">These are the moments when the interface changes shape. You choose the switch points; Grid and components use them everywhere.</p>
+      <ol className="mt-4 grid gap-2 sm:grid-cols-3">
+        {stages.map((stage) => (
+          <li key={stage.id} className="rounded-lg border border-border p-3">
+            <p className="text-sm font-semibold">{stage.name}</p>
+            <p className="mt-1 text-xs text-muted-foreground">From {stage.token.value}</p>
+            <div aria-hidden="true" className="mt-3 grid gap-1" style={{ gridTemplateColumns: `repeat(${Math.min(stage.profile.columns, 6)}, minmax(0, 1fr))` }}>{Array.from({ length: Math.min(stage.profile.columns, 6) }, (_, index) => <span key={index} className="block h-6 rounded-[3px] bg-foreground/15" />)}</div>
+            <p className="mt-2 text-xs"><span className="font-medium">{stage.profile.columns} columns</span><span className="text-muted-foreground"> · {stage.explanation}</span></p>
+          </li>
+        ))}
+      </ol>
+      <details className="mt-4 border-t border-border pt-3">
+        <summary className="inline-flex min-h-11 cursor-pointer items-center text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">View PDF handoff details</summary>
+        <p className="mt-1 text-xs leading-5 text-muted-foreground">The export will document each switch point and the layout it activates.</p>
+        <ul className="mt-2 space-y-1 text-xs text-muted-foreground">{scale.map((token) => { const profile = effectiveProfile(system, token.id); return <li key={token.id}><span className="font-medium text-foreground">{token.label}</span> from {token.value}: {profile.columns} columns</li> })}</ul>
+      </details>
+    </section>
   )
 }
 
@@ -98,9 +139,9 @@ function PresetSection({
   }
 
   return (
-    <section aria-label="Breakpoint presets" className="rounded-xl border border-border bg-background p-5">
+    <section aria-label="Choose screen-size rules" className="rounded-xl border border-border bg-background p-5">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h2 className="font-medium">Scale presets</h2>
+        <h2 className="text-lg font-semibold tracking-tight">Choose when layouts change</h2>
         <p className="text-xs text-muted-foreground">
           <span className={`font-medium ${customEdits ? "text-amber-600 dark:text-amber-400" : "text-emerald-600 dark:text-emerald-400"}`}>
             {customEdits ? "Custom scale" : "Starter scale"}
@@ -108,7 +149,7 @@ function PresetSection({
         </p>
       </div>
       <p className="mt-1 text-xs text-muted-foreground">
-        Presets replace threshold values only — Grid columns and gaps are never touched.
+        Start with a familiar device scale. This changes only when layouts switch; it never changes the layout itself.
       </p>
       <div className="mt-4 grid gap-2 sm:grid-cols-3">
         {BREAKPOINT_PRESETS.map((preset) => (
@@ -119,9 +160,7 @@ function PresetSection({
           >
             <span className="block text-sm font-medium">{preset.label}</span>
             <span className="mt-0.5 block text-xs text-muted-foreground">{preset.description}</span>
-            <span className="mt-1 block font-mono text-[11px] text-muted-foreground">
-              {preset.scale.map((token) => token.value).join(" · ")}
-            </span>
+            <span className="mt-2 block text-xs text-muted-foreground">Tablet from {preset.scale.find((token) => token.id === "md")?.value ?? "—"} · Laptop from {preset.scale.find((token) => token.id === "lg")?.value ?? "—"}</span>
           </button>
         ))}
       </div>
@@ -850,7 +889,7 @@ function BreakpointPreview({ system, selectedId }: { system: DesignSystemConfig;
   const gridMax = parseGridMaxWidth(container?.value ?? grid.maxWidth);
 
   return (
-    <aside aria-label="Breakpoint preview" className="h-fit rounded-xl border border-border bg-background p-5">
+    <aside aria-label="Breakpoint preview" className="h-fit rounded-xl border border-border bg-background p-5 xl:sticky xl:top-20 xl:max-h-[calc(100vh-6rem)] xl:overflow-y-auto">
       <p className="text-xs font-semibold tracking-wider text-muted-foreground">LIVE PREVIEW</p>
       <p className="mt-1 text-xs leading-5 text-muted-foreground">
         Active breakpoint is computed from saved thresholds — resize the stage to watch layouts switch.
