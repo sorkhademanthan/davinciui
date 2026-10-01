@@ -10,6 +10,7 @@ import {
   type MotionValue,
 } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { useAutoplayScrollScrub } from "./use-autoplay-scroll-scrub";
 
 interface MiniItem {
   title: string;
@@ -133,6 +134,10 @@ export function CMSScrollGalleryCardPreview() {
   // Measured stage height (the visible card media height) — the track is
   // exactly one stage per item, no container-query units needed.
   const [stageH, setStageH] = useState(192);
+
+  // Self-playing: gently ping-pong the scrub while visible so backdrops
+  // and titles crossfade with no manual wheel input.
+  useAutoplayScrollScrub(containerRef, { phase: 1.35, durationMs: 8400 });
 
   useEffect(() => {
     const el = containerRef.current;

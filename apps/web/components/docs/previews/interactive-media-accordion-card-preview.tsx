@@ -3,6 +3,7 @@
 import * as React from "react";
 import { useReducedMotion } from "framer-motion";
 import { InteractiveMediaAccordion } from "@workspace/ui/components/interactive-media-accordion";
+import { useAutoplayScrollScrub } from "./use-autoplay-scroll-scrub";
 
 const ITEMS = [
   {
@@ -47,6 +48,10 @@ export function InteractiveMediaAccordionCardPreview() {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion() ?? false;
   const [active, setActive] = React.useState(0);
+
+  // Self-playing: eased ping-pong scrub so bands expand and collapse in a
+  // continuous loop with no manual wheel input. Real scrub takes over.
+  useAutoplayScrollScrub(containerRef, { phase: 0.9, durationMs: 8000 });
 
   // Capture wheel intent over the card so scrolling scrubs the preview
   // instead of the page — native 1:1, exactly like the fullscreen demo.
@@ -117,7 +122,7 @@ export function InteractiveMediaAccordionCardPreview() {
         descriptionSize={10}
         textGap={2}
         contentPadding={[12, 12]}
-        duration={650}
+        duration={800}
         onActiveChange={handleActiveChange}
       />
       </div>
