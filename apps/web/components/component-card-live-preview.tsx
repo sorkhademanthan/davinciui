@@ -106,16 +106,16 @@ const EncryptedText = dynamic(
 
 const FluidParticleText = dynamic(
   () =>
-    import("@workspace/ui/components/fluid-particle-text").then(
-      (module) => module.FluidParticleText,
+    import("@/components/docs/previews/fluid-particle-text-card-preview").then(
+      (module) => module.FluidParticleTextCardPreview,
     ),
   { ssr: false },
 );
 
 const GlitchLiquidText = dynamic(
   () =>
-    import("@workspace/ui/components/glitch-liquid-text").then(
-      (module) => module.GlitchLiquidText,
+    import("@/components/docs/previews/glitch-liquid-text-card-preview").then(
+      (module) => module.GlitchLiquidTextCardPreview,
     ),
   { ssr: false },
 );
@@ -501,8 +501,8 @@ const KineticSplitTextCardPreview = dynamic(
 
 const MediaTextHover = dynamic(
   () =>
-    import("@workspace/ui/components/media-text-hover").then(
-      (module) => module.MediaTextHover,
+    import("@/components/docs/previews/media-text-hover-card-preview").then(
+      (module) => module.MediaTextHoverCardPreview,
     ),
   { ssr: false },
 );
@@ -742,19 +742,7 @@ export function ComponentCardLivePreview({
       ) : slug === "rolling-text" ? (
         <RollingTextCardPreview />
       ) : slug === "media-text-hover" ? (
-        <MediaTextHover
-          text="DAVINCIUI"
-          splitIndex={5}
-          mediaSrc="/preview-videos/component-animations/spiral3dslider.mp4"
-          mediaWidth={112}
-          mediaHeight={54}
-          fontFamily="Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif"
-          fontSize="clamp(2rem, 3.2vw, 2.75rem)"
-          letterSpacing="-0.025em"
-          textColor="var(--foreground)"
-          tabIndex={-1}
-          className="px-3"
-        />
+        <MediaTextHover />
       ) : slug === "text-morph" ? (
         <TextMorph
           words={["DAVINCIUI", "COMPONENTS"]}
@@ -775,35 +763,9 @@ export function ComponentCardLivePreview({
           revealedColor={isDark ? "#f5f5f4" : "#18181b"}
         />
       ) : slug === "fluid-particle-text" ? (
-        <FluidParticleText
-          preset="showcase"
-          text="INK"
-          padding={0.28}
-          color={isDark ? "#f4f4f5" : "#18181b"}
-          background={isDark ? "#09090b" : "#fafafa"}
-          particleSpacing={2.5}
-          particleSize={1.5}
-          maxParticles={14000}
-          maxDpr={1}
-          outline
-          strokeWidth={1.5}
-          className="h-full w-full"
-        />
+        <FluidParticleText />
       ) : slug === "glitch-liquid-text" ? (
-        <GlitchLiquidText
-          text={"DAVINCIUI\nCOMPONENTS"}
-          fontSize={48}
-          fontWeight={800}
-          lineHeight={0.95}
-          backgroundColor={isDark ? "#09090b" : "#fafafa"}
-          textColor={isDark ? "#f4f4f5" : "#18181b"}
-          cursorEnabled={false}
-          distortionStrength={0.42}
-          liquidStrength={1.1}
-          glitchStrength={0.3}
-          grainStrength={0.012}
-          className="h-full w-full"
-        />
+        <GlitchLiquidText />
       ) : slug === "ink-flow" ? (
         <div
           aria-hidden="true"
