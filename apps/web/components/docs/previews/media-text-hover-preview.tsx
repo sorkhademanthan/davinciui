@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { create } from "zustand";
+import { useTheme } from "next-themes";
 import {
   MediaTextHover,
   type MediaTextHoverMode,
@@ -33,8 +34,11 @@ const DEFAULT_CONFIG: MediaTextHoverConfig = {
   text: "DAVINCIUI",
   mode: "fixed",
   splitIndex: 5,
-  mediaWidth: 240,
-  mediaHeight: 96,
+  // 2:1 media window, height matched to the exact cap-height of the 92px
+  // Impact headline (~64px) — same proportions as the gallery card (42×21).
+  // Shared by the right-side preview and fullscreen mode.
+  mediaWidth: 128,
+  mediaHeight: 64,
   mediaRadius: 0,
   fontSize: 92,
   springStiffness: 260,
@@ -73,6 +77,8 @@ function generateCode(config: MediaTextHoverConfig): string {
 
 export function MediaTextHoverPlayground() {
   const config = useMediaTextHoverStore((state) => state.config);
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme !== "light";
 
   React.useEffect(() => {
     const timeoutId = window.setTimeout(() => {
@@ -82,7 +88,7 @@ export function MediaTextHoverPlayground() {
   }, [config]);
 
   return (
-    <div className="flex h-full min-h-[440px] w-full items-center justify-center overflow-hidden bg-black px-4 py-16 lg:min-h-[520px]">
+    <div className="flex h-full min-h-[440px] w-full items-center justify-center overflow-hidden bg-zinc-100 px-4 py-16 dark:bg-black lg:min-h-[520px]">
       <MediaTextHover
         text={config.text}
         splitIndex={Math.min(config.splitIndex, config.text.length)}
@@ -95,7 +101,7 @@ export function MediaTextHoverPlayground() {
         fontSize={`clamp(2.75rem, ${config.fontSize / 11}vw, ${config.fontSize}px)`}
         fontWeight={400}
         letterSpacing="-0.025em"
-        textColor="#ffffff"
+        textColor={isDark ? "#ffffff" : "#18181b"}
         springStiffness={config.springStiffness}
         springDamping={config.springDamping}
         className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-white/70"
