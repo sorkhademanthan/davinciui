@@ -22,7 +22,7 @@ export async function InteractiveMediaAccordionDocs() {
   return (
     <DocsPageLayout
       title="Interactive Media Accordion"
-      description="A sticky, scroll-driven media accordion — each scroll band transfers the expanded state to the next card while the remaining images collapse into narrow pills. Reverse the scroll to reverse the sequence; click and keyboard focus remain available as accessible fallbacks."
+      description="A sticky media accordion that advances with scroll and reverses as you scroll back. Click or focus a card to select it directly; narrow layouts keep every card visible when space allows."
       preview={
         <InteractiveMediaAccordionDemoPreview
           src="/demo/interactive-media-accordion"
@@ -48,7 +48,7 @@ export async function InteractiveMediaAccordionDocs() {
         { name: "radius / collapsedRadius", type: "number", default: "48 / collapsedWidth ÷ 2", description: "Active card radius and pill radius. The pill defaults to a capsule." },
         { name: "outerPadding", type: "number", default: "0", description: "Outer padding of the gallery in pixels." },
         { name: "fit", type: '"cover" | "contain"', default: '"cover"', description: "How media fills its card. Cover keeps the crop-window behavior." },
-        { name: "textGradient / gradientStrength", type: "boolean / number", default: "true / 0.55", description: "Subtle bottom gradient behind the active text, with 0–1 strength." },
+        { name: "textGradient / gradientStrength", type: "boolean / number", default: "true / 0.8", description: "Bottom gradient behind the active text, with 0–1 strength." },
         { name: "inactiveBrightness / inactiveSaturation", type: "number", default: "1 / 1", description: "Optional treatment for inactive pills. Defaults keep the original image." },
         { name: "titleSize / descriptionSize", type: "number", default: "40 / 15", description: "Active text sizes in pixels, scaled down on narrow containers." },
         { name: "titleFont / descriptionFont", type: "string", description: "Font families for the active title and subtitle." },

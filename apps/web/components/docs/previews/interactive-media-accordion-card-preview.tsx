@@ -3,7 +3,6 @@
 import * as React from "react";
 import { useReducedMotion } from "framer-motion";
 import { InteractiveMediaAccordion } from "@workspace/ui/components/interactive-media-accordion";
-import { useAutoplayScrollScrub } from "./use-autoplay-scroll-scrub";
 
 const ITEMS = [
   {
@@ -11,134 +10,109 @@ const ITEMS = [
     media:
       "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=600&auto=format&fit=crop",
     title: "Mountains of Mist",
-    description: "Wander into nature's hands.",
   },
   {
     id: "dunes",
     media:
       "https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?q=80&w=600&auto=format&fit=crop",
     title: "Golden Dunes",
-    description: "Where the desert breathes.",
   },
   {
     id: "tide",
     media:
       "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=600&auto=format&fit=crop",
     title: "Emerald Tide",
-    description: "Chase the endless horizon.",
   },
   {
     id: "aurora",
     media:
       "https://images.unsplash.com/photo-1531366936337-7c912a4589a7?q=80&w=600&auto=format&fit=crop",
     title: "Northern Aurora",
-    description: "Light dancing on winter skies.",
   },
 ];
 
 /**
- * Card preview that renders the production fullscreen component.
- * The card itself is the scroll container — scrolling over the card drives
- * the real `InteractiveMediaAccordion` in scroll mode via its sticky stage,
- * exactly like the fullscreen demo at `/demo/interactive-media-accordion`.
- * Wheel input is dampened so each card lingers, and progress ticks show
- * the active item, mirroring the other scroll-gallery card previews.
+ * Display-only catalog preview. A timer gives each card time to settle,
+ * and pauses when the preview is offscreen or the document is hidden.
  */
 export function InteractiveMediaAccordionCardPreview() {
-  const containerRef = React.useRef<HTMLDivElement>(null);
+  const hostRef = React.useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion() ?? false;
   const [active, setActive] = React.useState(0);
+  const activeRef = React.useRef(0);
 
-  // Self-playing: eased ping-pong scrub so bands expand and collapse in a
-  // continuous loop with no manual wheel input. Real scrub takes over.
-  useAutoplayScrollScrub(containerRef, { phase: 0.9, durationMs: 8000 });
-
-  // Capture wheel intent over the card so scrolling scrubs the preview
-  // instead of the page — native 1:1, exactly like the fullscreen demo.
-  // Works even where overscroll-behavior is unsupported.
-  // Pinch-zoom (ctrlKey) is never intercepted.
   React.useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    const onWheel = (e: WheelEvent) => {
-      if (e.ctrlKey || e.metaKey) return;
-      const delta =
-        e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? 400 : 1);
-      if (delta === 0) return;
-      const max = el.scrollHeight - el.clientHeight;
-      const atTop = el.scrollTop <= 0;
-      const atBottom = el.scrollTop >= max - 1;
-      if ((delta > 0 && !atBottom) || (delta < 0 && !atTop)) {
-        e.preventDefault();
-        e.stopPropagation();
-        el.scrollTop += delta;
-      }
+    if (reduceMotion) return;
+    const host = hostRef.current;
+    if (!host) return;
+
+    let timer = 0;
+    let visible = false;
+    let direction = 1;
+    const DWELL_MS = 2300;
+
+    const stop = () => {
+      window.clearInterval(timer);
+      timer = 0;
     };
-    el.addEventListener("wheel", onWheel, { passive: false });
-    return () => el.removeEventListener("wheel", onWheel);
-  }, []);
+    const start = () => {
+      stop();
+      if (!visible || document.hidden) return;
+      timer = window.setInterval(() => {
+        const current = activeRef.current;
+        let next = current + direction;
+        if (next >= ITEMS.length) {
+          direction = -1;
+          next = ITEMS.length - 2;
+        } else if (next < 0) {
+          direction = 1;
+          next = 1;
+        }
+        activeRef.current = next;
+        setActive(next);
+      }, DWELL_MS);
+    };
 
-  const handleActiveChange = React.useCallback((index: number) => {
-    setActive(index);
-  }, []);
-
-  if (reduceMotion) {
-    const item = ITEMS[0]!;
-    return (
-      <div className="absolute inset-0 overflow-hidden bg-white dark:bg-black">
-        <img
-          src={item.media}
-          alt=""
-          aria-hidden="true"
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-      </div>
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        visible = entry?.isIntersecting ?? false;
+        start();
+      },
+      { threshold: 0.05 },
     );
-  }
+    observer.observe(host);
+    document.addEventListener("visibilitychange", start);
+
+    return () => {
+      stop();
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", start);
+    };
+  }, [reduceMotion]);
 
   return (
-    <div className="absolute inset-0 overflow-hidden bg-white dark:bg-black">
-      <div
-        ref={containerRef}
-        className="h-full w-full overflow-y-auto overflow-x-hidden [&::-webkit-scrollbar]:hidden"
-        style={{
-          scrollbarWidth: "none",
-          overscrollBehaviorY: "contain",
-        }}
-      >
+    <div
+      ref={hostRef}
+      inert
+      className="pointer-events-none absolute inset-0 overflow-hidden bg-white dark:bg-black"
+    >
       <InteractiveMediaAccordion
         items={ITEMS}
-        trigger="scroll"
-        scrollStep={300}
-        stickyTop={8}
-        height={168}
+        trigger="hover"
+        activeIndex={active}
+        height={184}
         gap={6}
         collapsedWidth={44}
         tabletCollapsedWidth={36}
         mobileCollapsedWidth={30}
         radius={14}
         outerPadding={8}
-        titleSize={16}
-        descriptionSize={10}
-        textGap={2}
-        contentPadding={[12, 12]}
-        duration={800}
-        onActiveChange={handleActiveChange}
+        titleSize={22}
+        contentPadding={[16, 50]}
+        duration={720}
+        easing="cubic-bezier(0.22, 1, 0.36, 1)"
+        reducedMotion={reduceMotion}
       />
-      </div>
-      {/* Scroll progress ticks — difference blend stays legible on every background */}
-      <div className="pointer-events-none absolute bottom-2 left-1/2 z-10 flex -translate-x-1/2 gap-1 text-white mix-blend-difference">
-        {ITEMS.map((item, i) => (
-          <span
-            key={item.id}
-            className={
-              i === active
-                ? "h-1 w-4 rounded-full bg-current opacity-90"
-                : "h-1 w-1 rounded-full bg-current opacity-50"
-            }
-          />
-        ))}
-      </div>
     </div>
   );
 }
