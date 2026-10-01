@@ -18,7 +18,7 @@ export interface ServicesShowcaseProps
   images?: ServiceImage[];
   /** "comfortable" for full pages, "compact" for small card previews. */
   density?: "comfortable" | "compact";
-  /** When false, pointer perspective + hover unfold are disabled. */
+  /** When false, the stack is display-only. */
   interactive?: boolean;
   /** Runs the compact-to-open loop without requiring pointer input. */
   autoPlay?: boolean;
@@ -59,35 +59,35 @@ interface CardGeometry {
 
 const STACK_GEOMETRY: CardGeometry[] = [
   {
-    w: 39,
-    h: 72,
-    x: 7,
-    y: 19,
-    openRotation: -7,
-    closedX: 60.25,
-    closedY: -8.33,
+    w: 44,
+    h: 76,
+    x: 4,
+    y: 15,
+    openRotation: -8,
+    closedX: 54.55,
+    closedY: 0,
     closedRotation: 0,
     depth: 1,
   },
   {
-    w: 39,
-    h: 72,
-    x: 31,
+    w: 44,
+    h: 76,
+    x: 28,
     y: 7,
-    openRotation: 2,
-    closedX: -1.28,
-    closedY: 8.33,
+    openRotation: 1,
+    closedX: 13.64,
+    closedY: 7.89,
     closedRotation: 0,
     depth: 0.82,
   },
   {
-    w: 39,
-    h: 72,
-    x: 55,
-    y: 17,
-    openRotation: 8,
-    closedX: -62.82,
-    closedY: -5.56,
+    w: 44,
+    h: 76,
+    x: 52,
+    y: 13,
+    openRotation: 7,
+    closedX: -27.27,
+    closedY: -2.63,
     closedRotation: 0,
     depth: 0.68,
   },
@@ -120,13 +120,41 @@ function ServiceVisual({
   geometry: CardGeometry[];
   interactive: boolean;
   autoPlay: boolean;
-  tiltRef: (el: HTMLDivElement | null) => void;
+  tiltRef: (el: HTMLElement | null) => void;
 }) {
+  const [open, setOpen] = React.useState(false);
+  const VisualTag = interactive ? "button" : "div";
+
   return (
-    <div
+    <VisualTag
       ref={tiltRef}
       data-svc-tilt={interactive ? "true" : undefined}
-      data-svc-autoplay={autoPlay ? "true" : undefined}
+      data-svc-autoplay={autoPlay && !interactive ? "true" : undefined}
+      data-svc-open={open ? "true" : undefined}
+      type={interactive ? "button" : undefined}
+      aria-label={interactive ? "Service image stack" : undefined}
+      aria-expanded={interactive ? open : undefined}
+      onPointerEnter={interactive ? (event) => {
+        if (event.pointerType === "mouse" || event.pointerType === "pen") {
+          setOpen(true);
+        }
+      } : undefined}
+      onPointerLeave={interactive ? (event) => {
+        if (event.pointerType === "mouse" || event.pointerType === "pen") {
+          setOpen(false);
+        }
+      } : undefined}
+      onClick={interactive ? (event) => {
+        if (
+          event.detail === 0 ||
+          window.matchMedia("(hover: none), (pointer: coarse)").matches
+        ) {
+          setOpen((value) => !value);
+        }
+      } : undefined}
+      onKeyDown={interactive ? (event) => {
+        if (event.key === "Escape") setOpen(false);
+      } : undefined}
       className="svc-visual relative w-full overflow-visible"
       style={{ aspectRatio: "4 / 3.4" }}
     >
@@ -139,7 +167,7 @@ function ServiceVisual({
         return (
           <div
             key={slot}
-            className="svc-s absolute left-0 top-0 will-change-transform"
+            className="svc-s absolute left-0 top-0"
             style={{
               width: `${geo.w}%`,
               height: `${geo.h}%`,
@@ -169,7 +197,7 @@ function ServiceVisual({
           </div>
         );
       })}
-    </div>
+    </VisualTag>
   );
 }
 
@@ -186,7 +214,7 @@ export function ServicesShowcase({
   style,
   ...props
 }: ServicesShowcaseProps) {
-  const tiltRefs = React.useRef<Array<HTMLDivElement | null>>([]);
+  const tiltRefs = React.useRef<Array<HTMLElement | null>>([]);
 
   /* ---- pointer perspective: fine pointers only, CSS vars on each card ---- */
   React.useEffect(() => {
@@ -294,28 +322,43 @@ const SVC_CSS = `
 .svc-root {
   --svc-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --closed-scale-x: 1;
-  --closed-scale-y: 0.86;
+  --closed-scale-y: 0.9;
 }
 /* The gallery keeps the same stack, but gives its miniature more breathing room. */
 .svc-root[data-density="compact"] {
-  --closed-scale-x: 0.92;
-  --closed-scale-y: 0.82;
+  --closed-scale-x: 0.96;
+  --closed-scale-y: 0.88;
 }
 .svc-root[data-density="compact"] .svc-stage { min-height: 100%; padding: 0.75rem; }
 /* Gallery cards are short (h-48) — the visual is sized to fit the height
    instead of the width so the stack is never cropped. */
 .svc-root[data-density="compact"] .svc-visual {
-  width: 56%;
+  width: 68%;
 }
 
-/* The reference starts as one broad pile, then unfolds into three portraits. */
+.svc-visual {
+  display: block;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  -webkit-tap-highlight-color: transparent;
+}
+button.svc-visual { cursor: pointer; touch-action: manipulation; }
+button.svc-visual:focus-visible { outline: none; }
+button.svc-visual:focus-visible .svc-s:first-child .svc-rest {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}
+
+/* The three visible layers spread into portraits without fading in and out. */
 .svc-s {
   transform: translate3d(var(--closed-x), var(--closed-y), 0) scaleX(var(--closed-scale-x)) scaleY(var(--closed-scale-y)) rotate(var(--closed-r));
   transform-origin: center center;
-  transition: transform 720ms var(--svc-ease), opacity 180ms ease-out;
-  will-change: transform;
+  transition: transform 680ms var(--svc-ease);
 }
-.svc-s:not(:first-child) { opacity: 0; }
+.svc-s:not(:first-child) { opacity: 1; }
 
 /* Gallery cards remain display-only, but demonstrate the same unfold on a loop. */
 @keyframes svc-autoplay-stack {
@@ -329,26 +372,22 @@ const SVC_CSS = `
     transform: translate3d(var(--closed-x), var(--closed-y), 0) scaleX(var(--closed-scale-x)) scaleY(var(--closed-scale-y)) rotate(var(--closed-r));
   }
 }
-@keyframes svc-autoplay-layer {
-  0%, 28% { opacity: 0; }
-  44%, 74% { opacity: 1; }
-  100% { opacity: 0; }
-}
 .svc-visual[data-svc-autoplay="true"] .svc-s {
   animation: svc-autoplay-stack 5.8s var(--svc-ease) infinite;
 }
-.svc-visual[data-svc-autoplay="true"] .svc-s:not(:first-child) {
-  animation: svc-autoplay-stack 5.8s var(--svc-ease) infinite, svc-autoplay-layer 5.8s linear infinite;
+.svc-visual[data-svc-autoplay="true"] .svc-s,
+.svc-visual[data-svc-open="true"] .svc-s { will-change: transform; }
+.svc-visual[data-svc-open="true"] .svc-s {
+  transform: translate3d(0, 0, 0) scaleX(1) scaleY(1) rotate(var(--open-r));
+  transition-delay: calc(var(--i, 0) * 55ms);
 }
 @media (hover: hover) and (pointer: fine) {
   /* Unfold cascades front-to-back; refold cascades back-to-front. */
   .svc-visual[data-svc-tilt="true"] .svc-s {
-    transition-delay: calc((2 - var(--i, 0)) * 65ms), 0ms;
+    transition-delay: calc((2 - var(--i, 0)) * 55ms);
   }
-  .svc-visual[data-svc-tilt="true"]:hover .svc-s {
-    transform: translate3d(0, 0, 0) scaleX(1) scaleY(1) rotate(var(--open-r));
-    opacity: 1;
-    transition-delay: calc(var(--i, 0) * 65ms), 0ms;
+  .svc-visual[data-svc-tilt="true"][data-svc-open="true"] .svc-s {
+    transition-delay: calc(var(--i, 0) * 55ms);
   }
 }
 
@@ -362,18 +401,18 @@ const SVC_CSS = `
       calc(var(--ty, 0px) * var(--depth)),
       0
     );
-  will-change: transform;
   transform-origin: center center;
 }
+.svc-visual[data-svc-open="true"] .svc-card { will-change: transform; }
 
 .svc-img { transform: scale(1.025); }
+.svc-rest {
+  border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+  box-shadow: 0 14px 28px rgb(0 0 0 / 0.16);
+}
 
 @media (prefers-reduced-motion: reduce) {
-  .svc-s { animation: none !important; transition: none; }
-  .svc-visual[data-svc-tilt="true"]:hover .svc-s {
-    transform: translate3d(var(--closed-x), var(--closed-y), 0) scaleX(var(--closed-scale-x)) scaleY(var(--closed-scale-y)) rotate(var(--closed-r));
-  }
-  .svc-visual[data-svc-tilt="true"]:hover .svc-s:not(:first-child) { opacity: 0; }
+  .svc-s { animation: none !important; transition: none !important; }
 }
 `;
 

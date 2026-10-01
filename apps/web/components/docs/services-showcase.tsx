@@ -31,7 +31,7 @@ export async function ServicesShowcaseDocs() {
   return (
     <DocsPageLayout
       title="Services Showcase"
-      description="A single theme-aware image stack that unfolds from a compact pile into three portrait cards with a smooth, full-card perspective response."
+      description="A layered image stack that unfolds into three portrait cards on hover, tap, or keyboard activation, with a subtle pointer perspective response."
       preview={<ServicesShowcasePreview />}
       previewCode={usageCode}
       usageCode={usageCode}
@@ -60,7 +60,7 @@ export async function ServicesShowcaseDocs() {
           type: "boolean",
           default: "true",
           description:
-            "Enables the hover unfold and full-card pointer perspective on fine-pointer devices. Disabled automatically on touch and reduced-motion.",
+            "Enables hover, tap, and keyboard unfolding. Fine pointers also add a subtle perspective response; reduced-motion preferences remove the transition.",
         },
         {
           name: "autoPlay",
