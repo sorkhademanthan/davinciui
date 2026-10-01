@@ -96,6 +96,7 @@ function hasLiveCardPreview(
   | "animated-pill-button"
   | "burn-plus"
   | "team-slide-reveal"
+  | "hover-transition"
   | "ambient-audio-toggle"
   | "interaction-sound-kit"
   | "voice-recorder"
@@ -167,6 +168,7 @@ function hasLiveCardPreview(
     slug === "animated-pill-button" ||
     slug === "burn-plus" ||
     slug === "team-slide-reveal" ||
+    slug === "hover-transition" ||
     slug === "ambient-audio-toggle" ||
     slug === "interaction-sound-kit" ||
     slug === "voice-recorder" ||

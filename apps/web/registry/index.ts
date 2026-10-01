@@ -106,8 +106,6 @@ export const components: Record<string, ComponentMetadata> = {
     category: "Premium Components",
     slug: "hover-transition",
     addedAt: "2026-08-08",
-    previewVideo:
-      "https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/component-animations/hovertransition.webm",
   },
   "fluid-particle-text": {
     title: "Particle Flow",
@@ -855,7 +853,7 @@ export const components: Record<string, ComponentMetadata> = {
   "services-showcase": {
     title: "Services Showcase",
     description:
-      "A dark editorial services section with layered image stacks, scroll-driven parallax, restrained hover spread, and container-query sizing for card, panel, and fullscreen previews.",
+      "A layered portrait stack that unfolds on hover, tap, or keyboard activation, with subtle pointer depth and a display-only animated preview.",
     category: "Visual Effects",
     slug: "services-showcase",
     addedAt: "2026-09-23",
@@ -911,7 +909,7 @@ export const components: Record<string, ComponentMetadata> = {
   "team-slide-reveal": {
     title: "Team Slide Reveal",
     description:
-      "A click-to-reveal portrait card that slides into a compact testimonial summary, with an explicit return control and responsive single-footprint layout.",
+      "An editorial portrait card with a story sheet that rises into the frame and returns to the profile on demand.",
     category: "Interactions",
     slug: "team-slide-reveal",
     addedAt: "2026-09-24",
