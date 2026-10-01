@@ -9,6 +9,8 @@ export function HoverCardsCardPreview() {
       items={hoverCardsDemoItems}
       className="absolute inset-0 min-h-0"
       backdropBlur={18}
+      autoPlay
+      autoPlayInterval={2600}
     />
   );
 }

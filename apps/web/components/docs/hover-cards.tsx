@@ -89,6 +89,26 @@ export async function HoverCardsDocs() {
           description: "Blur radius, in pixels, for the expanded background image.",
         },
         {
+          name: "autoPlay",
+          type: "boolean",
+          default: "false",
+          description:
+            "Auto-advance through cards on a timer. Pauses offscreen, in background tabs, and while hovered or focused.",
+        },
+        {
+          name: "autoPlayInterval",
+          type: "number",
+          default: "3000",
+          description: "Auto-play interval in milliseconds (minimum 800).",
+        },
+        {
+          name: "pauseAutoPlayOnHover",
+          type: "boolean",
+          default: "true",
+          description:
+            "Pause auto-play while the pointer hovers or focus is inside the composition.",
+        },
+        {
           name: "className",
           type: "string",
           description: "Additional classes for sizing and styling the stage.",
