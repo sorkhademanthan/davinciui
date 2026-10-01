@@ -957,7 +957,7 @@ function TypePreview({
     : null
 
   return (
-    <aside aria-label="Typography preview" className="h-fit rounded-xl border border-border bg-background p-5">
+    <aside aria-label="Typography preview" className="h-fit rounded-xl border border-border bg-background p-5 xl:sticky xl:top-20 xl:max-h-[calc(100vh-6rem)] xl:overflow-y-auto">
       <div className="flex items-baseline justify-between gap-2">
         <p className="text-xs font-semibold tracking-wider text-muted-foreground">TYPE PREVIEW</p>
         {focusLabel && (

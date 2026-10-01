@@ -774,7 +774,7 @@ function SpacingPreview({ system, selectedId }: { system: DesignSystemConfig; se
   }
 
   return (
-    <aside aria-label="Spacing preview" className="h-fit rounded-xl border border-border bg-background p-5">
+    <aside aria-label="Spacing preview" className="h-fit rounded-xl border border-border bg-background p-5 xl:sticky xl:top-20 xl:max-h-[calc(100vh-6rem)] xl:overflow-y-auto">
       <p className="text-xs font-semibold tracking-wider text-muted-foreground">LIVE PREVIEW</p>
       <p className="mt-1 text-xs leading-5 text-muted-foreground">
         Driven by saved spacing and sizing tokens — not hardcoded values.
