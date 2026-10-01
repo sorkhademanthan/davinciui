@@ -137,7 +137,7 @@ export function ScrollTimelineCardPreview() {
 
   // Self-playing: gently ping-pong the scrub while visible so eras
   // collapse and years rotate with no manual wheel input.
-  useAutoplayScrollScrub(containerRef, { phase: 1.6, durationMs: 6000 });
+  useAutoplayScrollScrub(containerRef, { phase: 1.6, durationMs: 5000 });
 
   useEffect(() => {
     const el = containerRef.current;

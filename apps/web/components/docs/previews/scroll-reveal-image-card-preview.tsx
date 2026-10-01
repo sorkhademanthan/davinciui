@@ -104,7 +104,7 @@ export function ScrollRevealImageCardPreview() {
 
   // Self-playing: gently ping-pong the scrub while visible so frames
   // arrive in their centered window with no manual wheel input.
-  useAutoplayScrollScrub(containerRef, { phase: 0.45, durationMs: 7200 });
+  useAutoplayScrollScrub(containerRef, { phase: 0.45, durationMs: 6000 });
 
   useEffect(() => {
     const el = containerRef.current;

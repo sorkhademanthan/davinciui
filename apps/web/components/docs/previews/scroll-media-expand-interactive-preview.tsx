@@ -6,7 +6,7 @@ import { Play } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const SRC =
-  "https://images.unsplash.com/photo-1517796931930-443b6f13cf65?q=85&w=1800&auto=format&fit=crop";
+  "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=85&w=1800&auto=format&fit=crop";
 
 /* Phase boundaries mirror the full ScrollMediaExpand component exactly —
    the pill is rendered at rest on mount and every frame scrubs from there. */
@@ -56,6 +56,7 @@ export function ScrollMediaExpandInteractivePreview({
   const labelLeftRef = useRef<HTMLSpanElement>(null);
   const labelRightRef = useRef<HTMLSpanElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
+  const scrimRef = useRef<HTMLDivElement>(null);
   const hintRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion() ?? false;
   const [stageSize, setStageSize] = useState({ w: 0, h: 0 });
@@ -154,8 +155,14 @@ export function ScrollMediaExpandInteractivePreview({
       }
 
       const overlay = overlayRef.current;
+      const scrim = scrimRef.current;
+      const overlayP = smootherstep(OVERLAY_IN[0], OVERLAY_IN[1], p);
+      if (scrim) {
+        scrim.style.opacity = (0.9 * overlayP).toFixed(2);
+        scrim.style.visibility = overlayP <= 0 ? "hidden" : "visible";
+      }
       if (overlay) {
-        const o = smootherstep(OVERLAY_IN[0], OVERLAY_IN[1], p);
+        const o = overlayP;
         overlay.style.opacity = o.toFixed(2);
         overlay.style.transform = `translate(-50%, calc(-50% + ${(8 * (1 - o)).toFixed(1)}px)) scale(${(0.96 + 0.04 * o).toFixed(3)})`;
         overlay.style.filter =
@@ -259,17 +266,28 @@ export function ScrollMediaExpandInteractivePreview({
               />
             </div>
             <div
+              ref={scrimRef}
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0"
+              style={{
+                opacity: 0,
+                visibility: "hidden",
+                background:
+                  "radial-gradient(ellipse at center, rgba(0,0,0,0.42) 0%, rgba(0,0,0,0.12) 45%, rgba(0,0,0,0) 68%)",
+              }}
+            />
+            <div
               ref={overlayRef}
               aria-hidden="true"
               className="absolute left-1/2 top-1/2 z-10"
               style={{ opacity: 0, visibility: "hidden" }}
             >
-              <div className="flex items-center gap-2">
-                <span className="whitespace-nowrap text-[13px] font-medium tracking-wide text-white/60">
-                  Play showreel
+              <div className="flex items-center gap-2.5 rounded-full bg-black/35 py-1.5 pl-1.5 pr-4 ring-1 ring-white/25 backdrop-blur-md">
+                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white">
+                  <Play className="h-3 w-3 fill-zinc-950 text-zinc-950" />
                 </span>
-                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-black/80 ring-1 ring-white/15">
-                  <Play className="h-2.5 w-2.5 fill-white text-white" />
+                <span className="whitespace-nowrap text-[13px] font-medium tracking-wide text-white">
+                  Play showreel
                 </span>
               </div>
             </div>
@@ -277,14 +295,14 @@ export function ScrollMediaExpandInteractivePreview({
           <span
             ref={labelLeftRef}
             aria-hidden="true"
-            className="pointer-events-none absolute left-1/2 top-1/2 z-10 whitespace-nowrap text-[12px] font-semibold text-foreground md:text-[13px]"
+            className="pointer-events-none absolute left-1/2 top-1/2 z-10 whitespace-nowrap text-[12px] font-semibold uppercase tracking-[0.18em] text-foreground md:text-[13px]"
           >
             ©2026
           </span>
           <span
             ref={labelRightRef}
             aria-hidden="true"
-            className="pointer-events-none absolute left-1/2 top-1/2 z-10 whitespace-nowrap text-[12px] font-semibold text-foreground md:text-[13px]"
+            className="pointer-events-none absolute left-1/2 top-1/2 z-10 whitespace-nowrap text-[12px] font-semibold uppercase tracking-[0.18em] text-foreground md:text-[13px]"
           >
             Showreel
           </span>
