@@ -320,6 +320,14 @@ const TeamSlideRevealCardPreview = dynamic(
   { ssr: false },
 );
 
+const HoverTransitionCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/hover-transition-card-preview").then(
+      (module) => module.HoverTransitionCardPreview,
+    ),
+  { ssr: false },
+);
+
 const AmbientAudioToggleCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/ambient-audio-toggle-card-preview").then(
@@ -594,7 +602,8 @@ type ComponentCardLivePreviewProps = {
     | "nudge-button"
     | "animated-pill-button"
     | "burn-plus"
-    | "team-slide-reveal"
+      | "team-slide-reveal"
+      | "hover-transition"
     | "ambient-audio-toggle"
     | "interaction-sound-kit"
     | "voice-recorder"
@@ -683,6 +692,7 @@ export function ComponentCardLivePreview({
           slug !== "sunlight-effect" &&
           slug !== "vertical-image-marquee" &&
           slug !== "hover-cards" &&
+          slug !== "interactive-media-accordion" &&
           slug !== "services-showcase" &&
           slug !== "lens-drift-grid" &&
           slug !== "orbit-spiral-gallery" &&
@@ -833,6 +843,8 @@ export function ComponentCardLivePreview({
         <BurnPlusCardPreview />
       ) : slug === "team-slide-reveal" ? (
         <TeamSlideRevealCardPreview />
+      ) : slug === "hover-transition" ? (
+        <HoverTransitionCardPreview />
       ) : slug === "ambient-audio-toggle" ? (
         <AmbientAudioToggleCardPreview />
       ) : slug === "interaction-sound-kit" ? (
