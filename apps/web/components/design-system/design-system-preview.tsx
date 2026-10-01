@@ -3,15 +3,24 @@
 import {
   AlertTriangle,
   Check,
+  ChevronDown,
+  Eye,
   Info,
   Menu,
+  Monitor,
+  Moon,
   Plus,
+  RotateCcw,
+  Ruler,
   Search,
+  SlidersHorizontal,
+  Smartphone,
+  Sun,
+  Tablet,
   X,
   XCircle,
 } from "lucide-react"
-import Link from "next/link"
-import { useEffect, useMemo, useRef, useState, type ComponentProps, type CSSProperties, type ReactNode } from "react"
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react"
 import type { DesignSystemConfig } from "@/lib/design-system/domain"
 import { listThemes } from "@/lib/design-system/themes"
 import {
@@ -19,28 +28,12 @@ import {
   type ComponentSlotPreview,
   type PreviewResolution,
 } from "@/lib/design-system/preview"
-import { ComponentCardLivePreview } from "@/components/component-card-live-preview"
-import {
-  CARD_LIVE_SLUGS,
-  isCardLiveSlug,
-  type ComponentManifestEntry,
-} from "@/lib/design-system/component-manifest"
-import { includedEntries, resolveBridgeValues } from "@/lib/design-system/component-curation"
-
-type GalleryLiveSlug = ComponentProps<typeof ComponentCardLivePreview>["slug"];
-type GallerySync = typeof CARD_LIVE_SLUGS extends readonly GalleryLiveSlug[] ? true : false;
-const gallerySync: GallerySync = true;
-void gallerySync;
-
-function isGalleryLive(id: string): id is GalleryLiveSlug {
-  return isCardLiveSlug(id);
-}
 
 const VIEWPORT_PRESETS = [
-  { id: "mobile", label: "Mobile", width: 390 },
-  { id: "tablet", label: "Tablet", width: 768 },
-  { id: "desktop", label: "Desktop", width: 1024 },
-  { id: "wide", label: "Wide", width: 1440 },
+  { id: "mobile", label: "Phone", width: 390, icon: Smartphone },
+  { id: "tablet", label: "Tablet", width: 768, icon: Tablet },
+  { id: "desktop", label: "Desktop", width: 1024, icon: Monitor },
+  { id: "wide", label: "Wide", width: 1440, icon: Monitor },
 ] as const
 
 /**
@@ -75,6 +68,7 @@ export function DesignSystemPreview({ system }: { system: DesignSystemConfig }) 
     () => resolvePreview(system, themeId, previewWidth, { osPrefersReduced: osReduced }),
     [system, themeId, previewWidth, osReduced],
   )
+  const activeThemeLabel = themes.find((theme) => theme.id === themeId)?.label ?? themeId
 
   const commitWidth = (): void => {
     const text = (widthDraft ?? String(previewWidth)).trim()
@@ -103,144 +97,220 @@ export function DesignSystemPreview({ system }: { system: DesignSystemConfig }) 
   return (
     <>
       <PageHeader
-        eyebrow="Design System"
-        title="Preview"
-        description="Inspect the complete system as a responsive, themed product interface. Preview controls are local only — nothing here edits or saves tokens."
+        eyebrow="Design System / Review"
+        title="See your system working"
+        description="Try themes, screen sizes, and real interface states before you validate or export. Everything here is a read-only preview."
+        action={
+          <span className="inline-flex min-h-9 items-center gap-2 rounded-full border border-border bg-muted/40 px-3 text-xs font-medium text-muted-foreground">
+            <Eye className="size-3.5" aria-hidden="true" />
+            Read only
+          </span>
+        }
       />
-      <section aria-label="Preview controls" className="mt-6 rounded-xl border border-border bg-background p-5">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 className="font-medium">System controls</h2>
-          <button
-            onClick={resetControls}
-            className="inline-flex min-h-11 items-center rounded-lg border border-border px-4 py-2 text-sm font-medium transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none"
-          >
-            Reset preview controls
-          </button>
+      <section aria-label="Preview setup" className="mt-6 overflow-hidden rounded-2xl border border-border bg-background shadow-sm">
+        <div className="grid gap-5 p-4 sm:p-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-8">
+          <fieldset className="min-w-0">
+            <legend className="text-sm font-semibold">Appearance</legend>
+            <p className="mt-1 text-xs leading-5 text-muted-foreground">Switch themes without changing saved settings.</p>
+            <div className="mt-3 flex flex-wrap gap-2" role="group" aria-label="Preview appearance">
+              {themes.map((theme) => {
+                const ThemeIcon = theme.mode === "dark" ? Moon : Sun
+                const active = themeId === theme.id
+                return (
+                  <button
+                    key={theme.id}
+                    type="button"
+                    aria-pressed={active}
+                    onClick={() => setThemeId(theme.id)}
+                    className={`inline-flex min-h-11 min-w-24 items-center gap-2 rounded-xl border px-3 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none ${active ? "border-foreground bg-foreground text-background" : "border-border bg-background text-foreground hover:bg-muted"}`}
+                  >
+                    <ThemeIcon className="size-4" aria-hidden="true" />
+                    <span className="truncate">{theme.label}</span>
+                  </button>
+                )
+              })}
+            </div>
+          </fieldset>
+
+          <fieldset className="min-w-0">
+            <legend className="text-sm font-semibold">Screen size</legend>
+            <p className="mt-1 text-xs leading-5 text-muted-foreground">Check how the layout changes across common devices.</p>
+            <div className="mt-3 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap" role="group" aria-label="Preview screen size">
+              {VIEWPORT_PRESETS.map((preset) => {
+                const PresetIcon = preset.icon
+                const active = previewWidth === preset.width
+                return (
+                  <button
+                    key={preset.id}
+                    type="button"
+                    aria-pressed={active}
+                    onClick={() => {
+                      setPreviewWidth(preset.width)
+                      setWidthDraft(null)
+                      setWidthError(null)
+                    }}
+                    className={`inline-flex min-h-11 items-center gap-2 rounded-xl border px-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none ${active ? "border-foreground bg-muted text-foreground" : "border-border text-muted-foreground hover:bg-muted hover:text-foreground"}`}
+                  >
+                    <PresetIcon className="size-4 shrink-0" aria-hidden="true" />
+                    <span className="min-w-0">
+                      <span className="block truncate text-xs font-medium">{preset.label}</span>
+                      <span className="block text-[10px] tabular-nums opacity-70">{preset.width}px</span>
+                    </span>
+                  </button>
+                )
+              })}
+            </div>
+          </fieldset>
         </div>
-        <div className="mt-3 flex flex-wrap gap-2" role="group" aria-label="Theme selector">
-          {themes.map((theme) => (
-            <button
-              key={theme.id}
-              aria-pressed={themeId === theme.id}
-              onClick={() => setThemeId(theme.id)}
-              className={`inline-flex min-h-11 items-center rounded-lg border px-3 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none ${themeId === theme.id ? "border-foreground bg-muted" : "border-border hover:bg-muted/60"}`}
-            >
-              {theme.label} · {theme.mode}
-            </button>
-          ))}
+
+        <div className="border-t border-border bg-muted/20 px-4 py-3 sm:px-5">
+          <details className="group">
+            <summary className="flex min-h-11 cursor-pointer list-none items-center gap-2 rounded-lg text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&::-webkit-details-marker]:hidden">
+              <SlidersHorizontal className="size-4 text-muted-foreground" aria-hidden="true" />
+              Advanced preview tools
+              <span className="ml-auto text-xs font-normal text-muted-foreground group-open:hidden">Custom width, grid, tokens</span>
+              <ChevronDown className="size-4 text-muted-foreground transition-transform group-open:rotate-180 motion-reduce:transition-none" aria-hidden="true" />
+            </summary>
+            <div className="grid gap-4 pb-2 pt-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
+              <div className="min-w-0">
+                <label htmlFor="preview-width" className="text-xs font-medium">Custom width</label>
+                <div className="mt-1.5 flex items-center gap-2">
+                  <input
+                    id="preview-width"
+                    value={widthDraft ?? String(previewWidth)}
+                    inputMode="numeric"
+                    onChange={(event) => {
+                      setWidthDraft(event.target.value)
+                      setWidthError(null)
+                    }}
+                    onBlur={commitWidth}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") (event.target as HTMLInputElement).blur()
+                    }}
+                    aria-invalid={Boolean(widthError)}
+                    aria-describedby={widthError ? "preview-width-error" : "preview-breakpoint"}
+                    className={`h-11 w-32 rounded-xl border bg-background px-3 text-sm tabular-nums outline-none focus-visible:ring-2 focus-visible:ring-ring ${widthError ? "border-destructive" : "border-border"}`}
+                  />
+                  <span className="text-xs text-muted-foreground">pixels</span>
+                </div>
+                {widthError ? (
+                  <p id="preview-width-error" role="alert" className="mt-1.5 text-xs font-medium text-destructive">{widthError}</p>
+                ) : (
+                  <p id="preview-breakpoint" className="mt-1.5 text-xs text-muted-foreground">Use any width from 200 to 2560px.</p>
+                )}
+              </div>
+              <div className="flex flex-wrap gap-2" role="group" aria-label="Advanced preview tools">
+                <button
+                  type="button"
+                  aria-pressed={guides}
+                  onClick={() => setGuides((value) => !value)}
+                  className={`inline-flex min-h-11 items-center gap-2 rounded-xl border px-3 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none ${guides ? "border-foreground bg-foreground text-background" : "border-border bg-background hover:bg-muted"}`}
+                >
+                  <Ruler className="size-4" aria-hidden="true" />
+                  Grid {guides ? "shown" : "hidden"}
+                </button>
+                <button
+                  type="button"
+                  aria-pressed={inspector}
+                  onClick={() => setInspector((value) => !value)}
+                  className={`inline-flex min-h-11 items-center gap-2 rounded-xl border px-3 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none ${inspector ? "border-foreground bg-foreground text-background" : "border-border bg-background hover:bg-muted"}`}
+                >
+                  <Search className="size-4" aria-hidden="true" />
+                  Tokens {inspector ? "shown" : "hidden"}
+                </button>
+                <button
+                  type="button"
+                  onClick={resetControls}
+                  className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-border bg-background px-3 text-xs font-medium transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none"
+                >
+                  <RotateCcw className="size-4" aria-hidden="true" />
+                  Reset
+                </button>
+              </div>
+            </div>
+          </details>
         </div>
-        <div className="mt-3 flex flex-wrap gap-2" role="group" aria-label="Viewport selector">
-          {VIEWPORT_PRESETS.map((preset) => (
-            <button
-              key={preset.id}
-              aria-pressed={previewWidth === preset.width}
-              onClick={() => {
-                setPreviewWidth(preset.width)
-                setWidthDraft(null)
-                setWidthError(null)
-              }}
-              className={`inline-flex min-h-11 items-center rounded-lg border px-3 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none ${previewWidth === preset.width ? "border-foreground bg-muted" : "border-border hover:bg-muted/60"}`}
-            >
-              {preset.label} · {preset.width}
-            </button>
-          ))}
-        </div>
-        <div className="mt-2 flex flex-wrap items-center gap-2">
-          <label htmlFor="preview-width" className="sr-only">
-            Preview width in pixels
-          </label>
-          <input
-            id="preview-width"
-            value={widthDraft ?? String(previewWidth)}
-            inputMode="numeric"
-            onChange={(event) => {
-              setWidthDraft(event.target.value)
-              setWidthError(null)
-            }}
-            onBlur={commitWidth}
-            onKeyDown={(event) => {
-              if (event.key === "Enter") (event.target as HTMLInputElement).blur()
-            }}
-            aria-invalid={Boolean(widthError)}
-            aria-describedby={widthError ? "preview-width-error" : "preview-breakpoint"}
-            className={`h-11 w-28 rounded-lg border bg-background px-2.5 font-mono text-[13px] outline-none focus:border-foreground focus-visible:ring-2 focus-visible:ring-ring ${widthError ? "border-destructive" : "border-border"}`}
-          />
-          <span aria-hidden="true" className="font-mono text-xs text-muted-foreground">px</span>
-          <p id="preview-breakpoint" className="font-mono text-[11px] text-muted-foreground">
-            Active: {model.layout.breakpointId} ≥{model.layout.breakpointValue} · {model.layout.columns} grid cols
-          </p>
-        </div>
-        <div className="mt-1 min-h-5" aria-live="polite">
-          {widthError && (
-            <p id="preview-width-error" role="alert" className="text-xs font-medium text-destructive">
-              {widthError}
-            </p>
-          )}
-        </div>
-        <div className="mt-1 flex flex-wrap gap-2" role="group" aria-label="Preview tools">
-          <button
-            aria-pressed={guides}
-            onClick={() => setGuides((value) => !value)}
-            className={`inline-flex min-h-11 items-center rounded-lg border px-3 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none ${guides ? "border-foreground bg-muted" : "border-border hover:bg-muted/60"}`}
-          >
-            Grid guides {guides ? "on" : "off"}
-          </button>
-          <button
-            aria-pressed={inspector}
-            onClick={() => setInspector((value) => !value)}
-            className={`inline-flex min-h-11 items-center rounded-lg border px-3 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none ${inspector ? "border-foreground bg-muted" : "border-border hover:bg-muted/60"}`}
-          >
-            Token inspector {inspector ? "on" : "off"}
-          </button>
-        </div>
-        <p className="mt-2 font-mono text-[11px] text-muted-foreground">
-          Motion: {model.motion.reduce ? `reduced (${model.motion.reason})` : `full (${model.motion.transition})`}
-        </p>
       </section>
 
+      <div className="mt-4 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-border bg-border shadow-sm sm:grid-cols-4">
+        <PreviewFact label="Theme" value={activeThemeLabel} />
+        <PreviewFact label="Breakpoint" value={model.layout.breakpointId} detail={`from ${model.layout.breakpointValue}px`} />
+        <PreviewFact label="Page grid" value={`${model.layout.columns} columns`} />
+        <PreviewFact label="Motion" value={model.motion.reduce ? "Reduced" : "Full"} />
+      </div>
+
       {(model.diagnostics.unresolved.length > 0 || model.diagnostics.circular.length > 0) && (
-        <div role="status" className="mt-4 rounded-xl border border-amber-500/40 bg-amber-500/10 p-4">
-          <p className="text-sm font-medium">Preview diagnostics (contained — nothing claimed as valid)</p>
-          {model.diagnostics.unresolved.length > 0 && (
-            <p className="mt-1 font-mono text-[11px]">
-              Unresolved: {model.diagnostics.unresolved.slice(0, 6).join(", ")}
-              {model.diagnostics.unresolved.length > 6 ? ` +${model.diagnostics.unresolved.length - 6} more` : ""}
+        <div role="status" className="mt-4 flex items-start gap-3 rounded-xl border border-amber-500/40 bg-amber-500/10 p-4">
+          <AlertTriangle className="mt-0.5 size-4 shrink-0 text-amber-700 dark:text-amber-300" aria-hidden="true" />
+          <div className="min-w-0">
+            <p className="text-sm font-medium">Some preview values need attention</p>
+            <p className="mt-1 text-xs leading-5 text-muted-foreground">
+              {model.diagnostics.unresolved.length} unresolved and {model.diagnostics.circular.length} circular reference{model.diagnostics.circular.length === 1 ? "" : "s"}. Open the token inspector for exact sources, then use Validate for the complete report.
             </p>
-          )}
-          {model.diagnostics.circular.length > 0 && (
-            <p className="mt-1 font-mono text-[11px]">
-              Circular: {model.diagnostics.circular.slice(0, 6).join(", ")}
-              {model.diagnostics.circular.length > 6 ? ` +${model.diagnostics.circular.length - 6} more` : ""}
-            </p>
-          )}
+          </div>
         </div>
       )}
 
-      <div className="mt-4 overflow-x-auto rounded-xl border border-border bg-muted/30 p-3">
-        <PreviewFrame model={model} guides={guides}>
-          <AppShell
-            model={model}
-            nav={nav}
-            onNav={setNav}
-            dialogOpen={dialogOpen}
-            onDialogOpen={() => setDialogOpen(true)}
-            onDialogClose={() => setDialogOpen(false)}
-            toast={toast}
-            onToast={(message) => setToast(message)}
-            onToastClose={() => setToast(null)}
-          />
-        </PreviewFrame>
+      <div className={`mt-4 grid min-w-0 gap-4 ${inspector ? "lg:grid-cols-[minmax(0,1fr)_20rem]" : "grid-cols-1"}`}>
+        <section aria-labelledby="live-preview-heading" className="min-w-0 overflow-hidden rounded-2xl border border-border bg-muted/30 shadow-sm">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-border bg-background/80 px-4 py-3 backdrop-blur">
+            <div className="flex gap-1.5" aria-hidden="true">
+              <span className="size-2.5 rounded-full bg-border" />
+              <span className="size-2.5 rounded-full bg-border" />
+              <span className="size-2.5 rounded-full bg-border" />
+            </div>
+            <h2 id="live-preview-heading" className="text-sm font-semibold tracking-tight">Live product preview</h2>
+            <div className="ml-auto flex flex-wrap items-center gap-1.5">
+              <span className="inline-flex items-center rounded-full border border-border bg-muted/60 px-2.5 py-1 text-[11px] font-medium">
+                {activeThemeLabel}
+              </span>
+              <span className="inline-flex items-center rounded-full border border-border bg-muted/60 px-2.5 py-1 text-[11px] font-medium capitalize tabular-nums">
+                {model.layout.breakpointId} · {previewWidth}px
+              </span>
+              <span
+                className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-medium ${model.motion.reduce ? "border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-300" : "border-border bg-muted/60"}`}
+              >
+                <span className={`size-1.5 rounded-full ${model.motion.reduce ? "bg-amber-500" : "bg-emerald-500"}`} aria-hidden="true" />
+                {model.motion.reduce ? "Reduced motion" : "Full motion"}
+              </span>
+            </div>
+          </div>
+          <div className="min-w-0 overflow-x-auto bg-[radial-gradient(circle_at_1px_1px,rgba(0,0,0,0.09)_1px,transparent_0)] bg-[size:22px_22px] p-3 dark:bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.09)_1px,transparent_0)] sm:p-6">
+            <PreviewFrame model={model} guides={guides}>
+              <AppShell
+                model={model}
+                systemName={system.meta.name}
+                nav={nav}
+                onNav={setNav}
+                dialogOpen={dialogOpen}
+                onDialogOpen={() => setDialogOpen(true)}
+                onDialogClose={() => setDialogOpen(false)}
+                toast={toast}
+                onToast={(message) => setToast(message)}
+                onToastClose={() => setToast(null)}
+              />
+            </PreviewFrame>
+          </div>
+        </section>
+
+        {inspector && <InspectorPanel model={model} />}
       </div>
 
-      {inspector && <InspectorPanel model={model} />}
-
-      <ComponentGallery system={system} model={model} />
-
-      <p className="mt-4 text-[11px] leading-4 text-muted-foreground">
-        Note: complete contrast analysis belongs to the later Validate phase; this workspace checks
-        wiring, states, and responsive behavior, not contrast ratios.
-      </p>
+      <div className="mt-4 flex items-start gap-2 rounded-xl border border-border bg-muted/20 p-3 text-xs leading-5 text-muted-foreground">
+        <Info className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+        <p>This page checks responsive behavior and token wiring. Open Validate for measured contrast and export readiness.</p>
+      </div>
     </>
+  )
+}
+
+function PreviewFact({ label, value, detail }: { label: string; value: string; detail?: string }) {
+  return (
+    <div className="min-w-0 bg-background px-4 py-3.5">
+      <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">{label}</p>
+      <p className="mt-1 truncate text-sm font-semibold capitalize">{value}</p>
+      {detail && <p className="mt-0.5 truncate text-[10px] tabular-nums text-muted-foreground">{detail}</p>}
+    </div>
   )
 }
 
@@ -258,7 +328,7 @@ function PreviewFrame({
   return (
     <div className="mx-auto min-w-0" style={{ width: frameWidth, maxWidth: "100%" }}>
       <div
-        className="relative min-w-0 overflow-hidden rounded-lg"
+        className="relative min-w-0 overflow-hidden rounded-xl ring-1 ring-border shadow-[0_32px_80px_-24px_rgba(0,0,0,0.35)]"
         style={{ ...(model.cssVars as CSSProperties), maxWidth: containerMax ? `${Math.min(containerMax, frameWidth)}px` : undefined, marginInline: "auto" }}
       >
         {guides && (
@@ -288,6 +358,7 @@ function colorOf(model: PreviewResolution, id: string): string {
 
 function AppShell({
   model,
+  systemName,
   nav,
   onNav,
   dialogOpen,
@@ -298,6 +369,7 @@ function AppShell({
   onToastClose,
 }: {
   model: PreviewResolution
+  systemName: string
   nav: string
   onNav: (item: string) => void
   dialogOpen: boolean
@@ -326,7 +398,7 @@ function AppShell({
           </span>
         )}
         <span className="min-w-0 flex-1 truncate text-[13px] font-semibold" style={{ color: colorOf(model, "text.primary"), ...fontStyle(model.typography.label) }}>
-          Acme workspace
+          {systemName || "Product workspace"}
         </span>
         <button
           onClick={() => onToast("Report exported — toast uses status.info tokens.")}
@@ -357,9 +429,6 @@ function AppShell({
                 </li>
               ))}
             </ul>
-            <p className="mt-2 px-2 font-mono text-[10px]" style={{ color: colorOf(model, "text.muted") }}>
-              {nav} · sidebar {wide ? "visible" : "hidden"} at {model.layout.breakpointId}
-            </p>
           </nav>
         )}
         <main className="min-w-0 flex-1 p-3" aria-label={`${nav} content`}>
@@ -409,9 +478,6 @@ function Toolbar({ model }: { model: PreviewResolution }) {
       >
         Filter
       </span>
-      <span className="font-mono text-[10px]" style={{ color: colorOf(model, "text.muted") }}>
-        toolbar · {model.layout.breakpointId} · {model.layout.columns} cols
-      </span>
     </div>
   )
 }
@@ -423,12 +489,10 @@ function ContentSections({ model, onDialogOpen }: { model: PreviewResolution; on
     <div className="mt-3 grid min-w-0" style={{ rowGap: `${Math.min(model.layout.rowGapPx ?? 16, 20)}px` }}>
       <section aria-label="Page heading" className="min-w-0">
         <h2 className="break-words text-2xl font-bold" style={{ color: colorOf(model, "text.primary"), ...fontStyle(model.typography.heading) }}>
-          Launch readiness
+          Good morning, Maya
         </h2>
         <p className="mt-1 break-words text-sm leading-6" style={{ color: colorOf(model, "text.secondary"), ...fontStyle(model.typography.body) }}>
-          Body copy follows the configured body role. Gutter {model.layout.gutterToken}
-          {model.layout.gutterPx !== null ? ` (${model.layout.gutterPx}px)` : ""} shapes this
-          container at {model.layout.widthPx}px.
+          Here is what needs your attention before the next product release.
         </p>
       </section>
       <section aria-label="Cards" className="mt-3 grid min-w-0" style={{ gridTemplateColumns: `repeat(${cardCount}, minmax(0, 1fr))`, gap: `${Math.min(model.layout.columnGapPx ?? 16, 24)}px` }}>
@@ -445,12 +509,9 @@ function ContentSections({ model, onDialogOpen }: { model: PreviewResolution; on
               transition,
             }}
           >
-            <h3 className="truncate text-[13px] font-semibold">Milestone {index + 1}</h3>
+            <h3 className="truncate text-[13px] font-semibold">{["Design review", "Engineering handoff", "Release checklist"][index] ?? `Milestone ${index + 1}`}</h3>
             <p className="mt-0.5 line-clamp-2 break-words text-[12px] leading-5" style={{ color: colorOf(model, "text.secondary") }}>
-              Owner, due date, and status reflow inside {model.layout.columns}-column grid profile {model.layout.breakpointId}.
-            </p>
-            <p className="mt-1 font-mono text-[10px]" style={{ color: colorOf(model, "text.muted") }}>
-              Card · surface / border.default
+              {["Today at 2:30 PM · 6 reviewers", "12 tokens ready for implementation", "18 of 21 launch checks complete"][index] ?? "Review the latest product updates."}
             </p>
           </article>
         ))}
@@ -461,25 +522,22 @@ function ContentSections({ model, onDialogOpen }: { model: PreviewResolution; on
             className="inline-flex min-h-11 items-center rounded-lg px-4 text-sm font-medium motion-reduce:transition-none"
             style={{ backgroundColor: slotColor(model, "Button", "background", "primary"), color: slotColor(model, "Button", "foreground", "primary"), borderRadius: model.radiusMd ?? undefined, transition }}
           >
-            Primary
+            Create project
           </span>
           <span
             className="inline-flex min-h-11 items-center rounded-lg border px-4 text-sm font-medium motion-reduce:transition-none"
             style={{ backgroundColor: slotColor(model, "Button", "background", "secondary"), color: slotColor(model, "Button", "foreground", "secondary"), borderColor: slotColor(model, "Button", "border", "secondary"), borderRadius: model.radiusMd ?? undefined, transition }}
           >
-            Secondary
+            View activity
           </span>
           <span
             aria-disabled="true"
             className="inline-flex min-h-11 cursor-not-allowed items-center rounded-lg border px-4 text-sm font-medium opacity-50"
             style={{ borderColor: colorOf(model, "border.default"), color: colorOf(model, "text.muted"), borderRadius: model.radiusMd ?? undefined }}
           >
-            Disabled
+            Archive
           </span>
         </div>
-        <p className="mt-1 font-mono text-[10px]" style={{ color: colorOf(model, "text.muted") }}>
-          Button · component overrides when present, else action/border semantics
-        </p>
       </section>
       <section aria-label="Form" className="mt-3 min-w-0">
         <label className="block min-w-0 text-[13px] font-medium" style={{ color: colorOf(model, "text.primary"), ...fontStyle(model.typography.label) }} htmlFor="pv-email">
@@ -492,10 +550,10 @@ function ContentSections({ model, onDialogOpen }: { model: PreviewResolution; on
           />
         </label>
         <label className="mt-2 block min-w-0 text-[13px] font-medium" style={{ color: colorOf(model, "text.primary") }} htmlFor="pv-domain">
-          Focused input preview (ring always visible here)
+          Workspace name
           <input
             id="pv-domain"
-            defaultValue="acme"
+            defaultValue="Northstar"
             className="mt-1.5 block min-h-11 w-full min-w-0 rounded-lg border bg-transparent px-3 text-sm outline-none ring-2 motion-reduce:transition-none"
             style={{ borderColor: slotColor(model, "Input", "border"), color: slotColor(model, "Input", "foreground"), backgroundColor: slotColor(model, "Input", "background"), borderRadius: model.radiusMd ?? undefined, ["--tw-ring-color" as string]: slotColor(model, "Input", "ring") }}
           />
@@ -773,19 +831,24 @@ function InspectorPanel({ model }: { model: PreviewResolution }) {
     ]),
   ]
   return (
-    <section aria-label="Token inspector" className="mt-4 rounded-xl border border-border bg-background p-5">
-      <h2 className="font-medium">Token inspector</h2>
-      <p className="mt-1 font-mono text-[11px] text-muted-foreground">
-        theme {model.themeId} · breakpoint {model.layout.breakpointId} ≥{model.layout.breakpointValue} · {model.layout.columns} cols
-      </p>
-      <label htmlFor="inspector-section" className="mt-3 block text-sm font-medium">
-        Inspect section
+    <aside aria-label="Token inspector" className="min-w-0 rounded-2xl border border-border bg-background p-4 shadow-sm lg:sticky lg:top-20 lg:self-start">
+      <div className="flex items-start gap-3">
+        <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-muted text-muted-foreground">
+          <Search className="size-4" aria-hidden="true" />
+        </span>
+        <div className="min-w-0">
+          <h2 className="text-sm font-semibold">Token source</h2>
+          <p className="mt-0.5 text-xs leading-5 text-muted-foreground">See which saved values create each part of the preview.</p>
+        </div>
+      </div>
+      <label htmlFor="inspector-section" className="mt-4 block text-xs font-medium">
+        Area to inspect
       </label>
       <select
         id="inspector-section"
         value={section.id}
         onChange={(event) => setSectionId(event.target.value)}
-        className="mt-1.5 min-h-11 w-full rounded-lg border border-border bg-background px-3 text-sm outline-none focus:border-foreground focus-visible:ring-2 focus-visible:ring-ring"
+        className="mt-1.5 min-h-11 w-full rounded-xl border border-border bg-background px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
       >
         {INSPECTOR_SECTIONS.map((entry) => (
           <option key={entry.id} value={entry.id}>
@@ -793,58 +856,71 @@ function InspectorPanel({ model }: { model: PreviewResolution }) {
           </option>
         ))}
       </select>
-      <h3 className="mt-4 text-sm font-semibold">Semantic tokens</h3>
-      <ul className="mt-2 space-y-1.5">
+      <div className="mt-4 flex items-center justify-between gap-2">
+        <h3 className="text-xs font-semibold">Colours and roles</h3>
+        <span className="text-[10px] text-muted-foreground">{section.semantics.length} values</span>
+      </div>
+      <ul className="mt-2 divide-y divide-border overflow-hidden rounded-xl border border-border">
         {section.semantics.map((id) => {
           const entry = model.semantics[id]
           if (!entry) return null
           return (
-            <li key={id} className="rounded-lg border border-border p-2.5 font-mono text-[11px] leading-5">
-              <span className="font-semibold">{id}</span> · {provenanceLabel(entry.provenance)}
-              <br />
-              base {entry.base}
-              {entry.override !== null && <> · theme override {entry.override}</>}
-              <br />→ final {entry.final ?? entry.status}
-              {entry.chain.length > 0 && <> · {entry.chain.join(" → ")}</>}
+            <li key={id} className="bg-background p-3">
+              <div className="flex min-w-0 items-center gap-2.5">
+                <span
+                  className="size-8 shrink-0 rounded-lg border border-black/10 shadow-sm dark:border-white/15"
+                  style={{ backgroundColor: entry.final ?? "transparent" }}
+                  aria-hidden="true"
+                />
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-xs font-medium">{id}</span>
+                  <span className="block truncate text-[10px] text-muted-foreground">{provenanceLabel(entry.provenance)}</span>
+                </span>
+                <span className="max-w-24 truncate text-right text-[10px] tabular-nums text-muted-foreground">{entry.final ?? entry.status}</span>
+              </div>
+              <details className="group mt-2">
+                <summary className="cursor-pointer list-none text-[10px] text-muted-foreground underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&::-webkit-details-marker]:hidden">
+                  View resolution path
+                </summary>
+                <p className="mt-1.5 break-words rounded-lg bg-muted/50 p-2 font-mono text-[10px] leading-4 text-muted-foreground">
+                  {entry.base}
+                  {entry.override !== null ? ` → ${entry.override}` : ""}
+                  {entry.chain.length > 0 ? ` → ${entry.chain.join(" → ")}` : ""}
+                  {` → ${entry.final ?? entry.status}`}
+                </p>
+              </details>
             </li>
           )
         })}
       </ul>
       {slots.length > 0 && (
-        <>
-          <h3 className="mt-4 text-sm font-semibold">Component overrides</h3>
-          <ul className="mt-2 space-y-1.5">
+        <details className="group mt-3 rounded-xl border border-border">
+          <summary className="flex min-h-11 cursor-pointer list-none items-center gap-2 px-3 text-xs font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring [&::-webkit-details-marker]:hidden">
+            Component mappings
+            <span className="ml-auto text-[10px] font-normal text-muted-foreground">{slots.length}</span>
+            <ChevronDown className="size-3.5 text-muted-foreground transition-transform group-open:rotate-180 motion-reduce:transition-none" aria-hidden="true" />
+          </summary>
+          <ul className="divide-y divide-border border-t border-border">
             {slots.map((slot, index) => (
-              <li key={`${slot.component}-${slot.slot}-${slot.variant ?? "base"}-${index}`} className="rounded-lg border border-border p-2.5 font-mono text-[11px] leading-5">
-                <span className="font-semibold">
-                  {slot.component}.{slot.slot}
-                  {slot.variant ? ` (${slot.variant})` : ""}
-                </span>{" "}
-                · {provenanceLabel(slot.provenance)}
-                <br />
-                {slot.overrideValue !== null ? (
-                  <>override {slot.overrideValue} → final {slot.final ?? slot.status}</>
-                ) : slot.baseSemanticId ? (
-                  <>no override · falls back to {slot.baseSemanticId} → final {slot.final ?? slot.status}</>
-                ) : (
-                  <>no override and no conventional mapping · {slot.status}</>
-                )}
-                {slot.chain.length > 0 && <> · {slot.chain.join(" → ")}</>}
+              <li key={`${slot.component}-${slot.slot}-${slot.variant ?? "base"}-${index}`} className="p-3 text-[10px] leading-4 text-muted-foreground">
+                <p className="font-medium text-foreground">{slot.component}.{slot.slot}{slot.variant ? ` · ${slot.variant}` : ""}</p>
+                <p className="mt-0.5 break-words">{slot.overrideValue ?? slot.baseSemanticId ?? "No mapped value"} → {slot.final ?? slot.status}</p>
               </li>
             ))}
           </ul>
-        </>
+        </details>
       )}
       {sectionDiagnostics.length > 0 ? (
-        <p role="status" className="mt-3 font-mono text-[11px] text-amber-600 dark:text-amber-400">
-          Diagnostics in this section: {sectionDiagnostics.join(", ")}
+        <p role="status" className="mt-3 rounded-lg bg-amber-500/10 p-2.5 text-xs leading-5 text-amber-800 dark:text-amber-200">
+          Needs attention: {sectionDiagnostics.join(", ")}
         </p>
       ) : (
-        <p role="status" className="mt-3 font-mono text-[11px] text-muted-foreground">
-          No diagnostics in this section — every listed value resolved.
+        <p role="status" className="mt-3 flex items-center gap-2 rounded-lg bg-emerald-500/10 p-2.5 text-xs text-emerald-800 dark:text-emerald-200">
+          <Check className="size-3.5" aria-hidden="true" />
+          All values in this area resolve correctly.
         </p>
       )}
-    </section>
+    </aside>
   )
 }
 
@@ -854,123 +930,6 @@ function provenanceLabel(provenance: string): string {
   if (provenance === "base-semantic") return "base semantic";
   if (provenance === "foundation") return "foundation recipe";
   return provenance;
-}
-
-/**
- * Included-component gallery (Step 10A). Shows only this system's included
- * kit — never the full catalog — with live card previews where they exist
- * and system-aware bridge cards otherwise. Display-only: every card is a
- * route link to the dedicated docs page, and embedded previews stay
- * non-interactive. Nothing here writes to the system.
- */
-function ComponentGallery({ system, model }: { system: DesignSystemConfig; model: PreviewResolution }) {
-  const [tier, setTier] = useState<"all" | "core" | "premium">("all")
-  const entries = includedEntries(system).filter((entry) => tier === "all" || entry.tier === tier)
-  const coreCount = includedEntries(system, "core").length
-  const premiumCount = includedEntries(system, "premium").length
-  return (
-    <section aria-label="Included component gallery" className="mt-4 rounded-xl border border-border bg-background p-5">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <h2 className="font-medium">
-          Component gallery{" "}
-          <span className="font-mono text-xs font-normal text-muted-foreground">
-            ({entries.length} included · {model.themeId})
-          </span>
-        </h2>
-        <div className="flex flex-wrap gap-2" role="group" aria-label="Gallery tier filter">
-          {(["all", "core", "premium"] as const).map((entry) => (
-            <button
-              key={entry}
-              aria-pressed={tier === entry}
-              onClick={() => setTier(entry)}
-              className={`inline-flex min-h-11 items-center rounded-lg border px-3 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none ${tier === entry ? "border-foreground bg-muted" : "border-border hover:bg-muted/60"}`}
-            >
-              {entry === "all" ? `All (${coreCount + premiumCount})` : entry === "core" ? `Core (${coreCount})` : `Premium (${premiumCount})`}
-            </button>
-          ))}
-        </div>
-      </div>
-      <p className="mt-1 text-xs text-muted-foreground">
-        Only this system&apos;s included kit appears here. Effects keep their identity; frames and
-        captions follow {model.themeId}. Live effect interiors render with the application chrome —
-        treat them as display-only until an effect records dark-theme evidence. Full interaction
-        lives on each component page.
-      </p>
-      {entries.length === 0 ? (
-        <p className="mt-3 rounded-lg border border-dashed border-border p-6 text-sm text-muted-foreground">
-          Nothing included in this view. Curate the kit in the Components workspace.
-        </p>
-      ) : (
-        <ul className="mt-3 grid min-w-0 gap-3 sm:grid-cols-2">
-          {entries.map((entry) => (
-            <GalleryCard key={entry.id} system={system} model={model} entry={entry} />
-          ))}
-        </ul>
-      )}
-    </section>
-  )
-}
-
-function GalleryCard({
-  system,
-  model,
-  entry,
-}: {
-  system: DesignSystemConfig
-  model: PreviewResolution
-  entry: ComponentManifestEntry
-}) {
-  const bridge = entry.bridge ? resolveBridgeValues(system, model.themeId, entry.bridge) : {}
-  const backdrop = bridge["surface"]?.final ?? bridge["canvas"]?.final ?? model.semantics["surface.default"]?.final ?? "transparent"
-  const ink = bridge["foreground"]?.final ?? model.semantics["text.primary"]?.final ?? "inherit"
-  const accent = bridge["accent"]?.final ?? model.semantics["action.primary.background"]?.final ?? "inherit"
-  // Letter on the accent tile must pair with the action foreground, not the
-  // surface color, to stay readable in every system theme.
-  const onAccent = model.semantics["action.primary.foreground"]?.final ?? (ink === "inherit" ? undefined : ink)
-  return (
-    <li className="min-w-0 overflow-hidden rounded-xl border border-border bg-background">
-      <Link
-        href={entry.docsRoute}
-        aria-label={`${entry.name} (${entry.tier === "core" ? "Core UI" : "Premium experience"}) — open full component page`}
-        className="block rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-      >
-        <span className="pointer-events-none relative block h-24 select-none overflow-hidden" inert={true} aria-hidden="true" style={{ backgroundColor: backdrop === "transparent" ? undefined : backdrop }}>
-          {entry.livePreview && isGalleryLive(entry.id) ? (
-            <ComponentCardLivePreview slug={entry.id} />
-          ) : (
-            <span className="flex h-full w-full items-center gap-2.5 px-4">
-              <span
-                aria-hidden="true"
-                className="grid size-9 shrink-0 place-items-center rounded-lg text-base font-bold"
-                style={{ backgroundColor: accent === "inherit" ? undefined : accent, color: onAccent }}
-              >
-                {entry.name.slice(0, 1)}
-              </span>
-              <span className="min-w-0">
-                <span className="block truncate text-[13px] font-semibold" style={{ color: ink === "inherit" ? undefined : ink }}>
-                  {entry.name}
-                </span>
-                <span className="block truncate font-mono text-[10px] text-muted-foreground">
-                  {entry.tier === "core" ? `${entry.slots.length} token slots` : `${entry.motionModality} · ${entry.reducedMotionFallback} fallback`}
-                </span>
-              </span>
-            </span>
-          )}
-        </span>
-        <span className="block min-w-0 border-t border-border p-2.5">
-          <span className="block truncate text-[13px] font-medium" style={{ color: ink === "inherit" ? undefined : ink }}>
-            {entry.name}
-          </span>
-          <span className="mt-0.5 block truncate font-mono text-[10px] text-muted-foreground">
-            {entry.tier === "core" ? "Core UI" : "Premium experience"} · {entry.family} · {model.themeId}
-            {entry.tier === "premium" && entry.bridge
-              ? ` · ${Object.keys(bridge).length} bridge values`
-              : ""}
-          </span>
-        </span>
-      </Link>
-    </li>
-  )
 }
 
 function PageHeader({
