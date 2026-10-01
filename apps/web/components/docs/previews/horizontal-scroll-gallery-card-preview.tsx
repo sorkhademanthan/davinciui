@@ -9,6 +9,7 @@ import {
   useTransform,
 } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { useAutoplayScrollScrub } from "./use-autoplay-scroll-scrub";
 
 const Q = "?q=60&w=600&auto=format&fit=crop";
 
@@ -71,6 +72,10 @@ export function HorizontalScrollGalleryCardPreview() {
   const [active, setActive] = useState(0);
   const [stageH, setStageH] = useState(192);
   const [travel, setTravel] = useState(280);
+
+  // Self-playing: gently ping-pong the scrub while visible so the film
+  // strip glides horizontally with no manual wheel input.
+  useAutoplayScrollScrub(containerRef, { phase: 1.1, durationMs: 7600 });
 
   useEffect(() => {
     const el = containerRef.current;

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useReducedMotion } from "framer-motion";
 import { Play } from "lucide-react";
+import { useAutoplayScrollScrub } from "./use-autoplay-scroll-scrub";
 
 const SRC =
   "https://images.unsplash.com/photo-1519681393784-d120267933ba?q=60&w=800&auto=format&fit=crop";
@@ -49,6 +50,10 @@ export function ScrollMediaExpandCardPreview() {
   const overlayRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion() ?? false;
   const [stageH, setStageH] = useState(192);
+
+  // Self-playing: gently ping-pong the scrub while visible so the pill
+  // blooms into the fullscreen scene with no manual wheel input.
+  useAutoplayScrollScrub(containerRef, { phase: 0.7, durationMs: 6000 });
 
   useEffect(() => {
     const el = containerRef.current;
