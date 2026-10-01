@@ -155,8 +155,8 @@ export function HoverTransition({
   hoverComponent,
   effect = "wipe",
   direction = "right",
-  duration = 0.72,
-  easing = "cubic-bezier(0.22, 1, 0.36, 1)",
+  duration = 1.15,
+  easing = "cubic-bezier(0.16, 1, 0.3, 1)",
   label = "Interactive hover transition",
   className,
   onMouseEnter,
@@ -227,7 +227,7 @@ export function HoverTransition({
       1,
       Math.max(0, (event.clientY - bounds.top) / bounds.height),
     );
-    const maxTilt = 2.4;
+    const maxTilt = 1.6;
 
     event.currentTarget.style.setProperty(
       "--hover-tilt-x",
@@ -525,11 +525,11 @@ export function HoverTransition({
         style={{
           transform: reducedMotion
             ? "none"
-            : `perspective(1000px) rotateX(var(--hover-tilt-x, 0deg)) rotateY(var(--hover-tilt-y, 0deg)) scale(${active ? 1.012 : 1})`,
+            : `perspective(1000px) rotateX(var(--hover-tilt-x, 0deg)) rotateY(var(--hover-tilt-y, 0deg)) scale(${active ? 1.006 : 1})`,
           transformStyle: "preserve-3d",
           transition: reducedMotion
             ? "none"
-            : `transform ${active ? 0.22 : 0.55}s ${easing}`,
+            : `transform ${active ? 0.35 : 0.8}s ${easing}`,
         }}
       >
         <div
@@ -549,8 +549,8 @@ export function HoverTransition({
           style={{
             background:
               "radial-gradient(circle 180px at var(--hover-glare-x, 50%) var(--hover-glare-y, 50%), rgba(255,255,255,.22), rgba(255,255,255,.05) 48%, transparent 78%)",
-            opacity: active && !reducedMotion ? 0.16 : 0,
-            transition: reducedMotion ? "none" : `opacity 0.3s ${easing}`,
+            opacity: active && !reducedMotion ? 0.1 : 0,
+            transition: reducedMotion ? "none" : `opacity 0.45s ${easing}`,
           }}
         />
       </div>
