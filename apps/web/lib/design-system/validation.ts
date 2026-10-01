@@ -163,6 +163,8 @@ function routeFor(systemId: string, slug: string): string {
   return slug ? `${base}/${slug}` : base;
 }
 
+const COMPONENTS_CATALOG_ROUTE = "/experience/components";
+
 function routeForFoundationPath(systemId: string, path: string): string {
   if (path.includes("foundations.colors")) return routeFor(systemId, "colors");
   if (path.includes("foundations.typography")) return routeFor(systemId, "typography");
@@ -178,7 +180,7 @@ function routeForFoundationPath(systemId: string, path: string): string {
   if (path.includes("foundations.breakpoints")) return routeFor(systemId, "breakpoints");
   if (path.includes("semanticTokens")) return routeFor(systemId, "tokens");
   if (path.includes("themes")) return routeFor(systemId, "themes");
-  if (path.includes("components")) return routeFor(systemId, "components");
+  if (path.includes("components")) return COMPONENTS_CATALOG_ROUTE;
   return routeFor(systemId, "");
 }
 
@@ -718,7 +720,7 @@ function checkThemes(system: DesignSystemConfig, systemId: string, collector: Co
   }
 }
 
-function checkComponents(system: DesignSystemConfig, systemId: string, collector: Collector): void {
+function checkComponents(system: DesignSystemConfig, collector: Collector): void {
   // Component slots may point at non-color foundation recipes (shadow, radius,
   // spacing, motion, icon sizes, border tokens) that the color-oriented token
   // resolver does not cover. Those ids are valid targets, not broken refs.
@@ -747,7 +749,7 @@ function checkComponents(system: DesignSystemConfig, systemId: string, collector
         addFinding(collector, "components", "error", "missing-slot", `A ${entry?.component ?? "component"} override is missing its slot.`,
           "Every component override needs a token slot (for example background or border) so exports know what it styles.",
           `components.${entry?.component ?? index}.overrides.${index}`, entry?.component ?? "component",
-          routeFor(systemId, "components"));
+          COMPONENTS_CATALOG_ROUTE);
         return;
       }
       try {
@@ -761,7 +763,7 @@ function checkComponents(system: DesignSystemConfig, systemId: string, collector
           addFinding(collector, "components", "error", "invalid-slot-reference",
             `"${entry.component}" slot "${override.token}" points at an unknown value.`,
             `"${override.value}" does not match a token, palette shade, or theme value. Repoint it so the component renders.`,
-            `components.${entry.component}.overrides.${index}`, entry.component, routeFor(systemId, "components"));
+            `components.${entry.component}.overrides.${index}`, entry.component, COMPONENTS_CATALOG_ROUTE);
         } else if (resolution.status === "resolved") {
           pass(collector);
         } else {
@@ -787,7 +789,7 @@ function checkComponents(system: DesignSystemConfig, systemId: string, collector
       addFinding(collector, "components", "warning", "premium-needs-review",
         `"${entry.name}" is included but still needs review.`,
         `This premium experience ships as needs-review in the catalog.${gaps} Review it before relying on it in production.`,
-        `library.included.${entry.id}`, entry.name, routeFor(systemId, "components"));
+        `library.included.${entry.id}`, entry.name, COMPONENTS_CATALOG_ROUTE);
     } else {
       pass(collector);
     }
@@ -795,7 +797,7 @@ function checkComponents(system: DesignSystemConfig, systemId: string, collector
       addFinding(collector, "components", "warning", "premium-missing-bridge",
         `"${entry.name}" has no token bridge.`,
         "Without a token bridge this experience cannot follow the system theme. It still renders, but it will not recolor with Light and Dark.",
-        `library.included.${entry.id}`, entry.name, routeFor(systemId, "components"));
+        `library.included.${entry.id}`, entry.name, COMPONENTS_CATALOG_ROUTE);
       continue;
     }
     let bridgeIssues: ReturnType<typeof validateBridge>;
@@ -808,7 +810,7 @@ function checkComponents(system: DesignSystemConfig, systemId: string, collector
       addFinding(collector, "components", "warning", "premium-bridge",
         `"${entry.name}" bridge reference does not resolve.`,
         `"${issue.key}": ${issue.message}`,
-        `library.included.${entry.id}.${issue.key}`, entry.name, routeFor(systemId, "components"));
+        `library.included.${entry.id}.${issue.key}`, entry.name, COMPONENTS_CATALOG_ROUTE);
     }
     if (bridgeIssues.length === 0) pass(collector);
 
@@ -826,7 +828,7 @@ function checkComponents(system: DesignSystemConfig, systemId: string, collector
       addFinding(collector, "components", "info", "premium-readiness",
         `"${entry.name}": ${check.label} is not confirmed.`,
         check.detail,
-        `library.included.${entry.id}.${check.id}`, entry.name, routeFor(systemId, "components"));
+        `library.included.${entry.id}.${check.id}`, entry.name, COMPONENTS_CATALOG_ROUTE);
     }
   }
 
@@ -843,7 +845,7 @@ function checkComponents(system: DesignSystemConfig, systemId: string, collector
         addFinding(collector, "components", "warning", "unknown-component",
           `Included component "${id}" is not in the catalog.`,
           "It stays stored so nothing is silently deleted, but it will not render or export. Remove it or re-include a known component.",
-          `library.included.${id}`, id, routeFor(systemId, "components"));
+          `library.included.${id}`, id, COMPONENTS_CATALOG_ROUTE);
       }
     } catch {
       // Defensive: catalog lookup is total, never throws the report.
@@ -938,7 +940,7 @@ export function validateDesignSystemReport(
       checkFoundationValues(system, systemId, collector);
       checkSemanticTokens(system, systemId, collector);
       checkThemes(system, systemId, collector);
-      checkComponents(system, systemId, collector);
+      checkComponents(system, collector);
       checkAccessibility(system, systemId, collector);
     }
   } catch {

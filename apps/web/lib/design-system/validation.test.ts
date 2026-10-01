@@ -187,7 +187,7 @@ test("included premium component needing review is a warning", () => {
     (finding) => finding.severity === "warning" && /needs review/i.test(finding.title),
   );
   assert.ok(review.length > 0);
-  assert.ok(review.every((finding) => finding.route.endsWith("/components")));
+  assert.ok(review.every((finding) => finding.route === "/experience/components"));
   // Warnings allow export.
   if (report.summary.errors === 0) assert.equal(report.exportReady, true);
 });
@@ -266,7 +266,7 @@ test("validation never mutates the system", () => {
   assert.equal(JSON.stringify(system), before);
 });
 
-test("every finding carries an editor route", () => {
+test("every finding carries an actionable route", () => {
   const system = healthySystem();
   const broken: DesignSystemConfig = {
     ...system,
@@ -278,7 +278,8 @@ test("every finding carries an editor route", () => {
   const report = validateDesignSystemReport(broken, { systemId: system.id });
   for (const finding of findingsOf(report)) {
     assert.ok(
-      finding.route.startsWith(`/design-system/${system.id}`),
+      finding.route.startsWith(`/design-system/${system.id}`) ||
+        finding.route === "/experience/components",
       `finding ${finding.id} has route ${finding.route}`,
     );
     assert.ok(finding.id.length > 0);
