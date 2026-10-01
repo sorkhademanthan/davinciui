@@ -25,7 +25,7 @@ import { TextVideoMaskPlayground } from "@/components/docs/previews/text-video-m
 import { PixelWipeCarouselCardPreview } from "@/components/docs/previews/pixel-wipe-carousel-card-preview";
 import { ScrollRevealImageAutoCardPreview } from "@/components/docs/previews/scroll-reveal-image-auto-card-preview";
 import { GSAPTextCardPreview } from "@/components/docs/previews/gsap-text-card-preview";
-import { ScrollSyncGalleryCardPreview } from "@/components/docs/previews/scroll-sync-gallery-card-preview";
+import { LensDriftGridCardPreview } from "@/components/docs/previews/lens-drift-grid-card-preview";
 
 const cardVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -331,14 +331,14 @@ export default function Home() {
 
               <motion.div variants={cardVariants} className="sm:col-span-2 lg:col-span-8">
                 <FeatureCard
-                  href="/experience/components/scroll-sync-gallery"
-                  title="Scroll sync gallery"
-                  blurb="Pinned image wall with synced column drift"
+                  href="/experience/components/lens-drift-grid"
+                  title="Lens drift grid"
+                  blurb="Fisheye image wall with drag and auto-drift"
                   tag="Gallery"
                   previewHeightClass="h-[260px] sm:h-[300px]"
                 >
                   <div className="absolute inset-0">
-                    <ScrollSyncGalleryCardPreview />
+                    <LensDriftGridCardPreview />
                   </div>
                 </FeatureCard>
               </motion.div>
