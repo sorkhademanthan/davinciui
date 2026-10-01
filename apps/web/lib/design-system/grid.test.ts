@@ -20,6 +20,7 @@ import {
   diffGrids,
   effectiveProfile,
   ensureGridForSystem,
+  gridExportSummary,
   gridIssues,
   hasCustomGridEdits,
   insertContainer,
@@ -74,6 +75,18 @@ test("responsive Grid resolution at 390, 768, 1024, and 1440px", () => {
   assert.equal(activeBreakpoint(system, 1440).id, at1440.breakpointId);
   assert.deepEqual(gridIssues(system), []);
   assert.deepEqual(validateDesignSystem(system), []);
+});
+
+test("grid export summary presents containers and responsive rules for documentation", () => {
+  const summary = gridExportSummary(manthanSystem());
+  assert.equal(summary.defaultContainer.id, "standard");
+  assert.equal(summary.containers.length, 5);
+  assert.deepEqual(
+    summary.profiles.slice(0, 3).map((profile) => [profile.breakpointId, profile.columns]),
+    [["base", 4], ["sm", 6], ["md", 8]],
+  );
+  assert.equal(summary.profiles[0]?.gutter.token, "space-4");
+  assert.equal(summary.profiles[0]?.gutter.value, "16px");
 });
 
 test("breakpoint-threshold changes shift Grid activation without losing configuration", () => {

@@ -332,6 +332,46 @@ export function resolveGridForWidth(
   return { breakpointId: active.id, profile: effectiveProfile(system, active.id) };
 }
 
+/** A human-readable grid contract for documentation and PDF export. */
+export interface GridExportSummary {
+  defaultContainer: { id: string; label: string; value: string; description?: string };
+  containers: Array<{ id: string; label: string; value: string; description?: string }>;
+  profiles: Array<{
+    breakpointId: string;
+    threshold: string;
+    columns: number;
+    gutter: { token: string; value: string | null };
+    columnGap: { token: string; value: string | null };
+    rowGap: { token: string; value: string | null };
+  }>;
+}
+
+function gridSpaceValue(system: DesignSystemConfig, id: string): string | null {
+  return system.foundations.spacing?.scale.find((token) => token.id === id)?.value
+    ?? system.foundations.sizing?.tokens.find((token) => token.id === id)?.value
+    ?? null;
+}
+
+export function gridExportSummary(system: DesignSystemConfig): GridExportSummary {
+  const grid = ensureGridForSystem(system);
+  const defaultContainer = grid.containers.find((container) => container.id === grid.defaultContainer) ?? grid.containers[0]!;
+  return {
+    defaultContainer: { ...defaultContainer },
+    containers: grid.containers.map((container) => ({ ...container })),
+    profiles: ensureBreakpointScale(system.foundations.breakpoints?.scale).map((breakpoint) => {
+      const profile = effectiveProfile(system, breakpoint.id);
+      return {
+        breakpointId: breakpoint.id,
+        threshold: breakpoint.value,
+        columns: profile.columns,
+        gutter: { token: profile.gutter, value: gridSpaceValue(system, profile.gutter) },
+        columnGap: { token: profile.columnGap, value: gridSpaceValue(system, profile.columnGap) },
+        rowGap: { token: profile.rowGap, value: gridSpaceValue(system, profile.rowGap) },
+      };
+    }),
+  };
+}
+
 // ---------------------------------------------------------------------------
 // Containers
 // ---------------------------------------------------------------------------
