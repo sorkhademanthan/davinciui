@@ -1,4 +1,4 @@
-import { components } from "@/registry"
+import { components, sortByFeatured } from "@/registry"
 
 // ─────────────────────────────────────────────────────────────
 // Phase 1: Data-driven IA — DESIGN SYSTEM vs EXPERIENCE
@@ -232,10 +232,9 @@ const categoryOrder = ["Text Animations", "Premium Components", "Hero Background
 
 function buildPremiumSections(): NavSection[] {
   return categoryOrder.map((category) => {
-    const items = Object.values(components)
-      .filter((c) => c.category === category)
-      .sort((a, b) => a.title.localeCompare(b.title))
-      .map((c) => ({ title: c.title, href: `/experience/components/${c.slug}` }))
+    const items = sortByFeatured(
+      Object.values(components).filter((c) => c.category === category),
+    ).map((c) => ({ title: c.title, href: `/experience/components/${c.slug}` }))
     return { title: category, items }
   })
 }

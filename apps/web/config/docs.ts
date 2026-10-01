@@ -1,4 +1,4 @@
-import { components } from "@/registry";
+import { components, sortByFeatured } from "@/registry";
 
 type NavItem = {
   title: string;
@@ -75,9 +75,9 @@ Open code you own. Composable APIs. Beautiful defaults. Animations handled.
   ] as const;
   categoryOrder.forEach((category) => {
     text += `\n\n### ${category}\n\n`;
-    const categoryComponents = Object.values(components)
-      .filter((c) => c.category === category)
-      .sort((a, b) => a.title.localeCompare(b.title));
+    const categoryComponents = sortByFeatured(
+      Object.values(components).filter((c) => c.category === category),
+    );
 
     categoryComponents.forEach((component) => {
       text += `- [${component.title}](${baseUrl}/docs/components/${component.slug}): ${component.description}\n`;
