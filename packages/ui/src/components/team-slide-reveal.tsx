@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, ArrowRight, Quote } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Quote } from "lucide-react";
 import * as React from "react";
 
 import { cn } from "@workspace/ui/lib/utils";
@@ -17,11 +17,11 @@ export interface TeamSlideRevealProps extends Omit<React.HTMLAttributes<HTMLDivE
   open?: boolean;
   /** Initial expanded state when uncontrolled. @default false */
   defaultOpen?: boolean;
-  /** Called when the profile and summary swap. */
+  /** Called when the profile and story swap. */
   onOpenChange?: (open: boolean) => void;
   /** Corner radius in px. @default 14 */
   radius?: number;
-  /** Transition duration in ms. @default 560 */
+  /** Sheet transition duration in ms. @default 480 */
   duration?: number;
   /** Use the denser layout intended for compact catalog previews. @default false */
   compact?: boolean;
@@ -29,35 +29,18 @@ export interface TeamSlideRevealProps extends Omit<React.HTMLAttributes<HTMLDivE
 
 const DEFAULT_IMAGE = "/images/spiral-3d-slider/dark-glitch.jpg";
 
-/* Compositor-only motion, staged like a scene change: the outgoing panel
-   accelerates away (ease-in, slightly farther) while the incoming panel
-   glides in on an expo-out curve and its content rises in a short cascade.
-   Opacity + transform only — never layout, paint, or filters. */
-const EXIT_TRANSITION =
-  "transition-[opacity,transform] duration-[var(--team-slide-duration)] ease-[cubic-bezier(0.55,0.06,0.68,0.19)] motion-reduce:transition-none";
-const ENTER_TRANSITION =
-  "transition-[opacity,transform] duration-[var(--team-slide-duration)] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none";
-
-/**
- * A click-to-reveal portrait card that trades profile imagery for a readable
- * testimonial. The two panels remain in one fixed footprint so the swap feels
- * spatially continuous in a gallery card, side preview, or fullscreen demo.
- *
- * Performance notes: the swap animates opacity + transform only (no blur or
- * filter keyframes), images are async-decoded, and sizing is driven by the
- * component's own inline-size container — it works in any plain wrapper.
- */
+/** A portrait card whose story rises into the same frame as the image. */
 export function TeamSlideReveal({
   image = DEFAULT_IMAGE,
   imageAlt = "Editorial portrait crossed by horizontal light trails",
   name = "Takahashi Aya",
   role = "CEO, Pentaclay",
-  testimonial = "I’m focused on growing my brand, improving my products, and finding smarter ways to market and package my work. I’m driven, curious, and committed to turning my design skills into something bigger.",
+  testimonial = "The strongest work starts with curiosity. We listen closely, make room for ideas to evolve, and build things that feel unmistakably human.",
   open: controlledOpen,
   defaultOpen = false,
   onOpenChange,
   radius = 14,
-  duration = 560,
+  duration = 480,
   compact = false,
   className,
   style,
@@ -66,19 +49,16 @@ export function TeamSlideReveal({
 }: TeamSlideRevealProps) {
   const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen);
   const open = controlledOpen ?? uncontrolledOpen;
-
   const profileRef = React.useRef<HTMLElement>(null);
   const backRef = React.useRef<HTMLButtonElement>(null);
   const firstRender = React.useRef(true);
+  const storyId = React.useId();
 
   const setOpen = React.useCallback((next: boolean) => {
     if (controlledOpen === undefined) setUncontrolledOpen(next);
     onOpenChange?.(next);
   }, [controlledOpen, onOpenChange]);
 
-  /* Keep keyboard and screen-reader users oriented: move focus to the back
-     control when the summary opens, and return it to the profile on close.
-     Skipped on mount so the card never steals initial focus. */
   React.useEffect(() => {
     if (firstRender.current) {
       firstRender.current = false;
@@ -86,58 +66,48 @@ export function TeamSlideReveal({
     }
     if (open) backRef.current?.focus({ preventScroll: true });
     else profileRef.current?.focus({ preventScroll: true });
-  }, [open ]);
+  }, [open]);
 
   const handleRootKeyDown = React.useCallback((event: React.KeyboardEvent<HTMLDivElement>) => {
     onKeyDown?.(event);
-    if (event.defaultPrevented) return;
-    if (event.key === "Escape" && open) {
+    if (!event.defaultPrevented && event.key === "Escape" && open) {
       event.stopPropagation();
       setOpen(false);
     }
   }, [onKeyDown, open, setOpen]);
 
-  /* Summary content rises in a short cascade behind the panel glide.
-     Delays apply on entry only — exits collapse immediately. */
-  const rise = () =>
-    cn(
-      "transition-[opacity,transform] duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none motion-reduce:transform-none",
-      open ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-3 opacity-0",
-    );
-  const riseStyle = (delayMs: number): React.CSSProperties =>
-    ({ transitionDelay: open ? `${delayMs}ms` : "0ms" });
-
   return (
     <div
       data-slot="team-slide-reveal"
       data-state={open ? "summary" : "profile"}
-      className={cn("relative isolate h-full w-full touch-manipulation select-none overflow-hidden", className)}
-      style={{
-        borderRadius: radius,
-        containerType: "inline-size",
-        "--team-slide-duration": `${duration}ms`,
-        ...style,
-      } as React.CSSProperties}
+      className={cn("relative isolate h-full w-full touch-manipulation overflow-hidden bg-zinc-950", className)}
+      style={{ borderRadius: radius, containerType: "inline-size", "--team-slide-duration": `${duration}ms`, ...style } as React.CSSProperties}
       onKeyDown={handleRootKeyDown}
       {...props}
     >
+      <img
+        src={image}
+        alt=""
+        aria-hidden="true"
+        draggable={false}
+        loading="lazy"
+        decoding="async"
+        className={cn(
+          "absolute inset-0 h-full w-full select-none object-cover transition-transform duration-[var(--team-slide-duration)] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none",
+          open ? "scale-[1.055]" : "scale-100",
+        )}
+      />
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/5 to-black/15" />
+
       <article
         ref={profileRef}
-        aria-hidden={open}
-        aria-label={`Read ${name}'s testimonial`}
-        aria-expanded={open}
         role="button"
         tabIndex={open ? -1 : 0}
-        onClick={(event) => {
-          /* The arrow badge toggles in place — keep it from activating an
-             outer link (gallery cards): stop propagation AND prevent the
-             anchor's native default navigation. */
-          if ((event.target as HTMLElement).closest?.("[data-tsr-cta]")) {
-            event.preventDefault();
-            event.stopPropagation();
-          }
-          setOpen(true);
-        }}
+        aria-hidden={open}
+        aria-label={`Read ${name}'s story. ${imageAlt}`}
+        aria-controls={storyId}
+        aria-expanded={open}
+        onClick={() => setOpen(true)}
         onKeyDown={(event) => {
           if (event.key === "Enter" || event.key === " ") {
             event.preventDefault();
@@ -145,93 +115,66 @@ export function TeamSlideReveal({
           }
         }}
         className={cn(
-          "absolute inset-0 cursor-pointer overflow-hidden bg-zinc-950 text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950",
-          EXIT_TRANSITION,
-          open
-            ? "pointer-events-none -translate-x-[12%] scale-[0.96] opacity-0"
-            : "translate-x-0 scale-100 opacity-100",
+          "absolute inset-0 cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white",
+          open && "pointer-events-none",
         )}
       >
-        <img
-          src={image}
-          alt={imageAlt}
-          draggable={false}
-          loading="lazy"
-          decoding="async"
-          className="absolute inset-0 h-full w-full select-none object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent" />
-        <div className={cn("absolute inset-x-0 bottom-0", compact ? "p-3" : "p-[clamp(0.85rem,4cqi,1.65rem)]")}>
-          <p className={cn("font-sans font-black uppercase leading-[0.9] tracking-[-0.06em] text-white", compact ? "text-sm" : "text-[clamp(1rem,5.5cqi,2rem)]")}>
-            {name}
-          </p>
-          <p className={cn("mt-1 font-medium text-white/85", compact ? "text-[9px]" : "text-[clamp(0.62rem,2.5cqi,0.9rem)]")}>({role})</p>
-        </div>
-        <span
-          aria-hidden="true"
-          data-tsr-cta
-          className={cn(
-            "absolute right-[clamp(0.7rem,3cqi,1.25rem)] top-[clamp(0.7rem,3cqi,1.25rem)] grid place-items-center rounded-full bg-white text-zinc-950 shadow-lg transition-transform duration-200 motion-reduce:transition-none",
-            compact ? "size-9" : "size-[clamp(2.25rem,11cqi,2.75rem)]",
-          )}
-        >
-          <ArrowRight className={cn(compact ? "size-5" : "size-[clamp(1.1rem,5cqi,1.35rem)]")} aria-hidden="true" />
+        <span className={cn(
+          "absolute right-[clamp(0.75rem,4cqi,1.4rem)] top-[clamp(0.75rem,4cqi,1.4rem)] inline-flex items-center gap-2 rounded-full border border-white/35 bg-black/25 text-white backdrop-blur-sm transition-[color,background-color,opacity] duration-200 hover:bg-white hover:text-zinc-950",
+          open && "opacity-0",
+          compact ? "size-8 justify-center" : "px-3.5 py-2 text-[clamp(0.65rem,2.7cqi,0.8rem)] font-medium",
+        )}>
+          {!compact && <span>Read story</span>}
+          <ArrowUpRight aria-hidden="true" className="size-4" />
         </span>
+        <div className={cn(
+          "absolute inset-x-0 bottom-0 text-white transition-[opacity,transform] duration-300 ease-out motion-reduce:transition-none",
+          open ? "translate-y-3 opacity-0" : "translate-y-0 opacity-100",
+          compact ? "p-3" : "p-[clamp(1rem,5cqi,2rem)]",
+        )}>
+          <p className={cn("font-serif leading-[0.98] tracking-[-0.045em]", compact ? "text-[clamp(1.15rem,7cqi,1.55rem)]" : "text-[clamp(2rem,9cqi,3.1rem)]")}>{name}</p>
+          <p className={cn("mt-2 font-medium text-white/80", compact ? "text-[9px]" : "text-[clamp(0.72rem,2.7cqi,0.88rem)]")}>{role}</p>
+        </div>
       </article>
 
       <article
+        id={storyId}
         aria-hidden={!open}
         className={cn(
-          "absolute inset-0 flex flex-col bg-white text-zinc-950 dark:bg-zinc-900 dark:text-zinc-50",
-          compact ? "p-3" : "p-[clamp(1rem,5cqi,2rem)]",
-          ENTER_TRANSITION,
-          open
-            ? "translate-x-0 scale-100 opacity-100"
-            : "pointer-events-none translate-x-[10%] scale-[0.985] opacity-0",
+          "absolute inset-x-0 bottom-0 flex h-[84%] flex-col rounded-t-[clamp(1rem,5cqi,1.6rem)] bg-[#f6f4ef] text-zinc-900 shadow-[0_-16px_48px_rgba(0,0,0,0.18)] transition-transform duration-[var(--team-slide-duration)] ease-[cubic-bezier(0.22,1,0.36,1)] dark:bg-[#202124] dark:text-white motion-reduce:transition-none",
+          compact ? "h-[89%] p-3" : "p-[clamp(1.25rem,5cqi,2rem)]",
+          open ? "translate-y-0" : "pointer-events-none translate-y-[101%]",
         )}
       >
-        <div className={cn("flex items-start justify-between gap-3", rise())} style={riseStyle(60)}>
+        <div className="flex shrink-0 items-center justify-between">
           <button
             ref={backRef}
             type="button"
             tabIndex={open ? 0 : -1}
             aria-label={`Back to ${name}'s profile`}
-            onClick={(event) => {
-              event.preventDefault();
-              event.stopPropagation();
-              setOpen(false);
-            }}
-            className={cn("grid shrink-0 place-items-center rounded-full bg-zinc-950 text-white shadow-sm transition-transform duration-200 hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950 focus-visible:ring-offset-2 dark:bg-white dark:text-zinc-950 dark:focus-visible:ring-white dark:focus-visible:ring-offset-zinc-900 motion-reduce:transition-none", compact ? "size-9" : "size-[clamp(2.25rem,11cqi,2.75rem)]")}
+            onClick={(event) => { event.preventDefault(); event.stopPropagation(); setOpen(false); }}
+            className={cn(
+              "grid place-items-center rounded-full border border-zinc-300 text-zinc-800 transition-colors hover:bg-zinc-900 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950 dark:border-white/25 dark:text-white dark:hover:bg-white dark:hover:text-zinc-950 dark:focus-visible:ring-white",
+              compact ? "size-8" : "size-[clamp(2.4rem,11cqi,2.9rem)]",
+            )}
           >
-            <ArrowLeft className={cn(compact ? "size-5" : "size-[clamp(1.1rem,5cqi,1.35rem)]")} aria-hidden="true" />
+            <ArrowLeft aria-hidden="true" className="size-[clamp(1rem,4.5cqi,1.25rem)]" />
           </button>
-          <Quote className="size-[clamp(2rem,9cqi,4rem)] fill-zinc-200 text-zinc-200 dark:fill-white/10 dark:text-white/10" aria-hidden="true" />
+          <span className={cn("font-medium text-zinc-500 dark:text-zinc-400", compact ? "text-[9px]" : "text-[clamp(0.68rem,2.6cqi,0.8rem)]")}>In their words</span>
         </div>
-        <p className={cn(rise(), "max-w-[33ch] text-pretty text-zinc-600 dark:text-zinc-300", compact ? "my-2 line-clamp-4 text-[10px] leading-[1.4]" : "my-auto text-[clamp(0.78rem,3.2cqi,1.05rem)] leading-[1.55]")} style={riseStyle(140)}>
-          {testimonial}
-        </p>
-        {compact ? (
-          <div className={rise()} style={riseStyle(220)}>
-            <p className="font-sans text-[10px] font-black uppercase leading-none tracking-[-0.055em]">{name}</p>
-            <p className="mt-1 text-[8px] font-medium text-zinc-600 dark:text-zinc-300">({role})</p>
-          </div>
-        ) : (
-          <div className={cn(rise(), "flex items-center gap-[clamp(0.65rem,3cqi,1rem)]")} style={riseStyle(220)}>
-            <img
-              src={image}
-              alt=""
-              aria-hidden="true"
-              draggable={false}
-              loading="lazy"
-              decoding="async"
-              className="size-[clamp(3rem,15cqi,5.5rem)] select-none rounded-[0.6rem] object-cover"
-            />
-            <div className="min-w-0">
-              <p className="truncate font-sans text-[clamp(0.82rem,4cqi,1.35rem)] font-black uppercase leading-none tracking-[-0.055em]">{name}</p>
-              <p className="mt-1 truncate text-[clamp(0.62rem,2.5cqi,0.9rem)] font-medium text-zinc-600 dark:text-zinc-300">({role})</p>
-            </div>
-          </div>
-        )}
+
+        <div className="flex min-h-0 flex-1 flex-col justify-center overflow-y-auto py-[clamp(0.5rem,3cqi,1.5rem)]">
+          <Quote aria-hidden="true" className={cn("mb-[clamp(0.4rem,2cqi,1rem)] text-zinc-400 dark:text-zinc-500", compact ? "size-4" : "size-[clamp(1.5rem,7cqi,2.3rem)]")} />
+          <p className={cn(
+            "max-w-[31ch] font-serif leading-[1.28] tracking-[-0.025em]",
+            compact ? "line-clamp-4 text-[clamp(0.8rem,4cqi,1rem)]" : "text-[clamp(1.15rem,5cqi,1.8rem)]",
+          )}>{testimonial}</p>
+        </div>
+
+        <div className="shrink-0 border-t border-zinc-900/15 pt-[clamp(0.6rem,3cqi,1.15rem)] dark:border-white/20">
+          <p className={cn("font-semibold tracking-[-0.02em]", compact ? "text-[10px]" : "text-[clamp(0.86rem,3.5cqi,1.1rem)]")}>{name}</p>
+          <p className={cn("mt-0.5 text-zinc-500 dark:text-zinc-400", compact ? "text-[9px]" : "text-[clamp(0.7rem,2.6cqi,0.82rem)]")}>{role}</p>
+        </div>
       </article>
     </div>
   );
