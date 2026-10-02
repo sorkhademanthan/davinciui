@@ -41,6 +41,14 @@ export interface HoverTransitionProps extends Omit<
   duration?: number;
   easing?: string;
   label?: string;
+  /**
+   * Controlled active state. When provided, the hover animation is driven
+   * by this value instead of internal pointer/focus state. Useful for
+   * auto-playing gallery card previews.
+   */
+  active?: boolean;
+  /** Called when the active state changes. */
+  onActiveChange?: (active: boolean) => void;
 }
 
 type Vector = { x: number; y: number };
@@ -158,6 +166,8 @@ export function HoverTransition({
   duration = 1.15,
   easing = "cubic-bezier(0.16, 1, 0.3, 1)",
   label = "Interactive hover transition",
+  active: controlledActive,
+  onActiveChange,
   className,
   onMouseEnter,
   onMouseLeave,
@@ -169,7 +179,22 @@ export function HoverTransition({
   ...props
 }: HoverTransitionProps) {
   const rootRef = React.useRef<HTMLDivElement>(null);
-  const [active, setActive] = React.useState(false);
+  const [uncontrolledActive, setUncontrolledActive] = React.useState(false);
+  const active = controlledActive ?? uncontrolledActive;
+  const setActive = React.useCallback(
+    (next: boolean | ((prev: boolean) => boolean)) => {
+      if (controlledActive !== undefined) {
+        const value =
+          typeof next === "function"
+            ? (next as (prev: boolean) => boolean)(controlledActive)
+            : next;
+        onActiveChange?.(value);
+        return;
+      }
+      setUncontrolledActive(next);
+    },
+    [controlledActive, onActiveChange],
+  );
   const reducedMotion = usePrefersReducedMotion();
   const vector = directionVectors[direction];
   const perceivedDurationScale =
