@@ -17,11 +17,13 @@ import { GridEditor } from "@/components/design-system/grid-editor"
 import { BreakpointsEditor } from "@/components/design-system/breakpoints-editor"
 import { SemanticTokensEditor } from "@/components/design-system/semantic-tokens-editor"
 import { ThemesEditor } from "@/components/design-system/themes-editor"
+import { ComponentsEditor } from "@/components/design-system/components-editor"
 import { DesignSystemPreview } from "@/components/design-system/design-system-preview"
 import { DesignSystemValidation } from "@/components/design-system/design-system-validation"
+import { DesignSystemExport } from "@/components/design-system/design-system-export"
 
 const foundations = ["Colors", "Typography", "Spacing", "Radius", "Borders", "Shadows", "Motion", "Icons", "Grid", "Breakpoints"]
-const systemSections: Array<[string, string]> = [["Semantic Tokens", "tokens"], ["Themes", "themes"], ["Preview", "preview"], ["Validate", "validate"], ["Export", "export"]]
+const systemSections: Array<[string, string]> = [["Semantic Tokens", "tokens"], ["Themes", "themes"], ["Components", "components"], ["Preview", "preview"], ["Validate", "validate"], ["Export", "export"]]
 
 export function Builder({ id, section = "colors" }: { id: string; section?: string }) {
   const [system, setSystem] = useState<DesignSystemConfig>()
@@ -53,8 +55,10 @@ function SectionEditor({ system, section, save }: { system: DesignSystemConfig; 
   if (section === "breakpoints") return <BreakpointsEditor system={system} save={save} />
   if (section === "tokens") return <SemanticTokensEditor system={system} save={save} />
   if (section === "themes") return <ThemesEditor system={system} save={save} />
+  if (section === "components") return <ComponentsEditor system={system} save={save} />
   if (section === "preview") return <DesignSystemPreview system={system} />
   if (section === "validate") return <DesignSystemValidation system={system} />
+  if (section === "export") return <DesignSystemExport system={system} />
   const title = foundations.find((item) => item.toLowerCase() === section) || systemSections.find(([, path]) => path === section)?.[0] || "Overview"
   return <><PageHeader eyebrow="Design System" title={title} description="This configuration area is ready for the next builder slice." /><div className="mt-6 rounded-xl border border-dashed border-border p-8 text-sm text-muted-foreground">{title} will inherit the same saved configuration model as Colors, Typography, Spacing and Radius.</div></>
 }
