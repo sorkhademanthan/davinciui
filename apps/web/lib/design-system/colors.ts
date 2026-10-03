@@ -178,7 +178,7 @@ export function removePalette(system: DesignSystemConfig, paletteId: string): De
 }
 
 export interface PaletteReference {
-  kind: "semantic" | "theme" | "component" | "border";
+  kind: "semantic" | "theme" | "component" | "border" | "icon" | "shadow";
   /** Human-readable pointer, e.g. `action.primary.background` or `Button › background`. */
   pointer: string;
   /** The stored value that routes through the palette. */
@@ -187,6 +187,12 @@ export interface PaletteReference {
 
 function mentionsPalette(value: unknown, paletteId: string): boolean {
   return typeof value === "string" && (value === paletteId || value.startsWith(`${paletteId}.`));
+}
+
+function replacePaletteReference(value: string, sourceId: string, replacementId: string): string {
+  if (value === sourceId) return replacementId;
+  if (value.startsWith(`${sourceId}.`)) return `${replacementId}${value.slice(sourceId.length)}`;
+  return value;
 }
 
 /**
@@ -252,6 +258,20 @@ export function findPaletteReferences(
     }
   }
 
+  for (const [role, value] of Object.entries(system.foundations?.icons?.colors ?? {})) {
+    if (mentionsPalette(value, paletteId)) {
+      push({ kind: "icon", pointer: `Icon › ${role}`, value });
+    }
+  }
+
+  for (const token of system.foundations?.shadows?.tokens ?? []) {
+    for (const [index, layer] of (token.layers ?? []).entries()) {
+      if (mentionsPalette(layer.color, paletteId)) {
+        push({ kind: "shadow", pointer: `Shadow › ${token.label || token.id} › layer ${index + 1}`, value: layer.color });
+      }
+    }
+  }
+
   return references;
 }
 
@@ -282,12 +302,85 @@ export function canDeletePalette(system: DesignSystemConfig, paletteId: string):
     return {
       ok: false,
       reasons: [
-        `In use by ${references.length} token${references.length === 1 ? "" : "s"}: ${names.join(", ")}${more}. Re-point those tokens before deleting.`,
+        `In use by ${references.length} saved value${references.length === 1 ? "" : "s"}: ${names.join(", ")}${more}. Choose another palette for these usages before deleting.`,
       ],
       references,
     };
   }
   return { ok: true };
+}
+
+export type ReplaceAndRemovePaletteResult =
+  | { ok: true; system: DesignSystemConfig; replaced: number }
+  | { ok: false; error: string };
+
+/**
+ * Atomically move direct stored references to another palette and remove the
+ * source. Shade suffixes are preserved (`brand.600` -> `neutral.600`). Alias
+ * chains then follow the rewritten direct value automatically.
+ */
+export function replaceAndRemovePalette(
+  system: DesignSystemConfig,
+  sourceId: string,
+  replacementId: string,
+): ReplaceAndRemovePaletteResult {
+  const palettes = system.foundations.colors.palettes;
+  if (sourceId === replacementId) return { ok: false, error: "Choose a different replacement palette." };
+  if (!palettes.some((palette) => palette.id === sourceId)) return { ok: false, error: "That palette no longer exists." };
+  if (!palettes.some((palette) => palette.id === replacementId)) return { ok: false, error: "The replacement palette no longer exists." };
+  if (palettes.length <= 1) return { ok: false, error: "The last palette cannot be deleted." };
+
+  let replaced = 0;
+  const rewrite = (value: string): string => {
+    const next = replacePaletteReference(value, sourceId, replacementId);
+    if (next !== value) replaced += 1;
+    return next;
+  };
+
+  const next: DesignSystemConfig = {
+    ...system,
+    foundations: {
+      ...system.foundations,
+      colors: {
+        ...system.foundations.colors,
+        palettes: palettes.filter((palette) => palette.id !== sourceId),
+      },
+      borders: {
+        ...system.foundations.borders,
+        tokens: system.foundations.borders.tokens.map((token) => ({ ...token, color: rewrite(token.color) })),
+      },
+      icons: {
+        ...system.foundations.icons,
+        colors: Object.fromEntries(
+          Object.entries(system.foundations.icons.colors).map(([role, value]) => [role, rewrite(value)]),
+        ) as typeof system.foundations.icons.colors,
+      },
+      shadows: {
+        ...system.foundations.shadows,
+        tokens: system.foundations.shadows.tokens.map((token) => ({
+          ...token,
+          layers: token.layers?.map((layer) => ({ ...layer, color: rewrite(layer.color) })),
+        })),
+      },
+    },
+    semanticTokens: system.semanticTokens.map((token) => ({ ...token, value: rewrite(token.value) })),
+    themes: system.themes.map((theme) => ({
+      ...theme,
+      overrides: Object.fromEntries(
+        Object.entries(theme.overrides).map(([tokenId, value]) => [tokenId, rewrite(value)]),
+      ),
+    })),
+    components: system.components.map((component) => ({
+      ...component,
+      overrides: component.overrides.map((override) => ({ ...override, value: rewrite(override.value) })),
+    })),
+  };
+
+  const remaining = findPaletteReferences(next, sourceId);
+  if (remaining.length > 0) {
+    return { ok: false, error: `Could not move ${remaining.length} remaining palette reference${remaining.length === 1 ? "" : "s"}.` };
+  }
+  return { ok: true, system: next, replaced };
 }
 
 /**
