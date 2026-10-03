@@ -971,9 +971,9 @@ export function validateDesignSystemReport(
       exportFindings.push({
         id: "export-readiness-warnings-travel",
         group: "export-readiness",
-        severity: "warning",
-        title: `${warnings} warning${warnings === 1 ? "" : "s"} will be listed in the export report.`,
-        explanation: "Warnings do not block export, but they travel with it: the generated report will list every warning so consumers know what to watch.",
+        severity: "info",
+        title: `${warnings} warning${warnings === 1 ? "" : "s"} grouped in the export appendix.`,
+        explanation: "Warnings do not block export. The handbook appendix groups them so the main chapters stay a clean design reference.",
         path: "export",
         affected: "export",
         route: routeFor(systemId, "export"),
