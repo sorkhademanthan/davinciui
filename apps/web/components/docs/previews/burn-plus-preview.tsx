@@ -2,6 +2,7 @@
 
 import { AshReveal } from "@workspace/ui/components/burn-plus";
 import { useState } from "react";
+import { useTheme } from "next-themes";
 import type {
   BurnPlusDirection,
   BurnPlusFit,
@@ -80,15 +81,26 @@ const useBurnPlusStore = create<{
 export function BurnPlusPreview() {
   const config = useBurnPlusStore((state) => state.config);
   const [runId, setRunId] = useState(0);
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme !== "light";
+  // Follow the theme until the user picks a custom burn background.
+  const resolvedBackground =
+    !isDark && config.background === DEFAULT_CONFIG.background
+      ? "#f5f5f4"
+      : config.background;
 
   return (
     <section
-      className="h-full min-h-0 w-full overflow-hidden bg-black"
+      className={cn(
+        "h-full min-h-0 w-full overflow-hidden transition-colors duration-500",
+        isDark ? "bg-black" : "bg-[#f5f5f4]",
+      )}
       style={{ containerType: "inline-size" }}
     >
       <AshReveal
-        key={runId}
+        key={`${runId}-${resolvedBackground}`}
         {...config}
+        background={resolvedBackground}
         className="h-full min-h-0 w-full"
         media="/images/spiral-3d-slider/orange-haze.jpg"
         fit="fill"
@@ -97,7 +109,7 @@ export function BurnPlusPreview() {
       <button
         type="button"
         onClick={() => setRunId((value) => value + 1)}
-        className="absolute bottom-5 left-1/2 z-10 -translate-x-1/2 rounded-full border border-white/20 bg-black/70 px-4 py-2 text-xs font-medium text-white shadow-lg backdrop-blur-md transition-colors hover:bg-black/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white dark:border-white/20 dark:bg-white/90 dark:text-black dark:hover:bg-white"
+        className="absolute bottom-5 left-1/2 z-10 -translate-x-1/2 rounded-full border border-white/25 bg-black/70 px-4 py-2 text-xs font-medium text-white shadow-lg backdrop-blur-md transition-colors hover:bg-black/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
       >
         Replay animation
       </button>
