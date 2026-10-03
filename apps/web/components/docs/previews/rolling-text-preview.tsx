@@ -42,7 +42,7 @@ interface RollingTextPlaygroundConfig {
 }
 
 const DEFAULT_CONFIG: RollingTextPlaygroundConfig = {
-  text: "ROLLING TEXT",
+  text: "DAVINCIUI",
   pattern: "alternating",
   duplicateCount: 8,
   rollDuration: 1.4,
@@ -192,8 +192,8 @@ export function RollingTextPersonalizePanel() {
           <PlaygroundSectionTitle>Content</PlaygroundSectionTitle>
           <PlaygroundInput
             value={config.text}
-            onChange={(e) => update({ text: e.target.value.slice(0, 48) || "ROLLING TEXT" })}
-            placeholder="ROLLING TEXT"
+            onChange={(e) => update({ text: e.target.value.slice(0, 48) || "DAVINCIUI" })}
+            placeholder="DAVINCIUI"
           />
         </div>
 

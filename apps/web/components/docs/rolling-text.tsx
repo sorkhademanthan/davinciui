@@ -9,7 +9,7 @@ import { readComponentSource } from "@/lib/source-code";
 const defaultCode = `import { RollingText } from "@/components/ui/rolling-text"
 
 <RollingText
-  text="ROLLING TEXT"
+  text="DAVINCIUI"
   pattern="alternating"
 />`;
 
@@ -31,7 +31,7 @@ export async function RollingTextDocs() {
       usageCode={<LiveCodeBlock defaultCode={defaultCode} />}
       fullWidthPreview
       props={[
-        { name: "text", type: "string", default: '"ROLLING TEXT"', description: "Text content. Wraps at word boundaries; spaces keep their width." },
+        { name: "text", type: "string", default: '"DAVINCIUI"', description: "Text content. Wraps at word boundaries; spaces keep their width." },
         { name: "pattern", type: '"sequential" | "alternating"', default: '"alternating"', description: "Sequential rolls every column downward in order; alternating rolls even and odd columns in opposing directions." },
         { name: "duplicateCount", type: "number", default: "8", description: "Repeated copies of each glyph stacked inside its column. Travel adapts automatically." },
         { name: "rollDuration", type: "number", default: "1.4", description: "Per-character roll duration in seconds. Eased with cubic-bezier(0.22, 1, 0.36, 1)." },

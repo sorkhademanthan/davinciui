@@ -68,7 +68,7 @@ export interface RollingTextProps {
 }
 
 export const ROLLING_TEXT_DEFAULTS = {
-  text: "ROLLING TEXT",
+  text: "DAVINCIUI",
   pattern: "alternating",
   duplicateCount: 8,
   rollDuration: 1.4,
