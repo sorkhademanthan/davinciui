@@ -88,6 +88,25 @@ export function resetToCore(system: DesignSystemConfig): DesignSystemConfig {
   return setIncluded(system, [...CORE_COMPONENT_IDS]);
 }
 
+/** Replace the stored inclusion list outright (sanitized to known ids). */
+export function setIncludedIds(system: DesignSystemConfig, ids: readonly string[]): DesignSystemConfig {
+  return setIncluded(system, ids);
+}
+
+/** Select every basic (core) component, preserving any premium picks. */
+export function includeAllCore(system: DesignSystemConfig): DesignSystemConfig {
+  return setIncluded(system, [...includedIds(system), ...CORE_COMPONENT_IDS]);
+}
+
+/** Remove every premium pick, keeping the current basic (core) selection. */
+export function removeAllPremium(system: DesignSystemConfig): DesignSystemConfig {
+  const included = new Set(includedIds(system));
+  return setIncluded(
+    system,
+    [...included].filter((id) => (CORE_COMPONENT_IDS as readonly string[]).includes(id)),
+  );
+}
+
 export function inclusionSummary(system: DesignSystemConfig): { included: number; total: number; core: number; premium: number } {
   const entries = includedEntries(system);
   return {
