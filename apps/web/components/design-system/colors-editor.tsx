@@ -17,6 +17,7 @@ import {
   paletteRoleLabel,
   regenerateShades,
   removePalette,
+  replaceAndRemovePalette,
   slugifyPaletteId,
   type PaletteReference,
 } from "@/lib/design-system/colors"
@@ -80,6 +81,15 @@ export function ColorsEditor({
     commit(removePalette(system, paletteId).foundations.colors.palettes)
     if (editingId === paletteId) setEditingId(null)
     if (selectedId === paletteId) setSelectedId(null)
+  }
+
+  const handleReplaceAndDelete = (sourceId: string, replacementId: string): string | null => {
+    const result = replaceAndRemovePalette(system, sourceId, replacementId)
+    if (!result.ok) return result.error
+    save(result.system)
+    if (editingId === sourceId) setEditingId(null)
+    if (selectedId === sourceId) setSelectedId(null)
+    return null
   }
 
   return (
@@ -185,6 +195,7 @@ export function ColorsEditor({
                       key={`editor-${palette.id}`}
                       system={system}
                       palette={palette}
+                      palettes={palettes}
                       references={references}
                       onSave={(next) => {
                         commit(palettes.map((entry) => (entry.id === palette.id ? next : entry)))
@@ -192,6 +203,7 @@ export function ColorsEditor({
                       }}
                       onCancel={() => setEditingId(null)}
                       onDelete={() => handleDelete(palette.id)}
+                      onReplaceAndDelete={(replacementId) => handleReplaceAndDelete(palette.id, replacementId)}
                     />
                   )}
                 </article>
@@ -283,17 +295,21 @@ function validateDraft(draft: DraftState): {
 function PaletteEditorPanel({
   system,
   palette,
+  palettes,
   references,
   onSave,
   onCancel,
   onDelete,
+  onReplaceAndDelete,
 }: {
   system: DesignSystemConfig
   palette: Palette
+  palettes: Palette[]
   references: PaletteReference[]
   onSave: (next: Palette) => void
   onCancel: () => void
   onDelete: () => void
+  onReplaceAndDelete: (replacementId: string) => string | null
 }) {
   const [draft, setDraft] = useState<DraftState>(() => draftFromPalette(palette))
   const [confirmingDelete, setConfirmingDelete] = useState(false)
@@ -522,12 +538,14 @@ function PaletteEditorPanel({
 
       <DeleteZone
         palette={palette}
+        palettes={palettes}
         guard={guard}
         references={references}
         confirming={confirmingDelete}
         onArm={() => setConfirmingDelete(true)}
         onCancel={() => setConfirmingDelete(false)}
         onConfirm={onDelete}
+        onReplaceAndDelete={onReplaceAndDelete}
       />
     </div>
   )
@@ -535,21 +553,29 @@ function PaletteEditorPanel({
 
 function DeleteZone({
   palette,
+  palettes,
   guard,
   references,
   confirming,
   onArm,
   onCancel,
   onConfirm,
+  onReplaceAndDelete,
 }: {
   palette: Palette
+  palettes: Palette[]
   guard: ReturnType<typeof canDeletePalette>
   references: PaletteReference[]
   confirming: boolean
   onArm: () => void
   onCancel: () => void
   onConfirm: () => void
+  onReplaceAndDelete: (replacementId: string) => string | null
 }) {
+  const alternatives = palettes.filter((entry) => entry.id !== palette.id)
+  const [replacementId, setReplacementId] = useState(() => alternatives[0]?.id ?? "")
+  const [moveError, setMoveError] = useState<string | null>(null)
+  const blockedByUsage = !guard.ok && references.length > 0
   return (
     <div className="mt-4 rounded-xl border border-destructive/30 bg-destructive/5 p-4">
       <h3 className="text-sm font-semibold text-destructive">Danger zone</h3>
@@ -567,6 +593,52 @@ function DeleteZone({
                 </li>
               ))}
             </ul>
+          )}
+          {blockedByUsage && alternatives.length > 0 && (
+            <div className="mt-3 rounded-lg border border-border bg-background p-3">
+              <label htmlFor={`move-${palette.id}-replacement`} className="text-xs font-medium text-foreground">
+                Move {references.length} usage{references.length === 1 ? "" : "s"} to another palette, then delete
+              </label>
+              <p className="mt-1 text-[11px] leading-5">
+                Shade numbers are preserved (e.g. {palette.id}.950 → {(replacementId || alternatives[0]!.id)}.950). Tokens that alias through
+                these values follow automatically.
+              </p>
+              <div className="mt-2 flex flex-wrap items-center gap-2">
+                <select
+                  id={`move-${palette.id}-replacement`}
+                  value={replacementId || alternatives[0]!.id}
+                  onChange={(event) => {
+                    setReplacementId(event.target.value)
+                    setMoveError(null)
+                  }}
+                  className="min-h-11 rounded-lg border border-border bg-background px-3 text-xs text-foreground outline-none focus:border-foreground focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  {alternatives.map((entry) => (
+                    <option key={entry.id} value={entry.id}>
+                      {entry.label} ({entry.id})
+                    </option>
+                  ))}
+                </select>
+                <button
+                  onClick={() => {
+                    const error = onReplaceAndDelete(replacementId || alternatives[0]!.id)
+                    setMoveError(error)
+                  }}
+                  className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-destructive px-4 py-2 text-xs font-medium text-white transition-colors hover:bg-destructive/85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  <Trash2 className="size-4" aria-hidden="true" />
+                  Move usages & delete
+                </button>
+              </div>
+              <p className="mt-1 text-[11px] leading-5">
+                Or edit the listed token(s) under Semantic tokens / Themes to point elsewhere, then return here to delete.
+              </p>
+              {moveError && (
+                <p role="alert" className="mt-1 font-medium text-destructive">
+                  {moveError}
+                </p>
+              )}
+            </div>
           )}
         </div>
       ) : !confirming ? (
