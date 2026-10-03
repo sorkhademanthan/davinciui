@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useTheme } from "next-themes";
 import {
   KINETIC_VARIANT_META,
   KINETIC_VARIANTS,
@@ -8,15 +9,27 @@ import {
   type KineticSplitTextHandle,
   type KineticVariant,
 } from "@workspace/ui/components/kinetic-split-text";
+import { cn } from "@/lib/utils";
 
-const CARD_TEXT = "MOTION\nIS\nALIVE.";
-const CARD_LINES = 3;
-const HOLD_MS = 1500;
-const EXIT_MS = 400;
+/** Distinct gallery copy per motion style — never the docs hero text. */
+const CARD_COPY: Record<KineticVariant, string> = {
+  "editorial-rise": "DESIGN\nIN\nMOTION.",
+  "depth-cascade": "DEPTH\nWITH\nFEELING.",
+  "split-shutter": "CUT\nUP\nTHE TYPE.",
+  "elastic-slam": "BOLD\nWITH\nIMPACT.",
+  "blur-rush": "SPEED\nINTO\nFOCUS.",
+};
+
+const HOLD_MS = 1700;
+const EXIT_MS = 450;
+
+const easeInOutCubic = (t: number) =>
+  t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
 /**
- * Gallery card — one strong composition cycling through all five motion
- * styles: play → hold → masked exit → next variant. Pauses offscreen.
+ * Gallery card — cycles all five motion styles with a distinct line per
+ * style: play → hold → eased masked exit → next variant. Theme-aware
+ * background, ink, glow, and pill. Pauses offscreen / hidden tab.
  */
 export function KineticSplitTextCardPreview() {
   const ref = React.useRef<KineticSplitTextHandle>(null);
@@ -24,7 +37,13 @@ export function KineticSplitTextCardPreview() {
   const inViewRef = React.useRef(true);
   const [reducedMotion, setReducedMotion] = React.useState(false);
   const [variantIndex, setVariantIndex] = React.useState(0);
+  const [exiting, setExiting] = React.useState(false);
   const variant: KineticVariant = KINETIC_VARIANTS[variantIndex] ?? "editorial-rise";
+
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = React.useState(false);
+  React.useEffect(() => setMounted(true), []);
+  const isDark = mounted ? resolvedTheme === "dark" : true;
 
   React.useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -34,6 +53,7 @@ export function KineticSplitTextCardPreview() {
     return () => mq.removeEventListener("change", update);
   }, []);
 
+  // Pause the loop offscreen; replay on return.
   React.useEffect(() => {
     if (reducedMotion) return;
     const el = hostRef.current;
@@ -48,29 +68,44 @@ export function KineticSplitTextCardPreview() {
       { threshold: 0 },
     );
     io.observe(el);
-    return () => io.disconnect();
+    const onVis = () => {
+      if (document.hidden) inViewRef.current = false;
+      else {
+        inViewRef.current = true;
+        ref.current?.play();
+      }
+    };
+    document.addEventListener("visibilitychange", onVis);
+    return () => {
+      io.disconnect();
+      document.removeEventListener("visibilitychange", onVis);
+    };
   }, [reducedMotion]);
 
+  // Entrance → hold → eased exit → advance. Remount per variant via key
+  // so each entrance starts from a clean WAAPI timeline.
   React.useEffect(() => {
     if (reducedMotion) return;
     let disposed = false;
     let holdTimer = 0;
     let raf = 0;
     const meta = KINETIC_VARIANT_META[variant];
-    const playMs = meta.duration * 1000 + (CARD_LINES - 1) * meta.stagger * 1000;
+    const lines = CARD_COPY[variant].split("\n").length;
+    const playMs = meta.duration * 1000 + (lines - 1) * meta.stagger * 1000;
+    setExiting(false);
     if (inViewRef.current) ref.current?.play();
-    // Hold the settled composition, then scrub back out (masked exit).
     holdTimer = window.setTimeout(() => {
       if (disposed || !inViewRef.current) {
         if (!disposed) setVariantIndex((i) => (i + 1) % KINETIC_VARIANTS.length);
         return;
       }
+      setExiting(true);
       const t0 = performance.now();
       const tick = (now: number) => {
         if (disposed) return;
-        const t = Math.min(1, (now - t0) / EXIT_MS);
-        if (inViewRef.current) ref.current?.setProgress(1 - t);
-        if (t < 1) raf = requestAnimationFrame(tick);
+        const raw = Math.min(1, (now - t0) / EXIT_MS);
+        if (inViewRef.current) ref.current?.setProgress(1 - easeInOutCubic(raw));
+        if (raw < 1) raf = requestAnimationFrame(tick);
         else setVariantIndex((i) => (i + 1) % KINETIC_VARIANTS.length);
       };
       raf = requestAnimationFrame(tick);
@@ -86,25 +121,56 @@ export function KineticSplitTextCardPreview() {
     <div
       ref={hostRef}
       aria-hidden="true"
-      className="absolute inset-0 flex items-center justify-center overflow-hidden bg-[#09090b] px-6"
+      className={cn(
+        "absolute inset-0 flex items-center justify-center overflow-hidden px-6 transition-colors duration-500",
+        isDark ? "bg-[#09090b]" : "bg-[#fafafa]",
+      )}
       style={{ containerType: "inline-size" }}
     >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_42%,rgba(255,255,255,0.08),transparent_64%)]" />
-      <KineticSplitText
-        ref={ref}
-        text={CARD_TEXT}
-        split="lines"
-        variant={variant}
-        direction="up"
-        trigger="manual"
-        fontFamily="inherit"
-        fontSize="clamp(1.6rem, 8cqi, 2.6rem)"
-        fontWeight={800}
-        lineHeight={0.98}
-        letterSpacing="-0.02em"
-        textAlign="center"
-        color="#fafafa"
+      <div
+        className={cn(
+          "pointer-events-none absolute inset-0 transition-opacity duration-500",
+          isDark
+            ? "bg-[radial-gradient(ellipse_at_50%_42%,rgba(255,255,255,0.09),transparent_64%)]"
+            : "bg-[radial-gradient(ellipse_at_50%_42%,rgba(24,24,27,0.09),transparent_64%)]",
+        )}
       />
+      <div
+        className={cn(
+          "transition-all duration-500 ease-out",
+          exiting ? "translate-y-2 opacity-0 blur-[6px]" : "translate-y-0 opacity-100 blur-0",
+        )}
+      >
+        <KineticSplitText
+          key={variant}
+          ref={ref}
+          text={CARD_COPY[variant]}
+          split="lines"
+          variant={variant}
+          direction="up"
+          trigger="manual"
+          fontFamily="inherit"
+          fontSize="clamp(1.6rem, 8cqi, 2.6rem)"
+          fontWeight={800}
+          lineHeight={0.98}
+          letterSpacing="-0.02em"
+          textAlign="center"
+          color={isDark ? "#fafafa" : "#18181b"}
+        />
+      </div>
+
+      {/* Current motion-style pill — fades with the exit. */}
+      <div
+        className={cn(
+          "pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full border px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.2em] backdrop-blur transition-all duration-500",
+          exiting && "translate-y-1 opacity-0",
+          isDark
+            ? "border-white/15 bg-white/5 text-white/60"
+            : "border-black/10 bg-black/5 text-black/55",
+        )}
+      >
+        {KINETIC_VARIANT_META[variant].title}
+      </div>
     </div>
   );
 }
