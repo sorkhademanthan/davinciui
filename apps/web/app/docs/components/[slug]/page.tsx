@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { getComponent } from "@/registry";
 import { getDocsImporter, getDocsSlugs } from "@/components/docs/lazy-registry";
-import { DocsPageLayout } from "@/components/docs-page-layout";
+import { galleryHrefForSlug } from "@/lib/component-groups";
 import { absoluteUrl, siteConfig } from "@/lib/site";
 
 // -----------------------------------------------------------------------------
@@ -162,9 +162,6 @@ export default async function ComponentPage(props: PageProps) {
 
     // If we have a dedicated docs component, render it with Suspense
     if (importer) {
-        // fallback for basic components not in registry (e.g., button)
-        const fallbackTitle = component?.title ?? params.slug.charAt(0).toUpperCase() + params.slug.slice(1);
-        const fallbackDesc = component?.description ?? `${fallbackTitle} component`;
         const isFallback = !component;
         if (isFallback) {
             return (
@@ -218,26 +215,7 @@ export default async function ComponentPage(props: PageProps) {
         );
     }
 
-    // Fallback for components without dedicated docs (component guaranteed here)
-    return (
-        <DocsPageLayout
-            title={component!.title}
-            description={component!.description}
-            installPackageName={component!.slug}
-            preview={
-                <div className="border border-border rounded-xl p-12 flex flex-col justify-center items-center bg-muted/20 min-h-[350px] gap-4">
-                    <div className="text-center space-y-2">
-                        <h3 className="text-lg font-medium">{component!.title} Preview</h3>
-                        <p className="text-sm text-muted-foreground">
-                            Component preview will appear here.
-                        </p>
-                    </div>
-                </div>
-            }
-            previewCode="// Preview code coming soon"
-            usageCode="// Usage examples coming soon"
-            examples={[]}
-            props={[]}
-        />
-    );
+    // No dedicated docs page: send users to the live gallery view for this
+    // component instead of shipping an empty "coming soon" stub as docs.
+    redirect(galleryHrefForSlug(component!.slug, component!.category));
 }
