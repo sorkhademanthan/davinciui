@@ -1,6 +1,6 @@
 export const siteConfig = {
   name: "DavinciUI",
-  url: "https://davinciui.dev",
+  url: "https://davinciui.com",
   title: "DavinciUI — Beautiful Animated UI Components for React",
   description:
     "Beautiful, animated React UI components with styling and motion already handled. Built with Tailwind CSS, TypeScript, and Framer Motion.",

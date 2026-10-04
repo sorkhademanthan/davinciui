@@ -36,7 +36,7 @@ const componentsNav: NavGroup = {
 };
 
 const getLlmsText = () => {
-  const baseUrl = "https://davinciui.dev";
+  const baseUrl = "https://davinciui.com";
   let text = `# DavinciUI
 
 > DavinciUI — Beautiful animated components for React. Copy, paste, customize. Tailwind CSS + Framer Motion. Open code.
