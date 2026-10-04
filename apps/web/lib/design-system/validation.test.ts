@@ -14,8 +14,6 @@ import {
 
 function healthySystem(): DesignSystemConfig {
   // SaaS ships every palette role, so all starter-wired references resolve.
-  // (Neutral-only starters such as Blank ship a `border.error` → `danger.500`
-  // reference with no danger palette; Validate flags that, correctly.)
   return createSystemFromStarter({ starterId: "saas", name: "Healthy" });
 }
 
@@ -35,6 +33,18 @@ test("healthy starter system is ready to export with no errors", () => {
     report.groups.map((group) => group.id),
     [...VALIDATION_GROUP_ORDER],
   );
+});
+
+test("neutral-only starters validate with no errors", () => {
+  // Blank and Minimal ship no danger palette, so every default reference
+  // must resolve without one — otherwise every new system opens blocked.
+  for (const starterId of ["blank", "minimal"] as const) {
+    const system = createSystemFromStarter({ starterId, name: `Fresh ${starterId}` });
+    const report = validateDesignSystemReport(system);
+    const errors = findingsOf(report).filter((finding) => finding.severity === "error");
+    assert.deepEqual(errors, [], `${starterId} should ship with no blockers`);
+    assert.equal(report.exportReady, true);
+  }
 });
 
 test("unresolved semantic alias is an error routed to Tokens", () => {

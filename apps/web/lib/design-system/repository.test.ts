@@ -2,7 +2,7 @@
 // compile with the repo's TypeScript, then `node --test` (no new packages).
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { createBlankDesignSystem, type DesignSystemConfig } from "./domain";
+import { createBlankDesignSystem, paletteFrom, type DesignSystemConfig } from "./domain";
 import type { V1DesignSystem } from "./migrations";
 import {
   DESIGN_SYSTEM_STORAGE_KEY,
@@ -417,4 +417,53 @@ test("clear wipes v2 only and is dev/test-only", () => {
   assert.ok(LEGACY_V1_KEY in mem.dump());
   // Legacy systems are never erased: the next read re-migrates them.
   assert.equal(store.list()[0]?.meta.name, "Manthan");
+});
+
+function withLegacyErrorBorder(system: DesignSystemConfig): DesignSystemConfig {
+  return {
+    ...system,
+    foundations: {
+      ...system.foundations,
+      borders: {
+        ...system.foundations.borders,
+        tokens: system.foundations.borders.tokens.map((token) =>
+          token.id === "border.error" ? { ...token, color: "danger.500" } : token,
+        ),
+      },
+    },
+  };
+}
+
+test("legacy border.error reference heals on load and persists", () => {
+  const legacy = withLegacyErrorBorder(createBlankDesignSystem({ name: "Legacy" }));
+  const mem = memoryStorage({ [DESIGN_SYSTEM_STORAGE_KEY]: envelopeWith([legacy]) });
+  const store = createDesignSystemsStore(() => mem);
+  const loaded = store.get(legacy.id);
+  assert.equal(
+    loaded?.foundations.borders.tokens.find((token) => token.id === "border.error")?.color,
+    "status.danger.foreground",
+  );
+  const persisted = JSON.parse(mem.dump()[DESIGN_SYSTEM_STORAGE_KEY]!) as { systems: DesignSystemConfig[] };
+  assert.equal(
+    persisted.systems[0]?.foundations.borders.tokens.find((token) => token.id === "border.error")?.color,
+    "status.danger.foreground",
+  );
+});
+
+test("resolvable danger.500 reference is left untouched", () => {
+  const blank = createBlankDesignSystem({ name: "WithDanger" });
+  const danger = paletteFrom("#dc2626", "danger", "Danger", "danger");
+  const system = withLegacyErrorBorder({
+    ...blank,
+    foundations: {
+      ...blank.foundations,
+      colors: { palettes: [...blank.foundations.colors.palettes, danger] },
+    },
+  });
+  const mem = memoryStorage({ [DESIGN_SYSTEM_STORAGE_KEY]: envelopeWith([system]) });
+  const store = createDesignSystemsStore(() => mem);
+  assert.equal(
+    store.get(system.id)?.foundations.borders.tokens.find((token) => token.id === "border.error")?.color,
+    "danger.500",
+  );
 });
