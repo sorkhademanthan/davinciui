@@ -244,28 +244,18 @@ const premiumSections: NavSection[] = buildPremiumSections()
 const motionSection: NavSection = {
   title: "Motion",
   items: [
-    { title: "Overview", href: "/experience/motion" },
-    { title: "Hover Effects", href: "/experience/motion/hover" },
-    { title: "Cursor Effects", href: "/experience/motion/cursor" },
-    { title: "Magnetic Effects", href: "/experience/motion/magnetic" },
-    { title: "Text Animations", href: "/experience/motion/text" },
-    { title: "Micro Interactions", href: "/experience/motion/micro" },
+    { title: "Overview", href: "/experience/components?tab=Motion" },
   ],
 }
 
 const scrollSection: NavSection = {
   title: "Scroll",
   items: [
-    { title: "Overview", href: "/experience/scroll" },
+    { title: "Overview", href: "/experience/components?tab=Scroll" },
     { title: "CMS Scroll Gallery", href: "/experience/components/cms-scroll-gallery" },
     { title: "Scroll Sync Gallery", href: "/experience/components/scroll-sync-gallery" },
     { title: "Interactive Media Accordion", href: "/experience/components/interactive-media-accordion" },
     { title: "Scroll Animations", href: "/experience/scroll/animations" },
-    { title: "Scroll Reveals", href: "/experience/scroll/reveals" },
-    { title: "Parallax", href: "/experience/scroll/parallax" },
-    { title: "Horizontal Scroll", href: "/experience/scroll/horizontal" },
-    { title: "Sticky Experiences", href: "/experience/scroll/sticky" },
-    { title: "Scroll Transitions", href: "/experience/scroll/transitions" },
   ],
 }
 
@@ -273,12 +263,6 @@ const blocksSection: NavSection = {
   title: "Blocks",
   items: [
     { title: "Overview", href: "/experience/blocks" },
-    { title: "Hero", href: "/experience/blocks/hero" },
-    { title: "Features", href: "/experience/blocks/features" },
-    { title: "Pricing", href: "/experience/blocks/pricing" },
-    { title: "Testimonials", href: "/experience/blocks/testimonials" },
-    { title: "Navigation", href: "/experience/blocks/navigation" },
-    { title: "Footer", href: "/experience/blocks/footer" },
   ],
 }
 
@@ -286,8 +270,6 @@ const templatesSection: NavSection = {
   title: "Templates",
   items: [
     { title: "Overview", href: "/experience/templates" },
-    { title: "Landing", href: "/experience/templates/landing" },
-    { title: "Dashboard", href: "/experience/templates/dashboard" },
   ],
 }
 

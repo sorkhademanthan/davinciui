@@ -1,4 +1,9 @@
-import Link from "next/link"
-import { Breadcrumbs } from "@/components/breadcrumbs"
-export const metadata = { title: "motion — Experience" }
-export default function Page(){ return (<div className="w-full max-w-[840px] px-6 lg:px-8 py-6"><Breadcrumbs className="mb-4" /><h1 className="text-3xl font-semibold capitalize">motion</h1><p className="mt-2 text-sm text-muted-foreground">Experience motion — premium motion showcase.</p><Link href="/experience/components" className="mt-6 inline-flex text-sm rounded-full border px-3 py-1.5">Back to components</Link></div>) }
+import { redirect } from "next/navigation"
+
+export const metadata = { title: "Motion — DavinciUI" }
+
+// Motion content lives in the live gallery — the stub page redirects there
+// so no dead-end showcase route ever ships.
+export default function Page() {
+  redirect("/experience/components?tab=Motion")
+}
