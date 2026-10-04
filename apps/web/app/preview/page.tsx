@@ -1,7 +1,10 @@
-"use client"
+import { DavinciUILogomark } from "@/components/logos/davinciui-logomark"
 
-import React from "react"
-import { ComponentryLogomark } from "@/components/logos/componentry-logomark"
+// Internal preview splash — never indexed.
+export const metadata = {
+  title: "Preview — DavinciUI",
+  robots: { index: false, follow: false },
+}
 
 export default function PreviewPage() {
   return (
@@ -32,7 +35,7 @@ export default function PreviewPage() {
         <div className="flex flex-row items-center justify-center gap-10 md:gap-16">
           <div className="relative group">
             <div className="absolute inset-0 animate-pulse bg-indigo-500/20 blur-[60px] rounded-full duration-[3s]" />
-            <ComponentryLogomark className="relative h-32 w-32 md:h-48 md:w-48 text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.2)] transition-transform duration-700 hover:scale-105" />
+            <DavinciUILogomark className="relative h-32 w-32 md:h-48 md:w-48 text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.2)] transition-transform duration-700 hover:scale-105" />
           </div>
 
           <div className="flex flex-col items-center justify-center">

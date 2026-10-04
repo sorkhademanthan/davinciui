@@ -1,6 +1,12 @@
-"use client";
+import type { Metadata } from "next";
 
-import { ComponentryLogomark } from "@/components/logos/componentry-logomark";
+import { DavinciUILogomark } from "@/components/logos/davinciui-logomark";
+
+// Internal screenshot target for OG image generation — never indexed.
+export const metadata: Metadata = {
+  title: "OG Preview — DavinciUI",
+  robots: { index: false, follow: false },
+};
 
 export default function OpenGraphPreviewPage() {
   return (
@@ -11,7 +17,7 @@ export default function OpenGraphPreviewPage() {
 
         <div className="absolute left-[104px] top-[120px] flex items-center gap-4 text-[38px] font-semibold leading-none tracking-[-0.045em] text-white">
           <div className="flex size-[46px] items-center justify-center">
-            <ComponentryLogomark className="size-[46px] text-white drop-shadow-[0_18px_46px_rgba(255,255,255,0.2)]" />
+            <DavinciUILogomark className="size-[46px] text-white drop-shadow-[0_18px_46px_rgba(255,255,255,0.2)]" />
           </div>
           DavinciUI
         </div>
