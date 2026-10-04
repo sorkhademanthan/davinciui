@@ -4,7 +4,7 @@ import React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { SlidersHorizontal } from "lucide-react"
-import { ComponentryLogomark } from "@/components/logos/componentry-logomark"
+import { DavinciUILogomark } from "@/components/logos/davinciui-logomark"
 import { CommandMenu } from "@/components/command-menu"
 import { landingGutterClass } from "@/components/landing/landing-frame"
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -176,7 +176,7 @@ export function SiteHeader({ sidebarToggle, landingGutter }: SiteHeaderProps) {
                         href="/"
                         className="group inline-flex h-8 items-center gap-1.5 rounded-md px-1 transition-colors duration-200 hover:bg-muted/60 dark:hover:bg-muted/40"
                     >
-                        <ComponentryLogomark className="size-5 text-zinc-900 dark:text-white transition-opacity group-hover:opacity-80" />
+                        <DavinciUILogomark className="size-5 text-zinc-900 dark:text-white transition-opacity group-hover:opacity-80" />
                         <span className="text-[16px] font-bold font-display tracking-tight text-zinc-900 dark:text-white">DAVINCIUI</span>
                     </Link>
                     <nav className="hidden items-center gap-0.5 text-sm font-normal lg:flex">

@@ -55,7 +55,7 @@ export const metadata: Metadata = {
   keywords: [
     "DavinciUI",
     "DavinciUI",
-    "componentry.dev",
+    "davinciui.com",
     "UI component library",
     "React components",
     "React UI library",

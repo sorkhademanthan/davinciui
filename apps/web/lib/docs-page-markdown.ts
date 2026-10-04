@@ -79,7 +79,7 @@ export function buildDocsPageMarkdown(props: DocsPageMarkdownInput): string {
 
   lines.push("---")
   lines.push("")
-  lines.push(`_Component from [DavinciUI](https://componentry.dev/docs/components/${props.installPackageName})_`)
+  lines.push(`_Component from [DavinciUI](https://davinciui.com/docs/components/${props.installPackageName})_`)
 
   return lines.join("\n")
 }

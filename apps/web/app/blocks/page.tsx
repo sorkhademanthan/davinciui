@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { ArrowUpRight, LayoutTemplate } from "lucide-react";
+import { LayoutTemplate } from "lucide-react";
 
 export const dynamic = "force-static";
 
 export const metadata: Metadata = {
-  title: "DavinciUI Pro Blocks | DavinciUI",
+  title: "Blocks | DavinciUI",
   description:
-    "A new library of production-ready blocks is coming soon to DavinciUI Pro.",
+    "A focused library of polished, production-ready blocks is coming soon to DavinciUI.",
 };
 
 export default function BlocksPage() {
@@ -21,7 +21,7 @@ export default function BlocksPage() {
         <div className="max-w-[590px]">
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-black/10 bg-white px-3 py-1.5 text-xs font-medium text-zinc-600 shadow-sm dark:border-white/10 dark:bg-white/[0.05] dark:text-zinc-300 dark:shadow-none">
             <LayoutTemplate className="size-3.5 text-blue-600 dark:text-blue-400" aria-hidden="true" />
-            DavinciUI Pro
+            Coming soon
           </div>
 
           <h1 className="max-w-[11ch] text-balance text-[clamp(3.3rem,7vw,6.5rem)] font-semibold leading-[0.91] tracking-[-0.07em]">
@@ -29,21 +29,8 @@ export default function BlocksPage() {
           </h1>
 
           <p className="mt-7 max-w-[540px] text-pretty text-base leading-7 text-zinc-600 dark:text-zinc-400 sm:text-lg sm:leading-8">
-            A focused library of polished, production-ready blocks is coming soon to DavinciUI Pro.
+            A focused library of polished, production-ready blocks is coming soon to DavinciUI.
           </p>
-
-          <a
-            href="https://pro.componentry.dev"
-            target="_blank"
-            rel="noreferrer"
-            className="group mt-8 inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-zinc-950 px-5 text-sm font-semibold text-white transition-[background-color,transform] duration-200 hover:-translate-y-0.5 hover:bg-zinc-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 motion-reduce:transform-none dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200 dark:focus-visible:ring-offset-[#080808]"
-          >
-            Visit DavinciUI Pro
-            <ArrowUpRight
-              aria-hidden="true"
-              className="size-4 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 motion-reduce:transform-none"
-            />
-          </a>
         </div>
 
         <div className="relative mx-auto w-full max-w-[620px] lg:mr-0" aria-hidden="true">

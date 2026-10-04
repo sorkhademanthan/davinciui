@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { ArrowUpRight, ArrowUp } from "lucide-react"
 import { LandingContent, landingGutterClass } from "@/components/landing/landing-frame"
-import { ComponentryLogomark } from "@/components/logos/componentry-logomark"
+import { DavinciUILogomark } from "@/components/logos/davinciui-logomark"
 
 const footerGroups = [
   {
@@ -45,7 +45,7 @@ export function Footer() {
           <div className="grid gap-12 py-14 sm:py-16 lg:grid-cols-12 lg:gap-10 lg:py-20">
             <div className="lg:col-span-5">
               <Link href="/" className="group inline-flex items-center gap-3 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6366f1]">
-                <ComponentryLogomark className="size-8 transition-transform duration-300 group-hover:rotate-[-8deg]" />
+                <DavinciUILogomark className="size-8 transition-transform duration-300 group-hover:rotate-[-8deg]" />
                 <span className="text-lg font-semibold tracking-[-0.055em]">DavinciUI</span>
               </Link>
               <p className="mt-5 max-w-[21rem] text-sm leading-6 text-zinc-600 dark:text-zinc-400">

@@ -50,7 +50,7 @@ export default function McpDocsPage() {
   const registryConfig = JSON.stringify(
     {
       registries: {
-        [registryNamespace]: "https://componentry.fun/r/{name}.json",
+        [registryNamespace]: "https://davinciui.com/r/{name}.json",
       },
     },
     null,

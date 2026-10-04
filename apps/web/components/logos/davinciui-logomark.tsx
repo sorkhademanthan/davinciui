@@ -1,6 +1,6 @@
 import type React from "react"
 
-export function ComponentryLogomark({ className, ...props }: React.SVGProps<SVGSVGElement>): React.JSX.Element {
+export function DavinciUILogomark({ className, ...props }: React.SVGProps<SVGSVGElement>): React.JSX.Element {
     return (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="380 350 500 520" fill="currentColor" className={className} {...props}>
             <g>
