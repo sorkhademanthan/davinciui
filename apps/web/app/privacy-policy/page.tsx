@@ -11,13 +11,13 @@ export default function PrivacyPolicyPage() {
       
       <main className="flex-grow w-full max-w-3xl mx-auto px-6 py-32 md:py-40">
         <h1 className="text-3xl md:text-5xl font-semibold tracking-tight mb-4">Privacy Policy</h1>
-        <p className="text-zinc-500 dark:text-zinc-400 mb-12">Last updated: June 20, 2026</p>
+        <p className="text-zinc-500 dark:text-zinc-400 mb-12">Last updated: October 4, 2026</p>
 
         <div className="space-y-8 text-zinc-700 dark:text-zinc-300 leading-relaxed">
           <section>
             <h2 className="text-xl font-medium text-zinc-900 dark:text-zinc-100 mb-4">1. Introduction</h2>
             <p>
-              Welcome to DavinciUI. We respect your privacy and are committed to protecting it. This Privacy Policy explains how we collect, use, and safeguard your information when you visit our website (componentry.com).
+              Welcome to DavinciUI. We respect your privacy and are committed to protecting it. This Privacy Policy explains how we collect, use, and safeguard your information when you visit our website (davinciui.com).
             </p>
           </section>
 
@@ -26,7 +26,10 @@ export default function PrivacyPolicyPage() {
             <p className="mb-4">We only collect information that is necessary to provide and improve our services:</p>
             <ul className="list-disc pl-6 space-y-2">
               <li>
-                <strong>Usage Data:</strong> We may use privacy-friendly analytics tools (like Vercel Analytics) to collect anonymized data about how you interact with our website, such as pages visited, time spent, and referring sites.
+                <strong>Usage Data:</strong> We use PostHog, a privacy-focused product analytics tool, to understand how visitors interact with our website — such as pages visited and feature usage. This data is aggregated and never sold.
+              </li>
+              <li>
+                <strong>Locally Stored Data:</strong> Features like the design-system builder and theme preferences are stored in your browser&apos;s local storage on your own device. This data never leaves your browser unless you explicitly export or share it.
               </li>
               <li>
                 <strong>Communication Data:</strong> If you contact us directly via email or social media, we will receive your contact information and the contents of your message.
@@ -47,14 +50,14 @@ export default function PrivacyPolicyPage() {
           <section>
             <h2 className="text-xl font-medium text-zinc-900 dark:text-zinc-100 mb-4">4. Third-Party Services</h2>
             <p>
-              We may use third-party services for hosting, analytics, and infrastructure. These services may collect information sent by your browser as part of a web page request, such as cookies or your IP address. This data is subject to the privacy policies of those respective third parties.
+              We use a small number of third-party services for hosting, infrastructure, and product analytics (including PostHog). These services may collect information sent by your browser as part of a web page request, such as cookies or your IP address. This data is subject to the privacy policies of those respective third parties.
             </p>
           </section>
 
           <section>
             <h2 className="text-xl font-medium text-zinc-900 dark:text-zinc-100 mb-4">5. Cookies</h2>
             <p>
-              DavinciUI uses minimal cookies essential for the functionality of the site (such as saving your theme preferences). We do not use tracking cookies for advertising purposes.
+              DavinciUI uses a minimal set of cookies: essential ones for site functionality (such as saving your theme preference) and analytics cookies from PostHog that help us understand aggregate usage. We do not use tracking cookies for advertising purposes.
             </p>
           </section>
 
@@ -75,7 +78,7 @@ export default function PrivacyPolicyPage() {
           <section>
             <h2 className="text-xl font-medium text-zinc-900 dark:text-zinc-100 mb-4">8. Contact Us</h2>
             <p>
-              If you have any questions or suggestions about our Privacy Policy, do not hesitate to contact us at hello@componentry.fun or via Twitter/X at @harshjdhv.
+              If you have any questions or suggestions about our Privacy Policy, do not hesitate to contact us at sorkhademanthan@gmail.com or via Twitter/X at @ManthanSorkhade.
             </p>
           </section>
         </div>
