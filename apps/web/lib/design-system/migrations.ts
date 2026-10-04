@@ -20,6 +20,7 @@ import {
   defaultTypography,
   isHexColor,
   paletteFrom,
+  resolveToken,
   type ComponentTokens,
   type Density,
   type DesignSystemConfig,
@@ -157,12 +158,77 @@ export type NormalizedRecord =
  * record has no usable timestamps, keeping this function pure.
  */
 export function normalizeRecord(value: unknown, fallbackTimestamp: string): NormalizedRecord {
-  if (isV2SystemShape(value)) return { kind: "v2", system: value };
+  if (isV2SystemShape(value)) {
+    // One-time self-heal for systems saved while border recipes still
+    // pointed at the legacy error-border default. Healed records persist on
+    // the next repository read, exactly like a migration.
+    const healed = repairLegacyBorderErrorColor(value);
+    if (healed.repaired) return { kind: "migrated", system: healed.system };
+    return { kind: "v2", system: value };
+  }
   if (isV1System(value)) return { kind: "migrated", system: migrateV1ToV2(value, fallbackTimestamp) };
   if (isRecord(value) && typeof value["schemaVersion"] === "number") {
     return { kind: "future", schemaVersion: value["schemaVersion"] };
   }
   return { kind: "invalid", reason: describeShapeProblem(value) };
+}
+
+// ---------------------------------------------------------------------------
+// Legacy default repair (border.error -> danger.500)
+// ---------------------------------------------------------------------------
+
+/**
+ * Palette reference shipped as the border.error default before it was
+ * repointed at the always-resolvable status.danger.foreground semantic token.
+ * It only resolves when a danger palette ships, so neutral-only systems
+ * (Blank, Minimal) created earlier carry a permanent export blocker.
+ */
+const LEGACY_ERROR_BORDER_COLOR = "danger.500";
+
+/** Replacement that resolves in every starter via the semantic layer. */
+const REPAIRED_ERROR_BORDER_COLOR = "status.danger.foreground";
+
+/** Raw fallback when even the semantic replacement is missing from the system. Always resolves. */
+const REPAIRED_ERROR_BORDER_FALLBACK = "#dc2626";
+
+/**
+ * One-time self-heal for the legacy error-border default. Scoped to that
+ * exact legacy value: systems whose danger palette resolves it are left
+ * byte-identical, and genuine user typos are left for Validate to flag.
+ */
+export function repairLegacyBorderErrorColor(system: DesignSystemConfig): {
+  system: DesignSystemConfig;
+  repaired: boolean;
+} {
+  const tokens = system.foundations?.borders?.tokens;
+  if (!Array.isArray(tokens)) return { system, repaired: false };
+  if (resolveToken(system, LEGACY_ERROR_BORDER_COLOR).status === "resolved") {
+    return { system, repaired: false };
+  }
+  if (!tokens.some((token) => (token as { color?: unknown } | null)?.color === LEGACY_ERROR_BORDER_COLOR)) {
+    return { system, repaired: false };
+  }
+  const replacement =
+    resolveToken(system, REPAIRED_ERROR_BORDER_COLOR).status === "resolved"
+      ? REPAIRED_ERROR_BORDER_COLOR
+      : REPAIRED_ERROR_BORDER_FALLBACK;
+  return {
+    system: {
+      ...system,
+      foundations: {
+        ...system.foundations,
+        borders: {
+          ...system.foundations.borders,
+          tokens: tokens.map((token) =>
+            (token as { color?: unknown } | null)?.color === LEGACY_ERROR_BORDER_COLOR
+              ? { ...token, color: replacement }
+              : token,
+          ),
+        },
+      },
+    },
+    repaired: true,
+  };
 }
 
 // ---------------------------------------------------------------------------
