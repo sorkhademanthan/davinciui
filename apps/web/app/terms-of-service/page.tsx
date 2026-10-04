@@ -11,7 +11,7 @@ export default function TermsOfServicePage() {
       
       <main className="flex-grow w-full max-w-3xl mx-auto px-6 py-32 md:py-40">
         <h1 className="text-3xl md:text-5xl font-semibold tracking-tight mb-4">Terms of Service</h1>
-        <p className="text-zinc-500 dark:text-zinc-400 mb-12">Last updated: June 20, 2026</p>
+        <p className="text-zinc-500 dark:text-zinc-400 mb-12">Last updated: October 4, 2026</p>
 
         <div className="space-y-8 text-zinc-700 dark:text-zinc-300 leading-relaxed">
           <section>
@@ -72,7 +72,7 @@ export default function TermsOfServicePage() {
           <section>
             <h2 className="text-xl font-medium text-zinc-900 dark:text-zinc-100 mb-4">8. Contact Information</h2>
             <p>
-              If you have any questions about these Terms of Service, please contact us at hello@componentry.fun or via Twitter/X at @harshjdhv.
+              If you have any questions about these Terms of Service, please contact us at sorkhademanthan@gmail.com or via Twitter/X at @ManthanSorkhade.
             </p>
           </section>
         </div>
