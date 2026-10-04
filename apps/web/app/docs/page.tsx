@@ -5,22 +5,22 @@ import { components } from "@/registry";
 const CATEGORIES = [
   {
     title: "Text Animations",
-    href: "/docs/premium/text-animations",
+    href: "/experience/components?tab=Text%20Animations",
     desc: "Kinetic reveals, morph and scramble.",
   },
   {
     title: "Premium Components",
-    href: "/experience/components",
+    href: "/experience/components?tab=Premium%20Components",
     desc: "Polished, interactive React components.",
   },
   {
     title: "Hero Backgrounds",
-    href: "/docs/premium/hero-backgrounds",
+    href: "/experience/components?tab=Hero%20Backgrounds",
     desc: "WebGL gradients, aurora and plasma.",
   },
   {
     title: "Visual Effects",
-    href: "/docs/premium/visual-effects",
+    href: "/experience/components?tab=Visual%20Effects",
     desc: "Ripple, trail and magnetic effects.",
   },
 ] as const;
