@@ -36,7 +36,7 @@ export function Builder({ id, section = "colors" }: { id: string; section?: stri
     setSystem(result.ok ? result.system : next)
   }
 
-  return <main className="min-h-[calc(100svh-3.5rem)] min-w-0 p-5 sm:p-8"><div className="mx-auto max-w-6xl">{section === "colors" ? <ColorsEditor system={system} save={save} /> : <SectionEditor system={system} section={section} save={save} />}</div></main>
+  return <main className="min-h-[calc(100svh-3.5rem)] min-w-0 px-[15px] py-[29px] sm:px-[27px] sm:py-[37px] lg:px-[35px]"><div className="mx-auto w-full max-w-6xl">{section === "colors" ? <ColorsEditor system={system} save={save} /> : <SectionEditor system={system} section={section} save={save} />}</div></main>
 }
 
 function NotFound() {

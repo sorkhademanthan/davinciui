@@ -67,7 +67,7 @@ export function DesignSystemLanding() {
   };
 
   return (
-    <main className="min-h-[calc(100svh-3.5rem)] min-w-0 px-5 py-6 sm:px-8 sm:py-8 lg:px-10">
+    <main className="min-h-[calc(100svh-3.5rem)] min-w-0 px-[15px] py-[29px] sm:px-[27px] sm:py-[37px] lg:px-[35px]">
       <div className="w-full">
         <header>
           <nav
