@@ -30,8 +30,6 @@ const SOFT = "#f4f4f5"
 const PAPER = "#ffffff"
 const SUCCESS = "#047857"
 const SUCCESS_SOFT = "#ecfdf5"
-const WARNING = "#a16207"
-const WARNING_SOFT = "#fffbeb"
 const DANGER = "#b91c1c"
 
 const styles = StyleSheet.create({
@@ -45,15 +43,20 @@ const styles = StyleSheet.create({
     paddingBottom: 50,
     paddingHorizontal: 46,
   },
-  cover: { backgroundColor: INK, color: PAPER, padding: 48 },
+  cover: { backgroundColor: INK, color: PAPER, paddingTop: 44, paddingBottom: 42, paddingHorizontal: 48 },
+  coverRail: { position: "absolute", left: 0, top: 0, bottom: 0, width: 7 },
   coverTop: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
-  coverMark: { fontSize: 8, fontFamily: "Helvetica-Bold", letterSpacing: 1.6 },
-  coverEdition: { color: "#a1a1aa", fontSize: 7 },
-  coverBody: { flexGrow: 1, flexDirection: "row", alignItems: "center" },
-  coverCopy: { width: "55%", paddingRight: 24 },
-  coverKicker: { color: "#a1a1aa", fontSize: 8, marginBottom: 12 },
-  coverTitle: { fontSize: 38, lineHeight: 0.98, fontFamily: "Helvetica-Bold", letterSpacing: -1.6 },
-  coverDescription: { marginTop: 18, color: "#d4d4d8", fontSize: 10.5, lineHeight: 1.55, maxWidth: 275 },
+  coverMark: { fontSize: 8, fontFamily: "Helvetica-Bold", letterSpacing: 1.8 },
+  coverEdition: { color: QUIET, fontSize: 7, letterSpacing: 0.65 },
+  coverBody: { flexGrow: 1 },
+  coverHero: { marginTop: 92, maxWidth: 455 },
+  coverKicker: { color: QUIET, fontSize: 7.5, letterSpacing: 0.75, marginBottom: 15 },
+  coverTitle: { fontSize: 46, lineHeight: 0.94, fontFamily: "Helvetica-Bold", letterSpacing: -2.1 },
+  coverTitleRule: { width: 72, height: 4, marginTop: 21, marginBottom: 18 },
+  coverDescription: { color: "#d4d4d8", fontSize: 11, lineHeight: 1.55, maxWidth: 360 },
+  coverProfile: { marginTop: 68, minHeight: 168, borderTopWidth: 1, borderBottomWidth: 1, borderColor: "#3f3f46", paddingVertical: 20, flexDirection: "row" },
+  coverProfileColumn: { paddingHorizontal: 20, borderRightWidth: 1, borderRightColor: "#3f3f46" },
+  coverProfileLabel: { color: QUIET, fontSize: 6.5, letterSpacing: 0.7, marginBottom: 12 },
   coverMeta: { borderTopWidth: 1, borderTopColor: "#3f3f46", paddingTop: 15, flexDirection: "row", justifyContent: "space-between" },
   metaLabel: { color: QUIET, fontSize: 6.5, marginBottom: 3 },
   metaValue: { fontSize: 8.5, fontFamily: "Helvetica-Bold" },
@@ -117,10 +120,14 @@ const styles = StyleSheet.create({
   elevationCard: { position: "absolute", left: 8, right: 16, top: 8, height: 34, backgroundColor: PAPER, borderWidth: 1, borderColor: LINE_COLOR },
   durationTrack: { width: 270, height: 4, backgroundColor: LINE_COLOR, marginTop: 8 },
   durationFill: { height: 4 },
-  tokenCard: { borderTopWidth: 1, borderTopColor: INK, paddingTop: 8, marginBottom: 12 },
-  tokenValues: { flexDirection: "row", marginTop: 8 },
-  tokenTheme: { width: "50%", paddingRight: 8 },
-  colorSample: { height: 29, borderWidth: 1, borderColor: LINE_COLOR, marginBottom: 5 },
+  semanticGrid: { flexDirection: "row", flexWrap: "wrap", marginHorizontal: -4 },
+  semanticCard: { width: "50%", padding: 4 },
+  semanticCardInner: { minHeight: 64, borderWidth: 1, borderColor: LINE_COLOR, borderRadius: 4, padding: 9 },
+  semanticSwatch: { width: 18, height: 18, borderRadius: 9, borderWidth: 1, borderColor: LINE_COLOR },
+  semanticTableHead: { flexDirection: "row", minHeight: 22, alignItems: "center", backgroundColor: SOFT, borderTopWidth: 1, borderBottomWidth: 1, borderColor: LINE_COLOR },
+  semanticTableRow: { flexDirection: "row", minHeight: 18, alignItems: "center", borderBottomWidth: 1, borderBottomColor: LINE_COLOR },
+  semanticCell: { paddingVertical: 4, paddingHorizontal: 5 },
+  semanticThemeCell: { flexDirection: "row", alignItems: "center" },
   pill: { borderRadius: 9, backgroundColor: SOFT, color: MUTED, fontSize: 6.5, paddingVertical: 3, paddingHorizontal: 7 },
   callout: { borderLeftWidth: 3, padding: 10, marginVertical: 10 },
   themeCanvas: { width: "49%", minHeight: 180, borderRadius: 5, borderWidth: 1, padding: 12 },
@@ -131,7 +138,6 @@ const styles = StyleSheet.create({
   coverageLabel: { width: 105, fontSize: 7.5 },
   coverageTrack: { flexGrow: 1, height: 7, backgroundColor: SOFT },
   coverageValue: { width: 62, textAlign: "right", fontSize: 7, color: MUTED },
-  warningBox: { borderTopWidth: 1, borderTopColor: LINE_COLOR, paddingTop: 8, marginBottom: 10 },
 })
 
 function text(value: unknown): string {
@@ -170,6 +176,15 @@ const COMPONENT_FAMILY_ORDER: readonly ComponentFamily[] = [
   "data-display",
   "layout",
 ]
+
+const ESSENTIAL_SEMANTIC_TOKEN_IDS = [
+  "background.canvas",
+  "surface.default",
+  "text.primary",
+  "border.default",
+  "action.primary.background",
+  "focus.ring",
+] as const
 
 function componentFamilyLabel(family: string): string {
   const labels: Record<string, string> = {
@@ -258,22 +273,29 @@ function SystemFingerprint({ system, accent }: { system: DesignSystemConfig; acc
   const palettes = system.foundations.colors.palettes.filter((item) => item.enabled).slice(0, 5)
   const radii = system.foundations.radius.scale.slice(0, 4)
   return (
-    <View style={{ width: "45%", height: 300, borderWidth: 1, borderColor: "#3f3f46", padding: 18, justifyContent: "space-between" }}>
-      <View>
-        <Text style={{ color: QUIET, fontSize: 7 }}>SYSTEM FINGERPRINT</Text>
-        <Text style={{ fontSize: 42, fontFamily: "Helvetica-Bold", marginTop: 14 }}>Aa</Text>
-        <Text style={{ color: QUIET, fontSize: 7, marginTop: 4 }}>{text(system.foundations.typography.primary)}</Text>
+    <View style={styles.coverProfile}>
+      <View style={[styles.coverProfileColumn, { width: "27%", paddingLeft: 0 }]}>
+        <Text style={styles.coverProfileLabel}>TYPE</Text>
+        <Text style={{ fontSize: 39, lineHeight: 0.9, fontFamily: "Helvetica-Bold" }}>Aa</Text>
+        <Text style={{ color: "#d4d4d8", fontSize: 8, marginTop: 10 }}>{text(system.foundations.typography.primary)}</Text>
+        <Text style={{ color: QUIET, fontSize: 6.5, marginTop: 4 }}>{system.foundations.typography.styles.length} text styles</Text>
       </View>
-      <View>
-        <View style={{ flexDirection: "row", marginBottom: 15 }}>
-          {palettes.map((palette) => <View key={palette.id} style={{ width: 28, height: 28, marginRight: 6, borderRadius: 14, backgroundColor: safeHex(palette.base, accent) }} />)}
+      <View style={[styles.coverProfileColumn, { width: "46%" }]}>
+        <Text style={styles.coverProfileLabel}>COLOUR AND SHAPE</Text>
+        <View style={{ flexDirection: "row", marginBottom: 22 }}>
+          {palettes.map((palette) => <View key={palette.id} style={{ width: 27, height: 27, marginRight: 7, borderRadius: 14, backgroundColor: safeHex(palette.base, accent) }} />)}
         </View>
-        <View style={{ flexDirection: "row", alignItems: "flex-end", height: 55 }}>
-          {[4, 8, 12, 16, 24, 32].map((value) => <View key={value} style={{ width: 10, height: value, backgroundColor: value === 24 ? accent : "#52525b", marginRight: 6 }} />)}
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          {radii.map((radius) => <View key={radius.id} style={{ width: 31, height: 31, marginRight: 8, borderWidth: 1, borderColor: "#71717a", borderRadius: Math.min(numberFrom(radius.value), 15) }} />)}
         </View>
       </View>
-      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-        {radii.map((radius) => <View key={radius.id} style={{ width: 35, height: 35, borderWidth: 1, borderColor: "#71717a", borderRadius: Math.min(numberFrom(radius.value), 16) }} />)}
+      <View style={{ width: "27%", paddingLeft: 20 }}>
+        <Text style={styles.coverProfileLabel}>SYSTEM</Text>
+        {[
+          [String(system.semanticTokens.length), "semantic roles"],
+          [String(system.themes.length), "themes"],
+          [String(system.foundations.breakpoints.scale.length), "breakpoints"],
+        ].map(([value, label]) => <View key={label} style={{ flexDirection: "row", alignItems: "baseline", marginBottom: 12 }}><Text style={{ width: 30, color: accent, fontSize: 15, fontFamily: "Helvetica-Bold" }}>{value}</Text><Text style={{ color: "#d4d4d8", fontSize: 7 }}>{label}</Text></View>)}
       </View>
     </View>
   )
@@ -375,22 +397,60 @@ function GridDiagram({ columns, label, width, accent }: { columns: number; label
   )
 }
 
-function TokenCard({ model, token }: { model: DesignSystemExportModel; token: SemanticToken }) {
-  const light = resolveToken(model.system, token.id, "light")
-  const dark = resolveToken(model.system, token.id, "dark")
-  const lightValue = light.status === "resolved" ? light.value : "Unresolved"
-  const darkValue = dark.status === "resolved" ? dark.value : "Unresolved"
+function resolvedSemanticValue(model: DesignSystemExportModel, token: SemanticToken, themeId: string): string {
+  const result = resolveToken(model.system, token.id, themeId)
+  return result.status === "resolved" ? result.value : "Unresolved"
+}
+
+function semanticCategoryLabel(category: string): string {
+  return category
+    .split(/[.-]/)
+    .filter(Boolean)
+    .map((part) => part[0]?.toUpperCase() + part.slice(1))
+    .join(" ")
+}
+
+function SemanticRoleCard({ model, token }: { model: DesignSystemExportModel; token: SemanticToken }) {
+  const lightValue = resolvedSemanticValue(model, token, "light")
+  const darkValue = resolvedSemanticValue(model, token, "dark")
   return (
-    <View style={styles.tokenCard} wrap={false}>
-      <View style={styles.rowBetween}>
-        <View><Text style={styles.codeStrong}>{text(token.id)}</Text><Text style={[styles.paragraph, { marginTop: 3 }]}>{text(token.label)}</Text></View>
-        <Text style={styles.pill}>{text(token.category)}</Text>
+    <View style={styles.semanticCard} wrap={false}>
+      <View style={styles.semanticCardInner}>
+        <View style={styles.rowBetween}>
+          <View style={{ width: "68%" }}><Text style={styles.h3}>{text(token.label)}</Text><Text style={styles.code}>{text(token.id)}</Text></View>
+          <Text style={styles.pill}>{text(semanticCategoryLabel(token.category))}</Text>
+        </View>
+        <View style={[styles.row, { marginTop: 10 }]}>
+          <View style={[styles.semanticThemeCell, { width: "50%" }]}><View style={[styles.semanticSwatch, { backgroundColor: safeHex(lightValue) }]} /><View style={{ marginLeft: 6 }}><Text style={styles.label}>LIGHT</Text><Text style={styles.code}>{text(lightValue)}</Text></View></View>
+          <View style={[styles.semanticThemeCell, { width: "50%" }]}><View style={[styles.semanticSwatch, { backgroundColor: safeHex(darkValue, INK) }]} /><View style={{ marginLeft: 6 }}><Text style={styles.label}>DARK</Text><Text style={styles.code}>{text(darkValue)}</Text></View></View>
+        </View>
       </View>
-      <View style={styles.tokenValues}>
-        <View style={styles.tokenTheme}><View style={[styles.colorSample, { backgroundColor: safeHex(lightValue) }]} /><Text style={styles.code}>LIGHT / {text(lightValue)}</Text></View>
-        <View style={styles.tokenTheme}><View style={[styles.colorSample, { backgroundColor: safeHex(darkValue, INK) }]} /><Text style={styles.code}>DARK / {text(darkValue)}</Text></View>
+    </View>
+  )
+}
+
+function SemanticReferenceTable({ model, tokens }: { model: DesignSystemExportModel; tokens: SemanticToken[] }) {
+  return (
+    <View style={[styles.table, { marginTop: 16 }]}>
+      <View style={styles.semanticTableHead} fixed>
+        <Text style={[styles.cell, styles.cellStrong, { width: "14%" }]}>Category</Text>
+        <Text style={[styles.cell, styles.cellStrong, { width: "31%" }]}>Role</Text>
+        <Text style={[styles.cell, styles.cellStrong, { width: "15%" }]}>Light</Text>
+        <Text style={[styles.cell, styles.cellStrong, { width: "15%" }]}>Dark</Text>
+        <Text style={[styles.cell, styles.cellStrong, { width: "25%" }]}>Source</Text>
       </View>
-      <Text style={[styles.code, { marginTop: 6 }]}>Source: {text(token.value)}</Text>
+      {tokens.map((token, index) => {
+        const lightValue = resolvedSemanticValue(model, token, "light")
+        const darkValue = resolvedSemanticValue(model, token, "dark")
+        const startsCategory = index === 0 || tokens[index - 1]?.category !== token.category
+        return <View key={token.id} style={[styles.semanticTableRow, startsCategory ? { borderTopWidth: 1, borderTopColor: INK } : {}]} wrap={false}>
+          <Text style={[styles.cell, styles.semanticCell, startsCategory ? styles.cellStrong : styles.cellMuted, { width: "14%", fontSize: 5.8 }]}>{startsCategory ? text(semanticCategoryLabel(token.category)) : ""}</Text>
+          <Text style={[styles.cell, styles.semanticCell, styles.codeStrong, { width: "31%", fontSize: 6.1 }]}>{text(token.id)}</Text>
+          <View style={[styles.cell, styles.semanticCell, styles.semanticThemeCell, { width: "15%" }]}><View style={[styles.semanticSwatch, { width: 9, height: 9, borderRadius: 5, backgroundColor: safeHex(lightValue) }]} /><Text style={[styles.code, { fontSize: 5.4, marginLeft: 3 }]}>{text(lightValue)}</Text></View>
+          <View style={[styles.cell, styles.semanticCell, styles.semanticThemeCell, { width: "15%" }]}><View style={[styles.semanticSwatch, { width: 9, height: 9, borderRadius: 5, backgroundColor: safeHex(darkValue, INK) }]} /><Text style={[styles.code, { fontSize: 5.4, marginLeft: 3 }]}>{text(darkValue)}</Text></View>
+          <Text style={[styles.cell, styles.semanticCell, styles.code, { width: "25%", fontSize: 5.4 }]}>{text(token.value)}</Text>
+        </View>
+      })}
     </View>
   )
 }
@@ -445,25 +505,20 @@ function ThemeCanvas({ model, themeId, label }: { model: DesignSystemExportModel
 }
 
 function HealthSummary({ model }: { model: DesignSystemExportModel }) {
-  const total = model.report.summary.passed + model.report.summary.warnings + model.report.summary.errors
-  const groupRows = model.report.groups.map((group) => {
-    const warnings = group.findings.filter((finding) => finding.severity === "warning").length
-    return { label: group.title, warnings, passed: Math.max(0, total ? Math.round(model.report.summary.passed / model.report.groups.length) : 0) }
-  })
-  const maxWarnings = Math.max(...groupRows.map((row) => row.warnings), 1)
+  const groupRows = model.report.groups.map((group) => ({ label: group.title }))
   return (
     <>
       <View style={[styles.rowBetween, { marginBottom: 22 }]}>
         <View style={[styles.healthMetric, { borderTopColor: SUCCESS }]}><Text style={[styles.healthValue, { color: SUCCESS }]}>{model.report.summary.passed}</Text><Text style={styles.healthLabel}>Checks passed</Text></View>
-        <View style={[styles.healthMetric, { borderTopColor: WARNING }]}><Text style={[styles.healthValue, { color: WARNING }]}>{model.report.summary.warnings}</Text><Text style={styles.healthLabel}>Review notes</Text></View>
+        <View style={[styles.healthMetric, { borderTopColor: INK }]}><Text style={styles.healthValue}>{model.report.groups.length}</Text><Text style={styles.healthLabel}>Areas reviewed</Text></View>
         <View style={[styles.healthMetric, { borderTopColor: DANGER }]}><Text style={[styles.healthValue, { color: DANGER }]}>0</Text><Text style={styles.healthLabel}>Blocking errors</Text></View>
       </View>
-      <Text style={styles.h2}>Review concentration</Text>
+      <Text style={styles.h2}>Coverage included</Text>
       {groupRows.map((row) => (
         <View key={row.label} style={styles.coverageRow}>
           <Text style={styles.coverageLabel}>{text(row.label)}</Text>
-          <View style={styles.coverageTrack}><View style={{ width: `${Math.max(2, (row.warnings / maxWarnings) * 100)}%`, height: 7, backgroundColor: row.warnings ? WARNING : SUCCESS }} /></View>
-          <Text style={styles.coverageValue}>{row.warnings ? `${row.warnings} review` : "Clear"}</Text>
+          <View style={styles.coverageTrack}><View style={{ width: "100%", height: 7, backgroundColor: SUCCESS }} /></View>
+          <Text style={styles.coverageValue}>Checked</Text>
         </View>
       ))}
     </>
@@ -476,40 +531,39 @@ export function DesignSystemExportDocument({ model }: { model: DesignSystemExpor
   const icons = iconExportSummary(system)
   const grid = gridExportSummary(system)
   const semanticGroups = [...new Set(system.semanticTokens.map((token) => token.category))]
+  const semanticTokensForReference = semanticGroups.flatMap((category) =>
+    system.semanticTokens.filter((token) => token.category === category),
+  )
+  const semanticReferencePageCount = Math.ceil(semanticTokensForReference.length / 18)
+  const semanticReferencePageSize = Math.ceil(semanticTokensForReference.length / Math.max(semanticReferencePageCount, 1))
+  const semanticReferencePages = Array.from(
+    { length: semanticReferencePageCount },
+    (_, index) => semanticTokensForReference.slice(index * semanticReferencePageSize, index * semanticReferencePageSize + semanticReferencePageSize),
+  )
+  const essentialSemanticTokens = ESSENTIAL_SEMANTIC_TOKEN_IDS
+    .map((id) => system.semanticTokens.find((token) => token.id === id))
+    .filter((token): token is SemanticToken => Boolean(token))
   const enabledPalettes = system.foundations.colors.palettes.filter((palette) => palette.enabled)
   const durations = system.foundations.motion.durations.filter((item) => item.enabled !== false)
   const easings = system.foundations.motion.easings.filter((item) => item.enabled !== false)
+  const coverTitleSize = system.meta.name.length > 26 ? 34 : system.meta.name.length > 18 ? 39 : 46
   const coreComponents = includedEntries(system, "core")
   const componentGroups = COMPONENT_FAMILY_ORDER.map((family) => ({
     family,
     entries: coreComponents.filter((entry) => entry.family === family),
   })).filter((group) => group.entries.length > 0)
-  const accessibilityWarnings = model.warnings.filter((warning) => warning.group === "accessibility")
-  // Appendix hygiene: the export-readiness "N warnings will be listed" note is
-  // meta-commentary about the report itself — never list it inside the report.
-  // Premium "needs-review" findings share one identical pattern, so group them
-  // into a single compact table instead of one box per component.
-  const appendixWarnings = model.warnings.filter(
-    (warning) => warning.group !== "accessibility" && warning.group !== "export-readiness",
-  )
-  const componentReviewWarnings = appendixWarnings.filter((warning) => warning.id.includes("premium-needs-review"))
-  const individualWarnings = appendixWarnings.filter((warning) => !warning.id.includes("premium-needs-review"))
-
-  function reviewGaps(explanation: string): string {
-    const match = explanation.match(/Open gaps:\s*(.+?)\.\s*Review/i)
-    if (match?.[1]) return match[1].trim()
-    return explanation.replace(/^This premium experience ships as needs-review in the catalog\.\s*/i, "").replace(/\s*Review it before relying on it in production\.\s*/i, "").trim() || "Needs review"
-  }
-
   return (
     <Document title={`${text(system.meta.name)} design system`} author={text(system.meta.team || system.meta.brand || "DavinciUI")} subject="Design-system handbook and technical reference" creator="DavinciUI Design System Builder">
       <Page size="A4" style={styles.cover} bookmark="Cover">
-        <View style={styles.coverTop}><Text style={styles.coverMark}>DAVINCIUI</Text><Text style={styles.coverEdition}>DESIGN SYSTEM / {text(system.meta.version)}</Text></View>
+        <View style={[styles.coverRail, { backgroundColor: accent }]} fixed />
+        <View style={styles.coverTop}><Text style={styles.coverMark}>DAVINCIUI</Text><Text style={styles.coverEdition}>DESIGN SYSTEM HANDBOOK / {text(system.meta.version)}</Text></View>
         <View style={styles.coverBody}>
-          <View style={styles.coverCopy}>
-            <Text style={styles.coverKicker}>SPECIFICATION / {displayDate(model.generatedAt).toUpperCase()}</Text>
-            <Text style={styles.coverTitle}>{text(system.meta.name)}{`\n`}Design system</Text>
-            <Text style={styles.coverDescription}>{text(system.meta.description || "A practical system for building consistent, accessible digital experiences.")}</Text>
+          <View style={styles.coverHero}>
+            <Text style={styles.coverKicker}>PRODUCT FOUNDATION / {displayDate(model.generatedAt).toUpperCase()}</Text>
+            <Text style={[styles.coverTitle, { fontSize: coverTitleSize }]}>{text(system.meta.name)}</Text>
+            <Text style={[styles.coverTitle, { fontSize: coverTitleSize }]}>Design system</Text>
+            <View style={[styles.coverTitleRule, { backgroundColor: accent }]} />
+            <Text style={styles.coverDescription}>{text(system.meta.description || "A practical foundation for building consistent, accessible, and recognizable digital experiences.")}</Text>
           </View>
           <SystemFingerprint system={system} accent={accent} />
         </View>
@@ -555,21 +609,6 @@ export function DesignSystemExportDocument({ model }: { model: DesignSystemExpor
             </Link>
           ))}
         </View>
-      </Page>
-
-      <Page size="A4" style={styles.page} wrap bookmark={`${chapter(model, "overview").number} System overview`}>
-        <PageChrome model={model} section="System overview" />
-        <ChapterHero entry={chapter(model, "overview")} accent={accent} />
-        <Metrics accent={accent} items={[["Starting point", system.starter.label], ["Density", system.foundations.density], ["Primary typeface", system.foundations.typography.primary], ["Schema", `v${system.schemaVersion}`]]} />
-        <Text style={styles.h2}>How to use this handbook</Text>
-        <View style={[styles.callout, { borderLeftColor: accent, backgroundColor: "#fafafa" }]}><Text>Start with the visual specimen to understand intent. Use the reference values beneath it for implementation. Check the theme and health chapters before introducing new raw values.</Text></View>
-        {(system.meta.team || system.meta.brand) && <ReferenceTable rows={([[
-          "Team", system.meta.team || "Not specified",
-        ], [
-          "Brand", system.meta.brand || "Not specified",
-        ], [
-          "Updated", displayDate(system.meta.updatedAt),
-        ]] as Array<[string, string]>)} columns={[{ key: "label", label: "Identity", width: "35%", value: (row) => row[0] }, { key: "value", label: "Saved value", width: "65%", value: (row) => row[1] }]} />}
       </Page>
 
       {enabledPalettes.length > 0 && <Page size="A4" style={styles.page} wrap bookmark={`${chapter(model, "colors").number} Colour foundations`}>
@@ -673,8 +712,18 @@ export function DesignSystemExportDocument({ model }: { model: DesignSystemExpor
         <PageChrome model={model} section="Semantic tokens" />
         <ChapterHero entry={chapter(model, "semantic-tokens")} accent={accent} />
         <TokenArchitecture model={model} accent={accent} />
-        {semanticGroups.map((category) => <View key={category}><Text style={styles.h2}>{text(category[0]?.toUpperCase() + category.slice(1))}</Text><View style={styles.specimenGrid}>{system.semanticTokens.filter((token) => token.category === category).map((token) => <View key={token.id} style={{ width: "50%", paddingHorizontal: 4 }}><TokenCard model={model} token={token} /></View>)}</View></View>)}
+        <View style={[styles.row, { marginTop: 8, marginBottom: 2 }]}><Text style={styles.pill}>{system.semanticTokens.length} roles</Text><Text style={[styles.pill, { marginLeft: 6 }]}>{semanticGroups.length} categories</Text><Text style={[styles.pill, { marginLeft: 6 }]}>{system.themes.length} themes</Text></View>
+        <Text style={styles.h2}>Essential interface roles</Text>
+        <Text style={styles.paragraph}>Start here. These shared roles establish the page, surface, text, border, primary action, and keyboard-focus language used throughout the product.</Text>
+        <View style={styles.semanticGrid}>{essentialSemanticTokens.map((token) => <SemanticRoleCard key={token.id} model={model} token={token} />)}</View>
       </Page>}
+
+      {semanticReferencePages.map((tokens, index) => <Page key={`semantic-reference-${index}`} size="A4" style={styles.page} wrap bookmark={index === 0 ? "Semantic token reference" : undefined}>
+        <PageChrome model={model} section="Semantic tokens / Reference" />
+        <Text style={styles.h1}>{index === 0 ? "Semantic token reference" : `Semantic token reference / ${index + 1}`}</Text>
+        <Text style={styles.intro}>{index === 0 ? "Roles are grouped by purpose. Use the stable role id in product code; Light and Dark show the final resolved colour, while Source identifies the stored foundation reference or alias." : "Continued reference values, kept in the same category-first order for fast implementation lookup."}</Text>
+        <SemanticReferenceTable model={model} tokens={tokens} />
+      </Page>)}
 
       {system.themes.length > 0 && <Page size="A4" style={styles.page} wrap bookmark={`${chapter(model, "themes").number} Themes`}>
         <PageChrome model={model} section="Themes" />
@@ -691,7 +740,7 @@ export function DesignSystemExportDocument({ model }: { model: DesignSystemExpor
       {coreComponents.length > 0 && model.chapters.some((entry) => entry.id === "components") && <Page size="A4" style={styles.page} wrap bookmark={`${chapter(model, "components").number} Components`}>
         <PageChrome model={model} section="Components" />
         <ChapterHero entry={chapter(model, "components")} accent={accent} />
-        <Metrics accent={accent} items={[["Basic components", String(coreComponents.length)], ["Families", String(componentGroups.length)], ["Maturity", "Production-ready"], ["Warnings", "None"]]} />
+        <Metrics accent={accent} items={[["Basic components", String(coreComponents.length)], ["Families", String(componentGroups.length)], ["Maturity", "Production-ready"], ["System link", "Token-driven"]]} />
         <Text style={styles.h2}>What is included</Text>
         <Text style={styles.paragraph}>Every component below follows shared semantic roles, so Light and Dark themes apply without rewriting component styles. Use the slots column when wiring product code to system tokens.</Text>
         {componentGroups.map((group) => (
@@ -713,33 +762,12 @@ export function DesignSystemExportDocument({ model }: { model: DesignSystemExpor
         <PageChrome model={model} section="System health" />
         <ChapterHero entry={chapter(model, "system-health")} accent={accent} />
         <HealthSummary model={model} />
-        <Text style={styles.h2}>Accessibility health</Text>
-        {accessibilityWarnings.length ? accessibilityWarnings.map((warning) => <View key={warning.id} style={[styles.callout, { borderLeftColor: WARNING, backgroundColor: WARNING_SOFT }]} wrap={false}><Text style={[styles.h3, { color: WARNING }]}>{text(warning.title)}</Text><Text style={styles.paragraph}>{text(warning.explanation)}</Text><Text style={styles.code}>Affected: {text(warning.affected)}</Text></View>) : <View style={[styles.callout, { borderLeftColor: SUCCESS, backgroundColor: SUCCESS_SOFT }]}><Text style={[styles.h3, { color: SUCCESS }]}>No automated contrast warnings</Text><Text style={styles.paragraph}>Manual assistive-technology, zoom, keyboard, and real-content testing is still required.</Text></View>}
+        <Text style={styles.h2}>Accessibility review</Text>
+        <View style={[styles.callout, { borderLeftColor: SUCCESS, backgroundColor: SUCCESS_SOFT }]}><Text style={[styles.h3, { color: SUCCESS }]}>Manual verification remains essential</Text><Text style={styles.paragraph}>Test the finished product with assistive technology, browser zoom, keyboard navigation, real content, and every supported theme.</Text></View>
         <Text style={styles.h2}>Manual quality checklist</Text>
         {["Keyboard navigation and visible focus", "Screen readers and browser zoom", "Contrast with real production content", "Reduced-motion behaviour", "Phone, tablet, laptop, and wide-screen layouts"].map((item) => <Text key={item} style={styles.paragraph}>• {item}</Text>)}
       </Page>
 
-      {appendixWarnings.length > 0 && <Page size="A4" style={styles.page} wrap bookmark="Appendix A / Validation report">
-        <PageChrome model={model} section="Appendix / Validation report" />
-        <Text style={styles.h1}>Appendix A{`\n`}Validation report</Text>
-        <Text style={styles.intro}>Complete non-blocking findings are kept here so the main handbook remains useful as a design reference. Warnings do not prevent export.</Text>
-        <View style={{ marginTop: 16 }}>
-          {componentReviewWarnings.length > 0 && (
-            <View wrap={false}>
-              <Text style={styles.h2}>Included experiences needing review ({componentReviewWarnings.length})</Text>
-              <Text style={styles.paragraph}>These premium experiences ship as needs-review in the catalog. Review them before relying on them in production. Full per-component detail lives in Review / Components.</Text>
-              <ReferenceTable
-                rows={componentReviewWarnings}
-                columns={[
-                  { key: "component", label: "Experience", width: "32%", value: (row) => row.affected },
-                  { key: "gaps", label: "Open gaps", width: "68%", value: (row) => reviewGaps(row.explanation) },
-                ]}
-              />
-            </View>
-          )}
-          {individualWarnings.map((warning, index) => <View key={warning.id} style={styles.warningBox} wrap={false}><View style={styles.rowBetween}><Text style={[styles.codeStrong, { color: WARNING }]}>{String(index + 1).padStart(2, "0")} / {text(warning.group)}</Text><Text style={styles.code}>{text(warning.affected)}</Text></View><Text style={[styles.h3, { marginTop: 5 }]}>{text(warning.title)}</Text><Text style={styles.paragraph}>{text(warning.explanation)}</Text><Text style={styles.code}>Path: {text(warning.path)}</Text></View>)}
-        </View>
-      </Page>}
     </Document>
   )
 }

@@ -24,7 +24,8 @@ test("ready systems produce an immutable, structured export model", () => {
   if (!result.ok) return;
   assert.equal(result.model.generatedAt, "2026-10-03T10:00:00.000Z");
   assert.equal(result.model.chapters.length, EXPORT_CHAPTERS.length);
-  assert.equal(result.model.chapters[0]?.title, "System overview");
+  assert.equal(result.model.chapters[0]?.title, "Colour foundations");
+  assert.equal(result.model.chapters.some((chapter) => chapter.title === "System overview"), false);
   assert.equal(result.model.report.exportReady, true);
   assert.notEqual(result.model.system, source);
   assert.equal(JSON.stringify(source), before);
@@ -41,7 +42,7 @@ test("errors block preparation and return actionable findings", () => {
   assert.ok(result.errors.some((finding) => finding.route.endsWith("/tokens")));
 });
 
-test("warnings remain exportable and are carried into the health appendix", () => {
+test("warnings remain exportable and available to the app review state", () => {
   const source = system();
   source.semanticTokens.find((token) => token.id === "text.primary")!.value = "#777777";
   source.semanticTokens.find((token) => token.id === "background.canvas")!.value = "#ffffff";

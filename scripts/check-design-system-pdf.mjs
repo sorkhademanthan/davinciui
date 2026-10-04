@@ -54,7 +54,7 @@ const { renderToFile } = require("@react-pdf/renderer");
 const { DesignSystemExportDocument } = require(${JSON.stringify(join(build, "compiled", "components", "design-system", "design-system-export-document.js"))});
 const { prepareDesignSystemExport } = require(${JSON.stringify(join(build, "compiled", "lib", "design-system", "export.js"))});
 const { createSystemFromStarter } = require(${JSON.stringify(join(build, "compiled", "lib", "design-system", "starters.js"))});
-const { CORE_COMPONENT_IDS, PREMIUM_COMPONENT_IDS } = require(${JSON.stringify(join(build, "compiled", "lib", "design-system", "component-manifest.js"))});
+const { CORE_COMPONENT_IDS } = require(${JSON.stringify(join(build, "compiled", "lib", "design-system", "component-manifest.js"))});
 
 (async () => {
   const baseline = process.env.PDF_FIXTURE === "baseline";
@@ -67,9 +67,13 @@ const { CORE_COMPONENT_IDS, PREMIUM_COMPONENT_IDS } = require(${JSON.stringify(j
       value: index % 2 === 0 ? "#0f766e" : "#18181b",
       description: "Long-document pagination regression token used to verify reliable browser PDF layout.",
     })));
-    // Exercise the compact System Health chapter and full validation appendix,
-    // not only the token-heavy core handbook.
-    system.library = { included: [...CORE_COMPONENT_IDS, ...PREMIUM_COMPONENT_IDS] };
+    // Exercise a warning-bearing model while verifying that the PDF remains a
+    // clean handbook and the long token reference still paginates safely.
+    const primaryText = system.semanticTokens.find((token) => token.id === "text.primary");
+    const canvas = system.semanticTokens.find((token) => token.id === "background.canvas");
+    if (primaryText) primaryText.value = "#777777";
+    if (canvas) canvas.value = "#ffffff";
+    system.library = { included: [...CORE_COMPONENT_IDS] };
   }
   const prepared = prepareDesignSystemExport(system, "2026-10-03T00:00:00.000Z");
   if (!prepared.ok) throw new Error("Stress fixture did not pass validation.");

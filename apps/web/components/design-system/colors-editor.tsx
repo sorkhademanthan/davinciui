@@ -15,7 +15,6 @@ import {
   PALETTE_ROLES,
   PALETTE_SHADES,
   paletteRoleLabel,
-  regenerateShades,
   removePalette,
   replaceAndRemovePalette,
   slugifyPaletteId,
@@ -41,6 +40,7 @@ export function ColorsEditor({
   const [showAdd, setShowAdd] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [announcement, setAnnouncement] = useState<string | null>(null)
 
   const commit = (next: Palette[]) => {
     save({
@@ -78,9 +78,11 @@ export function ColorsEditor({
   }
 
   const handleDelete = (paletteId: string) => {
+    const removed = palettes.find((palette) => palette.id === paletteId)
     commit(removePalette(system, paletteId).foundations.colors.palettes)
     if (editingId === paletteId) setEditingId(null)
     if (selectedId === paletteId) setSelectedId(null)
+    setAnnouncement(`${removed?.label ?? "Palette"} deleted.`)
   }
 
   const handleReplaceAndDelete = (sourceId: string, replacementId: string): string | null => {
@@ -89,6 +91,9 @@ export function ColorsEditor({
     save(result.system)
     if (editingId === sourceId) setEditingId(null)
     if (selectedId === sourceId) setSelectedId(null)
+    const source = palettes.find((palette) => palette.id === sourceId)
+    const replacement = palettes.find((palette) => palette.id === replacementId)
+    setAnnouncement(`${source?.label ?? "Palette"} deleted. ${result.replaced} saved usage${result.replaced === 1 ? "" : "s"} moved to ${replacement?.label ?? replacementId}.`)
     return null
   }
 
@@ -110,6 +115,15 @@ export function ColorsEditor({
           </button>
         }
       />
+      {announcement && (
+        <div role="status" className="mt-4 flex items-center gap-3 rounded-xl border border-emerald-500/30 bg-emerald-500/5 px-4 py-3 text-sm text-emerald-700 dark:text-emerald-300">
+          <Check className="size-4 shrink-0" aria-hidden="true" />
+          <p className="flex-1">{announcement}</p>
+          <button onClick={() => setAnnouncement(null)} aria-label="Dismiss palette update" className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg hover:bg-emerald-500/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+            <X className="size-4" aria-hidden="true" />
+          </button>
+        </div>
+      )}
       <div className="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
         <div className="min-w-0">
           {showAdd && (
@@ -575,23 +589,25 @@ function DeleteZone({
   const alternatives = palettes.filter((entry) => entry.id !== palette.id)
   const [replacementId, setReplacementId] = useState(() => alternatives[0]?.id ?? "")
   const [moveError, setMoveError] = useState<string | null>(null)
+  const [confirmingMove, setConfirmingMove] = useState(false)
   const blockedByUsage = !guard.ok && references.length > 0
   return (
     <div className="mt-4 rounded-xl border border-destructive/30 bg-destructive/5 p-4">
       <h3 className="text-sm font-semibold text-destructive">Danger zone</h3>
       {!guard.ok ? (
         <div role="status" className="mt-2 text-xs leading-5 text-muted-foreground">
-          <p className="font-medium text-foreground">This palette cannot be deleted.</p>
+          <p className="font-medium text-foreground">{blockedByUsage ? "Move its usages before deleting." : "This palette cannot be deleted."}</p>
           {guard.reasons.map((reason) => (
             <p key={reason} className="mt-1">{reason}</p>
           ))}
           {references.length > 0 && (
             <ul className="mt-2 space-y-1">
-              {references.map((reference) => (
+              {references.slice(0, 6).map((reference) => (
                 <li key={`${reference.kind}:${reference.pointer}`} className="font-mono text-[11px]">
                   {reference.kind} · {reference.pointer} → <span className="uppercase">{reference.value}</span>
                 </li>
               ))}
+              {references.length > 6 && <li className="text-[11px]">And {references.length - 6} more saved usages.</li>}
             </ul>
           )}
           {blockedByUsage && alternatives.length > 0 && (
@@ -619,17 +635,37 @@ function DeleteZone({
                     </option>
                   ))}
                 </select>
-                <button
-                  onClick={() => {
-                    const error = onReplaceAndDelete(replacementId || alternatives[0]!.id)
-                    setMoveError(error)
-                  }}
-                  className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-destructive px-4 py-2 text-xs font-medium text-white transition-colors hover:bg-destructive/85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                >
-                  <Trash2 className="size-4" aria-hidden="true" />
-                  Move usages & delete
-                </button>
+                {!confirmingMove && (
+                  <button
+                    onClick={() => setConfirmingMove(true)}
+                    className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-destructive/40 px-4 py-2 text-xs font-medium text-destructive transition-colors hover:bg-destructive/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  >
+                    <Trash2 className="size-4" aria-hidden="true" />
+                    Review move and delete
+                  </button>
+                )}
               </div>
+              {confirmingMove && (
+                <div role="alert" className="mt-3 rounded-lg border border-destructive/30 bg-destructive/5 p-3">
+                  <p className="text-xs leading-5 text-foreground">
+                    Move {references.length} usage{references.length === 1 ? "" : "s"} to <span className="font-semibold">{alternatives.find((entry) => entry.id === (replacementId || alternatives[0]!.id))?.label}</span> and permanently delete <span className="font-semibold">{palette.label}</span>?
+                  </p>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    <button onClick={() => setConfirmingMove(false)} className="inline-flex min-h-11 items-center rounded-lg border border-border bg-background px-4 text-xs font-medium hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Cancel</button>
+                    <button
+                      onClick={() => {
+                        const error = onReplaceAndDelete(replacementId || alternatives[0]!.id)
+                        setMoveError(error)
+                        if (error) setConfirmingMove(false)
+                      }}
+                      className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-destructive px-4 text-xs font-medium text-white hover:bg-destructive/85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    >
+                      <Trash2 className="size-4" aria-hidden="true" />
+                      Move usages and delete
+                    </button>
+                  </div>
+                </div>
+              )}
               <p className="mt-1 text-[11px] leading-5">
                 Or edit the listed token(s) under Semantic tokens / Themes to point elsewhere, then return here to delete.
               </p>

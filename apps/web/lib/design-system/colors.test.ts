@@ -23,6 +23,7 @@ import {
   PALETTE_SHADES,
   regenerateShades,
   removePalette,
+  replaceAndRemovePalette,
   slugifyPaletteId,
 } from "./colors";
 
@@ -242,6 +243,51 @@ test("palette deletion is blocked when referenced, with token detail", () => {
 
   // Unknown ids cannot be deleted either.
   assert.equal(canDeletePalette(system, "ghost").ok, false);
+});
+
+test("referenced palette can be replaced and removed without broken usages", () => {
+  const source = manthanSystem();
+  const replacement = createPalette({ label: "Replacement", role: "custom", base: "#7C3AED" }, paletteIds(source));
+  assert.equal(replacement.ok, true);
+  if (!replacement.ok) return;
+  const system: DesignSystemConfig = {
+    ...source,
+    foundations: {
+      ...source.foundations,
+      colors: { palettes: [...source.foundations.colors.palettes, replacement.palette] },
+      borders: {
+        ...source.foundations.borders,
+        tokens: source.foundations.borders.tokens.map((token, index) => index === 0 ? { ...token, color: "brand.200" } : token),
+      },
+      icons: {
+        ...source.foundations.icons,
+        colors: { ...source.foundations.icons.colors, default: "brand.500" },
+      },
+      shadows: {
+        ...source.foundations.shadows,
+        tokens: source.foundations.shadows.tokens.map((token, index) => index === 0 ? { ...token, layers: [{ x: 0, y: 2, blur: 4, spread: 0, color: "brand.950", opacity: 0.2, inset: false }] } : token),
+      },
+    },
+    themes: source.themes.map((theme, index) => index === 0 ? { ...theme, overrides: { ...theme.overrides, "text.primary": "brand.700" } } : theme),
+    components: source.components.map((component, index) => index === 0 ? { ...component, overrides: [...component.overrides, { token: "background", value: "brand.600" }] } : component),
+  };
+
+  const before = JSON.stringify(system);
+  const result = replaceAndRemovePalette(system, "brand", replacement.palette.id);
+  assert.equal(result.ok, true);
+  if (!result.ok) return;
+  assert.equal(JSON.stringify(system), before, "operation must stay immutable");
+  assert.ok(!paletteIds(result.system).includes("brand"));
+  assert.equal(findPaletteReferences(result.system, "brand").length, 0);
+  assert.equal(result.system.foundations.borders.tokens[0]?.color, `${replacement.palette.id}.200`);
+  assert.equal(result.system.foundations.icons.colors.default, `${replacement.palette.id}.500`);
+  assert.equal(result.system.foundations.shadows.tokens[0]?.layers?.[0]?.color, `${replacement.palette.id}.950`);
+  assert.equal(result.system.themes[0]?.overrides["text.primary"], `${replacement.palette.id}.700`);
+  assert.ok(result.system.components[0]?.overrides.some((override) => override.value === `${replacement.palette.id}.600`));
+  assert.ok(result.replaced >= 5);
+
+  assert.equal(replaceAndRemovePalette(system, "brand", "brand").ok, false);
+  assert.equal(replaceAndRemovePalette(system, "brand", "missing").ok, false);
 });
 
 test("palette edits persist after repository reload", () => {

@@ -85,7 +85,7 @@ export function DesignSystemExport({ system }: { system: DesignSystemConfig }) {
                         <h2 id="pdf-export-heading" className="text-lg font-semibold">Design-system handbook</h2>
                         <span className="rounded-full bg-muted px-2.5 py-1 text-[11px] font-medium text-muted-foreground">Recommended</span>
                       </div>
-                      <p className="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">An editorial, paginated handbook with visual specimens, technical references, theme previews, system health, and a complete validation appendix.</p>
+                      <p className="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">An editorial, paginated handbook with visual specimens, technical references, theme previews, and a clean system-health summary.</p>
                     </div>
                   </div>
                   <DownloadButton kind="pdf" state={downloadState} onClick={() => void download("pdf")} primary />
@@ -94,7 +94,7 @@ export function DesignSystemExport({ system }: { system: DesignSystemConfig }) {
               <div className="grid divide-y divide-border sm:grid-cols-3 sm:divide-x sm:divide-y-0">
                 <DocumentFact label="Chapters" value={`${model.chapters.length} structured sections`} />
                 <DocumentFact label="Themes" value={`${model.system.themes.length} documented`} />
-                <DocumentFact label="Review" value={warningCount > 0 ? `${appendixNoteCount(model)} in appendix` : "No automated warnings"} />
+                <DocumentFact label="PDF contents" value="Clean handbook only" />
               </div>
             </section>
 
@@ -165,16 +165,6 @@ function PrivacyBadge() {
   return <span className="inline-flex min-h-9 items-center gap-2 rounded-full border border-border bg-muted/40 px-3 text-xs font-medium text-muted-foreground"><LockKeyhole className="size-3.5" aria-hidden="true" />Local export</span>
 }
 
-function appendixNoteCount(model: DesignSystemExportModel): string {
-  const reviewGroup = model.warnings.filter((warning) => warning.id.includes("premium-needs-review")).length
-  const listed = model.warnings.filter(
-    (warning) => warning.group !== "export-readiness" && !warning.id.includes("premium-needs-review"),
-  ).length
-  if (reviewGroup > 0 && listed > 0) return `${reviewGroup} grouped + ${listed} listed`
-  if (reviewGroup > 0) return `${reviewGroup} grouped in 1 table`
-  return `${listed} listed`
-}
-
 function ReadinessCard({ system, model, errors, warningCount }: { system: DesignSystemConfig; model: DesignSystemExportModel | null; errors: Array<{ id: string }>; warningCount: number }) {
   const ready = model !== null
   return (
@@ -186,7 +176,7 @@ function ReadinessCard({ system, model, errors, warningCount }: { system: Design
           </div>
           <div>
             <h2 className="font-semibold">{ready ? (warningCount > 0 ? "Ready with review notes" : "Ready to export") : "Export is blocked"}</h2>
-            <p className="mt-1 text-sm leading-6 text-muted-foreground">{ready ? (warningCount > 0 && model ? `${warningCount} non-blocking warning${warningCount === 1 ? "" : "s"} found — appendix shows ${appendixNoteCount(model)}. Downloads remain available.` : "No automated blockers or warnings were found in the saved system.") : `${errors.length} blocker${errors.length === 1 ? "" : "s"} must be resolved before a reliable document can be generated.`}</p>
+            <p className="mt-1 text-sm leading-6 text-muted-foreground">{ready ? (warningCount > 0 && model ? `${warningCount} non-blocking warning${warningCount === 1 ? "" : "s"} remain available in Validate and are excluded from the downloaded handbook.` : "No automated blockers or warnings were found in the saved system.") : `${errors.length} blocker${errors.length === 1 ? "" : "s"} must be resolved before a reliable document can be generated.`}</p>
           </div>
         </div>
         {!ready && <Link href={`/design-system/${system.id}/validate`} className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-lg bg-foreground px-4 text-sm font-medium text-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">Fix blockers <ArrowRight className="size-4" aria-hidden="true" /></Link>}
@@ -224,7 +214,7 @@ function DocumentPreview({ model }: { model: DesignSystemExportModel }) {
           <div className="mt-10 border-t border-zinc-800 pt-2 text-[5px] text-zinc-500">SYSTEM FINGERPRINT / A4</div>
         </div>
       </div>
-      <div className="p-4"><div className="flex items-center gap-2 text-xs text-muted-foreground"><Check className="size-3.5 text-emerald-600" aria-hidden="true" /><span>Clickable editorial contents</span></div><div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground"><Check className="size-3.5 text-emerald-600" aria-hidden="true" /><span>Visual specimens plus references</span></div><div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground"><Check className="size-3.5 text-emerald-600" aria-hidden="true" /><span>System health and appendix</span></div></div>
+      <div className="p-4"><div className="flex items-center gap-2 text-xs text-muted-foreground"><Check className="size-3.5 text-emerald-600" aria-hidden="true" /><span>Clickable editorial contents</span></div><div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground"><Check className="size-3.5 text-emerald-600" aria-hidden="true" /><span>Visual specimens plus references</span></div><div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground"><Check className="size-3.5 text-emerald-600" aria-hidden="true" /><span>Clean system-health summary</span></div></div>
     </section>
   )
 }

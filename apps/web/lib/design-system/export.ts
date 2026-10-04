@@ -17,7 +17,6 @@ import { includedEntries } from "./component-curation";
 export const EXPORT_FORMAT_VERSION = "1.0";
 
 export type ExportChapterId =
-  | "overview"
   | "colors"
   | "typography"
   | "layout-foundations"
@@ -36,16 +35,15 @@ export interface ExportChapter {
 }
 
 export const EXPORT_CHAPTERS: readonly ExportChapter[] = [
-  { id: "overview", number: "01", title: "System overview", description: "Identity, starter, density, and document conventions." },
-  { id: "colors", number: "02", title: "Colour foundations", description: "Palettes, roles, base colours, and complete shade scales." },
-  { id: "typography", number: "03", title: "Typography", description: "Font roles and the text styles used across the product." },
-  { id: "layout-foundations", number: "04", title: "Spacing and surfaces", description: "Spacing, sizing, radius, borders, and elevation recipes." },
-  { id: "motion-icons", number: "05", title: "Motion and icons", description: "Interaction timing, reduced motion, icon sizing, and stroke treatment." },
-  { id: "responsive-layout", number: "06", title: "Responsive layout", description: "Containers, page grid, and breakpoint behaviour." },
-  { id: "semantic-tokens", number: "07", title: "Semantic tokens", description: "Stable colour roles with resolved light and dark values." },
-  { id: "themes", number: "08", title: "Themes", description: "Theme inheritance, overrides, and essential interface roles." },
-  { id: "components", number: "09", title: "Components", description: "Selected basic components and the token slots each one follows." },
-  { id: "system-health", number: "10", title: "System health", description: "Accessibility, validation coverage, and review priorities." },
+  { id: "colors", number: "01", title: "Colour foundations", description: "Palettes, roles, base colours, and complete shade scales." },
+  { id: "typography", number: "02", title: "Typography", description: "Font roles and the text styles used across the product." },
+  { id: "layout-foundations", number: "03", title: "Spacing and surfaces", description: "Spacing, sizing, radius, borders, and elevation recipes." },
+  { id: "motion-icons", number: "04", title: "Motion and icons", description: "Interaction timing, reduced motion, icon sizing, and stroke treatment." },
+  { id: "responsive-layout", number: "05", title: "Responsive layout", description: "Containers, page grid, and breakpoint behaviour." },
+  { id: "semantic-tokens", number: "06", title: "Semantic tokens", description: "Stable colour roles with resolved light and dark values." },
+  { id: "themes", number: "07", title: "Themes", description: "Theme inheritance, overrides, and essential interface roles." },
+  { id: "components", number: "08", title: "Components", description: "Selected basic components and the token slots each one follows." },
+  { id: "system-health", number: "09", title: "System health", description: "Automated coverage and manual accessibility checks." },
 ] as const;
 
 /**
@@ -101,8 +99,8 @@ export function exportFilenameBase(system: DesignSystemConfig): string {
 }
 
 /**
- * Prepare one immutable export snapshot. Errors block export; warnings are
- * intentionally retained as review notes and never block the download.
+ * Prepare one immutable export snapshot. Errors block export; warnings stay
+ * available to the app's readiness UI but are not rendered in the PDF.
  */
 export function prepareDesignSystemExport(
   system: DesignSystemConfig,
