@@ -188,6 +188,49 @@ test("remove deletes only the requested system", () => {
   );
 });
 
+test("remove permanently deletes a migrated legacy system (no resurrection)", () => {
+  const mem = memoryStorage({ [LEGACY_V1_KEY]: JSON.stringify([v1fixture()]) });
+  const store = createDesignSystemsStore(() => mem);
+  assert.equal(store.list().length, 1);
+  assert.deepEqual(store.remove("manthan-abc123"), { removed: true });
+  assert.deepEqual(store.list(), []);
+  // Fresh store instances must not re-migrate the read-only legacy record.
+  const second = createDesignSystemsStore(() => mem);
+  assert.deepEqual(second.list(), []);
+  assert.equal(second.get("manthan-abc123"), undefined);
+  assert.deepEqual(second.remove("manthan-abc123"), { removed: false });
+});
+
+test("deleting one legacy system keeps other legacy systems migrating", () => {
+  const branding = {
+    ...v1fixture(),
+    id: "branding-xyz789",
+    meta: { ...v1fixture().meta, name: "Branding" },
+  };
+  const mem = memoryStorage({ [LEGACY_V1_KEY]: JSON.stringify([v1fixture(), branding]) });
+  const store = createDesignSystemsStore(() => mem);
+  assert.equal(store.list().length, 2);
+  assert.deepEqual(store.remove("manthan-abc123"), { removed: true });
+  assert.deepEqual(
+    store.list().map((system) => system.meta.name),
+    ["Branding"],
+  );
+  assert.deepEqual(store.remove("branding-xyz789"), { removed: true });
+  assert.deepEqual(createDesignSystemsStore(() => mem).list(), []);
+});
+
+test("explicit save after delete restores the system", () => {
+  const mem = memoryStorage({ [LEGACY_V1_KEY]: JSON.stringify([v1fixture()]) });
+  const store = createDesignSystemsStore(() => mem);
+  const original = store.list()[0]!;
+  assert.deepEqual(store.remove(original.id), { removed: true });
+  assert.deepEqual(store.list(), []);
+  const saved = store.save(original);
+  assert.equal(saved.ok, true);
+  assert.equal(store.list().length, 1);
+  assert.equal(store.list()[0]?.id, original.id);
+});
+
 test("malformed localStorage is handled without throwing", () => {
   const mem = memoryStorage({ [DESIGN_SYSTEM_STORAGE_KEY]: "{not json" });
   const store = createDesignSystemsStore(() => mem);

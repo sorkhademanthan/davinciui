@@ -20,6 +20,39 @@ export const DESIGN_SYSTEM_STORAGE_KEY = "davinciui.design-system.v2";
 /** Read-only legacy key holding pre-Step-1 (v1) systems. Never written to. */
 const LEGACY_V1_STORAGE_KEY = "davinciui.design-system.v1";
 
+/**
+ * Tombstone key: ids the user explicitly deleted. The legacy v1 key is
+ * read-only and never erased, so without this a deleted legacy record would
+ * re-migrate on the next read and the delete would appear to fail.
+ */
+const DELETED_IDS_STORAGE_KEY = "davinciui.design-system.v2.deleted";
+
+/** Bound on tombstone growth; ids are random per system, so this is ample. */
+const MAX_DELETED_IDS = 500;
+
+function readDeletedIds(storage: StorageLike): Set<string> {
+  try {
+    const raw = storage.getItem(DELETED_IDS_STORAGE_KEY);
+    if (raw === null) return new Set();
+    const parsed: unknown = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return new Set();
+    return new Set(
+      parsed.filter((entry): entry is string => typeof entry === "string" && entry !== ""),
+    );
+  } catch {
+    return new Set();
+  }
+}
+
+function writeDeletedIds(storage: StorageLike, ids: Set<string>): boolean {
+  try {
+    storage.setItem(DELETED_IDS_STORAGE_KEY, JSON.stringify([...ids].slice(-MAX_DELETED_IDS)));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export const DESIGN_SYSTEM_STORAGE_VERSION = 1;
 
 export interface StorageEnvelope {
@@ -207,6 +240,7 @@ export function createDesignSystemsStore(
 
     const loaded: Loaded = { ...empty, available: true };
     const now = nowIso();
+    const deletedIds = readDeletedIds(storage);
 
     // 1. Read the v2 envelope.
     const raw = readRaw(storage, DESIGN_SYSTEM_STORAGE_KEY);
@@ -273,6 +307,7 @@ export function createDesignSystemsStore(
             continue;
           }
           if (knownIds.has(candidate.id)) continue; // Already migrated earlier.
+          if (deletedIds.has(candidate.id)) continue; // User-deleted: never resurrect read-only legacy records.
           loaded.systems.push(migrateV1ToV2(candidate, now));
           knownIds.add(candidate.id);
           loaded.migrated += 1;
@@ -426,6 +461,15 @@ export function createDesignSystemsStore(
         if (!writeSystems(resolved.storage, [...others, next])) {
           return { ok: false, error: "Storage write failed." };
         }
+        // An explicit save wins over an earlier delete: drop any tombstone so
+        // a re-saved id is never treated as deleted legacy data. Best effort
+        // only — the envelope copy already wins over legacy records.
+        try {
+          const deleted = readDeletedIds(resolved.storage);
+          if (deleted.delete(next.id)) writeDeletedIds(resolved.storage, deleted);
+        } catch {
+          // Ignore; persistence already succeeded.
+        }
         notify();
         return { ok: true, system: next };
       } catch {
@@ -435,8 +479,8 @@ export function createDesignSystemsStore(
 
     create(input: CreateDesignSystemInput): SaveResult {
       try {
-        // Thin adapter: the onboarding input shape is mapped onto the
-        // canonical starter factory (starters.ts) — no template data here.
+        // Thin adapter: the creation input is mapped onto the canonical
+        // starter factory (starters.ts) — no template data lives here.
         return this.save(
           createSystemFromStarter({
             starterId: input.presetId,
@@ -476,6 +520,17 @@ export function createDesignSystemsStore(
         if ("error" in resolved) return { removed: false };
         const loaded = load(true);
         if (!loaded.systems.some((system) => system.id === id)) return { removed: false };
+        // Tombstone first: the legacy v1 key is read-only and never erased,
+        // so without this a deleted legacy record would re-migrate on the
+        // next read and the delete would appear to fail. Tombstone-first also
+        // keeps failures honest: if the envelope write below fails, the
+        // system is still visibly present (the envelope copy always wins over
+        // legacy records and ignores tombstones).
+        if (readRaw(resolved.storage, LEGACY_V1_STORAGE_KEY) !== null) {
+          const deleted = readDeletedIds(resolved.storage);
+          deleted.add(id);
+          if (!writeDeletedIds(resolved.storage, deleted)) return { removed: false };
+        }
         if (!writeSystems(resolved.storage, loaded.systems.filter((system) => system.id !== id))) {
           return { removed: false };
         }
@@ -487,7 +542,7 @@ export function createDesignSystemsStore(
     },
 
     clear(): void {
-      // Development/test-only: wipes the v2 envelope. Never exposed in UI.
+      // Development/test-only: wipes the v2 envelope plus delete tombstones.
       // The legacy v1 key is intentionally left alone.
       try {
         const resolved = storageOrError();
@@ -496,6 +551,11 @@ export function createDesignSystemsStore(
           resolved.storage.removeItem(DESIGN_SYSTEM_STORAGE_KEY);
         } catch {
           return;
+        }
+        try {
+          resolved.storage.removeItem(DELETED_IDS_STORAGE_KEY);
+        } catch {
+          // Best effort; the envelope wipe already succeeded.
         }
         notify();
       } catch {
@@ -541,6 +601,7 @@ export function createDesignSystemsStore(
         const now = nowIso();
         const loaded = load(true);
         const merged = new Map(loaded.systems.map((system) => [system.id, system]));
+        const importedIds: string[] = [];
         for (const candidate of candidates) {
           const normalized = normalizeRecord(candidate, now);
           if (normalized.kind === "future") {
@@ -559,6 +620,7 @@ export function createDesignSystemsStore(
               continue;
             }
             merged.set(system.id, deepClone(system));
+            importedIds.push(system.id);
             result.imported += 1;
           }
         }
@@ -567,6 +629,18 @@ export function createDesignSystemsStore(
             result.warnings.push("Imported systems could not be persisted (storage write failed).");
             result.imported = 0;
           } else {
+            // Explicit imports win over earlier deletes: drop tombstones for
+            // re-imported ids. Best effort only.
+            try {
+              const deleted = readDeletedIds(resolved.storage);
+              let changed = false;
+              for (const id of importedIds) {
+                if (deleted.delete(id)) changed = true;
+              }
+              if (changed) writeDeletedIds(resolved.storage, deleted);
+            } catch {
+              // Ignore; the import already succeeded.
+            }
             notify();
           }
         }
@@ -598,5 +672,5 @@ function browserStorage(): StorageLike | undefined {
   }
 }
 
-/** Browser singleton used by Overview, onboarding, and Builder. */
+/** Browser singleton used by Overview, direct creation, and Builder. */
 export const browserDesignSystems: DesignSystemsStore = createDesignSystemsStore(browserStorage);
