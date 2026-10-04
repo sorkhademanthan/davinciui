@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowLeft, ArrowUpRight, BellRing } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, BellRing, Github, Star, Twitter } from "lucide-react";
 
 export interface ComingSoonTeaser {
   title: string;
@@ -59,6 +59,33 @@ export function ComingSoon({
               <ArrowLeft aria-hidden="true" className="size-4" />
               All galleries
             </Link>
+          </div>
+          <div className="mt-6 flex flex-col items-center gap-3 border-t border-border/60 pt-6">
+            <p className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+              <BellRing aria-hidden="true" className="size-3.5" />
+              Want first access when this lands?
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-2.5">
+              <a
+                href="https://x.com/ManthanSorkhade"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex h-9 items-center justify-center gap-1.5 rounded-lg border border-border px-3.5 text-xs font-medium text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <Twitter aria-hidden="true" className="size-3.5" />
+                Follow for launch updates
+              </a>
+              <a
+                href="https://github.com/sorkhademanthan/davinciui"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex h-9 items-center justify-center gap-1.5 rounded-lg border border-border px-3.5 text-xs font-medium text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <Star aria-hidden="true" className="size-3.5" />
+                Star on GitHub
+                <Github aria-hidden="true" className="size-3.5 text-muted-foreground" />
+              </a>
+            </div>
           </div>
         </div>
       </div>
