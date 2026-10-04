@@ -72,16 +72,14 @@ const LOOP = [...CARDS, ...CARDS];
 
 /**
  * Gallery card preview: a continuously scrolling horizontal strip of
- * 3–4 live Hover Transition cards. The strip auto-scrolls via CSS and
- * each card's hover reveal auto-fires in sequence while visible —
- * hovering a card pauses the tour and holds that card open.
+ * live Hover Transition cards. Fully ambient — the reveal tour runs in
+ * the background on a timer and deliberately ignores cursor movement,
+ * so hovering the preview never pauses, tilts, glares, or opens a card.
  */
 export function HoverTransitionCardPreview() {
   const hostRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [running, setRunning] = useState(true);
-  const [paused, setPaused] = useState(false);
-  const stateRef = useRef({ hovered: false });
 
   useEffect(() => {
     const host = hostRef.current;
@@ -100,27 +98,24 @@ export function HoverTransitionCardPreview() {
   }, []);
 
   useEffect(() => {
-    if (!running || paused || stateRef.current.hovered) return;
-    // Slow tour: each card holds open ~2.6s so the 1.15s reveal
+    if (!running) return;
+    // Slow ambient tour: each card holds open ~2.6s so the 1.15s reveal
     // fully settles before moving on — calm, smooth, readable.
+    // Runs regardless of cursor position; hover never interrupts it.
     const id = window.setInterval(
       () => setActiveIndex((i) => (i + 1) % CARDS.length),
       2600,
     );
     return () => window.clearInterval(id);
-  }, [running, paused]);
+  }, [running]);
 
-  const animate = running && !paused;
+  const animate = running;
 
   return (
     <div
       ref={hostRef}
-      className="group/strip absolute inset-0 overflow-hidden bg-[#f8f8f5] transition-colors dark:bg-zinc-950"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => {
-        setPaused(false);
-        stateRef.current.hovered = false;
-      }}
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0 select-none overflow-hidden bg-[#f8f8f5] transition-colors dark:bg-zinc-950"
     >
       <div className="flex h-full w-full items-center overflow-hidden">
         <div
@@ -137,10 +132,6 @@ export function HoverTransitionCardPreview() {
               <div
                 key={`${card.id}-${i}`}
                 className="mr-2 h-[156px] w-[124px] shrink-0 overflow-hidden rounded-lg shadow-sm ring-1 ring-black/10 dark:ring-white/15"
-                onMouseEnter={() => {
-                  stateRef.current.hovered = true;
-                  setActiveIndex(i % CARDS.length);
-                }}
               >
                 <HoverTransition
                   effect={card.effect}
@@ -150,6 +141,7 @@ export function HoverTransitionCardPreview() {
                   tabIndex={-1}
                   label={`${card.name}, ${card.role}`}
                   active={active}
+                  interactive={false}
                   defaultComponent={
                     <article
                       className="relative h-full w-full overflow-hidden bg-[#f8f8f5]"

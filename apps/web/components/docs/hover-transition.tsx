@@ -121,6 +121,13 @@ export async function HoverTransitionDocs() {
           description: "Accessible label for the focusable transition wrapper.",
         },
         {
+          name: "interactive",
+          type: "boolean",
+          default: "true",
+          description:
+            "When false, hover, focus, tilt, and glare are disabled and only the controlled active prop drives the animation. Use for ambient auto-playing previews.",
+        },
+        {
           name: "className",
           type: "string",
           description:

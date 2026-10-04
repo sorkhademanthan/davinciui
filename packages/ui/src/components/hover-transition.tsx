@@ -49,6 +49,13 @@ export interface HoverTransitionProps extends Omit<
   active?: boolean;
   /** Called when the active state changes. */
   onActiveChange?: (active: boolean) => void;
+  /**
+   * When false, pointer/keyboard interaction is disabled — the card ignores
+   * hover, focus, tilt and glare and only responds to the controlled `active`
+   * prop. Useful for auto-playing previews where cursor movement must not
+   * affect the card.
+   */
+  interactive?: boolean;
 }
 
 type Vector = { x: number; y: number };
@@ -168,6 +175,7 @@ export function HoverTransition({
   label = "Interactive hover transition",
   active: controlledActive,
   onActiveChange,
+  interactive = true,
   className,
   onMouseEnter,
   onMouseLeave,
@@ -224,12 +232,14 @@ export function HoverTransition({
   ]);
 
   const activate = (event: React.MouseEvent<HTMLDivElement>) => {
-    setActive(true);
     onMouseEnter?.(event);
+    if (!interactive) return;
+    setActive(true);
   };
   const deactivate = (event: React.MouseEvent<HTMLDivElement>) => {
-    setActive(false);
     onMouseLeave?.(event);
+    if (!interactive) return;
+    setActive(false);
   };
 
   const resetTilt = () => {
@@ -241,7 +251,8 @@ export function HoverTransition({
 
   const trackPointer = (event: React.PointerEvent<HTMLDivElement>) => {
     onPointerMove?.(event);
-    if (reducedMotion || event.pointerType !== "mouse") return;
+    if (!interactive || reducedMotion || event.pointerType !== "mouse")
+      return;
 
     const bounds = event.currentTarget.getBoundingClientRect();
     const x = Math.min(
@@ -521,7 +532,7 @@ export function HoverTransition({
       ref={rootRef}
       role="group"
       aria-label={label}
-      tabIndex={tabIndex ?? 0}
+      tabIndex={tabIndex ?? (interactive ? 0 : -1)}
       data-active={active ? "true" : "false"}
       data-effect={effect}
       className={cn(
@@ -536,25 +547,29 @@ export function HoverTransition({
         onPointerLeave?.(event);
       }}
       onFocus={(event) => {
-        setActive(true);
         onFocus?.(event);
+        if (!interactive) return;
+        setActive(true);
       }}
       onBlur={(event) => {
+        onBlur?.(event);
+        if (!interactive) return;
         if (!event.currentTarget.contains(event.relatedTarget))
           setActive(false);
-        onBlur?.(event);
       }}
     >
       <div
         className="relative h-full w-full"
         style={{
-          transform: reducedMotion
-            ? "none"
-            : `perspective(1000px) rotateX(var(--hover-tilt-x, 0deg)) rotateY(var(--hover-tilt-y, 0deg)) scale(${active ? 1.006 : 1})`,
+          transform:
+            reducedMotion || !interactive
+              ? "none"
+              : `perspective(1000px) rotateX(var(--hover-tilt-x, 0deg)) rotateY(var(--hover-tilt-y, 0deg)) scale(${active ? 1.006 : 1})`,
           transformStyle: "preserve-3d",
-          transition: reducedMotion
-            ? "none"
-            : `transform ${active ? 0.35 : 0.8}s ${easing}`,
+          transition:
+            reducedMotion || !interactive
+              ? "none"
+              : `transform ${active ? 0.35 : 0.8}s ${easing}`,
         }}
       >
         <div
@@ -574,8 +589,11 @@ export function HoverTransition({
           style={{
             background:
               "radial-gradient(circle 180px at var(--hover-glare-x, 50%) var(--hover-glare-y, 50%), rgba(255,255,255,.22), rgba(255,255,255,.05) 48%, transparent 78%)",
-            opacity: active && !reducedMotion ? 0.1 : 0,
-            transition: reducedMotion ? "none" : `opacity 0.45s ${easing}`,
+            opacity: active && !reducedMotion && interactive ? 0.1 : 0,
+            transition:
+              reducedMotion || !interactive
+                ? "none"
+                : `opacity 0.45s ${easing}`,
           }}
         />
       </div>
