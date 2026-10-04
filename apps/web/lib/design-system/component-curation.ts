@@ -1,9 +1,13 @@
-// Component-library curation for the Component Library workspace (Step 10A).
-// Pure functions only — no React, no storage. Inclusion state lives on the
-// system (`library.included`, seeded with all Core UI by starters); older
-// systems without the field default to the same. Inclusion never deletes
-// source components, docs, registry, or catalog entries — it only curates
-// what belongs to one system's kit, gallery, and future export surface.
+// Component-library curation for the Design System builder.
+// Pure functions only — no React, no storage. Design systems contain basic
+// (core) components only. Premium experiences live exclusively in the
+// component library (/experience/components, /docs/components) where they
+// can be downloaded individually — they are never part of a system's kit,
+// gallery, or export surface. Inclusion state lives on the system
+// (`library.included`, seeded with all Core UI by starters); older systems
+// without the field default to the same. Any stored premium ids (legacy data)
+// are filtered out on read/write, never deleted from source components,
+// docs, registry, or catalog entries.
 
 import {
   resolveToken,
@@ -12,8 +16,6 @@ import {
 import {
   COMPONENT_MANIFEST,
   CORE_COMPONENT_IDS,
-  PREMIUM_COMPONENT_IDS,
-  RECOMMENDED_PREMIUM_IDS,
   manifestById,
   type ComponentManifestEntry,
   type PremiumTokenBridge,
@@ -26,12 +28,14 @@ function withLibrary(system: DesignSystemConfig, included: string[]): DesignSyst
   return { ...system, library: { included: [...included] } };
 }
 
-/** Stored inclusion list, sanitized to known manifest ids. Absence means all Core UI. */
+const CORE_IDS = new Set<string>(CORE_COMPONENT_IDS as readonly string[]);
+
+/** Stored inclusion list, sanitized to known basic (core) ids. Premium ids are never part of a system. */
 export function includedIds(system: DesignSystemConfig): string[] {
   const stored = system.library?.included;
   if (!Array.isArray(stored)) return [...CORE_COMPONENT_IDS];
-  const known = new Set(COMPONENT_MANIFEST.map((entry) => entry.id));
-  return stored.filter((id) => typeof id === "string" && known.has(id));
+  const knownCore = new Set(COMPONENT_MANIFEST.filter((entry) => entry.tier === "core").map((entry) => entry.id));
+  return stored.filter((id) => typeof id === "string" && knownCore.has(id));
 }
 
 export function isIncluded(system: DesignSystemConfig, id: string): boolean {
@@ -49,13 +53,16 @@ export function includedEntries(system: DesignSystemConfig, tier?: "core" | "pre
 export type CurationMutation = { ok: true; system: DesignSystemConfig } | { ok: false; error: string };
 
 function setIncluded(system: DesignSystemConfig, ids: readonly string[]): DesignSystemConfig {
-  const known = new Set(COMPONENT_MANIFEST.map((entry) => entry.id));
-  const unique = [...new Set(ids)].filter((id) => known.has(id));
+  const unique = [...new Set(ids)].filter((id) => CORE_IDS.has(id));
   return withLibrary(system, unique);
 }
 
 export function includeComponent(system: DesignSystemConfig, id: string): CurationMutation {
-  if (!manifestById(id)) return { ok: false, error: `"${id}" is not a known library component.` };
+  const entry = manifestById(id);
+  if (!entry) return { ok: false, error: `"${id}" is not a known library component.` };
+  if (entry.tier !== "core") {
+    return { ok: false, error: `"${id}" is a premium experience. Premium components live only in the component library — they cannot be added to a design system.` };
+  }
   if (isIncluded(system, id)) return { ok: true, system };
   return { ok: true, system: setIncluded(system, [...includedIds(system), id]) };
 }
@@ -68,52 +75,41 @@ export function removeComponent(system: DesignSystemConfig, id: string): DesignS
 }
 
 export function includeFamily(system: DesignSystemConfig, family: string): DesignSystemConfig {
-  const familyIds = COMPONENT_MANIFEST.filter((entry) => entry.family === family).map((entry) => entry.id);
+  const familyIds = COMPONENT_MANIFEST.filter((entry) => entry.family === family && entry.tier === "core").map((entry) => entry.id);
   return setIncluded(system, [...includedIds(system), ...familyIds]);
 }
 
-export function includeAllPremium(system: DesignSystemConfig): DesignSystemConfig {
-  return setIncluded(system, [...includedIds(system), ...PREMIUM_COMPONENT_IDS]);
+/** Legacy migration helper: strip any stored premium picks, keeping core selection. Premium can no longer be added. */
+export function removeAllPremium(system: DesignSystemConfig): DesignSystemConfig {
+  return setIncluded(
+    system,
+    includedIds(system).filter((id) => (CORE_COMPONENT_IDS as readonly string[]).includes(id)),
+  );
 }
 
-/** Curated production-ready premium picks (stable effects across families). */
-export function includeRecommendedPremium(system: DesignSystemConfig): { system: DesignSystemConfig; added: string[] } {
-  const before = new Set(includedIds(system));
-  const added = RECOMMENDED_PREMIUM_IDS.filter((id) => manifestById(id) && !before.has(id));
-  return { system: setIncluded(system, [...before, ...added]), added: [...added] };
-}
-
-/** Back to the starter posture: Core UI only. Reversible via re-include. */
+/** Back to the starter posture: Core UI only. */
 export function resetToCore(system: DesignSystemConfig): DesignSystemConfig {
   return setIncluded(system, [...CORE_COMPONENT_IDS]);
 }
 
-/** Replace the stored inclusion list outright (sanitized to known ids). */
+/** Replace the stored inclusion list outright (sanitized to known basic ids; premium ids are dropped). */
 export function setIncludedIds(system: DesignSystemConfig, ids: readonly string[]): DesignSystemConfig {
   return setIncluded(system, ids);
 }
 
-/** Select every basic (core) component, preserving any premium picks. */
+/** Select every basic (core) component. */
 export function includeAllCore(system: DesignSystemConfig): DesignSystemConfig {
   return setIncluded(system, [...includedIds(system), ...CORE_COMPONENT_IDS]);
 }
 
-/** Remove every premium pick, keeping the current basic (core) selection. */
-export function removeAllPremium(system: DesignSystemConfig): DesignSystemConfig {
-  const included = new Set(includedIds(system));
-  return setIncluded(
-    system,
-    [...included].filter((id) => (CORE_COMPONENT_IDS as readonly string[]).includes(id)),
-  );
-}
-
 export function inclusionSummary(system: DesignSystemConfig): { included: number; total: number; core: number; premium: number } {
   const entries = includedEntries(system);
+  const core = entries.filter((entry) => entry.tier === "core").length;
   return {
-    included: entries.length,
-    total: COMPONENT_MANIFEST.length,
-    core: entries.filter((entry) => entry.tier === "core").length,
-    premium: entries.filter((entry) => entry.tier === "premium").length,
+    included: core,
+    total: COMPONENT_MANIFEST.filter((entry) => entry.tier === "core").length,
+    core,
+    premium: 0,
   };
 }
 

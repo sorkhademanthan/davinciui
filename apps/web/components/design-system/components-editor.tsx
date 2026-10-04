@@ -1,12 +1,10 @@
 "use client"
 
-import { Check, Search, Trash2 } from "lucide-react"
+import { Check, Search } from "lucide-react"
 import { useMemo, useState, type ReactNode } from "react"
 import type { DesignSystemConfig } from "@/lib/design-system/domain"
 import {
   includedIds,
-  inclusionSummary,
-  removeAllPremium,
   setIncludedIds,
 } from "@/lib/design-system/component-curation"
 import {
@@ -59,7 +57,6 @@ export function ComponentsEditor({
 }) {
   const core = useMemo(() => coreEntries(), [])
   const included = useMemo(() => new Set(includedIds(system)), [system])
-  const summary = inclusionSummary(system)
   const [query, setQuery] = useState("")
 
   const selectedCore = core.filter((entry) => included.has(entry.id))
@@ -118,32 +115,13 @@ export function ComponentsEditor({
       <PageHeader
         eyebrow="Design System / System"
         title="Components"
-        description="Choose which basic components belong to this system. Only basic components are listed here — premium experiences stay out unless you add them from the catalog."
+        description="Choose which basic components belong to this system. Premium experiences live only in the component library, where they can be downloaded individually — they are never part of a design system."
         action={
           <span className="inline-flex min-h-9 items-center gap-2 rounded-full border border-border bg-muted/40 px-3 text-xs font-medium text-muted-foreground">
             {selectedCore.length} of {core.length} basic selected
           </span>
         }
       />
-
-      {summary.premium > 0 && (
-        <div className="mt-6 flex flex-wrap items-center gap-3 rounded-xl border border-amber-500/40 bg-amber-500/5 p-4">
-          <p className="min-w-0 flex-1 text-sm leading-6">
-            <span className="font-semibold">{summary.premium} premium {summary.premium === 1 ? "experience is" : "experiences are"} also in this kit.</span>{" "}
-            <span className="text-muted-foreground">
-              Premium picks ship as needs-review and each one adds a validation warning plus appendix pages. Remove them to keep the handbook clean.
-            </span>
-          </p>
-          <button
-            type="button"
-            onClick={() => save(removeAllPremium(system))}
-            className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-destructive/40 px-4 py-2 text-sm font-medium text-destructive transition-colors hover:bg-destructive/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            <Trash2 className="size-4" aria-hidden="true" />
-            Remove all premium
-          </button>
-        </div>
-      )}
 
       <div className="mt-6 flex flex-wrap items-center gap-2">
         <button

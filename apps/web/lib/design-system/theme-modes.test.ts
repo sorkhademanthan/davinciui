@@ -14,8 +14,8 @@ import {
   resolveSemanticsForTheme,
 } from "./preview";
 import {
+  COMPONENT_MANIFEST,
   manifestById,
-  RECOMMENDED_PREMIUM_IDS,
 } from "./component-manifest";
 import { resolveBridgeValues } from "./component-curation";
 import type { DesignSystemConfig } from "./domain";
@@ -279,10 +279,12 @@ test("reduced-motion fallback remains active after theme switching", () => {
     const full = resolvePreview(system, themeId, 1024, { osPrefersReduced: false });
     assert.equal(full.motion.reduce, full.motion.reason === "Unavailable" ? false : full.motion.reduce);
   }
-  // Curated premium effects declare a static/simplified/disabled fallback.
-  for (const id of RECOMMENDED_PREMIUM_IDS) {
-    const item = manifestById(id);
-    assert.ok(item, `recommended premium exists: ${id}`);
-    assert.notEqual(item!.reducedMotionFallback, "not-applicable", `${id} declares a fallback`);
+  // Premium effects in the component library declare a static/simplified/disabled fallback.
+  const samplePremium = COMPONENT_MANIFEST.filter((entry) => entry.tier === "premium").slice(0, 12);
+  assert.ok(samplePremium.length > 0, "premium breadth in library");
+  for (const entry of samplePremium) {
+    const item = manifestById(entry.id);
+    assert.ok(item, `premium exists: ${entry.id}`);
+    assert.notEqual(item!.reducedMotionFallback, "not-applicable", `${entry.id} declares a fallback`);
   }
 });

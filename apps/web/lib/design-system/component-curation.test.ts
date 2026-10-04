@@ -9,7 +9,6 @@ import {
   COMPONENT_MANIFEST,
   CORE_COMPONENT_IDS,
   PREMIUM_COMPONENT_IDS,
-  RECOMMENDED_PREMIUM_IDS,
   manifestById,
   type ComponentFamily,
   type ComponentMaturity,
@@ -17,17 +16,17 @@ import {
 } from "./component-manifest";
 import {
   componentReadiness,
-  includeAllPremium,
   includeComponent,
   includeFamily,
-  includeRecommendedPremium,
   includedEntries,
   includedIds,
   inclusionSummary,
   isIncluded,
+  removeAllPremium,
   removeComponent,
   resetToCore,
   resolveBridgeValues,
+  setIncludedIds,
   validateBridge,
 } from "./component-curation";
 import { components as registryComponents } from "../../registry";
@@ -119,60 +118,59 @@ test("tier/family/maturity values are valid", () => {
   }
 });
 
-test("Core and Premium components can both be included in a system", () => {
+test("Design systems contain basic components only — premium stays library-only", () => {
   const system = manthanSystem();
   // New systems begin with all Core UI included.
   for (const id of ["button", "input", "card", "dialog"]) {
     assert.ok(isIncluded(system, id), id);
   }
-  assert.ok(!isIncluded(system, "text-morph"), "premium starts out, stays discoverable");
-  const added = includeComponent(system, "text-morph");
-  assert.equal(added.ok, true);
-  if (!added.ok) return;
-  assert.ok(isIncluded(added.system, "text-morph"));
-  assert.ok(isIncluded(added.system, "button"), "core untouched");
-  // Unknown ids are rejected, never stored.
+  assert.ok(!isIncluded(system, "text-morph"), "premium never in systems");
+  // Premium cannot be added: single, family, or bulk.
+  assert.equal(includeComponent(system, "text-morph").ok, false);
   assert.equal(includeComponent(system, "ghost-effect").ok, false);
-  const removed = removeComponent(added.system, "text-morph");
-  assert.ok(!isIncluded(removed, "text-morph"));
-  assert.ok(isIncluded(removed, "button"));
-  // Families and bulk actions.
   const scrolled = includeFamily(system, "scroll");
   assert.ok(
-    COMPONENT_MANIFEST.filter((entry) => entry.family === "scroll").every((entry) =>
+    COMPONENT_MANIFEST.filter((entry) => entry.family === "scroll" && entry.tier === "core").every((entry) =>
       isIncluded(scrolled, entry.id),
     ),
   );
-  const all = includeAllPremium(system);
-  assert.ok(
-    PREMIUM_COMPONENT_IDS.every((id) => isIncluded(all, id)),
-    "all premium includable",
-  );
-  const { system: recommended, added: picks } = includeRecommendedPremium(system);
-  assert.ok(picks.length > 0 && picks.length <= RECOMMENDED_PREMIUM_IDS.length);
-  assert.ok(picks.every((id) => isIncluded(recommended, id)));
-  const reset = resetToCore(all);
+  assert.ok(!isIncluded(scrolled, "scroll-reveal-image"), "scroll premium stays out");
+  // Core families still curate normally.
+  const inputs = includeFamily(removeComponent(system, "input"), "inputs");
+  assert.ok(isIncluded(inputs, "input"));
+  // Stored premium ids (legacy data) are filtered on read and write.
+  const legacy: DesignSystemConfig = {
+    ...system,
+    library: { included: [...CORE_COMPONENT_IDS, ...PREMIUM_COMPONENT_IDS.slice(0, 3)] },
+  };
+  assert.ok(!isIncluded(legacy, PREMIUM_COMPONENT_IDS[0]!));
+  assert.deepEqual([...includedIds(legacy)].sort(), [...CORE_COMPONENT_IDS].sort());
+  const cleaned = removeAllPremium(legacy);
+  assert.deepEqual([...includedIds(cleaned)].sort(), [...CORE_COMPONENT_IDS].sort());
+  const reset = resetToCore(legacy);
   assert.deepEqual([...includedIds(reset)].sort(), [...CORE_COMPONENT_IDS].sort());
+  const written = setIncludedIds(system, ["button", "text-morph", "ghost-effect"]);
+  assert.deepEqual(includedIds(written), ["button"]);
 });
 
 test("inclusion state persists after reload", () => {
   const mem = memoryStorage();
   const store = createDesignSystemsStore(() => mem);
-  const added = includeComponent(manthanSystem(), "silk-aurora");
-  assert.equal(added.ok, true);
-  if (!added.ok) return;
-  const saved = store.save(added.system);
+  const withoutCard = removeComponent(manthanSystem(), "card");
+  assert.ok(!isIncluded(withoutCard, "card"));
+  const saved = store.save(withoutCard);
   assert.equal(saved.ok, true);
-  const reloaded = createDesignSystemsStore(() => mem).get(added.system.id);
+  const reloaded = createDesignSystemsStore(() => mem).get(withoutCard.id);
   assert.ok(reloaded);
-  assert.ok(isIncluded(reloaded!, "silk-aurora"));
+  assert.ok(!isIncluded(reloaded!, "card"));
   assert.ok(isIncluded(reloaded!, "button"));
   // Legacy systems without the field default to all Core UI.
   const legacy: DesignSystemConfig = { ...manthanSystem(), library: undefined };
   assert.deepEqual([...includedIds(legacy)].sort(), [...CORE_COMPONENT_IDS].sort());
   const summary = inclusionSummary(reloaded!);
-  assert.equal(summary.included, summary.core + summary.premium);
-  assert.equal(summary.total, COMPONENT_MANIFEST.length);
+  assert.equal(summary.premium, 0);
+  assert.equal(summary.included, summary.core);
+  assert.equal(summary.total, CORE_COMPONENT_IDS.length);
 });
 
 test("a Premium component receives only supported token-bridge values", () => {
@@ -227,23 +225,28 @@ test("components marked Needs review expose concrete missing checks", () => {
   }
 });
 
-test("Preview receives only included components", () => {
+test("Preview receives only included basic components", () => {
   const system = manthanSystem();
   assert.ok(includedEntries(system).every((entry) => entry.tier === "core"));
   assert.equal(includedEntries(system, "premium").length, 0);
-  const added = includeComponent(system, "text-morph");
-  assert.equal(added.ok, true);
-  if (!added.ok) return;
-  assert.deepEqual(
-    includedEntries(added.system, "premium").map((entry) => entry.id),
-    ["text-morph"].filter((id) => manifestById(id)),
-  );
+  // Premium can no longer be added to a system.
+  assert.equal(includeComponent(system, "text-morph").ok, false);
+  assert.equal(includedEntries(system, "premium").length, 0);
   // Unknown stored ids never leak into the gallery.
   const tampered: DesignSystemConfig = {
     ...system,
     library: { included: ["button", "ghost-effect"] },
   };
   assert.ok(includedEntries(tampered).every((entry) => entry.id !== "ghost-effect"));
+  // Legacy stored premium ids are filtered out.
+  const legacyPremium: DesignSystemConfig = {
+    ...system,
+    library: { included: ["button", "text-morph"] },
+  };
+  assert.deepEqual(
+    includedEntries(legacyPremium).map((entry) => entry.id),
+    ["button"],
+  );
 });
 
 test("readiness data is machine-readable for the Validate phase", () => {

@@ -4,7 +4,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import type { DesignSystemConfig } from "./domain";
 import { createSystemFromStarter } from "./starters";
-import { RECOMMENDED_PREMIUM_IDS } from "./component-manifest";
+import { PREMIUM_COMPONENT_IDS } from "./component-manifest";
 import {
   VALIDATION_GROUP_ORDER,
   contrastRatio,
@@ -175,19 +175,19 @@ test("unresolvable contrast pair is a warning, not an error", () => {
   assert.ok(guidance.every((finding) => finding.severity === "warning"));
 });
 
-test("included premium component needing review is a warning", () => {
+test("stored premium ids are library-only and flagged as ignored (never part of a system)", () => {
   const system = healthySystem();
-  const premiumId = RECOMMENDED_PREMIUM_IDS[0]!;
+  const premiumId = PREMIUM_COMPONENT_IDS[0]!;
   const withPremium: DesignSystemConfig = {
     ...system,
     library: { included: [...(system.library?.included ?? []), premiumId] },
   };
   const report = validateDesignSystemReport(withPremium);
-  const review = findingsOf(report, "components").filter(
-    (finding) => finding.severity === "warning" && /needs review/i.test(finding.title),
+  const flagged = findingsOf(report, "components").filter(
+    (finding) => finding.severity === "warning" && /premium experience/i.test(finding.title),
   );
-  assert.ok(review.length > 0);
-  assert.ok(review.every((finding) => finding.route === "/experience/components"));
+  assert.ok(flagged.length > 0);
+  assert.ok(flagged.every((finding) => finding.route === "/experience/components"));
   // Warnings allow export.
   if (report.summary.errors === 0) assert.equal(report.exportReady, true);
 });
@@ -229,7 +229,7 @@ test("included component with an invalid slot reference is an error", () => {
 
 test("issue ordering is stable: errors first, groups in fixed order", () => {
   const system = healthySystem();
-  const premiumId = RECOMMENDED_PREMIUM_IDS[0]!;
+  const premiumId = PREMIUM_COMPONENT_IDS[0]!;
   const broken: DesignSystemConfig = {
     ...system,
     library: { included: [...(system.library?.included ?? []), premiumId] },

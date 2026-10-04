@@ -378,22 +378,6 @@ const FAMILY_SLOTS: Record<string, CoreSlot[]> = {
   layout: [{ slot: "background" }, { slot: "border" }],
 };
 
-/** Production-ready premium picks for the recommended-set action (curated, stable effects across families). */
-export const RECOMMENDED_PREMIUM_IDS: readonly string[] = [
-  "text-morph",
-  "text-reveal",
-  "rolling-text",
-  "encrypted-text",
-  "silk-aurora",
-  "soft-fluid-gradient",
-  "magic-cursor-pro",
-  "scroll-reveal-image",
-  "stacked-scroll-gallery",
-  "profile-carousel",
-  "hover-cards",
-  "animated-metric",
-];
-
 // ---------------------------------------------------------------------------
 // Manifest assembly (derived, then curated by rule)
 // ---------------------------------------------------------------------------

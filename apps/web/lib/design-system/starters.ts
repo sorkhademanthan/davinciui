@@ -666,7 +666,7 @@ export function createSystemFromStarter(input: CreateFromStarterInput): DesignSy
     semanticTokens: buildSemanticTokens(actionBackground, spec),
     themes: buildThemes(spec),
     components: buildComponents(spec),
-    // New systems begin with all Core UI included; premium stays discoverable.
+    // New systems begin with all Core UI included; premium lives only in the component library.
     library: { included: [...CORE_COMPONENT_IDS] },
     exportMeta: { version: "1.0", generator: "davinciui-starters" },
   };

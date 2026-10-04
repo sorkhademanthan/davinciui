@@ -22,11 +22,6 @@ import {
   invalidOverrideKeys,
   unresolvedOverrides,
 } from "./themes";
-import {
-  componentReadiness,
-  includedEntries,
-  validateBridge,
-} from "./component-curation";
 import { manifestById } from "./component-manifest";
 import { parseLength } from "./spacing";
 import { parseRadiusValue } from "./radius";
@@ -776,63 +771,10 @@ function checkComponents(system: DesignSystemConfig, collector: Collector): void
     });
   }
 
-  let included: ReturnType<typeof includedEntries>;
-  try {
-    included = includedEntries(system);
-  } catch {
-    included = [];
-  }
-  const premiumIncluded = included.filter((entry) => entry.tier === "premium");
-  for (const entry of premiumIncluded) {
-    if (entry.maturity !== "ready") {
-      const gaps = entry.missingChecks.length > 0 ? ` Open gaps: ${entry.missingChecks.join("; ")}.` : "";
-      addFinding(collector, "components", "warning", "premium-needs-review",
-        `"${entry.name}" is included but still needs review.`,
-        `This premium experience ships as needs-review in the catalog.${gaps} Review it before relying on it in production.`,
-        `library.included.${entry.id}`, entry.name, COMPONENTS_CATALOG_ROUTE);
-    } else {
-      pass(collector);
-    }
-    if (!entry.bridge) {
-      addFinding(collector, "components", "warning", "premium-missing-bridge",
-        `"${entry.name}" has no token bridge.`,
-        "Without a token bridge this experience cannot follow the system theme. It still renders, but it will not recolor with Light and Dark.",
-        `library.included.${entry.id}`, entry.name, COMPONENTS_CATALOG_ROUTE);
-      continue;
-    }
-    let bridgeIssues: ReturnType<typeof validateBridge>;
-    try {
-      bridgeIssues = validateBridge(system, entry.bridge, entry.motionModality);
-    } catch {
-      bridgeIssues = [];
-    }
-    for (const issue of bridgeIssues) {
-      addFinding(collector, "components", "warning", "premium-bridge",
-        `"${entry.name}" bridge reference does not resolve.`,
-        `"${issue.key}": ${issue.message}`,
-        `library.included.${entry.id}.${issue.key}`, entry.name, COMPONENTS_CATALOG_ROUTE);
-    }
-    if (bridgeIssues.length === 0) pass(collector);
-
-    // Machine-readable readiness that is still failing (unknown support levels).
-    let readiness: ReturnType<typeof componentReadiness>;
-    try {
-      readiness = componentReadiness(system, entry);
-    } catch {
-      readiness = [];
-    }
-    const failing = readiness.filter((check) => !check.pass);
-    for (const check of failing) {
-      // Bridge validity is already reported above with better copy.
-      if (check.id === "bridge-valid" && bridgeIssues.length > 0) continue;
-      addFinding(collector, "components", "info", "premium-readiness",
-        `"${entry.name}": ${check.label} is not confirmed.`,
-        check.detail,
-        `library.included.${entry.id}.${check.id}`, entry.name, COMPONENTS_CATALOG_ROUTE);
-    }
-  }
-
-  // Unknown stored ids never silently vanish: surface them once.
+  // Design systems contain basic components only. Premium experiences live
+  // exclusively in the component library and are never part of a system.
+  // Legacy stored systems may still list premium ids — surface them once as
+  // ignored so nothing silently vanishes, and point at the library.
   let rawIncluded: string[];
   try {
     rawIncluded = Array.isArray(system.library?.included) ? [...system.library.included] : [];
@@ -841,7 +783,13 @@ function checkComponents(system: DesignSystemConfig, collector: Collector): void
   }
   for (const id of rawIncluded) {
     try {
-      if (!manifestById(id)) {
+      const entry = manifestById(id);
+      if (entry && entry.tier === "premium") {
+        addFinding(collector, "components", "warning", "premium-not-in-systems",
+          `"${entry.name}" is a premium experience and is not part of design systems.`,
+          "Premium components live only in the component library, where they can be downloaded individually. This entry is ignored by the system — remove it to keep the stored list clean.",
+          `library.included.${id}`, entry.name, COMPONENTS_CATALOG_ROUTE);
+      } else if (!entry) {
         addFinding(collector, "components", "warning", "unknown-component",
           `Included component "${id}" is not in the catalog.`,
           "It stays stored so nothing is silently deleted, but it will not render or export. Remove it or re-include a known component.",
@@ -852,7 +800,7 @@ function checkComponents(system: DesignSystemConfig, collector: Collector): void
     }
   }
 
-  if (premiumIncluded.length === 0) pass(collector);
+  pass(collector);
 }
 
 function checkAccessibility(system: DesignSystemConfig, systemId: string, collector: Collector): void {
@@ -907,8 +855,7 @@ const CHECKED_LIST: readonly string[] = [
   "Light and Dark theme presence",
   "Theme override keys, values, and cycles",
   "Component slot references",
-  "Included premium components needing review",
-  "Premium token bridges and readiness",
+  "Premium components are library-only and never part of a system",
   "Text and action contrast pairs (automated guidance only)",
   "Export readiness (errors block export; warnings travel with the report)",
 ];
