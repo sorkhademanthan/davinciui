@@ -63,8 +63,8 @@ export function CreateDesignSystem() {
   };
 
   return (
-    <main className="min-h-[calc(100svh-3.5rem)] min-w-0 bg-background px-5 py-7 sm:px-8 sm:py-10 lg:px-10">
-      <div className="mx-auto w-full max-w-2xl">
+    <div className="min-h-[calc(100svh-3.5rem)] min-w-0 bg-background px-5 py-7 sm:px-8 sm:py-10 lg:px-10">
+      <div className="w-full max-w-2xl">
         <Link
           href="/design-system"
           className="inline-flex min-h-11 items-center gap-2 rounded-lg px-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
@@ -193,6 +193,6 @@ export function CreateDesignSystem() {
           </div>
         </form>
       </div>
-    </main>
+    </div>
   );
 }
