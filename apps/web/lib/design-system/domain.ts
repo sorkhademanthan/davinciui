@@ -511,7 +511,10 @@ export function defaultBorders(): BorderFoundations {
       { id: "border.default", label: "Default border", width: "default", style: "solid", color: "neutral.200" },
       { id: "border.strong", label: "Strong border", width: "medium", style: "solid", color: "neutral.300" },
       { id: "border.focus", label: "Focus border", width: "medium", style: "solid", color: "focus.ring" },
-      { id: "border.error", label: "Error border", width: "thin", style: "solid", color: "danger.500" },
+      // Semantic reference (not danger.500): every starter ships
+      // status.danger.foreground, including neutral-only Blank/Minimal with
+      // no danger palette, so the default validates cleanly everywhere.
+      { id: "border.error", label: "Error border", width: "thin", style: "solid", color: "status.danger.foreground" },
     ],
   };
 }
