@@ -7,7 +7,7 @@
   "files": [
     {
       "path": "components/ui/label.tsx",
-      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { cn } from \"@workspace/ui/lib/utils\";\n\nexport interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {}\n\nfunction Label({ className, ...props }: LabelProps) {\n  return <label className={cn(\"text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70\", className)} {...props} />;\n}\n\nexport { Label };\n",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { cn } from \"@/lib/utils\";\n\nexport interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {}\n\nfunction Label({ className, ...props }: LabelProps) {\n  return <label className={cn(\"text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70\", className)} {...props} />;\n}\n\nexport { Label };\n",
       "type": "registry:ui"
     }
   ],
