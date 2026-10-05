@@ -58,8 +58,8 @@ export default function McpDocsPage() {
   )
 
   return (
-    <div className="min-h-[calc(100svh-3.5rem)] bg-[#fafafa] text-zinc-950 dark:bg-[#080808] dark:text-white">
-      <main className="mx-auto flex min-h-[calc(100svh-3.5rem)] w-full max-w-[760px] flex-col items-center justify-center px-5 py-10 sm:px-8 sm:py-14">
+    <div className="min-h-[calc(100svh-4.5rem)] bg-[#fafafa] text-zinc-950 dark:bg-[#080808] dark:text-white">
+      <main className="mx-auto flex min-h-[calc(100svh-4.5rem)] w-full max-w-[760px] flex-col items-center justify-center px-5 py-10 sm:px-8 sm:py-14">
         <div className="flex max-w-[620px] flex-col items-center text-center">
           <div className="mb-4 flex size-10 items-center justify-center rounded-xl border border-black/10 bg-white shadow-sm dark:border-white/10 dark:bg-white/[0.05] dark:shadow-none">
             <Terminal className="size-5 text-blue-600 dark:text-blue-400" aria-hidden="true" />

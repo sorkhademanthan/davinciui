@@ -1,6 +1,5 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { absoluteUrl } from "@/lib/site"
 import { SiteHeader } from "@/components/site-header"
 import { DocsShell } from "@/components/docs-shell"
 
@@ -11,9 +10,6 @@ export const metadata: Metadata = {
     title: "UI Components Documentation | DavinciUI by Manthan Sorkhade",
     description: "Browse all React UI components. Copy-paste ready code with Tailwind CSS and Framer Motion.",
   },
-  alternates: {
-    canonical: absoluteUrl("/docs"),
-  },
 }
 
 export default function DocsLayout({
@@ -22,9 +18,11 @@ export default function DocsLayout({
   children: React.ReactNode
 }): React.JSX.Element {
   return (
-    <div data-route-docs className="min-h-svh flex flex-col bg-[#fcfcfc] dark:bg-[#050505]">
+    <div data-route-docs className="flex min-h-svh flex-col bg-background">
       <SiteHeader />
-      <DocsShell>{children}</DocsShell>
+      <div className="flex flex-1 flex-col pt-18">
+        <DocsShell>{children}</DocsShell>
+      </div>
     </div>
   )
 }
