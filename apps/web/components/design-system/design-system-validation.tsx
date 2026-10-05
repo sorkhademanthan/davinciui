@@ -15,6 +15,7 @@ import {
 import Link from "next/link"
 import { useMemo, useState, type ReactNode } from "react"
 import type { DesignSystemConfig } from "@/lib/design-system/domain"
+import { track } from "@/lib/analytics"
 import {
   validateDesignSystemReport,
   type ValidationFinding,
@@ -212,6 +213,13 @@ function ReadinessHero({
         </div>
         <Link
           href={actionHref}
+          onClick={() =>
+            track("design_system_validated", {
+              status: report.status,
+              errors: report.summary.errors,
+              warnings: report.summary.warnings,
+            })
+          }
           className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-foreground px-4 text-sm font-medium text-background transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 motion-reduce:transition-none"
         >
           {actionLabel}

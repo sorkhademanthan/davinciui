@@ -49,8 +49,8 @@ export function DesignSystemLayoutShell({
           </button>
         }
       />
-      <div className="flex-1 grid grid-cols-1 md:grid-cols-[220px_minmax(0,1fr)] pt-14">
-        <aside className="hidden md:flex md:flex-col sticky top-14 h-[calc(100vh-3.5rem)] border-r border-sidebar-border bg-sidebar text-sidebar-foreground overflow-hidden">
+      <div className="flex-1 grid grid-cols-1 md:grid-cols-[220px_minmax(0,1fr)] pt-18">
+        <aside className="hidden md:flex md:flex-col sticky top-18 h-[calc(100vh-4.5rem)] border-r border-sidebar-border bg-sidebar text-sidebar-foreground overflow-hidden">
           <DesignSystemSidebarNav />
         </aside>
         <main className="min-w-0 w-full max-w-none m-0 overflow-hidden bg-background">
