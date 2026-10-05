@@ -7,7 +7,7 @@
   "files": [
     {
       "path": "components/ui/aspect-ratio.tsx",
-      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { cn } from \"@workspace/ui/lib/utils\";\n\nexport interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {\n  ratio?: number;\n}\n\nfunction AspectRatio({ ratio = 1, className, style, ...props }: AspectRatioProps) {\n  return (\n    <div\n      data-slot=\"aspect-ratio\"\n      style={{ position: \"relative\", width: \"100%\", paddingBottom: `${100 / ratio}%`, ...style } as React.CSSProperties}\n      className={cn(className)}\n      {...props}\n    >\n      <div className=\"absolute inset-0\">{props.children}</div>\n    </div>\n  );\n}\n\nexport { AspectRatio };\n",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { cn } from \"@/lib/utils\";\n\nexport interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {\n  ratio?: number;\n}\n\nfunction AspectRatio({ ratio = 1, className, style, ...props }: AspectRatioProps) {\n  return (\n    <div\n      data-slot=\"aspect-ratio\"\n      style={{ position: \"relative\", width: \"100%\", paddingBottom: `${100 / ratio}%`, ...style } as React.CSSProperties}\n      className={cn(className)}\n      {...props}\n    >\n      <div className=\"absolute inset-0\">{props.children}</div>\n    </div>\n  );\n}\n\nexport { AspectRatio };\n",
       "type": "registry:ui"
     }
   ],
