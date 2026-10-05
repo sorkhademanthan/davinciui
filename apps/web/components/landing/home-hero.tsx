@@ -67,12 +67,6 @@ export function HomeHero() {
         <LandingContent>
           <div className={styles.layout}>
             <div className={styles.intro}>
-              <a href="https://vercel.com/open-source-program" target="_blank" rel="noopener noreferrer" className={styles.backing}>
-                <svg aria-hidden="true" width="13" height="12" viewBox="0 0 76 65" fill="currentColor"><path d="M37.59.25l36.95 64H.64z" /></svg>
-                Backed by Vercel OSS
-                <ArrowUpRight size={13} aria-hidden="true" />
-              </a>
-
               <h1 id="home-hero-heading" className={styles.heading}>
                 <span>Give your</span>
                 <span>interface life.</span>

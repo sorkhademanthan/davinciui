@@ -21,14 +21,10 @@ interface PackageManagerCommandProps {
 }
 
 function HighlightedCommand({ command }: { command: string }) {
-  const [commandName, ...rest] = command.split(" ")
 
   return (
-    <code className="text-sm">
-      <span className="text-violet-500 dark:text-violet-400">{commandName}</span>
-      {rest.length > 0 ? (
-        <span className="text-sky-600 dark:text-sky-300"> {rest.join(" ")}</span>
-      ) : null}
+    <code className="font-mono text-sm text-foreground">
+      {command}
     </code>
   )
 }
@@ -55,7 +51,7 @@ export function PackageManagerCommand({
     >
       <div {...wrapperProps}>
         <div ref={contentRef}>
-          <pre className="max-h-96 overflow-x-auto overflow-y-auto whitespace-pre rounded-lg bg-white p-4 font-mono text-sm leading-5 no-scrollbar dark:!bg-[#121212]">
+          <pre className="max-h-96 overflow-x-auto overflow-y-auto whitespace-pre rounded-b-md bg-background p-4 font-mono text-sm leading-5 no-scrollbar">
             <HighlightedCommand command={command} />
           </pre>
         </div>
