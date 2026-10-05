@@ -11,13 +11,13 @@ export const metadata: Metadata = {
 
 export default function BlocksPage() {
   return (
-    <section className="relative min-h-[calc(100svh-3.5rem)] overflow-hidden bg-[#fafafa] text-zinc-950 dark:bg-[#080808] dark:text-white">
+    <section className="relative min-h-[calc(100svh-4.5rem)] overflow-hidden bg-[#fafafa] text-zinc-950 dark:bg-[#080808] dark:text-white">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_72%_42%,rgba(59,130,246,0.08),transparent_36%)] dark:bg-[radial-gradient(circle_at_72%_42%,rgba(59,130,246,0.16),transparent_42%)]"
       />
 
-      <div className="relative mx-auto grid min-h-[calc(100svh-3.5rem)] w-full max-w-[1240px] items-center gap-16 px-5 py-16 sm:px-8 sm:py-20 lg:grid-cols-[0.88fr_1.12fr] lg:px-12 lg:py-24">
+      <div className="relative mx-auto grid min-h-[calc(100svh-4.5rem)] w-full max-w-[1240px] items-center gap-16 px-5 py-16 sm:px-8 sm:py-20 lg:grid-cols-[0.88fr_1.12fr] lg:px-12 lg:py-24">
         <div className="max-w-[590px]">
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-black/10 bg-white px-3 py-1.5 text-xs font-medium text-zinc-600 shadow-sm dark:border-white/10 dark:bg-white/[0.05] dark:text-zinc-300 dark:shadow-none">
             <LayoutTemplate className="size-3.5 text-blue-600 dark:text-blue-400" aria-hidden="true" />

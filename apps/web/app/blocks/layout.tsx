@@ -25,11 +25,11 @@ export default function BlocksLayout({
     <div className="min-h-screen overflow-x-clip bg-background text-foreground">
       <LandingGuideLines />
       <SiteHeader />
-      <main className="overflow-x-clip pt-14">
+      <main className="overflow-x-clip pt-18">
         <div
           data-blocks-layout
           className={cn(
-            "min-h-[calc(100vh-3.5rem)] overflow-x-clip bg-background",
+            "min-h-[calc(100vh-4.5rem)] overflow-x-clip bg-background",
             landingGutterClass,
           )}
         >

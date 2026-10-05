@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import { absoluteUrl } from "@/lib/site";
+
 import { BlockDisplay } from "@/components/blocks/block-display";
 import { BlocksHeading } from "@/components/blocks/blocks-heading";
 import { getAllBlocks } from "@/lib/blocks/registry";
@@ -26,6 +28,9 @@ export async function generateMetadata({
   return {
     title: `${item.title} Blocks | DavinciUI`,
     description: item.description,
+    alternates: {
+      canonical: absoluteUrl(`/blocks/${category}`),
+    },
   };
 }
 
