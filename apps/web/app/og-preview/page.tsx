@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 
-import { DavinciUILogomark } from "@/components/logos/davinciui-logomark";
-
 // Internal screenshot target for OG image generation — never indexed.
 export const metadata: Metadata = {
   title: "OG Preview — DavinciUI",
@@ -17,7 +15,13 @@ export default function OpenGraphPreviewPage() {
 
         <div className="absolute left-[104px] top-[120px] flex items-center gap-4 text-[38px] font-semibold leading-none tracking-[-0.045em] text-white">
           <div className="flex size-[46px] items-center justify-center">
-            <DavinciUILogomark className="size-[46px] text-white drop-shadow-[0_18px_46px_rgba(255,255,255,0.2)]" />
+            <img
+              src="/images/logo/logo-dark-180.png"
+              alt="DavinciUI"
+              width={46}
+              height={46}
+              className="size-[46px] drop-shadow-[0_18px_46px_rgba(255,255,255,0.2)]"
+            />
           </div>
           DavinciUI
         </div>

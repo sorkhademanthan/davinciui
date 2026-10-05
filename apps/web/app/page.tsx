@@ -126,23 +126,17 @@ export default function Home() {
                 }}
               >
                 <a
-                  href="https://vercel.com/open-source-program"
+                  href="https://github.com/sorkhademanthan/davinciui"
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-950/[0.08] px-3 py-1 text-[11px] font-medium text-zinc-600 dark:border-white/[0.08] dark:text-zinc-400 sm:text-xs"
+                  className="group inline-flex items-center gap-2 rounded-full border border-zinc-950/[0.08] bg-white/60 py-1 pl-3 pr-2.5 text-[11px] font-medium text-zinc-600 backdrop-blur transition-colors hover:border-zinc-950/[0.16] hover:text-zinc-950 dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-zinc-400 dark:hover:border-white/[0.16] dark:hover:text-white sm:text-xs"
                 >
-                  Backed by
-                  <svg
-                    viewBox="0 0 76 65"
-                    className="size-4"
-                    fill="currentColor"
-                  >
-                    <path d="M37.59.25l36.95 64H.64z" />
-                  </svg>
-                  <span className="font-semibold tracking-tight">
-                    Vercel OSS
+                  <span className="relative flex size-1.5" aria-hidden="true">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-60" />
+                    <span className="relative inline-flex size-1.5 rounded-full bg-emerald-500" />
                   </span>
-                  Program
+                  Open source · Free forever
+                  <ArrowIcon className="size-3.5 transition-transform duration-300 group-hover:rotate-45" />
                 </a>
               </motion.div>
 
@@ -154,11 +148,11 @@ export default function Home() {
                   delay: 0.2,
                   ease: [0.23, 1, 0.32, 1],
                 }}
-                className="mt-6 max-w-3xl text-[clamp(1.85rem,9vw,3rem)] font-medium leading-[0.98] tracking-[-0.035em] text-zinc-950 dark:text-white sm:text-5xl md:text-6xl"
+                className="mt-6 max-w-3xl text-balance text-[clamp(1.85rem,9vw,3rem)] font-medium leading-[0.98] tracking-[-0.035em] text-zinc-950 dark:text-white sm:text-5xl md:text-6xl"
               >
-                <span className="whitespace-nowrap">Beautiful Animated UI</span>
-                <br />
-                <span className="whitespace-nowrap">Components for React</span>
+                <span>Beautiful Animated UI</span>
+                <br className="hidden sm:block" />
+                <span>Components for React</span>
               </motion.h1>
 
               <motion.p
@@ -171,11 +165,8 @@ export default function Home() {
                 }}
                 className="mt-5 max-w-2xl text-[clamp(0.9rem,4vw,1rem)] font-normal leading-6 text-zinc-500 dark:text-zinc-400 sm:text-lg sm:leading-7"
               >
-                <span className="block whitespace-nowrap sm:hidden">
-                  Polished interactions for React projects
-                </span>
-                <span className="block whitespace-nowrap sm:hidden">
-                  with styling and animations handled.
+                <span className="block sm:hidden">
+                  Polished interactions for React projects with styling and animations handled.
                 </span>
                 <span className="hidden sm:inline">
                   Effortlessly add polished, production-ready interactions to

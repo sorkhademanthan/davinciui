@@ -10,9 +10,10 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import Script from "next/script";
 import "@workspace/ui/globals.css";
 import { Providers } from "@/components/providers";
+import { CookieConsent } from "@/components/cookie-consent";
 import { JsonLd } from "@/components/seo/json-ld";
 import { RouteScrollbarController } from "@/components/route-scrollbar-controller";
-import { absoluteUrl, siteConfig } from "@/lib/site";
+import { siteConfig } from "@/lib/site";
 
 const fontSans = Geist({
   subsets: ["latin"],
@@ -92,9 +93,11 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  alternates: {
-    canonical: siteConfig.url,
-  },
+  // Note: no sitewide canonical here — every indexable route sets its own
+  // self-referencing canonical, otherwise all pages would canonical to "/".
+  // Note: no explicit OG/Twitter images here either — file-convention
+  // opengraph-image.tsx routes supply per-section cards, and explicit
+  // metadata images would suppress them sitewide.
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -102,28 +105,11 @@ export const metadata: Metadata = {
     title: siteConfig.title,
     description: siteConfig.description,
     siteName: siteConfig.name,
-    images: [
-      {
-        url: absoluteUrl("/opengraph-image.png"),
-        width: 1200,
-        height: 630,
-        alt: "DavinciUI - Premium React UI Component Library",
-        type: "image/png",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "DavinciUI - Premium React UI Component Library",
     description: siteConfig.description,
-    images: [
-      {
-        url: absoluteUrl("/opengraph-image.png"),
-        width: 1200,
-        height: 630,
-        alt: "DavinciUI - Premium React UI Component Library",
-      },
-    ],
     creator: siteConfig.author.handle,
     site: siteConfig.author.handle,
   },
@@ -141,9 +127,9 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: "/icon.svg",
-    shortcut: "/icon.svg",
-    apple: "/icon.svg",
+    icon: "/images/logo/logo-dark-64.png",
+    shortcut: "/images/logo/logo-dark-64.png",
+    apple: "/images/logo/logo-dark-180.png",
   },
   manifest: "/manifest.json",
   category: "technology",
@@ -183,6 +169,7 @@ export default function RootLayout({
           <Providers>{children}</Providers>
         </div>
         <SpeedInsights />
+        <CookieConsent />
         <Script
           src="https://cloud.umami.is/script.js"
           data-website-id="26f17963-74a5-48ce-8d5c-6cebb2ca2baa"
