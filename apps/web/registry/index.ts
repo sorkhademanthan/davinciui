@@ -235,6 +235,14 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "textarea",
     addedAt: "2026-09-04",
   },
+  label: {
+    title: "Label",
+    description:
+      "Accessible form labels with proper control association and styling.",
+    category: "Forms",
+    slug: "label",
+    addedAt: "2026-09-04",
+  },
   select: {
     title: "Select",
     description:
@@ -391,6 +399,14 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "dialog",
     addedAt: "2026-09-04",
   },
+  "alert-dialog": {
+    title: "Alert Dialog",
+    description:
+      "A modal interruption that demands acknowledgement — destructive confirmations with focus lock and escape handling.",
+    category: "Overlays",
+    slug: "alert-dialog",
+    addedAt: "2026-09-04",
+  },
   drawer: {
     title: "Drawer",
     description: "A drawer component for React. Built on top of Vaul.",
@@ -450,6 +466,14 @@ export const components: Record<string, ComponentMetadata> = {
       "Keyboard-navigable disclosure stacks with animated panels and card layouts.",
     category: "Layout",
     slug: "accordion",
+    addedAt: "2026-09-04",
+  },
+  "aspect-ratio": {
+    title: "Aspect Ratio",
+    description:
+      "Responsive containers that preserve a fixed width-to-height ratio.",
+    category: "Layout",
+    slug: "aspect-ratio",
     addedAt: "2026-09-04",
   },
   carousel: {
