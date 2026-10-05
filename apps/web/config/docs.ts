@@ -27,13 +27,47 @@ const gettingStarted: NavGroup = {
   ],
 };
 
-const componentsNav: NavGroup = {
+const componentsIndex: NavGroup = {
   title: "Components",
   items: [
     { title: "All Components", href: "/docs/components" },
-    // Categories are discoverable on the index page — keeps sidebar clean
   ],
 };
+
+// Preferred sidebar/index order; registry categories outside this list
+// follow alphabetically so every component is reachable, never hidden.
+const PREFERRED_CATEGORY_ORDER = [
+  "Text Animations",
+  "Premium Components",
+  "Hero Backgrounds",
+  "Visual Effects",
+  "Preloaders",
+  "Interactions",
+  "Cursor Effects",
+  "Motion",
+] as const;
+
+/** Every registry category, preferred order first, extras alphabetically. */
+export function docsComponentCategories(): string[] {
+  const present = new Set(Object.values(components).map((c) => c.category));
+  return [
+    ...PREFERRED_CATEGORY_ORDER.filter((c) => present.has(c)),
+    ...[...present]
+      .filter((c) => !(PREFERRED_CATEGORY_ORDER as readonly string[]).includes(c))
+      .sort((a, b) => a.localeCompare(b)),
+  ];
+}
+
+function componentCategoryGroups(): NavGroup[] {
+  return docsComponentCategories().flatMap((category) => {
+    const items = sortByFeatured(
+      Object.values(components).filter((c) => c.category === category),
+    ).map((c) => ({ title: c.title, href: `/docs/components/${c.slug}` }));
+    return items.length > 0 ? [{ title: category, items } satisfies NavGroup] : [];
+  });
+}
+
+const navGroups: NavGroup[] = [gettingStarted, componentsIndex, ...componentCategoryGroups()];
 
 const getLlmsText = () => {
   const baseUrl = "https://davinciui.com";
@@ -46,7 +80,7 @@ Open code you own. Composable APIs. Beautiful defaults. Animations handled.
 
 ## Overview`;
 
-  const allNavGroups: NavGroup[] = [gettingStarted, componentsNav];
+  const allNavGroups: NavGroup[] = navGroups;
 
   allNavGroups.forEach((group) => {
     text += `\n\n## ${group.title}\n`;
@@ -63,17 +97,7 @@ Open code you own. Composable APIs. Beautiful defaults. Animations handled.
   });
 
   text += `\n\n## Registry Components\n`;
-  const categoryOrder = [
-    "Text Animations",
-    "Premium Components",
-    "Hero Backgrounds",
-    "Visual Effects",
-    "Preloaders",
-    "Interactions",
-    "Cursor Effects",
-    "Motion",
-  ] as const;
-  categoryOrder.forEach((category) => {
+  docsComponentCategories().forEach((category) => {
     text += `\n\n### ${category}\n\n`;
     const categoryComponents = sortByFeatured(
       Object.values(components).filter((c) => c.category === category),
@@ -87,7 +111,7 @@ Open code you own. Composable APIs. Beautiful defaults. Animations handled.
   return text;
 };
 
-const precomputedNav = Object.freeze([gettingStarted, componentsNav]);
+const precomputedNav = Object.freeze(navGroups);
 
 export const docsConfig = {
   nav: precomputedNav,

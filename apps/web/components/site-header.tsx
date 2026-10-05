@@ -4,7 +4,7 @@ import React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { SlidersHorizontal } from "lucide-react"
-import { DavinciUILogomark } from "@/components/logos/davinciui-logomark"
+import { DavinciUILogo } from "@/components/logos/davinci-ui-logo"
 import { CommandMenu } from "@/components/command-menu"
 import { landingGutterClass } from "@/components/landing/landing-frame"
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -46,7 +46,9 @@ export function SiteHeader({ sidebarToggle, landingGutter }: SiteHeaderProps) {
 
     React.useLayoutEffect(() => {
         try {
-            const cached = localStorage.getItem("github-stars-cache")
+            // v2 key: the v1 entry could hold a stale count from before the
+            // server-side proxy existed, so it is deliberately not reused.
+            const cached = localStorage.getItem("github-stars-cache-v2")
             if (!cached) return
 
             const { count } = JSON.parse(cached) as { count?: unknown }
@@ -74,7 +76,7 @@ export function SiteHeader({ sidebarToggle, landingGutter }: SiteHeaderProps) {
     React.useEffect(() => {
         const fetchStars = async () => {
             try {
-                const cacheKey = "github-stars-cache"
+                const cacheKey = "github-stars-cache-v2"
                 const cacheExpiry = 15 * 60 * 1000
                 const cached = localStorage.getItem(cacheKey)
 
@@ -93,19 +95,28 @@ export function SiteHeader({ sidebarToggle, landingGutter }: SiteHeaderProps) {
                     }
                 }
 
-                const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}`)
+                // Same-origin proxy (cached hourly server-side): browsers
+                // share one tiny GitHub quota, so direct api.github.com calls
+                // get rate-limited and the count goes stale for everyone.
+                const response = await fetch("/api/github-stars")
                 if (!response.ok) return
 
-                const data = (await response.json()) as { stargazers_count?: number }
-                if (typeof data.stargazers_count === "number") {
-                    setStars(data.stargazers_count)
+                const data = (await response.json()) as { stargazers_count?: unknown; stars?: unknown }
+                const count =
+                    typeof data.stars === "number"
+                        ? data.stars
+                        : typeof data.stargazers_count === "number"
+                          ? data.stargazers_count
+                          : null
+                if (typeof count === "number") {
+                    setStars(count)
                     localStorage.setItem(
                         cacheKey,
-                        JSON.stringify({ count: data.stargazers_count, timestamp: Date.now() })
+                        JSON.stringify({ count, timestamp: Date.now() })
                     )
                 }
             } catch {
-                // Keep the header quiet if GitHub rate-limits or localStorage is unavailable.
+                // Keep the header quiet if the proxy is unreachable or localStorage is unavailable.
             }
         }
 
@@ -161,7 +172,7 @@ export function SiteHeader({ sidebarToggle, landingGutter }: SiteHeaderProps) {
         >
             <div
                 className={cn(
-                    "h-14 w-full",
+                    "h-18 w-full",
                     landingGutterClass
                 )}
             >
@@ -174,19 +185,19 @@ export function SiteHeader({ sidebarToggle, landingGutter }: SiteHeaderProps) {
                     )}
                     <Link
                         href="/"
-                        className="group inline-flex h-8 items-center gap-1.5 rounded-md px-1 transition-colors duration-200 hover:bg-muted/60 dark:hover:bg-muted/40"
+                        className="group inline-flex h-10 items-center gap-2 rounded-md px-1 transition-colors duration-200 hover:bg-muted/60 dark:hover:bg-muted/40"
                     >
-                        <DavinciUILogomark className="size-5 text-zinc-900 dark:text-white transition-opacity group-hover:opacity-80" />
-                        <span className="text-[16px] font-bold font-display tracking-tight text-zinc-900 dark:text-white">DAVINCIUI</span>
+                        <DavinciUILogo className="size-7 shrink-0 transition-opacity group-hover:opacity-80" />
+                        <span className="text-[18px] font-bold font-display tracking-tight text-zinc-900 dark:text-white">DAVINCIUI</span>
                     </Link>
-                    <nav className="hidden items-center gap-0.5 text-sm font-normal lg:flex">
+                    <nav className="hidden items-center gap-0.5 text-[15px] font-normal lg:flex">
                         {navItems.map((item) => (
                             <Link
                                 key={item.href}
                                 href={item.href}
                                 aria-current={item.active ? "page" : undefined}
                                 className={cn(
-                                    "inline-flex h-8 items-center gap-1 whitespace-nowrap px-1.5 transition-[color,opacity] duration-200 ease-out",
+                                    "inline-flex h-10 items-center gap-1 whitespace-nowrap px-2 transition-[color,opacity] duration-200 ease-out",
                                     item.active
                                         ? "text-foreground"
                                         : "text-foreground/55 hover:text-foreground/80"
@@ -206,7 +217,7 @@ export function SiteHeader({ sidebarToggle, landingGutter }: SiteHeaderProps) {
                             target="_blank"
                             rel="noreferrer"
                             title={fullStars}
-                            className="group inline-flex h-8 items-center justify-center gap-1.5 rounded-full border border-border bg-white px-2.5 text-sm font-medium text-zinc-700 shadow-sm transition-colors hover:bg-zinc-50 hover:text-zinc-900 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-300 dark:hover:bg-white/[0.10] dark:hover:text-white"
+                            className="group inline-flex h-10 items-center justify-center gap-1.5 rounded-full border border-border bg-white px-3 text-[15px] font-medium text-zinc-700 shadow-sm transition-colors hover:bg-zinc-50 hover:text-zinc-900 dark:border-white/10 dark:bg-white/[0.06] dark:text-zinc-300 dark:hover:bg-white/[0.10] dark:hover:text-white"
                         >
                             <GitHubIcon className="size-4" />
                             <span className="hidden sm:inline">GitHub</span>
@@ -237,7 +248,7 @@ export function SiteHeader({ sidebarToggle, landingGutter }: SiteHeaderProps) {
                                     title="Personalize"
                                     aria-expanded={personalizeOpen}
                                     className={cn(
-                                        "hidden h-8 w-8 items-center justify-center rounded-lg border border-transparent transition-shadow hover:bg-accent sm:inline-flex",
+                                        "hidden h-10 w-10 items-center justify-center rounded-lg border border-transparent transition-shadow hover:bg-accent sm:inline-flex",
                                         personalizeOpen && "bg-accent"
                                     )}
                                 >
@@ -248,7 +259,7 @@ export function SiteHeader({ sidebarToggle, landingGutter }: SiteHeaderProps) {
                         <div className="hidden h-4 w-px bg-foreground/15 dark:bg-foreground/20 sm:block" />
                         <Link
                             href="/docs/installation"
-                            className="hidden h-8 items-center justify-center rounded-lg bg-foreground px-3.5 text-sm font-medium text-background transition-opacity hover:opacity-90 lg:inline-flex"
+                            className="hidden h-10 items-center justify-center rounded-lg bg-foreground px-4 text-[15px] font-medium text-background transition-opacity hover:opacity-90 lg:inline-flex"
                         >
                             Get Started
                         </Link>

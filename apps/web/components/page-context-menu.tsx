@@ -115,7 +115,7 @@ export function PageContextMenu({ content, className }: PageContextMenuProps) {
 
   return (
     <div className={cn("relative inline-flex", className)} ref={dropdownRef}>
-      <div className="inline-flex items-stretch overflow-hidden rounded-lg border border-border/40 bg-zinc-100/80 shadow-sm backdrop-blur-sm dark:border-white/[0.06] dark:bg-zinc-900/50">
+      <div className="inline-flex items-stretch overflow-hidden rounded-md border border-input bg-background shadow-xs">
         <button
           type="button"
           onClick={handleCopy}
@@ -177,7 +177,7 @@ export function PageContextMenu({ content, className }: PageContextMenuProps) {
       {isOpen && (
         <div
           role="menu"
-          className="absolute left-0 top-full z-50 mt-1.5 w-56 overflow-hidden rounded-lg border border-border/40 bg-white/95 shadow-[0_8px_32px_rgba(0,0,0,0.1)] backdrop-blur-xl animate-in fade-in zoom-in-95 duration-100 dark:border-white/[0.06] dark:bg-[#121212]/95"
+          className="absolute left-0 top-full z-50 mt-1.5 w-56 overflow-hidden rounded-md border border-border bg-popover text-popover-foreground shadow-md animate-in fade-in zoom-in-95 duration-100"
         >
           <button type="button" role="menuitem" onClick={viewMarkdown} className={menuItemClass}>
             <span className="relative z-[1] inline-flex items-center gap-2.5">
