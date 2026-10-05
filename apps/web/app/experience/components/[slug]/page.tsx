@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { notFound, redirect } from "next/navigation"
 import { getComponent } from "@/registry"
+import { absoluteUrl } from "@/lib/site"
 import { getDocsImporter, getDocsSlugs } from "@/components/docs/lazy-registry"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import { Suspense } from "react"
@@ -16,7 +17,7 @@ export async function generateMetadata({params}:{params: Promise<{slug:string}>}
   const {slug: raw}=await params; const slug = SLUG_ALIASES[raw] ?? raw; const c=getComponent(slug); if(!c) {
     const imp=getDocsImporter(slug); if(imp) return { title: `${slug} — DavinciUI`, description: `${slug} component` };
     return {};
-  } return { title: `${c.title} — Experience`, description: c.description }
+  } return { title: `${c.title} — Experience`, description: c.description, alternates: { canonical: absoluteUrl(`/experience/components/${slug}`) } }
 }
 async function DocsContent({slug}:{slug:string}){
   const imp=getDocsImporter(slug); if(!imp) return null; const m=await imp(); return "default" in m ? (m.default as any)() : null
