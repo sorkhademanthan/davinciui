@@ -3,6 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 
+import { absoluteUrl } from "@/lib/site";
+
 import { BlockDisplay } from "@/components/blocks/block-display";
 import {
   getAllBlockStaticParams,
@@ -21,9 +23,9 @@ export function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ name: string }>;
+  params: Promise<{ category: string; name: string }>;
 }): Promise<Metadata> {
-  const { name } = await params;
+  const { category, name } = await params;
   const item = getAllBlocks().find((block) => block.name === name);
 
   if (!item) return {};
@@ -31,6 +33,9 @@ export async function generateMetadata({
   return {
     title: `${item.title} Block | DavinciUI`,
     description: item.description,
+    alternates: {
+      canonical: absoluteUrl(`/blocks/${category}/${name}`),
+    },
   };
 }
 

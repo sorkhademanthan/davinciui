@@ -20,12 +20,6 @@
 </p>
 
 <p align="center">
-  <a href="https://vercel.com/open-source-program">
-    <img alt="Vercel OSS Program" src="https://vercel.com/oss/program-badge-2026.svg" />
-  </a>
-</p>
-
-<p align="center">
   <a href="https://github.com/sorkhademanthan/davinciui/blob/main/LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License" />
   </a>
