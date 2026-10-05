@@ -3,9 +3,9 @@
 import { LensDriftGrid } from "@workspace/ui/components/lens-drift-grid";
 
 /**
- * Live miniature for the component gallery card. The grid drifts on its own
- * via autoDrift (cursor motion, no video file) and still answers real
- * drag/hover input — the route-linked card stays fully navigable.
+ * Live miniature for the component gallery card. Pure autoplay: the grid
+ * drifts on its own and ignores all cursor, wheel, and keyboard input, so
+ * nothing the mouse does affects the animation.
  */
 export function LensDriftGridCardPreview() {
   return (
@@ -14,8 +14,8 @@ export function LensDriftGridCardPreview() {
         tileWidth={120}
         tileHeight={140}
         lensStrength={0.3}
-        hoverNudge={10}
         autoDrift={{ x: 30, y: -16 }}
+        interactive={false}
       />
     </div>
   );

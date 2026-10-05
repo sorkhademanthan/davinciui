@@ -169,7 +169,7 @@ export function DynamicCodeBlock({
         style={resolvedWrapperStyle}
         className={cn(
           wrapperProps.className,
-          "rounded-lg bg-white dark:!bg-[#121212]",
+          "rounded-b-md bg-background",
           className?.includes("h-full") && "h-full"
         )}
       >
