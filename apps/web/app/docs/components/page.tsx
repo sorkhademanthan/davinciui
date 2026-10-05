@@ -1,26 +1,18 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { components, sortByFeatured } from "@/registry"
+import { docsComponentCategories } from "@/config/docs"
 
 export const metadata: Metadata = {
   title: "Components — DavinciUI",
   description: "Browse all DavinciUI components — text animations, premium interactions, hero backgrounds and visual effects.",
 }
 
-const categoryOrder = [
-  "Text Animations",
-  "Premium Components",
-  "Hero Backgrounds",
-  "Visual Effects",
-  "Preloaders",
-  "Interactions",
-  "Cursor Effects",
-  "Motion",
-] as const
+const categoryOrder = docsComponentCategories()
 
 export default function ComponentsIndexPage() {
   return (
-    <div className="mx-auto w-full max-w-5xl px-4 py-10 sm:px-6 lg:px-8 lg:py-12">
+    <div className="w-full max-w-5xl px-4 py-6 sm:px-6 md:py-8 lg:px-8 lg:py-10">
       <div className="max-w-3xl space-y-4">
         <p className="text-sm font-medium text-muted-foreground">Docs</p>
         <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">Components</h1>

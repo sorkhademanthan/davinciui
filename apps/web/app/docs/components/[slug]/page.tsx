@@ -86,46 +86,24 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
     };
 }
 
-// Loading skeleton for docs page
+// Loading skeleton for docs page — shadcn single-column rhythm
 function DocsPageSkeleton() {
     return (
-        <div className="flex flex-col lg:flex-row w-full h-full min-h-screen lg:h-screen bg-white dark:bg-background overflow-hidden">
-            {/* Left Column: Scrollable Content Skeleton */}
-            <div className="w-full lg:basis-1/2 lg:max-w-1/2 h-full flex flex-col relative z-20 bg-white dark:bg-background">
-                {/* Gradients */}
-                <div className="absolute top-0 left-0 right-0 z-30 h-32 bg-gradient-to-b from-white via-white/95 to-transparent dark:from-background dark:via-background/95 pointer-events-none backdrop-blur-[1px]" />
-
-                <div className="flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-                    <div className="px-8 lg:px-16 pt-32 lg:pt-48 pb-40 space-y-20 max-w-3xl mx-auto w-full animate-pulse">
-
-                        {/* Header Section */}
-                        <div className="space-y-10">
-                            <div className="space-y-6">
-                                <div className="h-12 w-3/4 bg-zinc-200 dark:bg-zinc-800 rounded-lg" />
-                                <div className="h-6 w-full bg-zinc-200 dark:bg-zinc-800/50 rounded-lg" />
-                                <div className="h-6 w-2/3 bg-zinc-200 dark:bg-zinc-800/50 rounded-lg" />
-                            </div>
-                        </div>
-
-                        {/* Installation Section */}
-                        <div className="space-y-6">
-                            <div className="h-8 w-32 bg-zinc-200 dark:bg-zinc-800 rounded-lg" />
-                            <div className="h-16 w-full bg-zinc-200 dark:bg-zinc-800/30 rounded-xl" />
-                        </div>
-
-                        {/* Usage Section */}
-                        <div className="space-y-6">
-                            <div className="h-8 w-24 bg-zinc-200 dark:bg-zinc-800 rounded-lg" />
-                            <div className="h-48 w-full bg-zinc-200 dark:bg-zinc-800/30 rounded-xl border border-zinc-200 dark:border-zinc-800" />
-                        </div>
-                    </div>
+        <div className="mx-auto w-full max-w-[1200px] px-4 py-6 sm:px-6 md:py-8 lg:px-8 lg:py-10">
+            <div className="max-w-3xl animate-pulse space-y-8">
+                <div className="space-y-3">
+                    <div className="h-9 w-2/3 rounded-md bg-muted" />
+                    <div className="h-4 w-full rounded bg-muted/70" />
+                    <div className="h-4 w-3/5 rounded bg-muted/70" />
                 </div>
-            </div>
-
-            {/* Right Column: Sticky Preview Skeleton */}
-            <div className="flex-1 lg:basis-1/2 lg:max-w-1/2 lg:h-full lg:sticky lg:top-0 order-first lg:order-last bg-white dark:bg-[#121212] flex flex-col z-10">
-                <div className="relative w-full h-[400px] lg:h-full p-4 lg:pt-3 lg:pb-3 lg:pr-3 lg:pl-1.5 overflow-hidden bg-white dark:bg-[#121212]">
-                    <div className="w-full h-full bg-[#f7f7f7] dark:bg-zinc-800/20 rounded-xl border border-zinc-200 dark:border-zinc-800 animate-pulse" />
+                <div className="h-[420px] w-full rounded-lg border border-border bg-muted/40" />
+                <div className="space-y-3">
+                    <div className="h-5 w-32 rounded bg-muted" />
+                    <div className="h-12 w-full rounded-lg border border-border bg-muted/40" />
+                </div>
+                <div className="space-y-3">
+                    <div className="h-5 w-24 rounded bg-muted" />
+                    <div className="h-48 w-full rounded-lg border border-border bg-muted/40" />
                 </div>
             </div>
         </div>
