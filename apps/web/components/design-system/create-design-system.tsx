@@ -18,6 +18,7 @@ import {
   validateDirectSystemName,
 } from "@/lib/design-system/direct-create";
 import { browserDesignSystems } from "@/lib/design-system/repository";
+import { track } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
 const MAX_NAME_LENGTH = 60;
@@ -136,11 +137,12 @@ export function CreateDesignSystem() {
       return;
     }
 
+    track("design_system_created", { starter: starterId });
     router.push(`/design-system/${result.system.id}/colors`);
   };
 
   return (
-    <main className="relative min-h-[calc(100svh-3.5rem)] min-w-0 overflow-x-clip px-[15px] py-[29px] sm:px-[27px] sm:py-[37px] lg:px-[35px]">
+    <main className="relative min-h-[calc(100svh-4.5rem)] min-w-0 overflow-x-clip px-[15px] py-[29px] sm:px-[27px] sm:py-[37px] lg:px-[35px]">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 top-0 h-[30rem] bg-[radial-gradient(55%_80%_at_50%_0%,hsl(var(--muted))_0%,transparent_72%)] opacity-50"

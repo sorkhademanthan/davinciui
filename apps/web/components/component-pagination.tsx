@@ -20,10 +20,10 @@ const componentItems = docsConfig.nav.flatMap((group) => {
 })
 
 const paginationLinkClass =
-  "group inline-flex size-8 items-center justify-center rounded-[9px] bg-white/70 text-zinc-400 shadow-[0_0_0_1px_rgba(0,0,0,0.05),inset_0_6px_12px_-15px_color-mix(in_oklch,var(--foreground)_45%,transparent),inset_0_-6px_12px_-16px_color-mix(in_oklch,var(--foreground)_38%,transparent)] backdrop-blur-xl transition-[background-color,color,box-shadow] duration-200 hover:bg-white hover:text-zinc-800 hover:shadow-[0_0_0_1px_rgba(0,0,0,0.075),inset_0_6px_12px_-15px_color-mix(in_oklch,var(--foreground)_45%,transparent),inset_0_-6px_12px_-16px_color-mix(in_oklch,var(--foreground)_38%,transparent)] dark:bg-white/[0.045] dark:text-zinc-500 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.075),inset_0_6px_12px_-15px_color-mix(in_oklch,var(--foreground)_45%,transparent),inset_0_-6px_12px_-16px_color-mix(in_oklch,var(--foreground)_38%,transparent)] dark:hover:bg-white/[0.07] dark:hover:text-zinc-200 dark:hover:shadow-[0_0_0_1px_rgba(255,255,255,0.11),inset_0_6px_12px_-15px_color-mix(in_oklch,var(--foreground)_45%,transparent),inset_0_-6px_12px_-16px_color-mix(in_oklch,var(--foreground)_38%,transparent)]"
+  "group inline-flex size-8 items-center justify-center rounded-md border border-input bg-background text-muted-foreground shadow-xs transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
 
 const paginationDisabledClass =
-  "inline-flex size-8 items-center justify-center rounded-[9px] bg-white/35 text-zinc-200 shadow-[0_0_0_1px_rgba(0,0,0,0.025)] dark:bg-white/[0.02] dark:text-zinc-800 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.04)]"
+  "inline-flex size-8 items-center justify-center rounded-md border border-input/50 bg-background text-muted-foreground/40"
 
 export function ComponentPagination({
   currentSlug,

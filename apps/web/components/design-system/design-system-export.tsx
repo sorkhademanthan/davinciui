@@ -17,6 +17,7 @@ import {
 import Link from "next/link"
 import { useMemo, useState, type ReactNode } from "react"
 import type { DesignSystemConfig } from "@/lib/design-system/domain"
+import { track } from "@/lib/analytics"
 import {
   prepareDesignSystemExport,
   exportFailureMessage,
@@ -54,6 +55,7 @@ export function DesignSystemExport({ system }: { system: DesignSystemConfig }) {
         triggerDownload(new Blob([content], { type: mime }), filename)
       }
       setDownloadState({ kind, phase: "done", message: `${filename} downloaded.` })
+      track("design_system_exported", { format: kind })
     } catch (error) {
       setDownloadState({ kind, phase: "error", message: exportFailureMessage(error, kind) })
     }
