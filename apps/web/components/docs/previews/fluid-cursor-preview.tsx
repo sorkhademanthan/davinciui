@@ -2,9 +2,14 @@
 
 import { useRef } from "react";
 import { FluidCursor } from "@workspace/ui/components/fluid-cursor";
+import { useAmbientCursorDrive } from "./use-ambient-cursor-drive";
 
 export function FluidCursorPreview() {
   const previewRef = useRef<HTMLDivElement>(null);
+
+  // Self-playing: without this the canvas sits empty until the visitor
+  // moves their mouse, which reads as "no preview".
+  useAmbientCursorDrive(previewRef);
 
   return (
     <div ref={previewRef} className="relative h-full min-h-[600px] overflow-hidden bg-zinc-100 dark:bg-black">

@@ -108,6 +108,13 @@ export async function LensDriftGridDocs() {
             "Stillness in milliseconds after interaction before auto-drift resumes.",
         },
         {
+          name: "interactive",
+          type: "boolean",
+          default: "true",
+          description:
+            "When false, hover, drag, wheel, and keyboard input are disabled and only autoDrift drives the animation. Use for ambient auto-playing previews.",
+        },
+        {
           name: "className",
           type: "string",
           description: "Additional classes applied to the root container.",
