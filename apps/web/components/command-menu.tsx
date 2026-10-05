@@ -52,6 +52,46 @@ interface CommandMenuGroup {
   items: CommandMenuItem[]
 }
 
+// ────────────────────────────────────────────────────────────
+// Shared open state (module singleton). The menu mounts in the
+// header and in sidebars simultaneously; without this, ⌘K toggles
+// every mounted copy and stacks duplicate dialogs.
+// ────────────────────────────────────────────────────────────
+
+const sharedOpenListeners = new Set<() => void>()
+let sharedOpen = false
+let sharedShortcutInstalled = false
+
+function setSharedOpen(next: boolean | ((prev: boolean) => boolean)) {
+  sharedOpen =
+    typeof next === "function"
+      ? (next as (prev: boolean) => boolean)(sharedOpen)
+      : next
+  sharedOpenListeners.forEach((notify) => notify())
+}
+
+function subscribeSharedOpen(notify: () => void) {
+  sharedOpenListeners.add(notify)
+  return () => {
+    sharedOpenListeners.delete(notify)
+  }
+}
+
+function getSharedOpenSnapshot() {
+  return sharedOpen
+}
+
+function ensureSharedShortcut() {
+  if (sharedShortcutInstalled || typeof document === "undefined") return
+  sharedShortcutInstalled = true
+  document.addEventListener("keydown", (event) => {
+    if (event.key.toLowerCase() === "k" && (event.metaKey || event.ctrlKey)) {
+      event.preventDefault()
+      setSharedOpen((current) => !current)
+    }
+  })
+}
+
 const navGroups = docsConfig.nav
 const gettingStartedGroup = navGroups.find((group) => group.title.includes("Getting Started"))
 const componentGroups = navGroups.filter((group) => !group.title.includes("Getting Started"))
@@ -173,6 +213,17 @@ const commandGroups: CommandMenuGroup[] = [
     ),
   },
   {
+    value: "Docs Components",
+    items: allComponentItems.map((item) =>
+      createItem("Docs Components", {
+        title: item.title,
+        subtitle: "Docs",
+        href: item.href,
+        icon: <CircleDashed />,
+      }),
+    ),
+  },
+  {
     value: "Settings",
     items: [
       createItem("Settings", {
@@ -208,23 +259,22 @@ const commandGroups: CommandMenuGroup[] = [
 export function CommandMenu({ trigger }: { trigger?: React.ReactElement }) {
   const router = useRouter()
   const { setTheme } = useTheme()
-  const [open, setOpen] = React.useState(false)
+  // Shared open state: the menu is mounted in several places at once
+  // (header, sidebars), so a single store + one global shortcut keeps
+  // ⌘K from opening stacked duplicate dialogs.
+  const open = React.useSyncExternalStore(
+    subscribeSharedOpen,
+    getSharedOpenSnapshot,
+    () => false,
+  )
 
   React.useEffect(() => {
-    const handleShortcut = (event: KeyboardEvent) => {
-      if (event.key.toLowerCase() === "k" && (event.metaKey || event.ctrlKey)) {
-        event.preventDefault()
-        setOpen((currentOpen) => !currentOpen)
-      }
-    }
-
-    document.addEventListener("keydown", handleShortcut)
-    return () => document.removeEventListener("keydown", handleShortcut)
+    ensureSharedShortcut()
   }, [])
 
   const handleItemClick = React.useCallback(
     (item: CommandMenuItem) => {
-      setOpen(false)
+      setSharedOpen(false)
 
       if (item.theme) {
         setTheme(item.theme)
@@ -244,7 +294,7 @@ export function CommandMenu({ trigger }: { trigger?: React.ReactElement }) {
   )
 
   return (
-    <CommandDialog open={open} onOpenChange={setOpen}>
+    <CommandDialog open={open} onOpenChange={setSharedOpen}>
       {trigger ? (
         <CommandDialogTrigger render={trigger} />
       ) : (

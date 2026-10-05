@@ -26,7 +26,7 @@ export default function PrivacyPolicyPage() {
             <p className="mb-4">We only collect information that is necessary to provide and improve our services:</p>
             <ul className="list-disc pl-6 space-y-2">
               <li>
-                <strong>Usage Data:</strong> We use PostHog, a privacy-focused product analytics tool, to understand how visitors interact with our website — such as pages visited and feature usage. This data is aggregated and never sold.
+                <strong>Usage Data:</strong> We use PostHog, a privacy-focused product analytics tool, to understand how visitors interact with our website — such as pages visited and feature usage. PostHog only captures data after you accept the cookie banner, and the data is aggregated and never sold. We also use cookieless, aggregate analytics (Umami and Vercel Analytics) that do not identify you personally.
               </li>
               <li>
                 <strong>Locally Stored Data:</strong> Features like the design-system builder and theme preferences are stored in your browser&apos;s local storage on your own device. This data never leaves your browser unless you explicitly export or share it.

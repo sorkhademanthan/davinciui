@@ -19,13 +19,13 @@ export function ComponentLayout({
   action,
 }: ComponentLayoutProps) {
   return (
-    <div className="space-y-16">
-      <header className="space-y-6">
+    <div className="w-full max-w-3xl space-y-10 px-4 py-6 sm:px-6 md:py-8 lg:px-8 lg:py-10">
+      <header className="space-y-4">
         {/* Optional badge and date row */}
         {(badge || date) && (
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             {badge && (
-              <span className="px-2.5 py-1 text-xs font-medium rounded-md bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20">
+              <span className="rounded-md border border-border bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
                 {badge}
               </span>
             )}
@@ -38,23 +38,20 @@ export function ComponentLayout({
         )}
 
         {/* Title and Action */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <h1
-            className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight"
-            style={{ fontFamily: "var(--font-serif)" }}
-          >
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <h1 className="scroll-m-20 text-3xl font-semibold tracking-tight sm:text-4xl">
             {title}
           </h1>
-          {action && <div className="shrink-0">{action}</div>}
+          {action && <div className="shrink-0 pt-1">{action}</div>}
         </div>
 
         {/* Description */}
-        <p className="text-muted-foreground text-lg leading-relaxed max-w-2xl">
+        <p className="max-w-2xl text-[15px] leading-7 text-muted-foreground">
           {description}
         </p>
       </header>
 
-      <div className="space-y-16">
+      <div className="space-y-10">
         {children}
       </div>
     </div>
@@ -67,10 +64,37 @@ interface SectionProps {
   id?: string
   step?: number
   className?: string
+  /** h2 for top-level sections (bordered, shadcn docs style), h3 for examples. */
+  level?: 2 | 3
 }
 
-export function Section({ title, children, id, step, className }: SectionProps) {
+export function Section({ title, children, id, step, className, level = 2 }: SectionProps) {
   const sectionId = id || title.toLowerCase().replace(/\s+/g, "-")
+
+  if (level === 3) {
+    return (
+      <div
+        className={cn("scroll-mt-20", className)}
+        id={sectionId}
+        data-section-title={title}
+      >
+        <h3 className="group flex scroll-m-20 items-center gap-2 text-lg font-semibold tracking-tight">
+          {title}
+          <a
+            href={`#${sectionId}`}
+            aria-label={`Link to ${title}`}
+            className="text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100"
+          >
+            #
+          </a>
+        </h3>
+
+        <div className="mt-3 space-y-4">
+          {children}
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div
@@ -78,19 +102,28 @@ export function Section({ title, children, id, step, className }: SectionProps) 
       id={sectionId}
       data-section-title={title}
     >
-      {/* Section header with optional step number */}
-      <div className="mb-4 flex items-center gap-3">
-        {step !== undefined && (
-          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-foreground text-xs font-medium text-background">
-            {step}
-          </div>
-        )}
-        <h2 className="pb-1 text-[17px] font-medium leading-7 tracking-[-0.01em] text-zinc-800 dark:text-zinc-200">
-          {title}
-        </h2>
+      {/* shadcn docs h2: semibold tracking-tight with bottom border + hover anchor */}
+      <div className="border-b pb-2">
+        <div className="flex items-center gap-3">
+          {step !== undefined && (
+            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-foreground text-xs font-medium text-background">
+              {step}
+            </div>
+          )}
+          <h2 className="group flex scroll-m-20 items-center gap-2 text-2xl font-semibold tracking-tight">
+            {title}
+            <a
+              href={`#${sectionId}`}
+              aria-label={`Link to ${title}`}
+              className="text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100"
+            >
+              #
+            </a>
+          </h2>
+        </div>
       </div>
 
-      <div className={cn("space-y-6", step !== undefined && "pl-12")}>
+      <div className={cn("mt-4 space-y-6", step !== undefined && "pl-12")}>
         {children}
       </div>
     </div>
@@ -124,12 +157,6 @@ interface InfoBoxProps {
 }
 
 export function InfoBox({ children, type = "info" }: InfoBoxProps) {
-  const styles = {
-    info: "bg-cyan-500/5 border-cyan-500/20 text-cyan-700 dark:text-cyan-300",
-    warning: "bg-amber-500/5 border-amber-500/20 text-amber-700 dark:text-amber-300",
-    tip: "bg-emerald-500/5 border-emerald-500/20 text-emerald-700 dark:text-emerald-300",
-  }
-
   const icons = {
     info: (
       <svg className="h-4 w-4 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -158,11 +185,11 @@ export function InfoBox({ children, type = "info" }: InfoBoxProps) {
   }
 
   return (
-    <div className={cn("flex gap-3 px-4 py-3 rounded-lg border", styles[type])}>
+    <div className={cn("flex gap-3 rounded-md border border-border bg-muted/40 px-4 py-3 text-muted-foreground")}>
       {icons[type]}
       <div className="space-y-1">
         <p className="font-medium text-sm">{labels[type]}</p>
-        <div className="text-sm opacity-90">{children}</div>
+        <div className="text-sm text-muted-foreground">{children}</div>
       </div>
     </div>
   )
@@ -174,7 +201,7 @@ interface CodeInlineProps {
 
 export function CodeInline({ children }: CodeInlineProps) {
   return (
-    <code className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-sm font-mono text-cyan-600 dark:text-cyan-400">
+    <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[13px]">
       {children}
     </code>
   )

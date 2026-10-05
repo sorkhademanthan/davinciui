@@ -95,7 +95,7 @@ export default function SponsorsPage() {
       <LandingGuideLines />
       <SiteHeader landingGutter />
 
-      <main className="relative z-10 overflow-x-clip pt-14">
+      <main className="relative z-10 overflow-x-clip pt-18">
         <LandingGutter>
           <LandingContent>
             <section className="flex min-h-[620px] flex-col items-center justify-center border-b border-black/[0.08] py-20 text-center dark:border-white/[0.08] sm:py-24">
