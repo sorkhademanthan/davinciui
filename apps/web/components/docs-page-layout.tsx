@@ -17,9 +17,6 @@ import { FloatingDocsSidebarLazy } from "@/components/floating-docs-sidebar-lazy
 import { buildDocsPageMarkdown } from "@/lib/docs-page-markdown"
 import { PageContextMenu } from "@/components/page-context-menu"
 import { ChevronRight } from "lucide-react"
-import { Breadcrumbs } from "@/components/breadcrumbs"
-import { getComponent } from "@/registry"
-import { galleryHrefForSlug, galleryTabForSlug, galleryTabLabel } from "@/lib/component-groups"
 import { cn } from "@/lib/utils"
 
 export interface PropItem {
@@ -68,10 +65,15 @@ export interface DocsPageLayoutProps {
 function CodeBlockSkeleton({ className }: { className?: string }) {
   return (
     <div
-      className={`h-48 w-full bg-muted/20 rounded-xl border border-border animate-pulse ${className || ""}`}
+      className={`h-48 w-full animate-pulse rounded-md border border-border bg-muted/40 ${className || ""}`}
     />
   )
 }
+
+function slugify(value: string) {
+  return value.toLowerCase().replace(/\s+/g, "-")
+}
+
 export async function DocsPageLayout({
   title,
   description,
@@ -86,7 +88,6 @@ export async function DocsPageLayout({
   props = [],
   fullWidthPreview = false,
   scrollablePreview = false,
-  unstyledPreview = false,
   personalizeContent,
   hideDefaultPreviewVariant = false,
   hideExamples = false,
@@ -138,105 +139,82 @@ export async function DocsPageLayout({
 
   const variantCodes = hideExamples ? [] : examples.map((ex) => stripImportFromCode(ex.code || ""))
   const variantTitles = hideExamples ? [] : examples.map((ex) => ex.title)
+  const visibleExamples = hideExamples ? [] : examples
+
+  const toc: { title: string; id: string; depth: number }[] = [
+    { title: "Installation", id: "installation", depth: 2 },
+    { title: "Usage", id: "usage", depth: 2 },
+    ...visibleExamples.map((ex) => ({ title: ex.title, id: slugify(ex.title), depth: 3 })),
+    ...(props.length > 0 ? [{ title: "API Reference", id: "api-reference", depth: 2 }] : []),
+  ]
 
   return (
-    <div
-      data-docs-layout
-      className="flex flex-col lg:flex-row w-full h-full min-h-[calc(100vh-3.5rem)] lg:h-[calc(100vh-3.5rem)] bg-white dark:bg-background text-foreground max-w-none m-0 overflow-hidden"
-    >
-      {/* Minimal Navigation Cluster - hidden on desktop where persistent sidebar is visible */}
-      <div className="fixed left-1 top-3 z-50 flex items-center gap-2.5 pointer-events-none sm:left-3 lg:absolute lg:left-6 lg:top-6 md:hidden">
-        <div className="pointer-events-auto shrink-0">
+    <div data-docs-layout className="w-full">
+      {/* Mobile docs nav — inline, shadcn-style (was a fixed overlay cluster) */}
+      <div className="border-b border-border/60 lg:hidden">
+        <div className="flex items-center gap-2 px-4 py-2.5">
           <FloatingDocsSidebarLazy />
-        </div>
-          <div className="inline-flex min-h-8 min-w-0 items-center gap-2 text-[15px] font-normal tracking-[-0.02em] leading-normal text-black/45 pointer-events-auto dark:text-white/45">
-          <Link
-            href="/docs"
-            className="shrink-0 font-normal transition-colors hover:text-black/70 dark:hover:text-white/70"
-          >
-            Docs
-          </Link>
-          <ChevronRight
-            className="size-3.5 shrink-0 text-black/30 dark:text-white/30"
-            aria-hidden="true"
-          />
-          <span className="max-w-[130px] truncate font-medium text-black/60 sm:max-w-[220px] dark:text-white/60">
-            {title}
-          </span>
+          <nav aria-label="Breadcrumb" className="flex min-w-0 items-center gap-1.5 text-sm text-muted-foreground">
+            <Link href="/docs" className="shrink-0 transition-colors hover:text-foreground">
+              Docs
+            </Link>
+            <ChevronRight className="size-3.5 shrink-0 opacity-50" aria-hidden="true" />
+            <span className="truncate font-medium text-foreground">{title}</span>
+          </nav>
         </div>
       </div>
 
-      {/* Left Column: Scrollable Content.
-          overflow-clip contains inner overflow so this fixed-height column
-          never turns ancestor layouts into scroll containers (which would
-          trap the sticky preview column). Unlike overflow-hidden it is not
-          a scroll container, so anchor navigation keeps working. */}
-      <div
-        data-docs-left-column
-        className="w-full lg:basis-1/2 lg:max-w-[50%] min-w-0 h-full flex flex-col relative z-10 bg-white dark:bg-background overflow-clip"
-      >
-        {/* Scroll edge fades — subtly blend content into page background */}
-        <div className="absolute top-0 left-0 right-0 z-30 h-24 bg-gradient-to-b from-white to-transparent dark:from-background pointer-events-none hidden lg:block" />
-        <div className="absolute bottom-0 left-0 right-0 z-30 h-24 bg-gradient-to-t from-white to-transparent dark:from-background pointer-events-none" />
-
-        <div className="flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-          <div className="pl-3 pr-4 lg:pl-4 lg:pr-6 pt-6 lg:pt-8 pb-40 space-y-8 lg:space-y-10 w-full max-w-none m-0">
-
-            {/* Breadcrumbs — lives inside the scroll column so the
-                layout starts flush under the site header and the
-                right preview pane fits exactly one viewport. */}
-            {(() => {
-              const component = getComponent(installPackageName)
-              const { tab, sub } = galleryTabForSlug(installPackageName, component?.category)
-              return (
-                <Breadcrumbs
-                  items={[
-                    { label: "Home", href: "/" },
-                    { label: galleryTabLabel(tab, sub), href: galleryHrefForSlug(installPackageName, component?.category) },
-                    { label: title },
-                  ]}
-                />
-              )
-            })()}
-
-            {/* Header Section */}
+      <div className="mx-auto w-full max-w-[1200px] px-4 py-6 sm:px-6 md:py-8 lg:px-8 lg:py-10">
+        <div className="xl:grid xl:grid-cols-[minmax(0,1fr)_220px] xl:gap-10">
+          {/* Article */}
+          <article className="min-w-0">
+            {/* Header — title row with actions, shadcn-style */}
             <header>
-              <div className="space-y-4">
-                <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between xl:gap-5">
-                  <h1 className="mb-1 min-w-0 max-w-2xl pb-1 text-[34px] font-medium leading-[1.08] tracking-[-0.025em] text-[#333333] sm:text-[40px] lg:text-[46px] dark:text-zinc-100">
-                    {title}
-                  </h1>
-                  <div className="self-end xl:self-auto">
-                    <ComponentPagination currentSlug={installPackageName} />
-                  </div>
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <h1 className="scroll-m-20 text-3xl font-semibold tracking-tight sm:text-4xl">
+                  {title}
+                </h1>
+                <div className="shrink-0 pt-1">
+                  <ComponentPagination currentSlug={installPackageName} />
                 </div>
-
-                <p className="max-w-xl text-[15px] font-normal leading-7 tracking-normal text-muted-foreground/85">
-                  {description}
-                </p>
-
+              </div>
+              <p className="mt-3 max-w-2xl text-[15px] leading-7 text-muted-foreground">
+                {description}
+              </p>
+              <div className="mt-4">
                 <PageContextMenu content={pageMarkdown} />
               </div>
             </header>
 
+            {/* Preview — sits directly under the header, shadcn-style */}
+            <div
+              className={cn(
+                "mt-6 w-full overflow-hidden",
+                scrollablePreview ? "max-h-[560px] min-h-[420px]" : "min-h-[420px] lg:min-h-[480px]",
+              )}
+            >
+              <DocsPreviewWrapper
+                fullWidthPreview={fullWidthPreview}
+                scrollablePreview={scrollablePreview}
+                personalizeContent={personalizeContent}
+                hideDefaultVariant={hideDefaultPreviewVariant}
+                sourceCodeFilename={installSourceCode ? (installSourceFilename || `${installPackageName}.tsx`) : undefined}
+                sourceCodeKey={installSourceCode ? installPackageName : undefined}
+                variants={examples as VariantItem[]}
+              >
+                {preview}
+              </DocsPreviewWrapper>
+            </div>
 
             {/* Installation */}
-            <Section title="Installation" className="pt-8">
-              {installationNote && (
-                <div className="mb-4">
-                  {installationNote}
-                </div>
-              )}
+            <Section title="Installation" className="mt-10 scroll-mt-24" id="installation">
+              {installationNote && <div className="mb-4">{installationNote}</div>}
               <InstallCommand component={installPackageName} />
             </Section>
 
             {/* Usage */}
-            <Section title="Usage" className="pt-8">
-              {usageNote && (
-                <div className="mb-4">
-                  {usageNote}
-                </div>
-              )}
+            <Section title="Usage" className="mt-10 scroll-mt-24" id="usage">
+              {usageNote && <div className="mb-4">{usageNote}</div>}
               <div className="usage-code-scrollbar-none">
                 {typeof usageCode === "string" ? (
                   resolvedUsageCode ? (
@@ -269,12 +247,12 @@ export async function DocsPageLayout({
               </div>
             </Section>
 
-            {/* Composition */}
+            {/* Composition callouts */}
             {title === "Dialog" && (
-              <Section title="Composition" className="pt-8">
+              <Section title="Composition" className="mt-10 scroll-mt-24">
                 <div className="space-y-3">
                   <p className="text-sm leading-6 text-muted-foreground">Use the following composition to build a Dialog:</p>
-                  <pre className="overflow-x-auto rounded-lg border bg-muted/30 p-4 font-mono text-xs leading-6">
+                  <pre className="overflow-x-auto rounded-md border border-border bg-muted/40 p-4 font-mono text-xs leading-6">
 {`Dialog
 ├── DialogTrigger
 └── DialogContent
@@ -287,10 +265,10 @@ export async function DocsPageLayout({
               </Section>
             )}
             {title === "Popover" && (
-              <Section title="Composition" className="pt-8">
+              <Section title="Composition" className="mt-10 scroll-mt-24">
                 <div className="space-y-3">
                   <p className="text-sm leading-6 text-muted-foreground">Use the following composition to build a Popover:</p>
-                  <pre className="overflow-x-auto rounded-lg border bg-muted/30 p-4 font-mono text-xs leading-6">
+                  <pre className="overflow-x-auto rounded-md border border-border bg-muted/40 p-4 font-mono text-xs leading-6">
 {`Popover
 ├── PopoverTrigger
 └── PopoverContent`}
@@ -299,10 +277,10 @@ export async function DocsPageLayout({
               </Section>
             )}
             {title === "Tooltip" && (
-              <Section title="Composition" className="pt-8">
+              <Section title="Composition" className="mt-10 scroll-mt-24">
                 <div className="space-y-3">
                   <p className="text-sm leading-6 text-muted-foreground">Use the following composition to build a Tooltip:</p>
-                  <pre className="overflow-x-auto rounded-lg border bg-muted/30 p-4 font-mono text-xs leading-6">
+                  <pre className="overflow-x-auto rounded-md border border-border bg-muted/40 p-4 font-mono text-xs leading-6">
 {`TooltipProvider
 └── Tooltip
     ├── TooltipTrigger
@@ -313,10 +291,10 @@ export async function DocsPageLayout({
             )}
 
             {title === "Card" && (
-              <Section title="Composition" className="pt-8">
+              <Section title="Composition" className="mt-10 scroll-mt-24">
                 <div className="space-y-3">
                   <p className="text-sm leading-6 text-muted-foreground">Use the following composition to build a Card:</p>
-                  <pre className="overflow-x-auto rounded-lg border bg-muted/30 p-4 font-mono text-xs leading-6">
+                  <pre className="overflow-x-auto rounded-md border border-border bg-muted/40 p-4 font-mono text-xs leading-6">
 {`Card
 ├── CardHeader
 │   ├── CardTitle
@@ -330,10 +308,10 @@ export async function DocsPageLayout({
             )}
 
             {title === "Dropdown Menu" && (
-              <Section title="Composition" className="pt-8">
+              <Section title="Composition" className="mt-10 scroll-mt-24">
                 <div className="space-y-3">
                   <p className="text-sm leading-6 text-muted-foreground">Use the following composition to build a Dropdown Menu:</p>
-                  <pre className="overflow-x-auto rounded-lg border bg-muted/30 p-4 font-mono text-xs leading-6">
+                  <pre className="overflow-x-auto rounded-md border border-border bg-muted/40 p-4 font-mono text-xs leading-6">
 {`DropdownMenu
 ├── DropdownMenuTrigger
 └── DropdownMenuContent
@@ -349,13 +327,19 @@ export async function DocsPageLayout({
               </Section>
             )}
 
-            {/* Variant examples — visible in left column for TOC (hidden when hideExamples) */}
-            {!hideExamples && examples.length > 0 && (
-              <div className="space-y-8 pt-2">
-                {examples.map((ex) => (
-                  <Section key={ex.title} title={ex.title} className="pt-8">
-                    <div className="space-y-4">
-                      <div className="overflow-hidden rounded-xl border bg-white dark:bg-[#121212]">{ex.preview}</div>
+            {/* Examples */}
+            {visibleExamples.length > 0 && (
+              <div className="mt-4 space-y-8">
+                {visibleExamples.map((ex) => (
+                  <Section key={ex.title} title={ex.title} level={3} className="scroll-mt-24 pt-4" id={slugify(ex.title)}>
+                    <div className="min-h-[280px] w-full overflow-hidden">
+                      <DocsPreviewWrapper
+                        personalizeContent={personalizeContent}
+                        hideDefaultVariant
+                        variants={[]}
+                      >
+                        {ex.preview}
+                      </DocsPreviewWrapper>
                     </div>
                   </Section>
                 ))}
@@ -364,50 +348,56 @@ export async function DocsPageLayout({
 
             {/* Props */}
             {props.length > 0 && (
-              <Section title="API Reference" className="pt-8">
+              <Section title="API Reference" className="mt-10 scroll-mt-24" id="api-reference">
                 <DocsPropsTable props={props} />
               </Section>
             )}
 
             {afterContent}
 
-            <div className="mt-12">
+            <div className="mt-12 border-t pt-6">
               <DocsFooterSection />
             </div>
+          </article>
 
+          {/* Right rail — On This Page + promo card, shadcn-style */}
+          <aside className="hidden xl:block">
+            <div className="sticky top-24 max-h-[calc(100svh-7rem)] overflow-y-auto pb-8 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              <p className="mb-2 text-xs font-medium text-muted-foreground">On This Page</p>
+              <ul className="space-y-1 text-sm">
+                {toc.map((item) => (
+                  <li key={item.id}>
+                    <a
+                      href={`#${item.id}`}
+                      className={cn(
+                        "block py-0.5 text-muted-foreground transition-colors hover:text-foreground",
+                        item.depth === 3 && "pl-4",
+                      )}
+                    >
+                      {item.title}
+                    </a>
+                  </li>
+                ))}
+              </ul>
 
-            <div className="h-12" />
-          </div>
-        </div>
-      </div>
-
-      {/* Right Column: Sticky Preview — full bleed, 50% - viewport fit, no scroll */}
-      <div
-        data-docs-right-column
-        className={cn(
-          "flex-1 lg:basis-1/2 lg:max-w-[50%] min-w-0 h-[55vh] lg:h-[calc(100vh-3.5rem)] lg:sticky lg:top-14 order-first lg:order-last bg-white dark:bg-[#121212] flex flex-col z-20 lg:border-l border-border/40 overflow-hidden",
-          fullWidthPreview && unstyledPreview && "h-[calc(100vh-3.5rem)]",
-          scrollablePreview && "min-h-0 flex-none lg:flex-1",
-        )}
-      >
-        <div
-          data-docs-preview-shell
-          className="relative w-full h-full overflow-hidden bg-white dark:bg-[#121212] p-0"
-        >
-
-          {/* Floating Card Container */}
-          <DocsPreviewWrapper
-            fullWidthPreview={fullWidthPreview}
-            scrollablePreview={scrollablePreview}
-            personalizeContent={personalizeContent}
-            hideDefaultVariant={hideDefaultPreviewVariant}
-            sourceCodeFilename={installSourceCode ? (installSourceFilename || `${installPackageName}.tsx`) : undefined}
-            sourceCodeKey={installSourceCode ? installPackageName : undefined}
-            variants={examples as VariantItem[]}
-          >
-            {preview}
-          </DocsPreviewWrapper>
-
+              <div className="mt-6 rounded-xl bg-muted/60 p-5">
+                <p className="text-[15px] font-semibold leading-snug tracking-tight">
+                  Star DavinciUI on GitHub
+                </p>
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                  Free and open-source. A star keeps new components coming.
+                </p>
+                <a
+                  href="https://github.com/sorkhademanthan/davinciui"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-4 inline-flex h-8 items-center rounded-md border border-input bg-background px-3 text-sm font-medium shadow-xs transition-colors hover:bg-accent hover:text-accent-foreground"
+                >
+                  Star on GitHub
+                </a>
+              </div>
+            </div>
+          </aside>
         </div>
       </div>
     </div>

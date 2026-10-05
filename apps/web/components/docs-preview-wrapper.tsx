@@ -31,30 +31,38 @@ interface DocsPreviewWrapperProps {
   hideDefaultVariant?: boolean
 }
 
-function PreviewToolbarCell({
+function PreviewIconButton({
   children,
+  onClick,
+  label,
   active,
-  className,
+  expanded,
 }: {
   children: React.ReactNode
+  onClick?: () => void
+  label: string
   active?: boolean
-  className?: string
+  expanded?: boolean
 }) {
   return (
-    <div
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={label}
+      aria-pressed={active}
+      title={label}
       className={cn(
-        "flex size-8 shrink-0 items-center justify-center rounded-2xl bg-zinc-200/65 text-foreground/65 dark:bg-zinc-800/75",
-        active && "bg-foreground text-background dark:bg-zinc-100 dark:text-zinc-900",
-        className
+        "inline-flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
+        active && "bg-accent text-accent-foreground",
+        expanded && "hover:bg-accent",
       )}
     >
       {children}
-    </div>
+    </button>
   )
 }
 
-const previewToolbarIconClass =
-  "flex size-full items-center justify-center rounded-2xl text-current transition-all ease-in-out active:scale-95"
+const previewIconClass = "size-4"
 
 function PreviewVariantTab({
   active,
@@ -72,19 +80,14 @@ function PreviewVariantTab({
       aria-selected={active}
       onClick={onClick}
       className={cn(
-        "relative shrink-0 rounded-lg px-2.5 py-1 text-[13px] font-medium outline-none transition-colors",
-        "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1",
-        active ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+        "shrink-0 rounded-md px-2.5 py-1 text-[13px] outline-none transition-colors",
+        "focus-visible:ring-1 focus-visible:ring-ring",
+        active
+          ? "bg-muted font-medium text-foreground"
+          : "font-normal text-muted-foreground hover:text-foreground",
       )}
     >
-      {active && (
-        <motion.span
-          layoutId="preview-variant-pill"
-          className="absolute inset-0 rounded-lg bg-zinc-200/90 shadow-sm dark:bg-zinc-800/90"
-          transition={{ type: "spring", duration: 0.3, bounce: 0 }}
-        />
-      )}
-      <span className="relative">{children}</span>
+      {children}
     </button>
   )
 }
@@ -144,7 +147,6 @@ export function DocsPreviewWrapper({
   }, [personalizeContent, personalizeId, registerPersonalizeContent, clearPersonalizeContent])
 
   const previewRef = React.useRef<HTMLDivElement>(null)
-  const variantBarRef = React.useRef<HTMLDivElement>(null)
   const splitPreviewRectRef = React.useRef<PreviewRect | null>(null)
   const hasSourceCode = Boolean(sourceCodeKey)
 
@@ -266,7 +268,7 @@ export function DocsPreviewWrapper({
       previewShell.style.height = `${rect.height}px`
       previewShell.style.zIndex = "100"
       previewShell.style.padding = padding
-      previewShell.classList.add("bg-[#f7f7f7]", "dark:bg-[#171717]")
+      previewShell.classList.add("bg-background")
     }
 
     const clearFixedStyles = () => {
@@ -274,7 +276,7 @@ export function DocsPreviewWrapper({
       for (const prop of ["position", "top", "left", "width", "height", "zIndex", "padding", "transition"] as const) {
         previewShell.style.removeProperty(prop)
       }
-      previewShell.classList.remove("bg-[#f7f7f7]", "dark:bg-[#171717]")
+      previewShell.classList.remove("bg-background")
       cacheSplitPreviewRect()
     }
 
@@ -337,52 +339,69 @@ export function DocsPreviewWrapper({
 
   return (
     <div className={cn(
-      "relative w-full h-full overflow-hidden bg-[#f7f7f7] dark:bg-[#171717] flex flex-col",
-      fullWidthPreview ? "rounded-none border-0" : "rounded-xl lg:rounded-2xl border border-border/50 dark:border-[#121212]"
+      "relative flex h-full w-full flex-col overflow-hidden rounded-md border border-border bg-background",
     )} ref={previewRef}>
-      {/* Toolbar — glass dock, top-right: absolute in card, fixed in fullscreen */}
-      <section
-        aria-label="Preview controls"
-        className={cn(
-          "flex select-none items-center gap-1 rounded-2xl border border-border/40 bg-white/70 p-1.5 shadow-card backdrop-blur-xl dark:border-white/[0.06] dark:bg-[#171717]/75",
-          isExpanded ? "fixed right-6 top-6 z-[101]" : "absolute right-3 top-3 z-20"
-        )}
-      >
-        <PreviewToolbarCell>
+      {/* Toolbar — shadcn-style top bar: variant tabs left, actions right */}
+      <div className="flex h-11 shrink-0 items-center gap-1 border-b border-border/60 px-2">
+        <div
+          role="tablist"
+          aria-label="Preview variants"
+          className="flex min-w-0 flex-1 items-center gap-0.5 overflow-x-auto no-scrollbar"
+        >
+          {!hideDefaultVariant && (
+            <PreviewVariantTab
+              active={resolvedActiveVariant === -1}
+              onClick={() => selectVariant(-1)}
+            >
+              Preview
+            </PreviewVariantTab>
+          )}
+
+          {variants.map((variant, i) => (
+            <PreviewVariantTab
+              key={i}
+              active={resolvedActiveVariant === i}
+              onClick={() => selectVariant(i)}
+            >
+              {variant.title}
+            </PreviewVariantTab>
+          ))}
+        </div>
+
+        <div className="flex shrink-0 items-center" aria-label="Preview controls">
           <React.Suspense
             fallback={
-              <button type="button" className={previewToolbarIconClass} aria-label="Search">
-                <Search className="size-4 opacity-60" />
-              </button>
+              <span className="inline-flex size-8 items-center justify-center text-muted-foreground/50">
+                <Search className="size-4" />
+              </span>
             }
           >
             <CommandMenu
               trigger={
-                <button type="button" className={previewToolbarIconClass} aria-label="Search">
+                <button
+                  type="button"
+                  aria-label="Search"
+                  title="Search"
+                  className="inline-flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                >
                   <Search className="size-4" />
                 </button>
               }
             />
           </React.Suspense>
-        </PreviewToolbarCell>
 
-        {hasSourceCode && (
-          <PreviewToolbarCell active={showSource}>
-            <button
-              type="button"
+          {hasSourceCode && (
+            <PreviewIconButton
               onClick={handleSourceOpen}
-              className={previewToolbarIconClass}
-              aria-label="View Source"
+              label="View Source"
+              active={showSource}
             >
-              <CodeXml className="size-4" />
-            </button>
-          </PreviewToolbarCell>
-        )}
+              <CodeXml className={previewIconClass} />
+            </PreviewIconButton>
+          )}
 
-        {personalizeContent && (
-          <PreviewToolbarCell active={personalizeOpen}>
-            <button
-              type="button"
+          {personalizeContent && (
+            <PreviewIconButton
               onClick={() => {
                 if (isExpanded) {
                   setIsExpanded(false)
@@ -390,53 +409,38 @@ export function DocsPreviewWrapper({
                 setPersonalizeOpen(true)
                 setShowSource(false)
               }}
-              className={previewToolbarIconClass}
-              aria-label="Personalize"
-              aria-expanded={personalizeOpen}
+              label="Personalize"
+              active={personalizeOpen}
             >
-              <SlidersHorizontal className="size-4" />
-            </button>
-          </PreviewToolbarCell>
-        )}
+              <SlidersHorizontal className={previewIconClass} />
+            </PreviewIconButton>
+          )}
 
-        <PreviewToolbarCell>
-          <button
-            type="button"
+          <PreviewIconButton
             onClick={() => {
               selectVariant(resolvedActiveVariant)
               setKey((k) => k + 1)
             }}
-            className={previewToolbarIconClass}
-            aria-label="Reload preview"
+            label="Reload preview"
           >
-            <RotateCcw className="size-4" />
-          </button>
-        </PreviewToolbarCell>
+            <RotateCcw className={previewIconClass} />
+          </PreviewIconButton>
 
-        <PreviewToolbarCell active={isExpanded}>
-          <button
-            type="button"
+          <PreviewIconButton
             onClick={handleToggleExpanded}
-            className={previewToolbarIconClass}
-            aria-label={isExpanded ? "Collapse preview pane" : "Expand preview pane"}
+            label={isExpanded ? "Collapse preview pane" : "Expand preview pane"}
+            active={isExpanded}
           >
-            {isExpanded ? <Minimize className="size-4" /> : <Maximize className="size-4" />}
-          </button>
-        </PreviewToolbarCell>
+            {isExpanded ? <Minimize className={previewIconClass} /> : <Maximize className={previewIconClass} />}
+          </PreviewIconButton>
 
-        <PreviewToolbarCell>
-          <ThemeToggle
-            className={cn(
-              previewToolbarIconClass,
-              "!size-full !rounded-2xl !border-0 !bg-transparent shadow-none hover:!bg-transparent"
-            )}
-          />
-        </PreviewToolbarCell>
-      </section>
+          <ThemeToggle className="inline-flex size-8 shrink-0 items-center justify-center rounded-md border-0 bg-transparent text-muted-foreground shadow-none transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring" />
+        </div>
+      </div>
 
       {/* The scrollable surface is opt-in; Text Reveal uses its own scroller. */}
       <div className={cn(
-        "w-full flex bg-[#f7f7f7] dark:bg-[#171717]",
+        "flex w-full bg-muted/30 [background-image:radial-gradient(color-mix(in_oklab,var(--border)_55%,transparent)_1px,transparent_1px)] [background-size:20px_20px]",
         scrollablePreview
           ? "min-h-0 flex-1 flex-col items-stretch overflow-x-hidden overflow-y-auto overscroll-contain"
           : "h-full overflow-hidden",
@@ -470,39 +474,8 @@ export function DocsPreviewWrapper({
         </div>
       </div>
 
-      {/* Bottom Variant Bar */}
-      {variants.length > 0 && (
-        <div className="pointer-events-none absolute bottom-0 left-0 z-10 p-3 sm:p-4">
-          <div
-            ref={variantBarRef}
-            role="tablist"
-            aria-label="Preview variants"
-            className="pointer-events-auto flex max-w-[min(100vw-2rem,36rem)] items-center gap-0.5 overflow-x-auto rounded-2xl border border-border/40 bg-white/75 p-1 shadow-[0_8px_32px_rgba(0,0,0,0.08)] backdrop-blur-xl dark:border-white/[0.06] dark:bg-[#171717]/80 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
-          >
-            {!hideDefaultVariant && (
-              <PreviewVariantTab
-                active={resolvedActiveVariant === -1}
-                onClick={() => selectVariant(-1)}
-              >
-                Default
-              </PreviewVariantTab>
-            )}
-
-            {variants.map((variant, i) => (
-              <PreviewVariantTab
-                key={i}
-                active={resolvedActiveVariant === i}
-                onClick={() => selectVariant(i)}
-              >
-                {variant.title}
-              </PreviewVariantTab>
-            ))}
-          </div>
-        </div>
-      )}
-
       {/* Personalize drawer — rendered by the preview that owns the panel,
-          opened from the toolbar pill or the site header via the doc store. */}
+          opened from the toolbar or the site header via the doc store. */}
       {personalizeContent && <PersonalizeDrawer />}
 
       {/* Source Code Panel Portal */}
@@ -526,24 +499,23 @@ export function DocsPreviewWrapper({
               }}
               className="fixed bottom-0 left-0 z-50 flex flex-col outline-none h-[80vh] w-full rounded-t-lg border-t border-border/20 bg-transparent shadow-none pointer-events-none lg:top-0 lg:bottom-0 lg:h-screen lg:max-h-screen lg:w-1/2 lg:rounded-none lg:border-none lg:pt-3 lg:pb-3 lg:pl-3 lg:pr-1.5"
             >
-              <div className="relative h-full bg-white dark:bg-[#171717] lg:rounded-2xl overflow-hidden border border-border/20 shadow-2xl pointer-events-auto">
+              <div className="relative h-full overflow-hidden rounded-md border border-border bg-background shadow-lg pointer-events-auto">
                 {/* Header Overlay */}
                 <div className="absolute top-0 left-0 right-0 z-20 pointer-events-none">
-                  <div className="absolute inset-0 h-32 bg-gradient-to-b from-white to-transparent dark:from-[#171717] [mask-image:linear-gradient(to_bottom,black_20%,transparent)]" />
+                  <div className="absolute inset-0 h-24 bg-gradient-to-b from-background to-transparent [mask-image:linear-gradient(to_bottom,black_20%,transparent)]" />
                   <div className="relative z-10 flex flex-col pointer-events-auto">
                     {/* Drag handle - top edge-to-edge */}
-                    <div
-                      className="flex items-center justify-center pt-2 pb-1 touch-none"
-                      onPointerDown={(event) => sourceDragControls.start(event)}
-                    >
-                      <div className="w-10 h-1 rounded-full bg-zinc-900/[0.08] dark:bg-white/[0.08] transition-colors hover:bg-zinc-900/[0.15] dark:hover:bg-white/[0.15]" />
-                    </div>
+                      <div className="flex items-center justify-center pt-2 pb-1 touch-none"
+                        onPointerDown={(event) => sourceDragControls.start(event)}
+                      >
+                        <div className="w-10 h-1 rounded-full bg-muted-foreground/20 transition-colors hover:bg-muted-foreground/30" />
+                      </div>
 
                     {/* Header row */}
                     <div className="flex items-center justify-between px-4 py-1">
                       <button
                         onClick={() => setShowSource(false)}
-                        className="inline-flex items-center gap-1.5 text-zinc-500 dark:text-zinc-400 transition-colors hover:text-zinc-900 dark:hover:text-white focus-visible:outline-none"
+                        className="inline-flex items-center gap-1.5 text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none"
                       >
                         <ChevronLeft className="w-4 h-4" />
                         <span className="text-xs font-mono tracking-wide">Source Code</span>
@@ -552,11 +524,11 @@ export function DocsPreviewWrapper({
                       <div className="flex items-center gap-3">
                         {sourceCodeFilename && (
                           <div className="flex items-center gap-1.5">
-                            <svg className="h-3.5 w-3.5 text-zinc-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <svg className="h-3.5 w-3.5 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                               <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
                               <polyline points="14 2 14 8 20 8" />
                             </svg>
-                            <span className="text-xs font-mono text-zinc-500">{sourceCodeFilename}</span>
+                            <span className="text-xs font-mono text-muted-foreground">{sourceCodeFilename}</span>
                           </div>
                         )}
                         {sourceCode && (
@@ -566,7 +538,7 @@ export function DocsPreviewWrapper({
                               setCopied(true)
                               setTimeout(() => setCopied(false), 2000)
                             }}
-                            className="inline-flex items-center justify-center w-7 h-7 rounded-md text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                            className="inline-flex items-center justify-center w-7 h-7 rounded-md text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                             aria-label={copied ? "Copied" : "Copy code"}
                           >
                             {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
@@ -580,7 +552,7 @@ export function DocsPreviewWrapper({
                 {/* Code content - full height, hidden scrollbar */}
                 <div className="relative h-full min-h-0">
                   {/* Bottom gradient overlay */}
-                  <div className="absolute bottom-0 left-0 right-0 z-10 h-16 bg-gradient-to-t from-white to-transparent dark:from-[#171717] pointer-events-none [mask-image:linear-gradient(to_top,black_30%,transparent)]" />
+                  <div className="absolute bottom-0 left-0 right-0 z-10 h-12 bg-gradient-to-t from-background to-transparent pointer-events-none [mask-image:linear-gradient(to_top,black_30%,transparent)]" />
                   <div data-drawer-code className="h-full overflow-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] [&_pre]:min-h-full [&_pre]:!pt-24 [&_pre]:!px-4 [&_.relative.group_>_button]:hidden">
                     <div className="h-full w-full">
                       {isSourceLoading && (
