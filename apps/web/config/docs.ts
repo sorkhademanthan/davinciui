@@ -11,26 +11,24 @@ type NavGroup = {
   items: NavItem[];
 };
 
-// DavinciUI docs — minimal, shadcn-inspired IA
-// Basics first: Introduction → Installation → config → Theming → CLI → Changelog
+// DavinciUI docs IA mirrors shadcn/ui:
+// Sections (Introduction → Components → Installation → … → Changelog),
+// then Components grouped by category, then Foundations.
 // Dark mode lives inside Theming. Components at /docs/components + /docs/components/[slug]
 
-const gettingStarted: NavGroup = {
+const sections: NavGroup = {
   title: "Getting Started",
   items: [
     { title: "Introduction", href: "/docs" },
+    { title: "Components", href: "/docs/components" },
     { title: "Installation", href: "/docs/installation" },
     { title: "Configuration", href: "/docs/configuration" },
     { title: "Theming", href: "/docs/theming" },
     { title: "CLI", href: "/docs/cli" },
+    { title: "Typeset", href: "/docs/typeset" },
+    { title: "Skills", href: "/docs/skills" },
+    { title: "Registry", href: "/docs/registry" },
     { title: "Changelog", href: "/docs/changelog" },
-  ],
-};
-
-const componentsIndex: NavGroup = {
-  title: "Components",
-  items: [
-    { title: "All Components", href: "/docs/components" },
   ],
 };
 
@@ -59,17 +57,40 @@ export function docsComponentCategories(): string[] {
 }
 
 function componentCategoryGroups(): NavGroup[] {
-  return docsComponentCategories().flatMap((category) => {
-    const items = sortByFeatured(
+  const items = docsComponentCategories().flatMap((category) => {
+    const links = sortByFeatured(
       Object.values(components).filter((c) => c.category === category),
     ).map((c) => ({ title: c.title, href: `/docs/components/${c.slug}` }));
-    return items.length > 0 ? [{ title: category, items } satisfies NavGroup] : [];
+    const anchor = `/docs/components#${category.toLowerCase().replace(/\s+/g, "-")}`;
+    return links.length > 0 ? [{ title: category, href: anchor, items: links } satisfies NavItem] : [];
   });
+  return items.length > 0 ? [{ title: "Components", items } satisfies NavGroup] : [];
 }
 
-const navGroups: NavGroup[] = [gettingStarted, componentsIndex, ...componentCategoryGroups()];
+const foundations: NavGroup = {
+  title: "Foundations",
+  items: [
+    { title: "Colors", href: "/docs/foundations/colors" },
+    { title: "Typography", href: "/docs/foundations/typography" },
+    { title: "Spacing", href: "/docs/foundations/spacing" },
+    { title: "Sizing", href: "/docs/foundations/sizing" },
+    { title: "Borders", href: "/docs/foundations/borders" },
+    { title: "Border Radius", href: "/docs/foundations/border-radius" },
+    { title: "Shadows", href: "/docs/foundations/shadows" },
+    { title: "Motion", href: "/docs/foundations/motion" },
+    { title: "Breakpoints", href: "/docs/foundations/breakpoints" },
+    { title: "Icons", href: "/docs/foundations/icons" },
+  ],
+};
 
-const getLlmsText = () => {
+const mcp: NavGroup = {
+  title: "MCP",
+  items: [{ title: "Setup", href: "/docs/mcp" }],
+};
+
+const navGroups: NavGroup[] = [sections, ...componentCategoryGroups(), foundations, mcp];
+
+export function getLlmsText(): string {
   const baseUrl = "https://davinciui.com";
   let text = `# DavinciUI
 
@@ -109,7 +130,7 @@ Open code you own. Composable APIs. Beautiful defaults. Animations handled.
   });
 
   return text;
-};
+}
 
 const precomputedNav = Object.freeze(navGroups);
 
