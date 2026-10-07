@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { ComponentLayout, Section } from "@/components/component-layout"
 import { CopyButton } from "@/components/copy-button"
+import { FoundationsRelated } from "@/components/foundations-related"
 
 export const metadata: Metadata = {
   title: "Borders — Foundations | DavinciUI",
@@ -113,6 +114,13 @@ export default function BordersPage() {
           <li>Keep borders subtle — alpha values are intentional for light/dark.</li>
         </ul>
       </Section>
+      <FoundationsRelated
+        items={[
+          ["Colors", "/docs/foundations/colors"],
+          ["Border Radius", "/docs/foundations/border-radius"],
+          ["Shadows", "/docs/foundations/shadows"],
+        ]}
+      />
     </ComponentLayout>
   )
 }

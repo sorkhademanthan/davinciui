@@ -93,7 +93,7 @@ function ensureSharedShortcut() {
 }
 
 const navGroups = docsConfig.nav
-const gettingStartedGroup = navGroups.find((group) => group.title.includes("Getting Started"))
+const sectionsGroup = navGroups.find((group) => group.title.includes("Getting Started"))
 const componentGroups = navGroups.filter((group) => !group.title.includes("Getting Started"))
 function flattenNavItems(groups: typeof navGroups) {
   const flat: { title: string; href: string }[] = []
@@ -106,7 +106,7 @@ function flattenNavItems(groups: typeof navGroups) {
   for (const g of groups) collect(g.items)
   return flat
 }
-const allComponentItems = flattenNavItems(componentGroups).sort((a, b) => a.title.localeCompare(b.title))
+const allComponentItems = dedupeByHref(flattenNavItems(componentGroups)).sort((a, b) => a.title.localeCompare(b.title))
 
 // Phase 4: Search grouped by Design System / Experience (spec §17)
 function flattenNavigationSections(sections: typeof navigation.designSystem.sections) {
@@ -125,13 +125,30 @@ function flattenNavigationSections(sections: typeof navigation.designSystem.sect
 const designSystemItems = flattenNavigationSections(navigation.designSystem.sections)
 const experienceItems = flattenNavigationSections(navigation.experience.sections)
 
+// Base and premium entries can describe the same route with the same title
+// (e.g. Tabs). Keep the first occurrence so keys stay unique.
+function dedupeByHref<T extends { title: string; href: string }>(items: T[]): T[] {
+  const seen = new Set<string>()
+  return items.filter((item) => {
+    const key = `${item.href}::${item.title}`
+    if (seen.has(key)) return false
+    seen.add(key)
+    return true
+  })
+}
+
 function createItem(
   group: string,
   item: Omit<CommandMenuItem, "label" | "value"> & { value?: string },
 ): CommandMenuItem {
+  // Values double as React keys and command-selection ids, so they must be
+  // unique: titles alone collide ("Overview" exists in many sections), and so
+  // do hrefs (base and premium entries can share a route with different
+  // titles). Combining both closes every collision class.
+  const slug = `${item.href ?? ""} ${item.title}`.toLowerCase().replaceAll(/[^a-z0-9]+/g, "-").replaceAll(/^-|-$/g, "")
   return {
     ...item,
-    value: item.value ?? `${group.toLowerCase()}-${item.title.toLowerCase().replaceAll(" ", "-")}`,
+    value: item.value ?? `${group.toLowerCase()}-${slug}`,
     label: [item.title, item.subtitle, group].filter(Boolean).join(" "),
   }
 }
@@ -146,7 +163,7 @@ const commandGroups: CommandMenuGroup[] = [
         href: "/docs",
         icon: <ArrowRight />,
       }),
-      ...(gettingStartedGroup?.items.map((item) =>
+      ...(sectionsGroup?.items.map((item) =>
         createItem("Pages", {
           title: item.title,
           href: item.href,
@@ -160,12 +177,12 @@ const commandGroups: CommandMenuGroup[] = [
     items: [
       createItem("Get started", {
         title: "Terms of Service",
-        href: "/docs/terms",
+        href: "/terms-of-service",
         icon: <BookOpen />,
       }),
       createItem("Get started", {
         title: "Privacy Policy",
-        href: "/docs/privacy",
+        href: "/privacy-policy",
         icon: <BookOpen />,
       }),
       createItem("Get started", {
@@ -192,7 +209,7 @@ const commandGroups: CommandMenuGroup[] = [
   },
   {
     value: "Design System",
-    items: designSystemItems.slice(0, 30).map((item) =>
+    items: dedupeByHref(designSystemItems).map((item) =>
       createItem("Design System", {
         title: item.title,
         subtitle: item.group,
@@ -203,7 +220,7 @@ const commandGroups: CommandMenuGroup[] = [
   },
   {
     value: "Components",
-    items: experienceItems.slice(0, 60).map((item) =>
+    items: dedupeByHref(experienceItems).map((item) =>
       createItem("Components", {
         title: item.title,
         subtitle: item.group,

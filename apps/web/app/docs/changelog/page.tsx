@@ -1,4 +1,6 @@
 import type { Metadata } from "next"
+import Link from "next/link"
+import { Section } from "@/components/component-layout"
 
 export const metadata: Metadata = {
   title: "Changelog — DavinciUI",
@@ -11,44 +13,62 @@ export default function ChangelogPage() {
       <div className="space-y-4">
         <p className="text-sm font-medium text-muted-foreground">Docs</p>
         <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">Changelog</h1>
-        <p className="text-[15px] leading-7 text-muted-foreground">
-          Updates to DavinciUI. New components, fixes and registry changes.
+        <p className="max-w-2xl text-[15px] leading-7 text-muted-foreground">
+          What changed in the registry and docs, and how to follow future
+          releases. Entries below reflect the repository&apos;s commit history —
+          not a marketing timeline.
         </p>
       </div>
 
-      <div className="mt-10 space-y-8">
-        <section className="rounded-lg border p-6">
-          <div className="flex items-baseline justify-between gap-4">
-            <h2 className="text-sm font-semibold">2026-08 — Docs refresh</h2>
-            <span className="text-xs font-mono text-muted-foreground">Latest</span>
-          </div>
-          <ul className="mt-3 list-disc space-y-1 pl-5 text-sm leading-6 text-muted-foreground">
-            <li>Rebuilt docs landing — Introduction with shadcn-inspired typography and install command.</li>
-            <li>Minimal IA: Getting Started + Components. Removed duplicate foundations sidebar.</li>
-            <li>Added Installation, components.json, Theming, Dark Mode, CLI and Changelog pages.</li>
-            <li>Components index at /docs/components with category grouping and counts.</li>
+      <div className="mt-10 space-y-10">
+        <Section title="How to follow releases" id="how-to-follow-releases">
+          <ul className="list-disc space-y-1 pl-5 text-sm leading-6 text-muted-foreground">
+            <li>
+              GitHub releases:{" "}
+              <a
+                href="https://github.com/sorkhademanthan/davinciui/releases"
+                className="underline underline-offset-4"
+              >
+                sorkhademanthan/davinciui releases
+              </a>{" "}
+              — the authoritative source for versioned notes.
+            </li>
+            <li>
+              Commit history (<code className="rounded bg-muted px-1 py-0.5 font-mono text-xs">git log</code>) records
+              every registry addition and docs change.
+            </li>
+            <li>
+              Because installed components are copied source, nothing auto-updates:
+              re-run <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs">shadcn add … --overwrite</code> to
+              pick up a newer version of something you already installed.
+            </li>
           </ul>
-        </section>
+        </Section>
 
-        <section className="rounded-lg border p-6">
-          <h2 className="text-sm font-semibold">2026-07 — Visual effects</h2>
-          <ul className="mt-3 list-disc space-y-1 pl-5 text-sm leading-6 text-muted-foreground">
-            <li>New: Dithered Logo, Spiral 3D Slider, Newsletter Bookshelf.</li>
-            <li>Hero backgrounds: Silk Aurora and Liquid Chrome.</li>
+        <Section title="Recent registry additions" id="recent-additions">
+          <p className="text-sm leading-6 text-muted-foreground">
+            Per commit history, recent registry work added:
+          </p>
+          <ul className="list-disc space-y-1 pl-5 text-sm leading-6 text-muted-foreground">
+            <li>Form and feedback pieces: textarea, toggle, switch, label, skeleton, spinner.</li>
+            <li>Layout and navigation: sidebar, aspect-ratio, button-group, carousel, pagination, link.</li>
+            <li>Interactive and motion pieces: testimonial-marquee, spotlight-card, scrub-input, lens-drift-grid, hyper-text.</li>
+            <li>Docs and distribution: registry index, CLI registry wiring, docs shell and component pages.</li>
           </ul>
-        </section>
+          <p className="text-sm leading-6 text-muted-foreground">
+            For the current catalog, see{" "}
+            <Link href="/docs/components" className="underline underline-offset-4">Components</Link> — it is
+            generated from the registry, so it never goes stale.
+          </p>
+        </Section>
 
-        <section className="rounded-lg border p-6">
-          <h2 className="text-sm font-semibold">2026-06 — Premium interactions</h2>
-          <ul className="mt-3 list-disc space-y-1 pl-5 text-sm leading-6 text-muted-foreground">
-            <li>New: Orbit Card Stack, Sticky Scroll Cards.</li>
-            <li>CLI registry under @davinciui — install any component via shadcn add.</li>
+        <Section title="Migration notes" id="migration-notes">
+          <ul className="list-disc space-y-1 pl-5 text-sm leading-6 text-muted-foreground">
+            <li>Re-installing with <code className="font-mono">--overwrite</code> replaces local files. Commit your customizations first.</li>
+            <li>If a component&apos;s dependencies changed upstream, the installer adds the new packages on re-install — restart the dev server afterwards.</li>
+            <li>No breaking-change policy is published yet. When one lands, it will be linked here with per-component upgrade steps.</li>
           </ul>
-        </section>
-
-        <p className="text-sm leading-6 text-muted-foreground">
-          Full history in GitHub releases. For component-level changes see each component page.
-        </p>
+        </Section>
       </div>
     </div>
   )

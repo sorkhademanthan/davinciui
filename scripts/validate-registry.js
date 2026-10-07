@@ -43,8 +43,11 @@ function readJson(filePath) {
 
 function readDocsRegistrySlugs() {
   const source = fs.readFileSync(DOCS_REGISTRY_PATH, "utf8")
-  const matches = [...source.matchAll(/^\s*"([a-z0-9-]+)"\s*:\s*{/gm)]
-  return new Set(matches.map((match) => match[1]))
+  // Entries use quoted ("button-group") and unquoted (accordion) keys.
+  const matches = [
+    ...source.matchAll(/^\s*(?:"([a-z0-9-]+)"|([A-Za-z_$][A-Za-z0-9_$-]*))\s*:\s*{/gm),
+  ]
+  return new Set(matches.map((match) => match[1] ?? match[2]))
 }
 
 function readBlockRegistrySlugs() {

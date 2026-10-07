@@ -85,9 +85,13 @@ export function DocsSidebarNav({
                     if (subGroup.items?.length) {
                       return (
                         <div key={sIdx}>
-                          <p className="mb-1 px-2 text-sm text-muted-foreground">
+                          <Link
+                            href={subGroup.href}
+                            onClick={onNavigate}
+                            className="mb-1 block px-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+                          >
                             {subGroup.title}
-                          </p>
+                          </Link>
                           <div className="grid grid-flow-row auto-rows-max gap-px text-sm">
                             {subGroup.items.map((item) => (
                               <SidebarLink

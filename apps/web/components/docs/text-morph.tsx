@@ -31,6 +31,14 @@ export async function TextMorphDocs() {
       installSourceFilename="components/ui/text-morph.tsx"
       usageCode={<LiveCodeBlock defaultCode={basicUsageCode} />}
       fullWidthPreview
+      accessibilityNote="Text Morph cycles visible words on a timer and renders plain text with no live-region announcements. Treat the animation as enhancement: keep the surrounding heading meaningful on its own, and don't put the only instance of critical information inside the morph sequence."
+      motionNote="The fluid morph runs on a per-word timer controlled by the interval and morphDuration props. When the visitor prefers reduced motion, the component swaps words instantly with no blur or morph transition."
+      customizationNote="All visual text properties inherit from surrounding typography — set size, weight, and tracking with className (e.g. text-4xl font-bold tracking-tight) instead of editing the component. Colors follow the current theme tokens."
+      relatedLinks={[
+        { title: "Text Reveal", href: "/docs/components/text-reveal" },
+        { title: "Typography", href: "/docs/foundations/typography" },
+        { title: "Motion", href: "/docs/foundations/motion" },
+      ]}
       props={[
         {
           name: "words",

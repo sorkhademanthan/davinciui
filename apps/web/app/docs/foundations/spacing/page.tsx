@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { ComponentLayout, Section } from "@/components/component-layout"
 import { CopyButton } from "@/components/copy-button"
+import { FoundationsRelated } from "@/components/foundations-related"
 
 export const metadata: Metadata = {
   title: "Spacing — Foundations | DavinciUI",
@@ -156,6 +157,13 @@ export default function SpacingPage() {
           <li>Consistent gap is more important than inventing a new token now.</li>
         </ul>
       </Section>
+      <FoundationsRelated
+        items={[
+          ["Sizing", "/docs/foundations/sizing"],
+          ["Breakpoints", "/docs/foundations/breakpoints"],
+          ["Colors", "/docs/foundations/colors"],
+        ]}
+      />
     </ComponentLayout>
   )
 }

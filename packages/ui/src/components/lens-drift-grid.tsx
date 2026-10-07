@@ -57,6 +57,12 @@ export interface LensDriftGridProps extends Omit<
   autoDrift?: boolean | LensDriftVector;
   /** Stillness in ms after interaction before auto-drift resumes. @default 2400 */
   driftResumeMs?: number;
+  /**
+   * When false, hover, drag, wheel, and keyboard input are all ignored — the
+   * grid only follows `autoDrift`. Use for ambient auto-playing previews
+   * where cursor movement must not affect the animation. @default true
+   */
+  interactive?: boolean;
   /** Additional classes applied to the root container. */
   className?: string;
 }
@@ -264,6 +270,7 @@ export function LensDriftGrid({
   wheelSensitivity = 0.42,
   autoDrift = false,
   driftResumeMs = 2400,
+  interactive = true,
   className,
   style,
   "aria-label": ariaLabel = "Infinite drifting image grid",
@@ -776,15 +783,17 @@ export function LensDriftGrid({
       requestRender();
     };
 
-    root.addEventListener("pointerenter", onPointerEnter);
-    root.addEventListener("pointerleave", onPointerLeave);
-    root.addEventListener("pointerdown", onPointerDown);
-    root.addEventListener("pointermove", onPointerMove);
-    root.addEventListener("pointerup", endDrag);
-    root.addEventListener("pointercancel", endDrag);
-    window.addEventListener("blur", cancelDrag);
-    root.addEventListener("keydown", onKeyDown);
-    root.addEventListener("wheel", onWheel, { passive: false });
+    if (interactive) {
+      root.addEventListener("pointerenter", onPointerEnter);
+      root.addEventListener("pointerleave", onPointerLeave);
+      root.addEventListener("pointerdown", onPointerDown);
+      root.addEventListener("pointermove", onPointerMove);
+      root.addEventListener("pointerup", endDrag);
+      root.addEventListener("pointercancel", endDrag);
+      window.addEventListener("blur", cancelDrag);
+      root.addEventListener("keydown", onKeyDown);
+      root.addEventListener("wheel", onWheel, { passive: false });
+    }
     requestRender();
 
     return () => {
@@ -809,6 +818,7 @@ export function LensDriftGrid({
     gap,
     hoverNudge,
     inertia,
+    interactive,
     lensStrength,
     resolvedItems,
     resolvedTheme,
@@ -824,11 +834,12 @@ export function LensDriftGrid({
       {...rest}
       ref={rootRef}
       role="region"
-      tabIndex={0}
+      tabIndex={interactive ? 0 : undefined}
       aria-label={ariaLabel}
       data-dragging="false"
       className={cn(
-        "group/lens-drift-grid relative isolate h-full w-full cursor-grab touch-none select-none overflow-hidden outline-none [perspective:900px] focus-visible:ring-2 focus-visible:ring-inset data-[dragging=true]:cursor-grabbing",
+        "group/lens-drift-grid relative isolate h-full w-full touch-none select-none overflow-hidden outline-none [perspective:900px] focus-visible:ring-2 focus-visible:ring-inset data-[dragging=true]:cursor-grabbing",
+        interactive ? "cursor-grab" : "cursor-default",
         resolvedTheme === "light"
           ? "bg-[#f1efe9] text-[#171717] focus-visible:ring-black/50"
           : "bg-[#070707] text-white focus-visible:ring-white/60",
@@ -842,8 +853,9 @@ export function LensDriftGrid({
       }
     >
       <span className="sr-only">
-        Drag in any direction or use the arrow keys to explore the infinite
-        grid.
+        {interactive
+          ? "Drag in any direction or use the arrow keys to explore the infinite grid."
+          : "Auto-playing infinite image grid."}
       </span>
 
       <canvas

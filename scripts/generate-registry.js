@@ -62,9 +62,17 @@ function normalizeRegistryContent(content) {
   return (
     content
       .replace(/@workspace\/ui\/lib\/utils/g, "@/lib/utils")
+      .replace(/@workspace\/ui\/lib\/ease/g, "@/lib/ease")
       .replace(
         /@workspace\/ui\/components\/webgl-error-boundary/g,
         "./webgl-error-boundary",
+      )
+      // Cross-component imports become standard alias paths so the shadcn
+      // CLI rewrites them to the user's aliases; the targets ship via
+      // registryDependencies (@davinciui/*).
+      .replace(
+        /@workspace\/ui\/components\/(button|input|scroll-area|autocomplete)/g,
+        "@/components/ui/$1",
       )
       // Extensionless sibling imports resolve in every bundler; the source
       // keeps the explicit .js extension for node16/nodenext typechecking.

@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { ComponentLayout, Section } from "@/components/component-layout"
 import { CopyButton } from "@/components/copy-button"
+import { FoundationsRelated } from "@/components/foundations-related"
 
 export const metadata: Metadata = {
   title: "Shadows — Foundations | DavinciUI",
@@ -109,6 +110,13 @@ export default function ShadowsPage() {
           <li>Dark mode is automatic — do not duplicate shadow definitions.</li>
         </ul>
       </Section>
+      <FoundationsRelated
+        items={[
+          ["Colors", "/docs/foundations/colors"],
+          ["Borders", "/docs/foundations/borders"],
+          ["Border Radius", "/docs/foundations/border-radius"],
+        ]}
+      />
     </ComponentLayout>
   )
 }

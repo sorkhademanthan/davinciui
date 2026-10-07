@@ -15,6 +15,7 @@ import { splitImportAndUsage, stripImportFromCode } from "@/lib/split-import"
 import type { BundledLanguage } from "shiki"
 import { FloatingDocsSidebarLazy } from "@/components/floating-docs-sidebar-lazy"
 import { buildDocsPageMarkdown } from "@/lib/docs-page-markdown"
+import { DocsSnippet } from "@/components/docs-snippet"
 import { PageContextMenu } from "@/components/page-context-menu"
 import { ChevronRight } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -60,6 +61,16 @@ export interface DocsPageLayoutProps {
   usageNote?: React.ReactNode
   /** Optional extra sections rendered after API Reference (e.g. Changelog). */
   afterContent?: React.ReactNode
+  /** Accessibility behavior — rendered as its own section when provided. */
+  accessibilityNote?: React.ReactNode
+  /** Motion behavior and reduced-motion handling — rendered when provided. */
+  motionNote?: React.ReactNode
+  /** Customization guidance — rendered as its own section when provided. */
+  customizationNote?: React.ReactNode
+  /** Known constraints — rendered as their own section when provided. */
+  constraintsNote?: React.ReactNode
+  /** Related components or foundations — rendered as link pills when provided. */
+  relatedLinks?: { title: string; href: string }[]
 }
 
 function CodeBlockSkeleton({ className }: { className?: string }) {
@@ -94,6 +105,11 @@ export async function DocsPageLayout({
   installationNote,
   usageNote,
   afterContent,
+  accessibilityNote,
+  motionNote,
+  customizationNote,
+  constraintsNote,
+  relatedLinks = [],
 }: DocsPageLayoutProps) {
 
   const pageMarkdown = buildDocsPageMarkdown({
@@ -141,13 +157,6 @@ export async function DocsPageLayout({
   const variantTitles = hideExamples ? [] : examples.map((ex) => ex.title)
   const visibleExamples = hideExamples ? [] : examples
 
-  const toc: { title: string; id: string; depth: number }[] = [
-    { title: "Installation", id: "installation", depth: 2 },
-    { title: "Usage", id: "usage", depth: 2 },
-    ...visibleExamples.map((ex) => ({ title: ex.title, id: slugify(ex.title), depth: 3 })),
-    ...(props.length > 0 ? [{ title: "API Reference", id: "api-reference", depth: 2 }] : []),
-  ]
-
   return (
     <div data-docs-layout className="w-full">
       {/* Mobile docs nav — inline, shadcn-style (was a fixed overlay cluster) */}
@@ -165,7 +174,7 @@ export async function DocsPageLayout({
       </div>
 
       <div className="mx-auto w-full max-w-[1200px] px-4 py-6 sm:px-6 md:py-8 lg:px-8 lg:py-10">
-        <div className="xl:grid xl:grid-cols-[minmax(0,1fr)_220px] xl:gap-10">
+        <div>
           {/* Article */}
           <article className="min-w-0">
             {/* Header — title row with actions, shadcn-style */}
@@ -221,7 +230,7 @@ export async function DocsPageLayout({
                     <Suspense fallback={<CodeBlockSkeleton />}>
                       {resolvedImportCode ? (
                         <div className="space-y-3">
-                          <ImportCodeBlock html={importHtml} />
+                          <ImportCodeBlock html={importHtml} code={resolvedImportCode} />
                           <DynamicCodeBlock
                             originalCode={resolvedUsageCode}
                             defaultHtml={usageHtml}
@@ -252,15 +261,16 @@ export async function DocsPageLayout({
               <Section title="Composition" className="mt-10 scroll-mt-24">
                 <div className="space-y-3">
                   <p className="text-sm leading-6 text-muted-foreground">Use the following composition to build a Dialog:</p>
-                  <pre className="overflow-x-auto rounded-md border border-border bg-muted/40 p-4 font-mono text-xs leading-6">
-{`Dialog
+                  <DocsSnippet
+                    variant="muted"
+                    code={`Dialog
 ├── DialogTrigger
 └── DialogContent
     ├── DialogHeader
     │   ├── DialogTitle
     │   └── DialogDescription
     └── DialogFooter`}
-                  </pre>
+                  />
                 </div>
               </Section>
             )}
@@ -268,11 +278,12 @@ export async function DocsPageLayout({
               <Section title="Composition" className="mt-10 scroll-mt-24">
                 <div className="space-y-3">
                   <p className="text-sm leading-6 text-muted-foreground">Use the following composition to build a Popover:</p>
-                  <pre className="overflow-x-auto rounded-md border border-border bg-muted/40 p-4 font-mono text-xs leading-6">
-{`Popover
+                  <DocsSnippet
+                    variant="muted"
+                    code={`Popover
 ├── PopoverTrigger
 └── PopoverContent`}
-                  </pre>
+                  />
                 </div>
               </Section>
             )}
@@ -280,12 +291,13 @@ export async function DocsPageLayout({
               <Section title="Composition" className="mt-10 scroll-mt-24">
                 <div className="space-y-3">
                   <p className="text-sm leading-6 text-muted-foreground">Use the following composition to build a Tooltip:</p>
-                  <pre className="overflow-x-auto rounded-md border border-border bg-muted/40 p-4 font-mono text-xs leading-6">
-{`TooltipProvider
+                  <DocsSnippet
+                    variant="muted"
+                    code={`TooltipProvider
 └── Tooltip
     ├── TooltipTrigger
     └── TooltipContent`}
-                  </pre>
+                  />
                 </div>
               </Section>
             )}
@@ -294,15 +306,16 @@ export async function DocsPageLayout({
               <Section title="Composition" className="mt-10 scroll-mt-24">
                 <div className="space-y-3">
                   <p className="text-sm leading-6 text-muted-foreground">Use the following composition to build a Card:</p>
-                  <pre className="overflow-x-auto rounded-md border border-border bg-muted/40 p-4 font-mono text-xs leading-6">
-{`Card
+                  <DocsSnippet
+                    variant="muted"
+                    code={`Card
 ├── CardHeader
 │   ├── CardTitle
 │   ├── CardDescription
 │   └── CardAction
 ├── CardContent
 └── CardFooter`}
-                  </pre>
+                  />
                 </div>
               </Section>
             )}
@@ -311,8 +324,9 @@ export async function DocsPageLayout({
               <Section title="Composition" className="mt-10 scroll-mt-24">
                 <div className="space-y-3">
                   <p className="text-sm leading-6 text-muted-foreground">Use the following composition to build a Dropdown Menu:</p>
-                  <pre className="overflow-x-auto rounded-md border border-border bg-muted/40 p-4 font-mono text-xs leading-6">
-{`DropdownMenu
+                  <DocsSnippet
+                    variant="muted"
+                    code={`DropdownMenu
 ├── DropdownMenuTrigger
 └── DropdownMenuContent
     ├── DropdownMenuLabel
@@ -322,7 +336,7 @@ export async function DocsPageLayout({
     └── DropdownMenuSub
         ├── DropdownMenuSubTrigger
         └── DropdownMenuSubContent`}
-                  </pre>
+                  />
                 </div>
               </Section>
             )}
@@ -353,6 +367,46 @@ export async function DocsPageLayout({
               </Section>
             )}
 
+            {accessibilityNote && (
+              <Section title="Accessibility" className="mt-10 scroll-mt-24" id="accessibility">
+                <div className="text-sm leading-6 text-muted-foreground">{accessibilityNote}</div>
+              </Section>
+            )}
+
+            {motionNote && (
+              <Section title="Motion" className="mt-10 scroll-mt-24" id="motion">
+                <div className="text-sm leading-6 text-muted-foreground">{motionNote}</div>
+              </Section>
+            )}
+
+            {customizationNote && (
+              <Section title="Customization" className="mt-10 scroll-mt-24" id="customization">
+                <div className="text-sm leading-6 text-muted-foreground">{customizationNote}</div>
+              </Section>
+            )}
+
+            {constraintsNote && (
+              <Section title="Known constraints" className="mt-10 scroll-mt-24" id="known-constraints">
+                <div className="text-sm leading-6 text-muted-foreground">{constraintsNote}</div>
+              </Section>
+            )}
+
+            {relatedLinks.length > 0 && (
+              <Section title="Related" className="mt-10 scroll-mt-24" id="related">
+                <div className="flex flex-wrap gap-1.5">
+                  {relatedLinks.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className="rounded-full border bg-background px-2.5 py-1 text-xs hover:bg-accent"
+                    >
+                      {link.title}
+                    </Link>
+                  ))}
+                </div>
+              </Section>
+            )}
+
             {afterContent}
 
             <div className="mt-12 border-t pt-6">
@@ -360,44 +414,6 @@ export async function DocsPageLayout({
             </div>
           </article>
 
-          {/* Right rail — On This Page + promo card, shadcn-style */}
-          <aside className="hidden xl:block">
-            <div className="sticky top-24 max-h-[calc(100svh-7rem)] overflow-y-auto pb-8 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              <p className="mb-2 text-xs font-medium text-muted-foreground">On This Page</p>
-              <ul className="space-y-1 text-sm">
-                {toc.map((item) => (
-                  <li key={item.id}>
-                    <a
-                      href={`#${item.id}`}
-                      className={cn(
-                        "block py-0.5 text-muted-foreground transition-colors hover:text-foreground",
-                        item.depth === 3 && "pl-4",
-                      )}
-                    >
-                      {item.title}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-
-              <div className="mt-6 rounded-xl bg-muted/60 p-5">
-                <p className="text-[15px] font-semibold leading-snug tracking-tight">
-                  Star DavinciUI on GitHub
-                </p>
-                <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                  Free and open-source. A star keeps new components coming.
-                </p>
-                <a
-                  href="https://github.com/sorkhademanthan/davinciui"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="mt-4 inline-flex h-8 items-center rounded-md border border-input bg-background px-3 text-sm font-medium shadow-xs transition-colors hover:bg-accent hover:text-accent-foreground"
-                >
-                  Star on GitHub
-                </a>
-              </div>
-            </div>
-          </aside>
         </div>
       </div>
     </div>

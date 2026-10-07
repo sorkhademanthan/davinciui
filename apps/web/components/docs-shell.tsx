@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation"
 import { ChevronRight } from "lucide-react"
 import { DocsSidebarNav } from "@/components/docs-sidebar-nav"
 import { FloatingDocsSidebarLazy } from "@/components/floating-docs-sidebar-lazy"
+import { DocsOnThisPage } from "@/components/docs-on-this-page"
 import { cn } from "@/lib/utils"
 
 function toTitle(seg: string) {
@@ -40,14 +41,14 @@ export function DocsShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex-1">
-      <div className="mx-auto w-full max-w-[1400px] lg:grid lg:grid-cols-[240px_minmax(0,1fr)]">
+      <div className="w-full lg:grid lg:grid-cols-[220px_minmax(0,1fr)] xl:grid-cols-[220px_minmax(0,1fr)_300px]">
         <aside className="sticky top-18 hidden h-[calc(100svh-4.5rem)] shrink-0 border-r border-border/60 lg:block">
           <div className="h-full overflow-y-auto px-2 py-6 [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-border">
             <DocsSidebarNav />
           </div>
         </aside>
 
-        <main className={cn("min-w-0")}>
+        <main data-docs-main className={cn("min-w-0 lg:flex lg:flex-col lg:items-center")}>
           {/* Mobile docs nav for guide/foundation routes — component pages
               render their own row inside DocsPageLayout. */}
           {!isComponentPage && (
@@ -66,6 +67,9 @@ export function DocsShell({ children }: { children: React.ReactNode }) {
           )}
           {children}
         </main>
+        <aside className="sticky top-18 hidden h-[calc(100svh-4.5rem)] overflow-y-auto xl:block [scrollbar-width:thin]" aria-label="Page sections">
+          <DocsOnThisPage />
+        </aside>
       </div>
     </div>
   )

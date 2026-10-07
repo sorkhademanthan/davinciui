@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { ComponentLayout, Section, InfoBox } from "@/components/component-layout"
 import { CopyButton } from "@/components/copy-button"
+import { FoundationsRelated } from "@/components/foundations-related"
 
 export const metadata: Metadata = {
   title: "Breakpoints — Foundations | DavinciUI",
@@ -148,7 +149,7 @@ export default function BreakpointsPage() {
             </div>
             <div className="w-full rounded-xl border border-dashed border-border p-3 bg-muted/10">
               <div className="h-10 rounded bg-muted border border-border max-w-6xl mx-auto w-full" />
-              <p className="text-xs text-muted-foreground mt-2 text-center">full within content shell (280px sidebar + content)</p>
+              <p className="text-xs text-muted-foreground mt-2 text-center">full within content shell (220px sidebar + content)</p>
             </div>
           </div>
         </div>
@@ -335,11 +336,11 @@ export default function BreakpointsPage() {
             <p className="text-xs font-mono text-muted-foreground mb-2">Code pattern · Sidebar + content shell (current)</p>
             <div className="rounded-lg bg-muted/20 border border-border p-4 font-mono text-xs space-y-1 overflow-x-auto">
               <p>&lt;div className=&quot;flex&quot;&gt;</p>
-              <p className="pl-4">&lt;aside className=&quot;hidden lg:block w-[280px] shrink-0&quot;&gt;Sidebar&lt;/aside&gt;</p>
+              <p className="pl-4">&lt;aside className=&quot;hidden lg:block w-[220px] shrink-0&quot;&gt;Sidebar&lt;/aside&gt;</p>
               <p className="pl-4">&lt;main className=&quot;flex-1 min-w-0 max-w-6xl mx-auto&quot;&gt;Content&lt;/main&gt;</p>
               <p>&lt;/div&gt;</p>
             </div>
-            <p className="text-xs text-muted-foreground mt-2">Existing 280px sidebar shell — hidden below lg, visible at lg+.</p>
+            <p className="text-xs text-muted-foreground mt-2">Docs shell pattern — 220px sidebar, hidden below lg, visible at lg+.</p>
           </div>
         </div>
       </Section>
@@ -355,7 +356,7 @@ export default function BreakpointsPage() {
             <li>
               Prefer <code className="font-mono px-1 py-0.5 rounded bg-muted text-xs">md</code> (768) for layout shifts (single → two
               columns); <code className="font-mono px-1 py-0.5 rounded bg-muted text-xs">lg</code> (1024) for three/four columns and
-              exposing the 280px sidebar.
+              exposing the 220px sidebar.
             </li>
             <li>
               Use <code className="font-mono px-1 py-0.5 rounded bg-muted text-xs">hidden md:block</code> for progressive disclosure —
@@ -374,6 +375,13 @@ export default function BreakpointsPage() {
           </ul>
         </div>
       </Section>
+      <FoundationsRelated
+        items={[
+          ["Sizing", "/docs/foundations/sizing"],
+          ["Spacing", "/docs/foundations/spacing"],
+          ["Typography", "/docs/foundations/typography"],
+        ]}
+      />
     </ComponentLayout>
   )
 }

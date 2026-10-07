@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { ComponentLayout, Section } from "@/components/component-layout"
+import { FoundationsRelated } from "@/components/foundations-related"
 
 export const metadata: Metadata = {
   title: "Sizing — Foundations | DavinciUI",
@@ -128,6 +129,13 @@ export default function SizingPage() {
           <li>Containers: <code className="font-mono px-1 py-0.5 rounded bg-muted text-xs">max-w-sm</code> forms, <code className="font-mono px-1 py-0.5 rounded bg-muted text-xs">max-w-2xl</code> prose, <code className="font-mono px-1 py-0.5 rounded bg-muted text-xs">max-w-6xl</code> docs.</li>
         </ul>
       </Section>
+      <FoundationsRelated
+        items={[
+          ["Spacing", "/docs/foundations/spacing"],
+          ["Breakpoints", "/docs/foundations/breakpoints"],
+          ["Colors", "/docs/foundations/colors"],
+        ]}
+      />
     </ComponentLayout>
   )
 }

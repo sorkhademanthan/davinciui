@@ -2,6 +2,8 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { components, sortByFeatured } from "@/registry"
 import { docsComponentCategories } from "@/config/docs"
+import { DocsSnippet } from "@/components/docs-snippet"
+import { Section } from "@/components/component-layout"
 
 export const metadata: Metadata = {
   title: "Components — DavinciUI",
@@ -10,21 +12,73 @@ export const metadata: Metadata = {
 
 const categoryOrder = docsComponentCategories()
 
+const SPOTLIGHTS = [
+  { title: "Text Animations", href: "#text-animations", desc: "Headline motion: morph, reveal, scramble." },
+  { title: "Premium Components", href: "#premium-components", desc: "Interactive building blocks for product UI." },
+  { title: "Hero Backgrounds", href: "#hero-backgrounds", desc: "Full-bleed animated backdrops." },
+] as const
+
 export default function ComponentsIndexPage() {
   return (
     <div className="w-full max-w-5xl px-4 py-6 sm:px-6 md:py-8 lg:px-8 lg:py-10">
       <div className="max-w-3xl space-y-4">
         <p className="text-sm font-medium text-muted-foreground">Docs</p>
         <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">Components</h1>
-        <p className="text-[15px] leading-7 text-muted-foreground">
-          Open-code components you own. Copy, paste, customize. Built with Tailwind CSS and Framer
-          Motion. Each component page includes preview, CLI install, and full source.
+        <p className="max-w-2xl text-[15px] leading-7 text-muted-foreground">
+          Every component below is open code you add to your own project. Each
+          component page gives you a live preview, the CLI install command, the
+          full source, basic usage, props, examples, and required dependencies
+          where they apply.
         </p>
-        <div className="flex gap-2">
-          <code className="rounded-md border bg-muted px-2 py-1 font-mono text-xs">
-            pnpm dlx shadcn add @davinciui/[component]
-          </code>
-        </div>
+        <DocsSnippet
+          variant="muted"
+          className="w-full max-w-md"
+          code={`pnpm dlx shadcn@latest add @davinciui/[component]`}
+        />
+      </div>
+
+      <div className="mt-10 max-w-3xl">
+        <Section title="Choosing a component" id="choosing-a-component">
+          <ul className="list-disc space-y-1 pl-5 text-sm leading-6 text-muted-foreground">
+            <li>
+              Start from the tâche: animated headline →{" "}
+              <Link href="#text-animations" className="underline underline-offset-4">Text Animations</Link>;
+              page backdrop →{" "}
+              <Link href="#hero-backgrounds" className="underline underline-offset-4">Hero Backgrounds</Link>;
+              form, feedback, or overlay UI → the matching{" "}
+              <Link href="/experience/components" className="underline underline-offset-4">base component</Link>.
+            </li>
+            <li>
+              Open the component page and try the interactive preview first — most
+              animated components expose their key props as live controls.
+            </li>
+            <li>
+              Check the install dependencies before adding: animation-heavy pieces
+              need <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs">framer-motion</code>,
+              canvas pieces need a WebGL-capable browser.
+            </li>
+            <li>
+              If you customize theme tokens, skim{" "}
+              <Link href="/docs/foundations/colors" className="underline underline-offset-4">Colors</Link>{" "}
+              and{" "}
+              <Link href="/docs/foundations/motion" className="underline underline-offset-4">Motion</Link>{" "}
+              — components inherit both.
+            </li>
+          </ul>
+        </Section>
+      </div>
+
+      <div className="mt-10 grid gap-3 sm:grid-cols-3">
+        {SPOTLIGHTS.map((s) => (
+          <Link
+            key={s.href}
+            href={s.href}
+            className="rounded-lg border p-4 transition-colors hover:bg-muted/50"
+          >
+            <span className="text-sm font-medium">{s.title}</span>
+            <span className="mt-1 block text-sm text-muted-foreground">{s.desc}</span>
+          </Link>
+        ))}
       </div>
 
       <div className="mt-10 space-y-12">
@@ -34,7 +88,7 @@ export default function ComponentsIndexPage() {
           )
           if (items.length === 0) return null
           return (
-            <section key={category}>
+            <section key={category} id={category.toLowerCase().replace(/\s+/g, "-")} className="scroll-mt-24">
               <div className="flex items-baseline justify-between gap-4 border-b pb-3">
                 <h2 className="text-sm font-semibold tracking-widest uppercase text-muted-foreground">
                   {category}

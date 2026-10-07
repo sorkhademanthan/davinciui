@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 import { ComponentLayout, Section } from "@/components/component-layout"
 import { CopyButton } from "@/components/copy-button"
+import { DocsSnippet } from "@/components/docs-snippet"
+import { FoundationsRelated } from "@/components/foundations-related"
 
 export const metadata: Metadata = {
   title: "Colors — Foundations | DavinciUI",
@@ -178,13 +180,22 @@ export default function ColorsPage() {
       </Section>
 
       <Section title="Usage" id="usage">
-        <div className="rounded-xl border border-border bg-muted/20 p-4 font-mono text-sm space-y-1">
-          <p>background: var(--background);</p>
-          <p>color: var(--foreground);</p>
-          <p>border-color: var(--border);</p>
-          <p className="text-muted-foreground">/* Focus */ box-shadow: 0 0 0 2px var(--ring);</p>
-        </div>
+        <DocsSnippet
+          variant="muted"
+          code={`background: var(--background);
+color: var(--foreground);
+border-color: var(--border);
+/* Focus */ box-shadow: 0 0 0 2px var(--ring);`}
+        />
       </Section>
+      <FoundationsRelated
+        items={[
+          ["Theming", "/docs/theming"],
+          ["Typography", "/docs/foundations/typography"],
+          ["Borders", "/docs/foundations/borders"],
+          ["Shadows", "/docs/foundations/shadows"],
+        ]}
+      />
     </ComponentLayout>
   )
 }

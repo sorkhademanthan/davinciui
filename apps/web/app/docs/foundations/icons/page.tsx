@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { ComponentLayout, Section } from "@/components/component-layout"
+import { FoundationsRelated } from "@/components/foundations-related"
 import { Search, Heart, Star, Settings, User, Mail, Bell, Home, ArrowRight, Check, X, Plus, Trash, Edit, Save, Download, Upload, Eye, Lock, Shield, Zap, Sparkles, Layers, Grid, Box, Calendar, Clock, FileText, Image as ImageIcon, Video, Music, MapPin, Phone, Globe, Github, Twitter } from "lucide-react"
 
 export const metadata: Metadata = {
@@ -166,6 +167,13 @@ export default function IconsPage() {
           <li>Avoid using icon color alone to convey meaning — pair with text.</li>
         </ul>
       </Section>
+      <FoundationsRelated
+        items={[
+          ["Typography", "/docs/foundations/typography"],
+          ["Colors", "/docs/foundations/colors"],
+          ["Theming", "/docs/theming"],
+        ]}
+      />
     </ComponentLayout>
   )
 }

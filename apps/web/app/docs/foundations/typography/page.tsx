@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { ComponentLayout, Section } from "@/components/component-layout"
+import { FoundationsRelated } from "@/components/foundations-related"
 
 export const metadata: Metadata = {
   title: "Typography — Foundations | DavinciUI",
@@ -160,6 +161,14 @@ export default function TypographyPage() {
           <li>Keep line-length ≤ 65ch for prose</li>
         </ul>
       </Section>
+      <FoundationsRelated
+        items={[
+          ["Typeset", "/docs/typeset"],
+          ["Colors", "/docs/foundations/colors"],
+          ["Spacing", "/docs/foundations/spacing"],
+          ["Icons", "/docs/foundations/icons"],
+        ]}
+      />
     </ComponentLayout>
   )
 }

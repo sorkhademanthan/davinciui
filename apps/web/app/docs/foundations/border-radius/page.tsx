@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { ComponentLayout, Section } from "@/components/component-layout"
+import { FoundationsRelated } from "@/components/foundations-related"
 
 export const metadata: Metadata = {
   title: "Border Radius — Foundations | DavinciUI",
@@ -92,6 +93,13 @@ export default function BorderRadiusPage() {
           <li>Keep radius consistent — don’t mix <code className="font-mono px-1 py-0.5 rounded bg-muted text-xs">rounded-lg</code> and <code className="font-mono px-1 py-0.5 rounded bg-muted text-xs">rounded-xl</code> arbitrarily on same surface.</li>
         </ul>
       </Section>
+      <FoundationsRelated
+        items={[
+          ["Borders", "/docs/foundations/borders"],
+          ["Shadows", "/docs/foundations/shadows"],
+          ["Colors", "/docs/foundations/colors"],
+        ]}
+      />
     </ComponentLayout>
   )
 }

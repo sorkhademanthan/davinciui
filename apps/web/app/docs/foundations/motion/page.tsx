@@ -3,6 +3,7 @@
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion"
 import { ComponentLayout, Section, InfoBox } from "@/components/component-layout"
 import { CopyButton } from "@/components/copy-button"
+import { FoundationsRelated } from "@/components/foundations-related"
 import { useState, useEffect } from "react"
 
 // ─────────────────────────────────────────────
@@ -708,6 +709,13 @@ export default function MotionPage() {
           </p>
         </div>
       </Section>
+      <FoundationsRelated
+        items={[
+          ["Theming", "/docs/theming"],
+          ["Colors", "/docs/foundations/colors"],
+          ["Shadows", "/docs/foundations/shadows"],
+        ]}
+      />
     </ComponentLayout>
   )
 }

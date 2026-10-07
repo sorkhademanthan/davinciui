@@ -1,7 +1,11 @@
-import { docsConfig } from "@/config/docs";
+import { getLlmsText } from "@/config/docs";
+
+export const dynamic = "force-dynamic";
 
 export function GET() {
-  return new Response(docsConfig.llms.text, {
+  // Regenerated on every request from nav groups + registry source,
+  // so Foundations, MCP and new components never go stale.
+  return new Response(getLlmsText(), {
     headers: {
       "Content-Type": "text/plain",
       "Cache-Control": "public, max-age=3600",
