@@ -1,5 +1,6 @@
 "use client"
 
+import * as React from "react"
 import Link from "next/link"
 import { ArrowUpRight, ArrowUp } from "lucide-react"
 import { LandingContent, landingGutterClass } from "@/components/landing/landing-frame"
@@ -70,21 +71,76 @@ const footerGroups = [
   },
 ] as const
 
+function SpotlightWordmark({ containerRef }: { containerRef: React.RefObject<HTMLDivElement | null> }) {
+  return (
+    <div ref={containerRef} aria-hidden="true" className="relative select-none">
+      {/* Outlined base — reads as texture */}
+      <p className="whitespace-nowrap text-center text-[clamp(3.5rem,12.5vw,12rem)] font-semibold leading-[0.85] tracking-[-0.09em] text-transparent [-webkit-text-stroke:1px_rgb(9_9_11/0.22)] dark:[-webkit-text-stroke:1px_rgb(255_255_255/0.22)]">
+        davinciui
+      </p>
+      {/* Pointer-tracked fill, clipped to the same glyphs. Tight spotlight
+          for nearby cursor, wide faint sheen so distant cursor still reads. */}
+      <p
+        aria-hidden="true"
+        className="footer-spotlight pointer-events-none absolute inset-0 whitespace-nowrap text-center text-[clamp(3.5rem,12.5vw,12rem)] font-semibold leading-[0.85] tracking-[-0.09em] text-transparent opacity-90"
+      >
+        davinciui
+      </p>
+    </div>
+  )
+}
+
 export function Footer() {
+  const markRef = React.useRef<HTMLDivElement>(null)
+
   const scrollToTop = () => {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
     window.scrollTo({ top: 0, behavior: reduceMotion ? "instant" : "smooth" })
   }
 
+  // Spotlight follows the cursor anywhere inside the footer — not just over
+  // the wordmark. Coordinates are resolved against the wordmark box at event
+  // time, so scroll position never skews them.
+  const trackSpotlight = (e: React.PointerEvent<HTMLElement>) => {
+    const el = markRef.current
+    if (!el) return
+    const r = el.getBoundingClientRect()
+    el.style.setProperty("--mx", `${e.clientX - r.left}px`)
+    el.style.setProperty("--my", `${e.clientY - r.top}px`)
+  }
+
   return (
-    <footer className="relative isolate w-full overflow-hidden border-t border-zinc-200 bg-[#f4f4f1] text-zinc-950 dark:border-white/10 dark:bg-[#111214] dark:text-zinc-50">
+    <footer
+      onPointerMove={trackSpotlight}
+      className="relative isolate w-full overflow-hidden border-t border-zinc-200 bg-[#f4f4f1] text-zinc-950 dark:border-white/10 dark:bg-[#0a0a0b] dark:text-zinc-50"
+    >
+      <style>{`.footer-spotlight {
+  background-image:
+    radial-gradient(320px circle at var(--mx, 50%) var(--my, 50%), rgb(9 9 11 / 0.9), transparent 70%),
+    radial-gradient(900px circle at var(--mx, 50%) var(--my, 50%), rgb(9 9 11 / 0.35), transparent 85%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+.dark .footer-spotlight {
+  background-image:
+    radial-gradient(320px circle at var(--mx, 50%) var(--my, 50%), rgb(255 255 255 / 0.95), transparent 70%),
+    radial-gradient(900px circle at var(--mx, 50%) var(--my, 50%), rgb(255 255 255 / 0.35), transparent 85%);
+}`}</style>
+      {/* Ambient aurora — dark-first, barely-there in light */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+        <div className="absolute -top-40 left-1/2 h-96 w-[60rem] -translate-x-1/2 rounded-full bg-indigo-500/[0.07] blur-[120px] dark:bg-indigo-500/[0.14]" />
+        <div className="absolute -left-40 top-1/3 h-80 w-80 rounded-full bg-fuchsia-500/[0.05] blur-[100px] dark:bg-fuchsia-500/[0.1]" />
+        <div className="absolute -right-40 top-1/2 h-80 w-80 rounded-full bg-cyan-400/[0.05] blur-[100px] dark:bg-cyan-400/[0.09]" />
+      </div>
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-zinc-950/25 to-transparent dark:via-white/25"
       />
+
       <div className={`relative mx-auto w-full ${landingGutterClass}`}>
         <LandingContent>
-          <div className="grid gap-12 py-14 sm:py-16 lg:grid-cols-12 lg:gap-10 lg:py-20">
+          {/* Link grid */}
+          <div className="grid gap-12 py-14 sm:py-16 lg:grid-cols-12 lg:gap-10 lg:py-16">
             <div className="lg:col-span-5">
               <Link href="/" className="group inline-flex items-center gap-3 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6366f1]">
                 <DavinciUILogo className="size-8 transition-transform duration-300 group-hover:rotate-[-8deg]" />
@@ -107,32 +163,25 @@ export function Footer() {
                   </a>
                 ))}
               </div>
-              <div className="mt-6 flex flex-wrap items-center gap-2">
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-zinc-950/10 px-2.5 py-1 text-[11px] font-medium text-zinc-600 dark:border-white/10 dark:text-zinc-400">
-                  <span className="size-1.5 rounded-full bg-emerald-500" aria-hidden="true" />
-                  Free forever
-                </span>
-                <span className="inline-flex items-center rounded-full border border-zinc-950/10 px-2.5 py-1 font-mono text-[11px] text-zinc-600 dark:border-white/10 dark:text-zinc-400">
-                  MIT licensed
-                </span>
-              </div>
             </div>
 
             <nav aria-label="Footer navigation" className="grid grid-cols-2 gap-x-5 gap-y-10 sm:grid-cols-4 lg:col-span-7 lg:gap-6">
               {footerGroups.map((group) => (
                 <div key={group.title}>
-                  <h3 className="font-mono text-[10px] font-medium uppercase tracking-[0.19em] text-zinc-500 dark:text-zinc-400 sm:text-xs">
+                  <h3 className="font-mono text-[10px] font-medium uppercase tracking-[0.19em] text-zinc-500 dark:text-zinc-500 sm:text-xs">
                     {group.title}
                   </h3>
-                  <ul className="mt-5 space-y-3.5">
+                  <ul className="mt-5 space-y-1">
                     {group.links.map((link) => (
                       <li key={link.label}>
                         <Link
                           href={link.href}
                           {...("external" in link ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                          className="group inline-flex min-h-6 items-center gap-1.5 rounded-sm text-sm font-medium text-zinc-700 transition-colors hover:text-[#4f46e5] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6366f1] dark:text-zinc-300 dark:hover:text-[#a5b4fc] sm:text-[15px]"
+                          className="group inline-flex min-h-8 items-center gap-1.5 rounded-sm text-sm font-medium text-zinc-700 transition-colors hover:text-zinc-950 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6366f1] dark:text-zinc-400 dark:hover:text-white sm:text-[15px]"
                         >
-                          {link.label}
+                          <span className="bg-gradient-to-r from-current to-current bg-[length:0%_1px] bg-left-bottom bg-no-repeat pb-px transition-[background-size] duration-300 group-hover:bg-[length:100%_1px]">
+                            {link.label}
+                          </span>
                           {"external" in link && <ArrowUpRight className="size-3 opacity-45 transition-[transform,opacity] group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:opacity-100" aria-hidden="true" />}
                         </Link>
                       </li>
@@ -143,25 +192,21 @@ export function Footer() {
             </nav>
           </div>
 
-          <div className="flex flex-wrap items-center justify-between gap-x-8 gap-y-4 border-t border-zinc-950/15 py-6 text-xs text-zinc-600 dark:border-white/15 dark:text-zinc-400 sm:text-sm">
+          {/* Interactive wordmark */}
+          <div className="border-t border-zinc-950/10 py-10 dark:border-white/10 sm:py-12">
+            <SpotlightWordmark containerRef={markRef} />
+          </div>
+
+          {/* Legal bar */}
+          <div className="flex flex-wrap items-center justify-between gap-x-8 gap-y-4 border-t border-zinc-950/10 py-6 text-xs text-zinc-600 dark:border-white/10 dark:text-zinc-500 sm:text-sm">
             <p>© {new Date().getFullYear()} DavinciUI · <span className="rounded-full border border-zinc-950/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-widest dark:border-white/15">v0.1.0</span> · Crafted by <a href="https://www.manthansorkhade.in/" target="_blank" rel="noopener noreferrer" className="underline decoration-zinc-400/60 underline-offset-4 transition-colors hover:text-zinc-950 dark:hover:text-white">Manthan Sorkhade</a></p>
             <div className="flex items-center gap-5 sm:gap-7">
               <Link href="/privacy-policy" className="transition-colors hover:text-zinc-950 dark:hover:text-white">Privacy</Link>
               <Link href="/terms-of-service" className="transition-colors hover:text-zinc-950 dark:hover:text-white">Terms</Link>
-              <button type="button" onClick={scrollToTop} className="group inline-flex items-center gap-1.5 font-medium text-zinc-950 transition-colors hover:text-[#4f46e5] focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6366f1] dark:text-zinc-100 dark:hover:text-[#a5b4fc]">
+              <button type="button" onClick={scrollToTop} className="group inline-flex items-center gap-1.5 font-medium text-zinc-950 transition-colors hover:text-[#4f46e5] focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6366f1] dark:text-zinc-100 dark:hover:text-white">
                 Back to top <ArrowUp className="size-3.5 transition-transform group-hover:-translate-y-0.5" aria-hidden="true" />
               </button>
             </div>
-          </div>
-
-          <div className="overflow-hidden border-t border-zinc-950/15 pb-4 pt-5 dark:border-white/15 sm:pb-7 sm:pt-7" aria-hidden="true">
-            <div className="flex items-center justify-between gap-4 font-mono text-[9px] uppercase tracking-[0.18em] text-zinc-500 dark:text-zinc-400 sm:text-[10px]">
-              <span>Made for the curious</span>
-              <span>Designed to move</span>
-            </div>
-            <p className="mx-auto mt-5 max-w-full select-none whitespace-nowrap bg-gradient-to-b from-zinc-950 via-zinc-950 to-zinc-950/35 bg-clip-text text-center text-[clamp(3.15rem,13vw,12rem)] font-semibold leading-[0.8] tracking-[-0.095em] text-transparent dark:from-zinc-50 dark:via-zinc-50 dark:to-zinc-50/35">
-              davinciui
-            </p>
           </div>
         </LandingContent>
       </div>
