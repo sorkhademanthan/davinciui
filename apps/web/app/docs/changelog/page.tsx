@@ -1,11 +1,24 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { Section } from "@/components/component-layout"
+import { DocsSnippet } from "@/components/docs-snippet"
+import { Section, InfoBox } from "@/components/component-layout"
 
 export const metadata: Metadata = {
   title: "Changelog — DavinciUI",
-  description: "Latest updates to DavinciUI.",
+  description:
+    "Latest updates and announcements from DavinciUI. New components, agent skills, docs, and distribution improvements.",
 }
+
+const ARCHIVE = [
+  { date: "October 2026", title: "Docs refresh", desc: "Rewritten installation, theming, CLI, and configuration guides, new docs shell with sidebar navigation, and per-route OG images." },
+  { date: "October 2026", title: "Registry index and llms.txt", desc: "Machine-readable catalog at /r/registry.json and a plain-text index at /llms.txt so assistants can browse the whole library." },
+  { date: "October 2026", title: "MCP server docs", desc: "Setup guide for connecting the registry to AI coding assistants through the shadcn MCP server." },
+  { date: "October 2026", title: "Typeset guide", desc: "The DavinciUI type scale documented as a specimen page: headings, body, code, and usage rules." },
+  { date: "October 2026", title: "Site foundations", desc: "Analytics instrumentation, cookie consent, legal pages, command menu, and branded 404." },
+  { date: "September 2026", title: "Forms and overlays", desc: "date-picker, input-group, input-otp, native-select, alert-dialog, dropdown-menu, context-menu, and hover-card." },
+  { date: "September 2026", title: "Premium scroll galleries", desc: "cms-scroll-gallery, interactive-media-accordion, scroll-reveal-image, stacked-scroll-gallery, scroll-sync-gallery, horizontal-scroll-gallery, scroll-media-expand, and scroll-timeline." },
+  { date: "September 2026", title: "Visual effects wave", desc: "pixel-wipe-carousel, segmented-image-carousel, burn-plus, cinematic-card-carousel, vertical-image-marquee, hover-cards, profile-carousel, and services-showcase." },
+] as const
 
 export default function ChangelogPage() {
   return (
@@ -14,51 +27,153 @@ export default function ChangelogPage() {
         <p className="text-sm font-medium text-muted-foreground">Docs</p>
         <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">Changelog</h1>
         <p className="max-w-2xl text-[15px] leading-7 text-muted-foreground">
-          What changed in the registry and docs, and how to follow future
-          releases. Entries below reflect the repository&apos;s commit history —
-          not a marketing timeline.
+          Latest updates and announcements. New components, skills, and docs —
+          newest first, with install commands where they matter.
         </p>
       </div>
 
       <div className="mt-10 space-y-10">
-        <Section title="How to follow releases" id="how-to-follow-releases">
-          <ul className="list-disc space-y-1 pl-5 text-sm leading-6 text-muted-foreground">
-            <li>
-              GitHub releases:{" "}
-              <a
-                href="https://github.com/sorkhademanthan/davinciui/releases"
-                className="underline underline-offset-4"
-              >
-                sorkhademanthan/davinciui releases
-              </a>{" "}
-              — the authoritative source for versioned notes.
-            </li>
-            <li>
-              Commit history (<code className="rounded bg-muted px-1 py-0.5 font-mono text-xs">git log</code>) records
-              every registry addition and docs change.
-            </li>
-            <li>
-              Because installed components are copied source, nothing auto-updates:
-              re-run <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs">shadcn add … --overwrite</code> to
-              pick up a newer version of something you already installed.
-            </li>
-          </ul>
+        <InfoBox type="info">
+          Installed components are copied source, so nothing auto-updates.
+          Re-run{" "}
+          <code className="font-mono">shadcn add @davinciui/… --overwrite</code>{" "}
+          to pick up a newer version — commit your customizations first.
+          Authoritative release notes live on{" "}
+          <a
+            href="https://github.com/sorkhademanthan/davinciui/releases"
+            className="underline underline-offset-4"
+          >
+            GitHub releases
+          </a>
+          .
+        </InfoBox>
+
+        <Section title="October 2026 — Agent skill" id="october-2026-skill">
+          <p className="text-sm leading-6 text-muted-foreground">
+            Your AI assistant can now learn DavinciUI. The{" "}
+            <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs">davinciui</code>{" "}
+            skill teaches agents your project&apos;s aliases, the{" "}
+            <code className="font-mono">@davinciui</code> namespace, install and
+            theming rules, and a map of all 80+ components — so you describe the
+            outcome in plain words and it installs the right pieces. Read the{" "}
+            <Link href="/docs/skills" className="underline underline-offset-4">
+              Skills guide
+            </Link>
+            , then install it:
+          </p>
+          <DocsSnippet
+            code={`npx skills add https://github.com/sorkhademanthan/davinciui --skill davinciui`}
+          />
         </Section>
 
-        <Section title="Recent registry additions" id="recent-additions">
+        <Section title="September 2026 — Cursor effects" id="september-2026-cursors">
           <p className="text-sm leading-6 text-muted-foreground">
-            Per commit history, recent registry work added:
+            Eight custom cursors in one drop — spring-driven followers, RGB
+            trails, lightning, fluid, and geometric variants. All disable
+            themselves on touch devices and never block interaction:
           </p>
-          <ul className="list-disc space-y-1 pl-5 text-sm leading-6 text-muted-foreground">
-            <li>Form and feedback pieces: textarea, toggle, switch, label, skeleton, spinner.</li>
-            <li>Layout and navigation: sidebar, aspect-ratio, button-group, carousel, pagination, link.</li>
-            <li>Interactive and motion pieces: testimonial-marquee, spotlight-card, scrub-input, lens-drift-grid, hyper-text.</li>
-            <li>Docs and distribution: registry index, CLI registry wiring, docs shell and component pages.</li>
-          </ul>
+          <DocsSnippet
+            code={`pnpm dlx shadcn@latest add @davinciui/magic-cursor-pro`}
+          />
+          <p className="text-sm leading-6 text-muted-foreground">
+            Browse the full set in{" "}
+            <Link
+              href="/docs/components#cursor-effects"
+              className="underline underline-offset-4"
+            >
+              Components → Cursor Effects
+            </Link>
+            .
+          </p>
+        </Section>
+
+        <Section title="September 2026 — Preloaders and sound" id="september-2026-preloaders-sound">
+          <p className="text-sm leading-6 text-muted-foreground">
+            Two brand-new categories. Six preloaders — fill, staircase, pixel,
+            editorial wipe, geometric, and a pro variant — plus five sound
+            utilities including an ambient toggle, interaction kit, and voice
+            recorder:
+          </p>
+          <DocsSnippet
+            code={`pnpm dlx shadcn@latest add @davinciui/preloader-pro
+pnpm dlx shadcn@latest add @davinciui/ambient-audio-toggle`}
+          />
+        </Section>
+
+        <Section title="September 2026 — Text animation wave" id="september-2026-text">
+          <p className="text-sm leading-6 text-muted-foreground">
+            Twelve text animations landed together: particle fields, morphing
+            words, encrypted reveals, glitch-liquid, shader text, video masks,
+            and rolling tickers. Start with the signature piece:
+          </p>
+          <DocsSnippet
+            code={`pnpm dlx shadcn@latest add @davinciui/text-morph`}
+          />
+          <p className="text-sm leading-6 text-muted-foreground">
+            See them all under{" "}
+            <Link
+              href="/docs/components#text-animations"
+              className="underline underline-offset-4"
+            >
+              Components → Text Animations
+            </Link>
+            .
+          </p>
+        </Section>
+
+        <Section title="September 2026 — Hero backgrounds" id="september-2026-heroes">
+          <p className="text-sm leading-6 text-muted-foreground">
+            The hero collection grew to nine: ink flow, soft fluid gradients,
+            neon mesh, spectra noise, sunlight, character fields, and pixel
+            flow join the original silk aurora and liquid chrome:
+          </p>
+          <DocsSnippet
+            code={`pnpm dlx shadcn@latest add @davinciui/ink-flow`}
+          />
+        </Section>
+
+        <Section title="August 2026 — First components" id="august-2026-first">
+          <p className="text-sm leading-6 text-muted-foreground">
+            The registry opened with its first four pieces — text-morph,
+            hover-transition, lens-drift-grid, and orbit-spiral-gallery —
+            establishing the copy-paste distribution model under the{" "}
+            <code className="font-mono">@davinciui</code> namespace. See{" "}
+            <Link href="/docs/registry" className="underline underline-offset-4">
+              Registry
+            </Link>{" "}
+            for how installs work.
+          </p>
+        </Section>
+
+        <Section title="June 2026 — Registry begins" id="june-2026-beginnings">
+          <p className="text-sm leading-6 text-muted-foreground">
+            The first two hero backgrounds — silk-aurora and liquid-chrome —
+            proved the concept: animated WebGL pieces delivered as registry JSON
+            instead of an npm package.
+          </p>
+        </Section>
+
+        <Section title="More updates" id="more-updates">
+          <div className="divide-y rounded-lg border">
+            {ARCHIVE.map((item) => (
+              <div key={`${item.date}-${item.title}`} className="flex gap-4 p-3 text-sm">
+                <span className="w-28 shrink-0 font-mono text-xs leading-6 text-muted-foreground">
+                  {item.date}
+                </span>
+                <span className="leading-6 text-muted-foreground">
+                  <strong className="font-medium text-foreground">{item.title}</strong>
+                  {" — "}
+                  {item.desc}
+                </span>
+              </div>
+            ))}
+          </div>
           <p className="text-sm leading-6 text-muted-foreground">
             For the current catalog, see{" "}
-            <Link href="/docs/components" className="underline underline-offset-4">Components</Link> — it is
-            generated from the registry, so it never goes stale.
+            <Link href="/docs/components" className="underline underline-offset-4">
+              Components
+            </Link>{" "}
+            — it is generated from the registry, so it never goes stale.
           </p>
         </Section>
 
