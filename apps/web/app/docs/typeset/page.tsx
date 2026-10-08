@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { DocsSnippet } from "@/components/docs-snippet";
 
 export const metadata: Metadata = {
   title: "Typeset — DavinciUI",
   description:
-    "The DavinciUI type scale in practice. Headings, body, lead, muted, blockquote, list and inline code specimens.",
+    "Prose styling for rendered markdown. Install one CSS file you own, wrap content in a preset, and tune three values.",
 };
 
 const scale = [
@@ -55,21 +56,121 @@ export default function TypesetPage() {
           Typeset
         </h1>
         <p className="text-[15px] leading-7 text-muted-foreground">
-          The type scale DavinciUI docs and components are set in. One sans
-          (Geist), one mono (JetBrains Mono), tight tracking on headings and
-          relaxed leading on body. Use this page to see the hierarchy working
-          together — then apply the same pairings in component UI. See{" "}
-          <Link
-            href="/docs/foundations/typography"
-            className="underline underline-offset-4"
-          >
-            Foundations → Typography
-          </Link>{" "}
-          for the underlying tokens.
+          Your markdown renderer outputs plain unstyled HTML — so you style
+          the elements one by one, once per surface: blog, docs, chat. Typeset
+          ends that repetition. It is one CSS file you own that styles
+          everything inside a container, driven by three values. The specimens
+          below show the scale; install the file to use it.
         </p>
       </div>
 
       <div className="mt-10 space-y-10">
+        <section>
+          <h2 className="scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight">
+            Install
+          </h2>
+          <div className="mt-6 space-y-4">
+            <p className="text-[15px] leading-7 text-muted-foreground">
+              Add the stylesheet to your project, then import it after
+              Tailwind. The file lands in your repo — edit it directly whenever
+              you need to.
+            </p>
+            <DocsSnippet
+              code={`pnpm dlx shadcn@latest add @davinciui/typeset`}
+            />
+            <DocsSnippet
+              code={`@import "tailwindcss";
+@import "./components/ui/typeset.css";`}
+            />
+            <p className="text-[15px] leading-7 text-muted-foreground">
+              Then wrap rendered markdown in{" "}
+              <code className="rounded bg-muted px-1 py-0.5 font-mono text-[13px]">
+                typeset
+              </code>{" "}
+              plus a preset:
+            </p>
+            <DocsSnippet
+              code={`<div className="typeset typeset-docs">\n  <YourMarkdownRenderer>{content}</YourMarkdownRenderer>\n</div>`}
+            />
+            <p className="text-[15px] leading-7 text-muted-foreground">
+              <code className="rounded bg-muted px-1 py-0.5 font-mono text-[13px]">
+                typeset
+              </code>{" "}
+              turns the styles on; the preset sets the rhythm. Use{" "}
+              <code className="rounded bg-muted px-1 py-0.5 font-mono text-[13px]">
+                typeset-docs
+              </code>{" "}
+              for articles,{" "}
+              <code className="rounded bg-muted px-1 py-0.5 font-mono text-[13px]">
+                typeset-chat
+              </code>{" "}
+              for messages, and{" "}
+              <code className="rounded bg-muted px-1 py-0.5 font-mono text-[13px]">
+                typeset-compact
+              </code>{" "}
+              for dense UI — all three can live in the same app.
+            </p>
+          </div>
+        </section>
+
+        <section>
+          <h2 className="scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight">
+            Three controls
+          </h2>
+          <div className="mt-6 space-y-4">
+            <p className="text-[15px] leading-7 text-muted-foreground">
+              Everything derives from size, leading, and flow. Heading sizes,
+              list indents, and gaps all follow these — set three values and
+              the whole document obeys:
+            </p>
+            <DocsSnippet
+              code={`.typeset-docs {\n  --typeset-size: 15px; /* body font-size (1em follows the container) */\n  --typeset-leading: 1.75; /* line-height */\n  --typeset-flow: 1.5em; /* space between blocks */\n}`}
+            />
+            <p className="text-[15px] leading-7 text-muted-foreground">
+              Fonts, colors, and radius come from your theme tokens
+              automatically, so dark mode needs no extra work. For a one-off,
+              skip the preset and set a value inline:{" "}
+              <code className="rounded bg-muted px-1 py-0.5 font-mono text-[13px]">
+                className=&quot;typeset [--typeset-flow:1.75em]&quot;
+              </code>
+              . Your own utilities and CSS always win over typeset styles —
+              no{" "}
+              <code className="rounded bg-muted px-1 py-0.5 font-mono text-[13px]">
+                !important
+              </code>{" "}
+              needed.
+            </p>
+          </div>
+        </section>
+
+        <section>
+          <h2 className="scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight">
+            Tables, opt-outs, and streaming
+          </h2>
+          <ul className="mt-6 list-disc space-y-1 pl-5 text-[15px] leading-7">
+            <li>Tables stay real tables. For wide ones, wrap in <code className="rounded bg-muted px-1 py-0.5 font-mono text-[13px]">typeset-scroll</code> to scroll horizontally instead of breaking layout.</li>
+            <li>To keep a component untouched, add <code className="rounded bg-muted px-1 py-0.5 font-mono text-[13px]">not-typeset</code> or <code className="rounded bg-muted px-1 py-0.5 font-mono text-[13px]">data-not-typeset</code> — it covers the component and everything inside it.</li>
+            <li>Streaming-safe by construction: spacing flows one way and no rule looks ahead, so appending a block never restyles the blocks above it.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 className="scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight">
+            Specimens
+          </h2>
+          <p className="mt-6 text-[15px] leading-7 text-muted-foreground">
+            The scale below is what the presets render. One sans (Geist), one
+            mono (JetBrains Mono), tight tracking on headings and relaxed
+            leading on body. See{" "}
+            <Link
+              href="/docs/foundations/typography"
+              className="underline underline-offset-4"
+            >
+              Foundations → Typography
+            </Link>{" "}
+            for the underlying tokens.
+          </p>
+        </section>
         <section>
           <h2 className="scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight">
             Headings
