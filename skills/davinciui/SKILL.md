@@ -52,6 +52,7 @@ Verify these; fix before adding components, not after:
 - **Motion:** wave-bars-loader, motion-hamburger, liquid-chrome-button, radial-fan-deck, animated-metric, kinetic-split-text
 - **Sound:** ambient-audio-toggle, interaction-sound-kit, voice-recorder, keyboard-command-sounds, upload-sound-status
 - **Primitives (shadcn-compatible):** Actions (button-group, toggle-group), Forms (date-picker, input-group, input-otp, native-select), Navigation (navigation-menu), Overlays (alert-dialog, dropdown-menu, context-menu, hover-card), Layout (aspect-ratio, scroll-area), Data Display (message-scroller)
+- **Styles:** typeset — prose styling for rendered markdown. Install with `add @davinciui/typeset`, `@import` the CSS after Tailwind, wrap content in `typeset` + a preset (`typeset-docs`, `typeset-chat`, `typeset-compact`). Docs: `https://davinciui.com/docs/typeset`.
 
 Machine-readable discovery: full index at `https://davinciui.com/r/registry.json`, plain-text catalog at `https://davinciui.com/llms.txt`, live docs at `https://davinciui.com/docs/components`.
 
