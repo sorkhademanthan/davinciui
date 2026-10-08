@@ -26,6 +26,8 @@ const LEGACY_UNDOCUMENTED_ITEMS = new Set([
   "spotlight-card",
   "testimonial-marquee",
   "text-animate",
+  // Documented on their own docs pages rather than /docs/components/[slug].
+  "typeset",
 ])
 
 function fail(message) {

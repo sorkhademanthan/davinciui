@@ -585,6 +585,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "typeset",
+      "type": "registry:ui"
+    },
+    {
       "name": "upload-sound-status",
       "type": "registry:ui"
     },
