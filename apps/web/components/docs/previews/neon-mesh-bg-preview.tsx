@@ -1,7 +1,10 @@
 "use client";
 
+import { useEffect } from "react";
+
 import { NeonMeshBG } from "@workspace/ui/components/neon-mesh-bg";
 import { create } from "zustand";
+import { configEquals, usePlaygroundStore } from "@/hooks/use-playground-store";
 import {
   PlaygroundColorPicker,
   PlaygroundSectionTitle,
@@ -51,8 +54,37 @@ const useNeonMeshBGStore = create<{
   reset: () => set({ config: DEFAULT_CONFIG }),
 }));
 
+function generateCode(config: NeonMeshBGConfig) {
+  return `import { NeonMeshBG } from "@/components/ui/neon-mesh-bg"
+
+<NeonMeshBG
+  scale={${config.scale}}
+  warp={${config.warp}}
+  contrast={${config.contrast}}
+  gridSize={${config.gridSize}}
+  gridStrength={${config.gridStrength}}
+  glowStrength={${config.glowStrength}}
+  glowSpread={${config.glowSpread}}
+  speed={${config.speed}}
+  animate={${config.animate}}
+  backgroundColor=${JSON.stringify(config.backgroundColor)}
+  primaryColor=${JSON.stringify(config.primaryColor)}
+  secondaryColor=${JSON.stringify(config.secondaryColor)}
+  highlightColor=${JSON.stringify(config.highlightColor)}
+/>`;
+}
+
 export function NeonMeshBGPreview() {
   const config = useNeonMeshBGStore((state) => state.config);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      const api = usePlaygroundStore.getState();
+      api.registerPreviewReset("neon-mesh-bg", () => useNeonMeshBGStore.getState().reset());
+      api.setPersonalizedCode("neon-mesh-bg", generateCode(config), !configEquals(config, DEFAULT_CONFIG));
+    }, 180);
+    return () => window.clearTimeout(timer);
+  }, [config]);
 
   return (
     <section

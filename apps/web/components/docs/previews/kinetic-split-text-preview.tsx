@@ -21,6 +21,7 @@ import {
   PlaygroundTextArea,
 } from "@/components/playground-primitives";
 import { cn } from "@/lib/utils";
+import { configEquals, usePlaygroundStore } from "@/hooks/use-playground-store";
 
 type KineticConfig = {
   text: string;
@@ -65,6 +66,23 @@ const useKineticStore = create<{
   update: (next) => set((state) => ({ config: { ...state.config, ...next } })),
   reset: () => set({ config: DEFAULT_CONFIG }),
 }));
+
+function generateCode(config: KineticConfig, color: string) {
+  return `import { KineticSplitText } from "@/components/ui/kinetic-split-text"
+
+<KineticSplitText
+  text=${JSON.stringify(config.text)}
+  split=${JSON.stringify(config.split)}
+  variant=${JSON.stringify(config.variant)}
+  preset=${JSON.stringify(config.preset)}
+  direction=${JSON.stringify(config.direction)}
+  staggerPattern=${JSON.stringify(config.staggerPattern)}
+  stagger={${config.stagger}}
+  duration={${config.duration}}
+  trigger=${JSON.stringify(config.trigger)}
+  color=${JSON.stringify(color)}
+/>`;
+}
 
 const replayBus = {
   listeners: new Set<() => void>(),
@@ -179,6 +197,19 @@ export function KineticSplitTextPreview() {
 
   React.useEffect(() => setMounted(true), []);
   const isDark = mounted ? resolvedTheme === "dark" : true;
+
+  React.useEffect(() => {
+    const timer = window.setTimeout(() => {
+      const api = usePlaygroundStore.getState();
+      api.registerPreviewReset("kinetic-split-text", () => useKineticStore.getState().reset());
+      api.setPersonalizedCode(
+        "kinetic-split-text",
+        generateCode(config, isDark ? "#fafafa" : "#18181b"),
+        !configEquals(config, DEFAULT_CONFIG),
+      );
+    }, 180);
+    return () => window.clearTimeout(timer);
+  }, [config, isDark]);
 
   React.useEffect(() => {
     const replay = () => handleRef.current?.play();

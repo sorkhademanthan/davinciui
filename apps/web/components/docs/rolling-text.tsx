@@ -28,7 +28,7 @@ export async function RollingTextDocs() {
       installPackageName="rolling-text"
       installSourceCode={sourceCode}
       installSourceFilename="components/ui/rolling-text.tsx"
-      usageCode={<LiveCodeBlock defaultCode={defaultCode} />}
+      usageCode={<LiveCodeBlock slug="rolling-text" defaultCode={defaultCode} />}
       fullWidthPreview
       props={[
         { name: "text", type: "string", default: '"DAVINCIUI"', description: "Text content. Wraps at word boundaries; spaces keep their width." },

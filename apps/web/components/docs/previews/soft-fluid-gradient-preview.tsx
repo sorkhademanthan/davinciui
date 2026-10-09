@@ -1,7 +1,10 @@
 "use client";
 
+import { useEffect } from "react";
+
 import { SoftFluidGradient } from "@workspace/ui/components/soft-fluid-gradient";
 import { create } from "zustand";
+import { configEquals, usePlaygroundStore } from "@/hooks/use-playground-store";
 import {
   PlaygroundSectionTitle,
   PlaygroundSlider,
@@ -27,8 +30,26 @@ const useSoftFluidGradientStore = create<{
   reset: () => set({ config: DEFAULT_CONFIG }),
 }));
 
+function generateCode(config: SoftFluidGradientConfig) {
+  return `import { SoftFluidGradient } from "@/components/ui/soft-fluid-gradient"
+
+<SoftFluidGradient
+  speed={${config.speed}}
+  density={${config.density}}
+/>`;
+}
+
 export function SoftFluidGradientPreview() {
   const config = useSoftFluidGradientStore((state) => state.config);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      const api = usePlaygroundStore.getState();
+      api.registerPreviewReset("soft-fluid-gradient", () => useSoftFluidGradientStore.getState().reset());
+      api.setPersonalizedCode("soft-fluid-gradient", generateCode(config), !configEquals(config, DEFAULT_CONFIG));
+    }, 180);
+    return () => window.clearTimeout(timer);
+  }, [config]);
 
   return (
     <section

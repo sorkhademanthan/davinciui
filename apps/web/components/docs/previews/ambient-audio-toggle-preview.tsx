@@ -1,7 +1,9 @@
 "use client";
 
+import { useEffect } from "react";
 import { useTheme } from "next-themes";
 import { create } from "zustand";
+import { configEquals, usePlaygroundStore } from "@/hooks/use-playground-store";
 import { AmbientAudioToggle } from "@workspace/ui/components/ambient-audio-toggle";
 import {
   PlaygroundColorPicker,
@@ -110,6 +112,42 @@ const useAmbientAudioToggleStore = create<{
     }),
 }));
 
+function generateCode(
+  config: AmbientAudioToggleConfig,
+  touchedColors: Record<AmbientAudioColorKey, boolean>,
+  themeDefaults: Record<AmbientAudioColorKey, string>,
+) {
+  const color = (key: AmbientAudioColorKey) =>
+    touchedColors[key] ? config[key] : themeDefaults[key];
+  return `import { AmbientAudioToggle } from "@/components/ui/ambient-audio-toggle"
+
+<AmbientAudioToggle
+  src="/audio/ambient-music.mp3"
+  persistenceKey="site-ambient-track"
+  loop={${config.loop}}
+  volume={${config.volume}}
+  visualizer=${JSON.stringify(config.visualizer)}
+  barCount={${config.barCount}}
+  activeColor=${JSON.stringify(color("activeColor"))}
+  inactiveColor=${JSON.stringify(color("inactiveColor"))}
+  playingColor=${JSON.stringify(color("playingColor"))}
+  pausedColor=${JSON.stringify(color("pausedColor"))}
+  labelPlaying=${JSON.stringify(config.labelPlaying)}
+  labelPaused=${JSON.stringify(config.labelPaused)}
+  hideLabel={${config.hideLabel}}
+  labelPosition=${JSON.stringify(config.labelPosition)}
+  labelGap={${config.labelGap}}
+  waveformWidth={${config.waveformWidth}}
+  waveformHeight={${config.waveformHeight}}
+  lineWeight={${config.lineWeight}}
+  lineCap=${JSON.stringify(config.lineCap)}
+  pausedAmount={${config.pausedAmount}}
+  animationSpeed={${config.animationSpeed}}
+  intensity={${config.intensity}}
+  transition={${config.transition}}
+/>`;
+}
+
 export function AmbientAudioTogglePreview() {
   const config = useAmbientAudioToggleStore((state) => state.config);
   const touchedColors = useAmbientAudioToggleStore(
@@ -118,6 +156,19 @@ export function AmbientAudioTogglePreview() {
   const { resolvedTheme } = useTheme();
   const themeDefaults =
     resolvedTheme === "light" ? LIGHT_COLOR_DEFAULTS : DARK_COLOR_DEFAULTS;
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      const api = usePlaygroundStore.getState();
+      api.registerPreviewReset("ambient-audio-toggle", () => useAmbientAudioToggleStore.getState().reset());
+      api.setPersonalizedCode(
+        "ambient-audio-toggle",
+        generateCode(config, touchedColors, themeDefaults),
+        !configEquals(config, DEFAULT_CONFIG),
+      );
+    }, 180);
+    return () => window.clearTimeout(timer);
+  }, [config, touchedColors, themeDefaults]);
 
   return (
     <section

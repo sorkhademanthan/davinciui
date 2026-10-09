@@ -3,7 +3,7 @@
 import * as React from "react";
 import { create } from "zustand";
 import { ShakeText } from "@workspace/ui/components/shake-text";
-import { usePlaygroundStore } from "@/hooks/use-playground-store";
+import { configEquals, usePlaygroundStore } from "@/hooks/use-playground-store";
 import {
   PlaygroundColorPicker,
   PlaygroundInput,
@@ -66,7 +66,11 @@ export function ShakeTextPlayground() {
   const config = useShakeTextPlayground((s) => s.config);
 
   React.useEffect(() => {
-    const t = window.setTimeout(() => usePlaygroundStore.getState().setCode(generateCode(config)), 180);
+    const t = window.setTimeout(() => {
+      const api = usePlaygroundStore.getState();
+      api.registerPreviewReset("shake-text", () => useShakeTextPlayground.getState().resetConfig());
+      api.setPersonalizedCode("shake-text", generateCode(config), !configEquals(config, DEFAULT_CONFIG));
+    }, 180);
     return () => window.clearTimeout(t);
   }, [config]);
 

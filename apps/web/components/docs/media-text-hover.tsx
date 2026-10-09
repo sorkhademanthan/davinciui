@@ -32,7 +32,7 @@ export async function MediaTextHoverDocs() {
       installDependencies="framer-motion"
       installSourceCode={sourceCode}
       installSourceFilename="components/ui/media-text-hover.tsx"
-      usageCode={<LiveCodeBlock defaultCode={defaultCode} />}
+      usageCode={<LiveCodeBlock slug="media-text-hover" defaultCode={defaultCode} />}
       fullWidthPreview
       props={[
         { name: "text", type: "string", default: '"DAVINCIUI"', description: "Headline rendered on both sides of the media window." },

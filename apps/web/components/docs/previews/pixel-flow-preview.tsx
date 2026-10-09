@@ -6,7 +6,7 @@ import { PixelFlow } from "@workspace/ui/components/pixel-flow";
 import type { PixelFlowPresetName } from "@workspace/ui/components/pixel-flow";
 import { PIXEL_FLOW_PRESETS } from "@workspace/ui/components/pixel-flow";
 import { cn } from "@/lib/utils";
-import { usePlaygroundStore } from "@/hooks/use-playground-store";
+import { configEquals, usePlaygroundStore } from "@/hooks/use-playground-store";
 import {
   PlaygroundColorPicker,
   PlaygroundSectionTitle,
@@ -155,7 +155,9 @@ export function PixelFlowPlayground() {
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      usePlaygroundStore.getState().setCode(generateCode(config));
+      const api = usePlaygroundStore.getState();
+      api.registerPreviewReset("pixel-flow", () => usePixelFlowPlaygroundStore.getState().resetConfig());
+      api.setPersonalizedCode("pixel-flow", generateCode(config), !configEquals(config, PIXEL_FLOW_DEFAULT_CONFIG));
     }, 250);
 
     return () => clearTimeout(timeoutId);

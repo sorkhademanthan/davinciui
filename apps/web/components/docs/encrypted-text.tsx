@@ -28,7 +28,7 @@ export async function EncryptedTextDocs() {
       installPackageName="encrypted-text"
       installSourceCode={sourceCode}
       installSourceFilename="components/ui/encrypted-text.tsx"
-      usageCode={<LiveCodeBlock defaultCode={basicUsageCode} />}
+      usageCode={<LiveCodeBlock slug="encrypted-text" defaultCode={basicUsageCode} />}
       fullWidthPreview
       props={[
         {

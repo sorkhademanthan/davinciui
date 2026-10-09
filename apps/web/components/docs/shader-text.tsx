@@ -43,7 +43,7 @@ export async function ShaderTextDocs() {
       installPackageName="shader-text"
       installSourceCode={sourceCode}
       installSourceFilename="components/ui/shader-text.tsx"
-      usageCode={<LiveCodeBlock defaultCode={basicUsageCode} />}
+      usageCode={<LiveCodeBlock slug="shader-text" defaultCode={basicUsageCode} />}
       fullWidthPreview
       examples={[
         {

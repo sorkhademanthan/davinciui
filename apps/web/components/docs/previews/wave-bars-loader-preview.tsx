@@ -11,6 +11,7 @@ import {
   PlaygroundSwitch,
 } from "@/components/playground-primitives";
 import { cn } from "@/lib/utils";
+import { configEquals, usePlaygroundStore } from "@/hooks/use-playground-store";
 
 type WaveBarsLoaderConfig = {
   size: number;
@@ -46,6 +47,22 @@ const useWaveBarsLoaderStore = create<{
   reset: () => set({ config: DEFAULT_CONFIG }),
 }));
 
+function generateCode(config: WaveBarsLoaderConfig, barColor: string) {
+  return `import { WaveBarsLoader } from "@/components/ui/wave-bars-loader"
+
+<WaveBarsLoader
+  size={${config.size}}
+  color=${JSON.stringify(barColor)}
+  speed={${config.speed}}
+  gap={${config.gap}}
+  barWidth={${config.barWidth}}
+  borderRadius={${config.borderRadius}}
+  glow={${config.glow}}
+  glowIntensity={${config.glowIntensity}}
+  paused={${config.paused}}
+/>`;
+}
+
 /**
  * Primary reference preview — mint bars on a very dark purple stage in dark
  * mode, deep teal bars on a light stage in light mode, centered, no extras.
@@ -67,6 +84,19 @@ export function WaveBarsLoaderPreview() {
         ? "#42E6C6"
         : "#0D9488"
       : config.color;
+
+  React.useEffect(() => {
+    const timer = window.setTimeout(() => {
+      const api = usePlaygroundStore.getState();
+      api.registerPreviewReset("wave-bars-loader", () => useWaveBarsLoaderStore.getState().reset());
+      api.setPersonalizedCode(
+        "wave-bars-loader",
+        generateCode(config, barColor),
+        !configEquals(config, DEFAULT_CONFIG),
+      );
+    }, 180);
+    return () => window.clearTimeout(timer);
+  }, [config, barColor]);
 
   return (
     <section

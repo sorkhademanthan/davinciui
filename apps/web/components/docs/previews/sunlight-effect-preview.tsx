@@ -1,7 +1,10 @@
 "use client";
 
+import { useEffect } from "react";
+
 import { SunlightEffect } from "@workspace/ui/components/sunlight-effect";
 import { create } from "zustand";
+import { configEquals, usePlaygroundStore } from "@/hooks/use-playground-store";
 import {
   PlaygroundColorPicker,
   PlaygroundSectionTitle,
@@ -59,8 +62,38 @@ const useSunlightEffectStore = create<{
   reset: () => set({ config: DEFAULT_CONFIG }),
 }));
 
+function generateCode(config: SunlightEffectConfig) {
+  return `import { SunlightEffect } from "@/components/ui/sunlight-effect"
+
+<SunlightEffect
+  colors={${JSON.stringify(config.colors)}}
+  backgroundColor=${JSON.stringify(config.backgroundColor)}
+  bloomColor=${JSON.stringify(config.bloomColor)}
+  bloom={${config.bloom}}
+  intensity={${config.intensity}}
+  density={${config.density}}
+  spotty={${config.spotty}}
+  midSize={${config.midSize}}
+  midIntensity={${config.midIntensity}}
+  speed={${config.speed}}
+  scale={${config.scale}}
+  rotation={${config.rotation}}
+  offsetX={${config.offsetX}}
+  offsetY={${config.offsetY}}
+/>`;
+}
+
 export function SunlightEffectPreview() {
   const config = useSunlightEffectStore((state) => state.config);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      const api = usePlaygroundStore.getState();
+      api.registerPreviewReset("sunlight-effect", () => useSunlightEffectStore.getState().reset());
+      api.setPersonalizedCode("sunlight-effect", generateCode(config), !configEquals(config, DEFAULT_CONFIG));
+    }, 180);
+    return () => window.clearTimeout(timer);
+  }, [config]);
 
   return (
     <section

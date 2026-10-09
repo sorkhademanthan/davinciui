@@ -1,7 +1,10 @@
 "use client";
 
+import { useEffect } from "react";
+
 import { SpectraNoise } from "@workspace/ui/components/spectra-noise";
 import { create } from "zustand";
+import { configEquals, usePlaygroundStore } from "@/hooks/use-playground-store";
 import {
   PlaygroundColorPicker,
   PlaygroundSectionTitle,
@@ -51,8 +54,37 @@ const useSpectraNoiseStore = create<{
   reset: () => set({ config: DEFAULT_CONFIG }),
 }));
 
+function generateCode(config: SpectraNoiseConfig) {
+  return `import { SpectraNoise } from "@/components/ui/spectra-noise"
+
+<SpectraNoise
+  hueShift={${config.hueShift}}
+  noiseIntensity={${config.noiseIntensity}}
+  scanlineDensity={${config.scanlineDensity}}
+  scanlineIntensity={${config.scanlineIntensity}}
+  warpAmount={${config.warpAmount}}
+  animationSpeed={${config.animationSpeed}}
+  resolutionScale={${config.resolutionScale}}
+  paused={${config.paused}}
+  seed={${config.seed}}
+  backgroundColor=${JSON.stringify(config.backgroundColor)}
+  glowColor=${JSON.stringify(config.glowColor)}
+  highlightColor=${JSON.stringify(config.highlightColor)}
+  effectIntensity={${config.effectIntensity}}
+/>`;
+}
+
 export function SpectraNoisePreview() {
   const config = useSpectraNoiseStore((state) => state.config);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      const api = usePlaygroundStore.getState();
+      api.registerPreviewReset("spectra-noise", () => useSpectraNoiseStore.getState().reset());
+      api.setPersonalizedCode("spectra-noise", generateCode(config), !configEquals(config, DEFAULT_CONFIG));
+    }, 180);
+    return () => window.clearTimeout(timer);
+  }, [config]);
 
   return (
     <section

@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import {
   LIQUID_CHROME_DEFAULT_CONFIG,
   type LiquidChromeConfig,
+  configEquals,
   usePlaygroundStore,
 } from "@/hooks/use-playground-store";
 import {
@@ -76,7 +77,9 @@ export function LiquidChromePlayground() {
   useEffect(() => {
     const code = generateCode(config);
     const timeoutId = setTimeout(() => {
-      usePlaygroundStore.getState().setCode(code);
+      const api = usePlaygroundStore.getState();
+      api.registerPreviewReset("liquid-chrome", () => api.resetLiquidChromeConfig());
+      api.setPersonalizedCode("liquid-chrome", code, !configEquals(config, LIQUID_CHROME_DEFAULT_CONFIG));
     }, 250);
 
     return () => clearTimeout(timeoutId);

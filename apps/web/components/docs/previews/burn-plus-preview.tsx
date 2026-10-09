@@ -1,7 +1,7 @@
 "use client";
 
 import { AshReveal } from "@workspace/ui/components/burn-plus";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import type {
   BurnPlusDirection,
@@ -10,6 +10,7 @@ import type {
   BurnPlusTrigger,
 } from "@workspace/ui/components/burn-plus";
 import { create } from "zustand";
+import { configEquals, isDarkPreviewTheme, usePlaygroundStore } from "@/hooks/use-playground-store";
 import {
   PlaygroundColorPicker,
   PlaygroundSectionTitle,
@@ -78,6 +79,40 @@ const useBurnPlusStore = create<{
   reset: () => set({ config: DEFAULT_CONFIG }),
 }));
 
+function generateCode(config: BurnPlusConfig) {
+  const background =
+    !isDarkPreviewTheme() && config.background === DEFAULT_CONFIG.background
+      ? "#f5f5f4"
+      : config.background;
+  return `import { AshReveal } from "@/components/ui/burn-plus"
+
+<AshReveal
+  burn={${config.burn}}
+  density={${config.density}}
+  distortion={${config.distortion}}
+  edgeSoftness={${config.edgeSoftness}}
+  noiseScale={${config.noiseScale}}
+  octaves={${config.octaves}}
+  seed={${config.seed}}
+  edgeComplexity={${config.edgeComplexity}}
+  start={${config.start}}
+  end={${config.end}}
+  completeAt={${config.completeAt}}
+  duration={${config.duration}}
+  delay={${config.delay}}
+  loop={${config.loop}}
+  loopDelay={${config.loopDelay}}
+  invert={${config.invert}}
+  autoplay={${config.autoplay}}
+  fit=${JSON.stringify(config.fit)}
+  trigger=${JSON.stringify(config.trigger)}
+  direction=${JSON.stringify(config.direction)}
+  transition=${JSON.stringify(config.transition)}
+  background=${JSON.stringify(background)}
+  media="/images/spiral-3d-slider/orange-haze.jpg"
+/>`;
+}
+
 export function BurnPlusPreview() {
   const config = useBurnPlusStore((state) => state.config);
   const [runId, setRunId] = useState(0);
@@ -88,6 +123,15 @@ export function BurnPlusPreview() {
     !isDark && config.background === DEFAULT_CONFIG.background
       ? "#f5f5f4"
       : config.background;
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      const api = usePlaygroundStore.getState();
+      api.registerPreviewReset("burn-plus", () => useBurnPlusStore.getState().reset());
+      api.setPersonalizedCode("burn-plus", generateCode(config), !configEquals(config, DEFAULT_CONFIG));
+    }, 180);
+    return () => window.clearTimeout(timer);
+  }, [config]);
 
   return (
     <section

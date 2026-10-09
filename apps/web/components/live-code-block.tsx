@@ -7,10 +7,20 @@ import { CopyButton } from "@/components/copy-button";
 interface LiveCodeBlockProps {
     defaultCode: string;
     lang?: string;
+    /**
+     * Registry slug that owns this block. Generated playground code is only
+     * honored when the store's slug matches — otherwise stale code from a
+     * previously visited component page would leak in (the store outlives
+     * navigation).
+     */
+    slug: string;
 }
 
-export function LiveCodeBlock({ defaultCode, lang = "tsx" }: LiveCodeBlockProps) {
-    const { code } = usePlaygroundStore();
+export function LiveCodeBlock({ defaultCode, lang = "tsx", slug }: LiveCodeBlockProps) {
+    const code = usePlaygroundStore((state) => state.code);
+    const codeSlug = usePlaygroundStore((state) => state.codeSlug);
+    const isDirty = usePlaygroundStore((state) => state.dirtySlugs[slug] === true);
+    const liveCode = codeSlug === slug && isDirty ? code : "";
     const [displayCode, setDisplayCode] = useState(defaultCode);
     const [html, setHtml] = useState("");
     const [isMounted, setIsMounted] = useState(false);
@@ -18,14 +28,14 @@ export function LiveCodeBlock({ defaultCode, lang = "tsx" }: LiveCodeBlockProps)
     useEffect(() => {
         setIsMounted(true);
         // Initialize store with default if empty
-        usePlaygroundStore.getState().setCode(defaultCode);
-    }, [defaultCode]);
+        usePlaygroundStore.getState().setPersonalizedCode(slug, defaultCode, false);
+    }, [defaultCode, slug]);
 
     useEffect(() => {
-        if (code) {
-            setDisplayCode(code);
+        if (liveCode) {
+            setDisplayCode(liveCode);
         }
-    }, [code]);
+    }, [liveCode]);
 
     useEffect(() => {
         let active = true;

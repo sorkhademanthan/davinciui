@@ -7,7 +7,7 @@ import {
   type InteractiveMediaAccordionTrigger,
 } from "@workspace/ui/components/interactive-media-accordion";
 import { cn } from "@/lib/utils";
-import { usePlaygroundStore } from "@/hooks/use-playground-store";
+import { configEquals, usePlaygroundStore } from "@/hooks/use-playground-store";
 import {
   PlaygroundSectionTitle,
   PlaygroundSlider,
@@ -81,7 +81,9 @@ export function InteractiveMediaAccordionPlayground() {
 
   React.useEffect(() => {
     const timeoutId = window.setTimeout(() => {
-      usePlaygroundStore.getState().setCode(generateCode(config));
+      const api = usePlaygroundStore.getState();
+      api.registerPreviewReset("interactive-media-accordion", () => useInteractiveMediaAccordionStore.getState().reset());
+      api.setPersonalizedCode("interactive-media-accordion", generateCode(config), !configEquals(config, DEFAULT_CONFIG));
     }, 180);
     return () => window.clearTimeout(timeoutId);
   }, [config]);

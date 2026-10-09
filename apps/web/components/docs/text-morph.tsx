@@ -29,7 +29,7 @@ export async function TextMorphDocs() {
       installDependencies="clsx tailwind-merge"
       installSourceCode={sourceCode}
       installSourceFilename="components/ui/text-morph.tsx"
-      usageCode={<LiveCodeBlock defaultCode={basicUsageCode} />}
+      usageCode={<LiveCodeBlock slug="text-morph" defaultCode={basicUsageCode} />}
       fullWidthPreview
       accessibilityNote="Text Morph cycles visible words on a timer and renders plain text with no live-region announcements. Treat the animation as enhancement: keep the surrounding heading meaningful on its own, and don't put the only instance of critical information inside the morph sequence."
       motionNote="The fluid morph runs on a per-word timer controlled by the interval and morphDuration props. When the visitor prefers reduced motion, the component swaps words instantly with no blur or morph transition."

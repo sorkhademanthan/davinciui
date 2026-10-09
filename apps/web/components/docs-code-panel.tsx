@@ -19,6 +19,8 @@ interface DocsCodePanelProps {
   activeTab?: string
   onTabChange?: (id: string) => void
   tabListAriaLabel?: string
+  /** Optional pill rendered in the header (e.g. live-personalization state). */
+  badge?: React.ReactNode
   children: React.ReactNode
   className?: string
 }
@@ -30,6 +32,7 @@ export function DocsCodePanel({
   activeTab,
   onTabChange,
   tabListAriaLabel = "Options",
+  badge,
   children,
   className,
 }: DocsCodePanelProps) {
@@ -77,6 +80,7 @@ export function DocsCodePanel({
           )}
         </div>
 
+        {badge}
         <CopyButton
           code={copyCode}
           eventName={copyEventName}

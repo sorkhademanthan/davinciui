@@ -11,6 +11,7 @@ import {
   PlaygroundSwitch,
 } from "@/components/playground-primitives";
 import { cn } from "@/lib/utils";
+import { configEquals, usePlaygroundStore } from "@/hooks/use-playground-store";
 
 type MotionHamburgerConfig = {
   startOpen: boolean;
@@ -46,6 +47,26 @@ const useMotionHamburgerStore = create<{
   reset: () => set({ config: DEFAULT_CONFIG }),
 }));
 
+function generateCode(
+  config: MotionHamburgerConfig,
+  iconColor: string,
+  ringColor: string,
+) {
+  return `import { MotionHamburger } from "@/components/ui/motion-hamburger"
+
+<MotionHamburger
+  initialState=${JSON.stringify(config.startOpen ? "open" : "closed")}
+  size={${config.size}}
+  color=${JSON.stringify(iconColor)}
+  thickness={${config.thickness}}
+  showRing={${config.showRing}}
+  ringColor=${JSON.stringify(ringColor)}
+  ringThickness={${config.ringThickness}}
+  ringPadding={${config.ringPadding}}
+  hoverGrowth={${config.hoverGrowth}}
+/>`;
+}
+
 export function MotionHamburgerPreview() {
   const config = useMotionHamburgerStore((state) => state.config);
   const { resolvedTheme } = useTheme();
@@ -68,6 +89,19 @@ export function MotionHamburgerPreview() {
         ? "rgba(255, 255, 255, 0.35)"
         : "rgba(24, 24, 27, 0.35)"
       : config.ringColor;
+
+  React.useEffect(() => {
+    const timer = window.setTimeout(() => {
+      const api = usePlaygroundStore.getState();
+      api.registerPreviewReset("motion-hamburger", () => useMotionHamburgerStore.getState().reset());
+      api.setPersonalizedCode(
+        "motion-hamburger",
+        generateCode(config, iconColor, ringColor),
+        !configEquals(config, DEFAULT_CONFIG),
+      );
+    }, 180);
+    return () => window.clearTimeout(timer);
+  }, [config, iconColor, ringColor]);
 
   return (
     <section

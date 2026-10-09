@@ -9,7 +9,7 @@ import {
   type HoverTransitionDirection,
   type HoverTransitionEffect,
 } from "@workspace/ui/components/hover-transition";
-import { usePlaygroundStore } from "@/hooks/use-playground-store";
+import { configEquals, usePlaygroundStore } from "@/hooks/use-playground-store";
 import {
   PlaygroundColorPicker,
   PlaygroundSectionTitle,
@@ -299,7 +299,9 @@ export function HoverTransitionPlayground() {
 
   useEffect(() => {
     const timeout = window.setTimeout(() => {
-      usePlaygroundStore.getState().setCode(generateCode(config));
+      const api = usePlaygroundStore.getState();
+      api.registerPreviewReset("hover-transition", () => useHoverTransitionStore.getState().resetConfig());
+      api.setPersonalizedCode("hover-transition", generateCode(config), !configEquals(config, DEFAULT_CONFIG));
     }, 150);
     return () => window.clearTimeout(timeout);
   }, [config]);

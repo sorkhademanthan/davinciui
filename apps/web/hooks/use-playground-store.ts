@@ -92,6 +92,22 @@ export const WEBGL_LIQUID_DEFAULT_CONFIG: WebGLLiquidConfig = {
 
 interface PlaygroundStore {
   code: string;
+  /**
+   * Slug-scoped personalized code. Preview modules publish their generated
+   * usage code under their own registry slug so code from one component page
+   * can never leak into another page's Usage block (the store outlives
+   * navigation). Consumers read `code` only when `codeSlug` matches.
+   */
+  codeSlug: string | null;
+  /**
+   * True once the user actually personalizes a slug (config differs from
+   * module defaults). Mount-time publishes are pristine, so the Usage block
+   * shows static defaults until touched — and reload (which restores
+   * defaults) returns to static.
+   */
+  dirtySlugs: Record<string, boolean>;
+  /** Per-slug reset callbacks registered by preview modules. */
+  previewResets: Record<string, () => void>;
   ditherPrismHeroConfig: DitherPrismHeroConfig;
   activeDitherPrismHeroPreset: string;
   ditherPrismHeroRenderVersion: number;
@@ -102,6 +118,10 @@ interface PlaygroundStore {
   activeWebglLiquidPreset: string;
   webglLiquidRenderVersion: number;
   setCode: (code: string) => void;
+  setPersonalizedCode: (slug: string, code: string, dirty: boolean) => void;
+  registerPreviewReset: (slug: string, reset: () => void) => void;
+  /** Restore a slug's module defaults and mark it pristine. */
+  resetPreview: (slug: string) => void;
   setDitherPrismHeroConfig: (config: DitherPrismHeroConfig) => void;
   updateDitherPrismHeroConfig: (
     updates: Partial<DitherPrismHeroConfig>,
@@ -129,8 +149,11 @@ interface PlaygroundStore {
   resetLiquidChromeConfig: () => void;
 }
 
-export const usePlaygroundStore = create<PlaygroundStore>((set) => ({
+export const usePlaygroundStore = create<PlaygroundStore>((set, get) => ({
   code: "",
+  codeSlug: null,
+  dirtySlugs: {},
+  previewResets: {},
   ditherPrismHeroConfig: DITHER_PRISM_HERO_DEFAULT_CONFIG,
   activeDitherPrismHeroPreset: "Default",
   ditherPrismHeroRenderVersion: 0,
@@ -144,6 +167,18 @@ export const usePlaygroundStore = create<PlaygroundStore>((set) => ({
   activeLiquidChromePreset: "Default",
   liquidChromeRenderVersion: 0,
   setCode: (code) => set({ code }),
+  setPersonalizedCode: (slug, code, dirty) =>
+    set((state) => ({
+      code,
+      codeSlug: slug,
+      dirtySlugs: { ...state.dirtySlugs, [slug]: dirty },
+    })),
+  registerPreviewReset: (slug, reset) =>
+    set((state) => ({ previewResets: { ...state.previewResets, [slug]: reset } })),
+  resetPreview: (slug) => {
+    get().previewResets[slug]?.();
+    set((state) => ({ dirtySlugs: { ...state.dirtySlugs, [slug]: false } }));
+  },
   setDitherPrismHeroConfig: (config) => set({ ditherPrismHeroConfig: config }),
   updateDitherPrismHeroConfig: (updates) =>
     set((state) => ({
@@ -213,3 +248,25 @@ export const usePlaygroundStore = create<PlaygroundStore>((set) => ({
       liquidChromeRenderVersion: state.liquidChromeRenderVersion + 1,
     })),
 }));
+
+/**
+ * Client-side theme resolution for personalized code generation. Mirrors the
+ * preview rule (`resolvedTheme !== "light"`, dark by default): next-themes
+ * toggles a `light`/`dark` class on <html>, so absence of `light` means dark.
+ */
+export function isDarkPreviewTheme(): boolean {
+  if (typeof document === "undefined") return true;
+  return !document.documentElement.classList.contains("light");
+}
+
+/**
+ * Structural equality for playground configs (same shape, stable key order).
+ * Used to detect user personalization: pristine (defaults) vs touched.
+ */
+export function configEquals(a: unknown, b: unknown): boolean {
+  try {
+    return JSON.stringify(a) === JSON.stringify(b);
+  } catch {
+    return false;
+  }
+}

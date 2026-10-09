@@ -5,15 +5,27 @@ import { Code2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { DocsCodePanel } from "@/components/docs-code-panel"
 import { useDocStore } from "@/hooks/use-doc-store"
+import { usePlaygroundStore } from "@/hooks/use-playground-store"
 import { useSmoothCodeHeight } from "@/hooks/use-smooth-code-height"
+import { stripImportFromCode } from "@/lib/split-import"
 
 interface DynamicCodeBlockProps {
   originalCode: string
   defaultHtml: string
+  /** Full usage snippet, shown as its own tab only when it differs. */
+  usageTabCode?: string
+  usageTabHtml?: string
   className?: string
   variantCodes?: string[]
   variantTitles?: string[]
   hideDefaultTab?: boolean
+  /**
+   * Registry slug for live personalization. When the playground store holds
+   * generated code for this slug, the Default tab shows it (highlighted +
+   * copied) instead of the static `originalCode` — so the Usage block always
+   * matches the personalized preview. Variant tabs are unaffected.
+   */
+  personalizedSlug?: string
 }
 
 async function fetchHighlightedTsx(code: string): Promise<string> {
@@ -34,12 +46,21 @@ async function fetchHighlightedTsx(code: string): Promise<string> {
 export function DynamicCodeBlock({
   originalCode,
   defaultHtml,
+  usageTabCode,
+  usageTabHtml,
   className,
   variantCodes = [],
   variantTitles = [],
   hideDefaultTab = false,
+  personalizedSlug,
 }: DynamicCodeBlockProps) {
   const { activeVariantIndex, setActiveVariantIndex } = useDocStore()
+  const liveCode = usePlaygroundStore((state) => state.code)
+  const liveCodeSlug = usePlaygroundStore((state) => state.codeSlug)
+  const liveDirty =
+    usePlaygroundStore((state) =>
+      personalizedSlug ? state.dirtySlugs[personalizedSlug] === true : false,
+    )
   const [variantHtmlMap, setVariantHtmlMap] = React.useState<Record<number, string>>({})
   const [visibleHtml, setVisibleHtml] = React.useState(defaultHtml)
   const [isSwitching, setIsSwitching] = React.useState(false)
@@ -51,24 +72,70 @@ export function DynamicCodeBlock({
     if (!hideDefaultTab) {
       items.push({ id: "default", label: "Default" })
     }
+    if (usageTabCode && usageTabHtml) {
+      items.push({ id: "usage", label: "Usage" })
+    }
     variantTitles.forEach((title, i) => {
       items.push({ id: String(i), label: title })
     })
     return items
-  }, [hideDefaultTab, variantTitles])
+  }, [hideDefaultTab, usageTabCode, usageTabHtml, variantTitles])
+
+  // The Usage tab is local to the code block: it never drives the preview,
+  // which keeps rendering the default variant underneath.
+  const [showUsageTab, setShowUsageTab] = React.useState(false)
 
   const activeTab = React.useMemo(() => {
+    if (showUsageTab && usageTabCode) return "usage"
     if (activeVariantIndex === -1) return hideDefaultTab ? tabs[0]?.id ?? "default" : "default"
     return String(activeVariantIndex)
-  }, [activeVariantIndex, hideDefaultTab, tabs])
+  }, [showUsageTab, usageTabCode, activeVariantIndex, hideDefaultTab, tabs])
+
+  const showingUsageTab = showUsageTab && Boolean(usageTabCode && usageTabHtml)
 
   const targetHtml =
-    activeVariantIndex === -1 ? defaultHtml : variantHtmlMap[activeVariantIndex]
+    showingUsageTab && usageTabHtml
+      ? usageTabHtml
+      : activeVariantIndex === -1 ? defaultHtml : variantHtmlMap[activeVariantIndex]
+
+  // Live personalization: generated code scoped to this page's slug replaces
+  // the static Default-tab code (display + copy). Import lines are stripped
+  // because the Import block above stays static — imports never change with
+  // personalization. Shown only when the live code actually differs.
+  const scopedLiveCode =
+    personalizedSlug && liveCodeSlug === personalizedSlug ? liveCode.trim() : ""
+  const liveUsage = scopedLiveCode ? stripImportFromCode(scopedLiveCode).trim() : ""
+  const isPersonalized =
+    activeVariantIndex === -1 &&
+    liveDirty &&
+    liveUsage.length > 0 &&
+    liveUsage !== originalCode.trim()
+
+  const [liveHtml, setLiveHtml] = React.useState<string | null>(null)
+  React.useEffect(() => {
+    if (!isPersonalized) {
+      setLiveHtml(null)
+      return
+    }
+    const timer = window.setTimeout(() => {
+      fetchHighlightedTsx(liveUsage)
+        .then((html) => setLiveHtml(html || null))
+        .catch(() => setLiveHtml(null))
+    }, 250)
+    return () => window.clearTimeout(timer)
+  }, [isPersonalized, liveUsage])
+
+  const effectiveHtml =
+    activeVariantIndex === -1 && isPersonalized && liveHtml ? liveHtml : targetHtml
 
   const rawCodeToUse =
-    activeVariantIndex === -1
-      ? originalCode
-      : variantCodes[activeVariantIndex] || originalCode
+    showingUsageTab && usageTabCode
+      ? usageTabCode
+      : activeVariantIndex === -1
+        ? isPersonalized
+          ? liveUsage
+          : originalCode
+        : variantCodes[activeVariantIndex] || originalCode
 
   const { contentRef, contentHeight, wrapperProps } = useSmoothCodeHeight([
     visibleHtml,
@@ -127,13 +194,13 @@ export function DynamicCodeBlock({
   }, [variantCodes])
 
   React.useEffect(() => {
-    if (targetHtml) {
-      const shouldAnimate = hasMountedRef.current && targetHtml !== visibleHtmlRef.current
+    if (effectiveHtml) {
+      const shouldAnimate = hasMountedRef.current && effectiveHtml !== visibleHtmlRef.current
       if (shouldAnimate) {
         setIsSwitching(true)
       }
-      visibleHtmlRef.current = targetHtml
-      setVisibleHtml(targetHtml)
+      visibleHtmlRef.current = effectiveHtml
+      setVisibleHtml(effectiveHtml)
       hasMountedRef.current = true
       if (shouldAnimate) {
         const timer = window.setTimeout(() => setIsSwitching(false), 200)
@@ -141,15 +208,25 @@ export function DynamicCodeBlock({
       }
     }
     return undefined
-  }, [targetHtml])
+  }, [effectiveHtml])
 
   const handleTabChange = (id: string) => {
+    if (id === "usage") {
+      setShowUsageTab(true)
+      return
+    }
+    setShowUsageTab(false)
     if (id === "default") {
       setActiveVariantIndex(-1)
       return
     }
     setActiveVariantIndex(Number(id))
   }
+
+  // Preview-toolbar tab switches drive the code block back off the Usage tab.
+  React.useEffect(() => {
+    setShowUsageTab(false)
+  }, [activeVariantIndex])
 
   const isLoadingActiveVariant =
     activeVariantIndex >= 0 && !variantHtmlMap[activeVariantIndex]
@@ -158,6 +235,13 @@ export function DynamicCodeBlock({
     <DocsCodePanel
       icon={Code2}
       copyCode={rawCodeToUse.trim()}
+      badge={
+        isPersonalized && !showingUsageTab ? (
+          <span className="shrink-0 rounded-full border border-emerald-600/25 bg-emerald-500/10 px-2 py-0.5 font-mono text-[11px] font-medium text-emerald-700 dark:text-emerald-300">
+            Personalized
+          </span>
+        ) : undefined
+      }
       tabs={tabs.length > 1 ? tabs : undefined}
       activeTab={activeTab}
       onTabChange={handleTabChange}

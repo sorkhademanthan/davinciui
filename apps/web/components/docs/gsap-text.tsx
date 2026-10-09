@@ -33,7 +33,7 @@ export async function GSAPTextDocs() {
       installDependencies="gsap"
       installSourceCode={sourceCode}
       installSourceFilename="components/ui/gsap-text.tsx"
-      usageCode={<LiveCodeBlock defaultCode={defaultCode} />}
+      usageCode={<LiveCodeBlock slug="gsap-text" defaultCode={defaultCode} />}
       fullWidthPreview
       props={[
         { name: "text", type: "string", default: '"GSAP TEXT"', description: "Text rendered in the main layer and every clone. \\n sequences become line breaks." },

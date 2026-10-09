@@ -5,7 +5,7 @@ import { create } from "zustand";
 import { CharacterField } from "@workspace/ui/components/character-field";
 import type { CharacterFieldSet } from "@workspace/ui/components/character-field";
 import { cn } from "@/lib/utils";
-import { usePlaygroundStore } from "@/hooks/use-playground-store";
+import { configEquals, usePlaygroundStore } from "@/hooks/use-playground-store";
 import {
   PlaygroundColorPicker,
   PlaygroundInput,
@@ -118,7 +118,9 @@ export function CharacterFieldPlayground() {
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      usePlaygroundStore.getState().setCode(generateCode(config));
+      const api = usePlaygroundStore.getState();
+      api.registerPreviewReset("character-field", () => useCharacterFieldPlaygroundStore.getState().resetConfig());
+      api.setPersonalizedCode("character-field", generateCode(config), !configEquals(config, CHARACTER_FIELD_DEFAULT_CONFIG));
     }, 250);
 
     return () => clearTimeout(timeoutId);

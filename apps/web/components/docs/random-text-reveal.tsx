@@ -37,7 +37,7 @@ export async function RandomTextRevealDocs() {
       installDependencies="gsap"
       installSourceCode={sourceCode}
       installSourceFilename="components/ui/random-text-reveal.tsx"
-      usageCode={<LiveCodeBlock defaultCode={defaultCode} />}
+      usageCode={<LiveCodeBlock slug="random-text-reveal" defaultCode={defaultCode} />}
       props={[
         { name: "text", type: "string", default: '"DavinciUI gives you production-ready components…"', description: "Text content. Words wrap naturally; characters reveal independently." },
         { name: "fontFamily", type: "string", description: "Font family applied to the text." },

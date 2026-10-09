@@ -1,7 +1,9 @@
 "use client";
 
+import { useEffect } from "react";
 import { InkFlow } from "@workspace/ui/components/ink-flow";
 import { create } from "zustand";
+import { configEquals, usePlaygroundStore } from "@/hooks/use-playground-store";
 import {
   PlaygroundColorPicker,
   PlaygroundSectionTitle,
@@ -40,8 +42,32 @@ const useInkFlowStore = create<{
   reset: () => set({ config: DEFAULT_CONFIG }),
 }));
 
+function generateCode(config: InkFlowConfig) {
+  return `import { InkFlow } from "@/components/ui/ink-flow"
+
+<InkFlow
+  speed={${config.speed}}
+  scale={${config.scale}}
+  saturation={${config.saturation}}
+  contrast={${config.contrast}}
+  paperColor=${JSON.stringify(config.paperColor)}
+  softInkColor=${JSON.stringify(config.softInkColor)}
+  deepInkColor=${JSON.stringify(config.deepInkColor)}
+  accentColor=${JSON.stringify(config.accentColor)}
+/>`;
+}
+
 export function InkFlowPreview() {
   const config = useInkFlowStore((state) => state.config);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      const api = usePlaygroundStore.getState();
+      api.registerPreviewReset("ink-flow", () => useInkFlowStore.getState().reset());
+      api.setPersonalizedCode("ink-flow", generateCode(config), !configEquals(config, DEFAULT_CONFIG));
+    }, 180);
+    return () => window.clearTimeout(timer);
+  }, [config]);
 
   return (
     <section

@@ -28,7 +28,7 @@ export async function ShakeTextDocs() {
       installDependencies="gsap"
       installSourceCode={sourceCode}
       installSourceFilename="components/ui/shake-text.tsx"
-      usageCode={<LiveCodeBlock defaultCode={defaultCode} />}
+      usageCode={<LiveCodeBlock slug="shake-text" defaultCode={defaultCode} />}
       fullWidthPreview
       props={[
         { name: "text", type: "string", description: "Text rendered in the front layer and every depth layer.", default: '"DAVINCIUI"' },

@@ -32,7 +32,7 @@ export async function CharacterFieldDocs() {
       installPackageName="character-field"
       installSourceCode={sourceCode}
       installSourceFilename="components/ui/character-field.tsx"
-      usageCode={<LiveCodeBlock defaultCode={basicUsageCode} />}
+      usageCode={<LiveCodeBlock slug="character-field" defaultCode={basicUsageCode} />}
       fullWidthPreview
       props={[
         {

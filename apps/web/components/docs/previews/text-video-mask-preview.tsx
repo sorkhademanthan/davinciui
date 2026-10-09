@@ -4,7 +4,7 @@ import * as React from "react";
 import { useTheme } from "next-themes";
 import { create } from "zustand";
 import { TextVideoMask } from "@workspace/ui/components/text-video-mask";
-import { usePlaygroundStore } from "@/hooks/use-playground-store";
+import { configEquals, usePlaygroundStore } from "@/hooks/use-playground-store";
 import {
   PlaygroundColorPicker,
   PlaygroundInput,
@@ -95,7 +95,9 @@ export function TextVideoMaskPlayground() {
 
   React.useEffect(() => {
     const timeoutId = window.setTimeout(() => {
-      usePlaygroundStore.getState().setCode(generateCode(config, colors));
+      const api = usePlaygroundStore.getState();
+      api.registerPreviewReset("text-video-mask", () => useTextVideoMaskStore.getState().resetConfig());
+      api.setPersonalizedCode("text-video-mask", generateCode(config, colors), !configEquals(config, DEFAULT_CONFIG));
     }, 180);
     return () => window.clearTimeout(timeoutId);
   }, [config, colors.backgroundColor, colors.fallbackColor]);

@@ -8,7 +8,7 @@ import {
 } from "@workspace/ui/components/shader-text";
 import { ShaderTextFitPreview } from "@/components/docs/previews/shader-text-fit-preview";
 import { cn } from "@/lib/utils";
-import { usePlaygroundStore } from "@/hooks/use-playground-store";
+import { configEquals, usePlaygroundStore } from "@/hooks/use-playground-store";
 import {
   PlaygroundInput,
   PlaygroundSectionTitle,
@@ -63,7 +63,9 @@ export function ShaderTextPlayground() {
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
-      usePlaygroundStore.getState().setCode(generateCode(config, fitSize));
+      const api = usePlaygroundStore.getState();
+      api.registerPreviewReset("shader-text", () => useShaderTextPlayground.getState().resetConfig());
+      api.setPersonalizedCode("shader-text", generateCode(config, fitSize), !configEquals(config, DEFAULT_CONFIG));
     }, 180);
     return () => window.clearTimeout(timeoutId);
   }, [config, fitSize]);

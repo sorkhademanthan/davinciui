@@ -32,7 +32,7 @@ export async function PixelFlowDocs() {
       installPackageName="pixel-flow"
       installSourceCode={sourceCode}
       installSourceFilename="components/ui/pixel-flow.tsx"
-      usageCode={<LiveCodeBlock defaultCode={basicUsageCode} />}
+      usageCode={<LiveCodeBlock slug="pixel-flow" defaultCode={basicUsageCode} />}
       fullWidthPreview
       props={[
         {

@@ -41,7 +41,7 @@ export async function TextVideoMaskDocs() {
       installPackageName="text-video-mask"
       installSourceCode={sourceCode}
       installSourceFilename="components/ui/text-video-mask.tsx"
-      usageCode={<LiveCodeBlock defaultCode={defaultCode} />}
+      usageCode={<LiveCodeBlock slug="text-video-mask" defaultCode={defaultCode} />}
       props={[
         { name: "text", type: "string", default: '"DAVINCI."', description: "Text revealed as cutouts in the video. Supports multiline via \\n." },
         { name: "src", type: "string", default: '""', description: "Video source — uploaded asset URL or remote .mp4/.webm URL." },

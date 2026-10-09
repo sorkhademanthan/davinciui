@@ -5,6 +5,7 @@ import * as ReactDOM from "react-dom"
 import { motion, AnimatePresence, type PanInfo } from "framer-motion"
 import { ChevronLeft } from "lucide-react"
 import { useDocStore } from "@/hooks/use-doc-store"
+import { useModalDialog } from "@/hooks/use-modal-dialog"
 
 /**
  * PersonalizeDrawer — the slide-over panel for per-component playground
@@ -18,6 +19,12 @@ export function PersonalizeDrawer() {
   const personalizeContent = useDocStore((state) => state.personalizeContent)
   const personalizeOpen = useDocStore((state) => state.personalizeOpen)
   const setPersonalizeOpen = useDocStore((state) => state.setPersonalizeOpen)
+  const dialogRef = React.useRef<HTMLDivElement | null>(null)
+  const isOpen = personalizeOpen && personalizeContent !== null
+  useModalDialog(isOpen, {
+    dialogRef,
+    onClose: () => setPersonalizeOpen(false),
+  })
 
   React.useEffect(() => {
     setMounted(true)
@@ -28,6 +35,7 @@ export function PersonalizeDrawer() {
         <AnimatePresence>
           {personalizeOpen && personalizeContent && (
             <motion.div
+              ref={dialogRef}
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
@@ -41,7 +49,9 @@ export function PersonalizeDrawer() {
                 }
               }}
               role="dialog"
+              aria-modal="true"
               aria-label="Personalize"
+              tabIndex={-1}
               className="fixed bottom-0 left-0 z-50 flex flex-col outline-none h-[80vh] w-full rounded-t-lg border-t border-border/20 bg-transparent shadow-none pointer-events-none lg:top-0 lg:bottom-0 lg:h-screen lg:max-h-screen lg:w-1/2 lg:rounded-none lg:border-none lg:pt-3 lg:pb-3 lg:pl-3 lg:pr-1.5"
             >
               <div className="relative h-full bg-white dark:bg-[#171717] lg:rounded-2xl overflow-hidden border border-border/20 shadow-2xl pointer-events-auto">
@@ -55,7 +65,8 @@ export function PersonalizeDrawer() {
                     <div className="flex items-center justify-between px-4 py-1">
                       <button
                         onClick={() => setPersonalizeOpen(false)}
-                        className="inline-flex items-center gap-1.5 text-zinc-500 dark:text-zinc-400 transition-colors hover:text-zinc-900 dark:hover:text-white focus-visible:outline-none"
+                        aria-label="Close personalize panel"
+                        className="inline-flex items-center gap-1.5 rounded-sm text-zinc-500 dark:text-zinc-400 transition-colors hover:text-zinc-900 dark:hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                       >
                         <ChevronLeft className="w-4 h-4" />
                         <span className="text-xs font-mono tracking-wide">Personalize</span>
