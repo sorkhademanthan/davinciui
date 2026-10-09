@@ -77,6 +77,23 @@ export function HoverCards({
   const activeItem = resolvedIndex == null ? null : items[resolvedIndex];
   const reducedMotion = useReducedMotion();
 
+  React.useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+
+    const syncHeight = (height: number) => {
+      root.style.setProperty("--hover-cards-height", `${height}px`);
+    };
+
+    syncHeight(root.clientHeight);
+    const observer = new ResizeObserver(([entry]) => {
+      syncHeight(entry?.contentRect.height ?? root.clientHeight);
+    });
+    observer.observe(root);
+
+    return () => observer.disconnect();
+  }, []);
+
   const setActive = React.useCallback(
     (nextIndex: number | null) => {
       const next = clampIndex(nextIndex, items.length);
@@ -145,7 +162,7 @@ export function HoverCards({
         "relative isolate h-full min-h-[30rem] w-full overflow-hidden bg-[#f4f3ef] text-[#181816] dark:bg-black dark:text-[#f4f2ed]",
         className,
       )}
-      style={{ containerType: "size", ...style }}
+      style={{ containerType: "inline-size", ...style }}
       onPointerEnter={(event) => {
         setAutoPaused(true);
         onPointerEnter?.(event);
@@ -209,13 +226,14 @@ export function HoverCards({
 
       <div
         className={cn(
-          "pointer-events-none absolute inset-x-0 top-[1.3cqh] z-20 text-center text-[clamp(9px,1.4cqw,22px)] font-normal leading-none tracking-[-0.035em] transition-colors duration-500",
+          "pointer-events-none absolute inset-x-0 z-20 text-center text-[clamp(9px,1.4cqw,22px)] font-normal leading-none tracking-[-0.035em] transition-colors duration-500",
           activeItem
             ? textIsLight
               ? "text-white"
               : "text-black"
             : "text-[#181816] dark:text-[#f4f2ed]",
         )}
+        style={{ top: "calc(var(--hover-cards-height, 30rem) * 0.013)" }}
       >
         {title}
       </div>
@@ -223,7 +241,11 @@ export function HoverCards({
       <div
         role="list"
         aria-label={typeof title === "string" ? title : "Hover card gallery"}
-        className="absolute inset-x-[6.4cqw] top-[8.55cqh] z-10 flex h-[83cqh] items-start gap-[clamp(2px,0.42cqw,12px)]"
+        className="absolute inset-x-[6.4cqw] z-10 flex items-start gap-[clamp(2px,0.42cqw,12px)]"
+        style={{
+          top: "calc(var(--hover-cards-height, 30rem) * 0.0855)",
+          height: "calc(var(--hover-cards-height, 30rem) * 0.83)",
+        }}
       >
         {items.map((item, index) => {
           const isActive = resolvedIndex === index;
@@ -260,7 +282,7 @@ export function HoverCards({
               >
                 <span
                   className={cn(
-                    "mb-[2.05cqh] block font-mono text-[clamp(7px,0.75cqw,15px)] italic leading-none tracking-[-0.08em] transition-[color,opacity] duration-500",
+                    "block font-mono text-[clamp(7px,0.75cqw,15px)] italic leading-none tracking-[-0.08em] transition-[color,opacity] duration-500",
                     activeItem
                       ? textIsLight
                         ? "text-white"
@@ -268,6 +290,10 @@ export function HoverCards({
                       : "text-[#181816] dark:text-[#f4f2ed]",
                     isDimmed ? "opacity-45" : "opacity-100",
                   )}
+                  style={{
+                    marginBottom:
+                      "calc(var(--hover-cards-height, 30rem) * 0.0205)",
+                  }}
                 >
                   {String(index + 1).padStart(3, "0")}
                 </span>
@@ -278,7 +304,9 @@ export function HoverCards({
                     isDimmed ? "opacity-60" : "opacity-100",
                   )}
                   style={{
-                    height: isActive ? "64.5cqh" : "39.3cqh",
+                    height: isActive
+                      ? "calc(var(--hover-cards-height, 30rem) * 0.645)"
+                      : "calc(var(--hover-cards-height, 30rem) * 0.393)",
                     filter: isDimmed ? "saturate(.72) brightness(.82)" : "none",
                     transitionDuration,
                     transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)",
@@ -296,7 +324,7 @@ export function HoverCards({
 
                 <span
                   className={cn(
-                    "mt-[2.25cqh] block truncate text-[clamp(7px,0.85cqw,16px)] leading-none tracking-[-0.045em] transition-[color,opacity,transform] duration-500",
+                    "block truncate text-[clamp(7px,0.85cqw,16px)] leading-none tracking-[-0.045em] transition-[color,opacity,transform] duration-500",
                     activeItem
                       ? textIsLight
                         ? "text-white"
@@ -308,19 +336,27 @@ export function HoverCards({
                         ? "opacity-45"
                         : "opacity-100",
                   )}
+                  style={{
+                    marginTop:
+                      "calc(var(--hover-cards-height, 30rem) * 0.0225)",
+                  }}
                 >
                   {item.label}
                 </span>
 
                 <span
                   className={cn(
-                    "mt-[-1.2cqh] block max-w-[30ch] text-balance text-[clamp(8px,0.9cqw,16px)] leading-[1.22] tracking-[-0.04em] transition-[color,opacity,transform] duration-500",
+                    "block max-w-[30ch] text-balance text-[clamp(8px,0.9cqw,16px)] leading-[1.22] tracking-[-0.04em] transition-[color,opacity,transform] duration-500",
                     textIsLight ? "text-white" : "text-black",
                     isActive
                       ? "translate-y-0 opacity-100 delay-100"
                       : "pointer-events-none translate-y-2 opacity-0",
                     "@max-[420px]:hidden",
                   )}
+                  style={{
+                    marginTop:
+                      "calc(var(--hover-cards-height, 30rem) * -0.012)",
+                  }}
                 >
                   {item.description}
                 </span>
