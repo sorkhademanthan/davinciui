@@ -9,8 +9,9 @@ import {
   FolderOpen,
   Plus,
   Trash2,
+  Upload,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -29,6 +30,9 @@ export function DesignSystemLanding() {
   const [deleteTarget, setDeleteTarget] = useState<DesignSystemConfig | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const [deleteNotice, setDeleteNotice] = useState<string | null>(null);
+  const [importMessage, setImportMessage] = useState<{ ok: boolean; text: string } | null>(null);
+  const [importing, setImporting] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     setSystems(browserDesignSystems.list());
@@ -66,6 +70,43 @@ export function DesignSystemLanding() {
     setDeleteNotice(`${removedName} was deleted from this browser.`);
   };
 
+  const handleImportFile = (file: File | undefined) => {
+    if (!file || importing) return;
+    setImporting(true);
+    setImportMessage(null);
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const result = browserDesignSystems.importRaw(reader.result);
+        setSystems(browserDesignSystems.list());
+        if (result.imported > 0) {
+          const extras = [
+            result.skipped > 0 ? `${result.skipped} skipped` : null,
+            result.incompatible > 0 ? `${result.incompatible} incompatible` : null,
+          ].filter(Boolean);
+          setImportMessage({
+            ok: true,
+            text: `Imported ${result.imported} system${result.imported === 1 ? "" : "s"}${extras.length > 0 ? ` (${extras.join(", ")})` : ""}. ${result.warnings[0] ?? "It appears below."}`,
+          });
+        } else {
+          setImportMessage({
+            ok: false,
+            text: result.warnings[0] ?? "That file does not contain an importable design system.",
+          });
+        }
+      } catch {
+        setImportMessage({ ok: false, text: "Could not read that file. Export a fresh Tokens JSON and try again." });
+      } finally {
+        setImporting(false);
+      }
+    };
+    reader.onerror = () => {
+      setImportMessage({ ok: false, text: "Could not read that file. Export a fresh Tokens JSON and try again." });
+      setImporting(false);
+    };
+    reader.readAsText(file);
+  };
+
   return (
     <main className="min-h-[calc(100svh-4.5rem)] min-w-0 px-[15px] py-[29px] sm:px-[27px] sm:py-[37px] lg:px-[35px]">
       <div className="w-full">
@@ -93,16 +134,47 @@ export function DesignSystemLanding() {
               </p>
             </div>
             {systems.length > 0 && (
-              <Link
-                href="/design-system/new"
-                className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-lg bg-foreground px-4 text-sm font-medium text-background transition-colors hover:bg-foreground/85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-              >
-                <Plus aria-hidden="true" className="size-4" />
-                New system
-              </Link>
+              <div className="flex shrink-0 items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={importing}
+                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-border bg-background px-4 text-sm font-medium transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-wait disabled:opacity-60"
+                >
+                  <Upload aria-hidden="true" className="size-4" />
+                  {importing ? "Importing…" : "Import"}
+                </button>
+                <Link
+                  href="/design-system/new"
+                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-foreground px-4 text-sm font-medium text-background transition-colors hover:bg-foreground/85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                >
+                  <Plus aria-hidden="true" className="size-4" />
+                  New system
+                </Link>
+              </div>
             )}
           </div>
         </header>
+
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="application/json,.json"
+          aria-label="Import a design system JSON file"
+          className="sr-only"
+          onChange={(event) => {
+            handleImportFile(event.target.files?.[0]);
+            event.target.value = "";
+          }}
+        />
+        {importMessage && (
+          <p
+            role={importMessage.ok ? "status" : "alert"}
+            className={`mt-4 rounded-lg border px-4 py-3 text-sm ${importMessage.ok ? "border-emerald-500/25 bg-emerald-500/10 text-foreground" : "border-destructive/30 bg-destructive/10 text-destructive"}`}
+          >
+            {importMessage.text}
+          </p>
+        )}
 
         {systems.length > 0 ? (
           <SystemsSection
@@ -113,7 +185,7 @@ export function DesignSystemLanding() {
             deleteNotice={deleteNotice}
           />
         ) : (
-          <EmptyState />
+          <EmptyState onImport={() => fileInputRef.current?.click()} importing={importing} />
         )}
       </div>
 
@@ -158,7 +230,7 @@ export function DesignSystemLanding() {
   );
 }
 
-function EmptyState() {
+function EmptyState({ onImport, importing }: { onImport: () => void; importing: boolean }) {
   return (
     <section
       className="mt-9 rounded-2xl border border-dashed border-border bg-muted/20 px-5 py-14 text-center sm:px-8 sm:py-20"
@@ -185,6 +257,17 @@ function EmptyState() {
           Create design system
           <ArrowRight aria-hidden="true" className="size-4" />
         </Link>
+        <div className="mt-3">
+          <button
+            type="button"
+            onClick={onImport}
+            disabled={importing}
+            className="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg px-4 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-wait disabled:opacity-60"
+          >
+            <Upload aria-hidden="true" className="size-4" />
+            {importing ? "Importing…" : "or import a Tokens JSON"}
+          </button>
+        </div>
       </div>
     </section>
   );

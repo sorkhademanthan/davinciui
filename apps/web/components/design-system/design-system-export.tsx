@@ -16,6 +16,8 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import { useMemo, useState, type ReactNode } from "react"
+import { CopyButton } from "@/components/copy-button"
+import { DocsSnippet } from "@/components/docs-snippet"
 import type { DesignSystemConfig } from "@/lib/design-system/domain"
 import { track } from "@/lib/analytics"
 import {
@@ -34,6 +36,12 @@ export function DesignSystemExport({ system }: { system: DesignSystemConfig }) {
   const [downloadState, setDownloadState] = useState<DownloadState>(null)
   const report = prepared.ok ? prepared.model.report : prepared.report
   const model = prepared.ok ? prepared.model : null
+  // Memoized so the one-click Copy button and the CSS download share the
+  // exact same generated text without recomputing on every render.
+  const cssText = useMemo(
+    () => (model ? serializeDesignSystemCss(model.system) : ""),
+    [model],
+  )
   const blockingErrors = prepared.ok ? [] : prepared.errors
   const warningCount = report.summary.warnings
 
@@ -50,7 +58,7 @@ export function DesignSystemExport({ system }: { system: DesignSystemConfig }) {
         const blob = await pdf(<DesignSystemExportDocument model={model} />).toBlob()
         triggerDownload(blob, filename)
       } else {
-        const content = kind === "json" ? serializeDesignSystemJson(model.system) : serializeDesignSystemCss(model.system)
+        const content = kind === "json" ? serializeDesignSystemJson(model.system) : cssText
         const mime = kind === "json" ? "application/json;charset=utf-8" : "text/css;charset=utf-8"
         triggerDownload(new Blob([content], { type: mime }), filename)
       }
@@ -113,6 +121,15 @@ export function DesignSystemExport({ system }: { system: DesignSystemConfig }) {
                   kind="json"
                   state={downloadState}
                   onClick={() => void download("json")}
+                  footer={
+                    <p className="mt-3 text-xs leading-5 text-muted-foreground">
+                      Re-import anytime from{" "}
+                      <Link href="/design-system" className="font-medium text-foreground underline underline-offset-4 hover:text-foreground/80">
+                        Design systems → Import
+                      </Link>
+                      .
+                    </p>
+                  }
                 />
                 <DeveloperFile
                   icon={<Code2 className="size-5" aria-hidden="true" />}
@@ -121,9 +138,12 @@ export function DesignSystemExport({ system }: { system: DesignSystemConfig }) {
                   kind="css"
                   state={downloadState}
                   onClick={() => void download("css")}
+                  copyText={cssText}
                 />
               </div>
             </section>
+
+            <UsageSection />
 
             <section aria-labelledby="included-heading" className="rounded-2xl border border-border bg-card p-5 sm:p-6">
               <h2 id="included-heading" className="text-lg font-semibold">What the handbook includes</h2>
@@ -196,8 +216,33 @@ function DocumentFact({ label, value }: { label: string; value: string }) {
   return <div className="px-5 py-4 sm:px-6"><p className="text-xs text-muted-foreground">{label}</p><p className="mt-1 text-sm font-medium">{value}</p></div>
 }
 
-function DeveloperFile({ icon, title, description, kind, state, onClick }: { icon: ReactNode; title: string; description: string; kind: DownloadKind; state: DownloadState; onClick: () => void }) {
-  return <article className="flex min-w-0 flex-col rounded-xl border border-border bg-background p-4"><div className="flex size-9 items-center justify-center rounded-lg bg-muted text-foreground">{icon}</div><h3 className="mt-4 text-sm font-semibold">{title}</h3><p className="mt-1 flex-1 text-xs leading-5 text-muted-foreground">{description}</p><div className="mt-4"><DownloadButton kind={kind} state={state} onClick={onClick} /></div></article>
+function DeveloperFile({ icon, title, description, kind, state, onClick, copyText, footer }: { icon: ReactNode; title: string; description: string; kind: DownloadKind; state: DownloadState; onClick: () => void; copyText?: string; footer?: ReactNode }) {
+  return <article className="flex min-w-0 flex-col rounded-xl border border-border bg-background p-4"><div className="flex size-9 items-center justify-center rounded-lg bg-muted text-foreground">{icon}</div><h3 className="mt-4 text-sm font-semibold">{title}</h3><p className="mt-1 flex-1 text-xs leading-5 text-muted-foreground">{description}</p><div className="mt-4 flex items-center gap-2"><div className="flex-1"><DownloadButton kind={kind} state={state} onClick={onClick} /></div>{copyText ? <CopyButton code={copyText} absolute={false} className="rounded-lg border border-border" /> : null}</div>{footer}</article>
+}
+
+function UsageSection() {
+  return (
+    <section aria-labelledby="usage-heading" className="rounded-2xl border border-border bg-card p-5 sm:p-6">
+      <h2 id="usage-heading" className="text-lg font-semibold">Use it in your project</h2>
+      <p className="mt-1 text-sm text-muted-foreground">Three steps from export to running product code.</p>
+      <ol className="mt-5 space-y-5">
+        <li>
+          <p className="text-sm font-medium"><span className="mr-2 inline-grid size-5 place-items-center rounded-full bg-muted text-[11px] font-semibold">1</span>Add the variables</p>
+          <p className="mt-1.5 text-xs leading-5 text-muted-foreground">Copy or download the CSS above and paste it into your global stylesheet (e.g. <code className="rounded bg-muted px-1 py-0.5 font-mono">app/globals.css</code>), after Tailwind. Every token ships as a <code className="rounded bg-muted px-1 py-0.5 font-mono">--ds-*</code> variable.</p>
+        </li>
+        <li>
+          <p className="text-sm font-medium"><span className="mr-2 inline-grid size-5 place-items-center rounded-full bg-muted text-[11px] font-semibold">2</span>Set the active theme</p>
+          <p className="mt-1.5 text-xs leading-5 text-muted-foreground">Semantic roles resolve per theme through a <code className="rounded bg-muted px-1 py-0.5 font-mono">data-ds-theme</code> attribute. Put it on <code className="rounded bg-muted px-1 py-0.5 font-mono">&lt;html&gt;</code> and swap the value to switch themes:</p>
+          <div className="mt-2.5"><DocsSnippet variant="muted" code={`<html data-ds-theme="dark">\n  <!-- … -->\n</html>\n\n// Switch at runtime:\ndocument.documentElement.dataset.dsTheme = "light"`} /></div>
+        </li>
+        <li>
+          <p className="text-sm font-medium"><span className="mr-2 inline-grid size-5 place-items-center rounded-full bg-muted text-[11px] font-semibold">3</span>Reference the tokens</p>
+          <p className="mt-1.5 text-xs leading-5 text-muted-foreground">Use any <code className="rounded bg-muted px-1 py-0.5 font-mono">--ds-*</code> name from the file — pick exact names from your download:</p>
+          <div className="mt-2.5"><DocsSnippet variant="muted" code={`.card {\n  background: var(--ds-surface);\n  color: var(--ds-text);\n  border-radius: var(--ds-radius-md);\n}`} /></div>
+        </li>
+      </ol>
+    </section>
+  )
 }
 
 function DocumentPreview({ model }: { model: DesignSystemExportModel }) {
