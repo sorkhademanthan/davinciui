@@ -112,7 +112,6 @@ export async function FillPreloaderDocs() {
         <FillPreloaderPreview
           src="/demo/fill-preloader"
           title="Fill Preloader Demo"
-          className="h-[420px]"
         />
       }
       previewCode={defaultCode}

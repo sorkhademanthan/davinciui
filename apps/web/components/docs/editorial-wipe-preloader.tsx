@@ -119,7 +119,6 @@ export async function EditorialWipePreloaderDocs() {
         <EditorialWipePreloaderPreview
           src="/demo/editorial-wipe-preloader"
           title="Editorial Wipe Preloader Demo"
-          className="h-[420px]"
         />
       }
       previewCode={defaultCode}

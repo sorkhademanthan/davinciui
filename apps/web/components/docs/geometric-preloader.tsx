@@ -20,7 +20,7 @@ export async function GeometricPreloaderDocs() {
     <DocsPageLayout
       title="Geometric Preloader"
       description="A fullscreen geometric loader with nested rotating squares and a diamond-scale reveal."
-      preview={<GeometricPreloaderPreview src="/demo/geometric-preloader" title="Geometric Preloader Demo" className="h-[420px]" />}
+      preview={<GeometricPreloaderPreview src="/demo/geometric-preloader" title="Geometric Preloader Demo" />}
       previewCode={defaultCode}
       usageCode={defaultCode}
       installPackageName="geometric-preloader"
