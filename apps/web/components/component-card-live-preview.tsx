@@ -650,11 +650,9 @@ export function ComponentCardLivePreview({
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (!entry?.isIntersecting) return;
-        setShouldRender(true);
-        observer.disconnect();
+        setShouldRender(Boolean(entry?.isIntersecting));
       },
-      { rootMargin: "200px" },
+      { rootMargin: "300px 0px", threshold: 0.01 },
     );
     observer.observe(host);
 
