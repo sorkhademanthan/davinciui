@@ -1,9 +1,10 @@
-"use client";
-
 /**
  * Slugs covered by BasicComponentCardPreview.
  * Kept in its own tiny module so gallery code can check membership
  * without pulling the (heavy) preview chunk into the main bundle.
+ * Deliberately directive-free (pure data + type guard) so both server
+ * components (docs layout, registry manifest, preview contract) and client
+ * components can import it.
  */
 export const BASIC_PREVIEW_SLUGS = [
   "button",

@@ -7,6 +7,7 @@ import {
   isBasicPreviewSlug,
   type BasicPreviewSlug,
 } from "@/components/docs/previews/basic-component-card-slugs";
+import { getPreviewDefinition } from "@/lib/preview-contract";
 
 const TextMorph = dynamic(
   () =>
@@ -663,49 +664,20 @@ export function ComponentCardLivePreview({
   }, []);
 
   const staticLabel = slug === "fluid-particle-text" ? "INK" : "DAVINCIUI";
+  // One shared rulebook for card behavior — sizing, background, assistive
+  // exposure, and reduced-motion policy come from the preview contract
+  // instead of inline slug lists.
+  const previewDef = getPreviewDefinition(slug);
 
   return (
     <div
       ref={hostRef}
-      aria-hidden={slug !== "ambient-audio-toggle" && slug !== "interaction-sound-kit" && slug !== "voice-recorder" && slug !== "keyboard-command-sounds" && slug !== "upload-sound-status"}
-      className={`absolute inset-0 flex items-center justify-center overflow-hidden ${
-        slug === "ambient-audio-toggle" ? "bg-[#eef4f0] dark:bg-[#101815]" : "bg-background"
-      }`}
+      aria-hidden={previewDef.ariaHidden}
+      className={`absolute inset-0 flex items-center justify-center overflow-hidden ${previewDef.cardBackground}`}
     >
       {slug === "ambient-audio-toggle" &&
       !shouldRender ? null : !shouldRender ||
-        (reducedMotion &&
-          slug !== "shader-text" &&
-          slug !== "soft-fluid-gradient" &&
-          slug !== "silk-aurora" &&
-          slug !== "character-field" &&
-          slug !== "pixel-flow" &&
-          slug !== "pixel-wipe-carousel" &&
-          slug !== "segmented-image-carousel" &&
-          slug !== "cinematic-card-carousel" &&
-          slug !== "radial-fan-deck" &&
-          slug !== "neon-mesh-bg" &&
-          slug !== "spectra-noise" &&
-          slug !== "noiser" &&
-          slug !== "sunlight-effect" &&
-          slug !== "vertical-image-marquee" &&
-          slug !== "hover-cards" &&
-          slug !== "interactive-media-accordion" &&
-          slug !== "services-showcase" &&
-          slug !== "lens-drift-grid" &&
-          slug !== "orbit-spiral-gallery" &&
-          slug !== "glass-scene-dock" &&
-          slug !== "liquid-reveal-button" &&
-          slug !== "animated-metric" &&
-          slug !== "nudge-button" &&
-          slug !== "animated-pill-button" &&
-          slug !== "burn-plus" &&
-          slug !== "ambient-audio-toggle" &&
-          slug !== "motion-hamburger" &&
-          slug !== "liquid-chrome-button" &&
-          slug !== "wave-bars-loader" &&
-          slug !== "kinetic-split-text" &&
-          !isBasicPreviewSlug(slug)) ? (
+        (reducedMotion && !previewDef.reduceMotionSafe) ? (
         <span className="text-3xl font-black tracking-[-0.055em] text-foreground sm:text-4xl">
           {staticLabel}
         </span>

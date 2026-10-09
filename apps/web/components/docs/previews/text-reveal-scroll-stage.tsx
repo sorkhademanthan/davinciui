@@ -2,8 +2,8 @@
 
 import * as React from "react";
 
-export const TEXT_REVEAL_PREVIEW_SCROLLER =
-  "[data-text-reveal-preview-scroll]";
+/** Generic contract scroll-region marker, resolved by the preview wrapper. */
+export const PREVIEW_SCROLL_REGION = "[data-preview-scroll-region]";
 export const TEXT_REVEAL_PREVIEW_TRIGGER =
   "[data-text-reveal-preview-trigger]";
 
@@ -21,7 +21,7 @@ export function TextRevealScrollStage({
 
   React.useEffect(() => {
     const stage = stageRef.current;
-    const scroller = stage?.closest<HTMLElement>(TEXT_REVEAL_PREVIEW_SCROLLER);
+    const scroller = stage?.closest<HTMLElement>(PREVIEW_SCROLL_REGION);
     if (!stage || !scroller) return;
 
     const updateStageSize = () => {

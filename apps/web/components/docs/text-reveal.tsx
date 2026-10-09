@@ -3,7 +3,7 @@ import { DocsPageLayout } from "@/components/docs-page-layout";
 import { TextReveal } from "@workspace/ui/components/text-reveal";
 import {
   TextRevealScrollStage,
-  TEXT_REVEAL_PREVIEW_SCROLLER,
+  PREVIEW_SCROLL_REGION,
   TEXT_REVEAL_PREVIEW_TRIGGER,
 } from "@/components/docs/previews/text-reveal-scroll-stage";
 import { readComponentSource } from "@/lib/source-code";
@@ -44,7 +44,7 @@ function ExamplePreview({
           lineHeight={1.45}
           startPosition="top top"
           endPosition="bottom bottom"
-          scroller={TEXT_REVEAL_PREVIEW_SCROLLER}
+          scroller={PREVIEW_SCROLL_REGION}
           trigger={TEXT_REVEAL_PREVIEW_TRIGGER}
           revealedColor="var(--foreground)"
           unrevealedColor="var(--foreground)"
@@ -69,7 +69,7 @@ export async function TextRevealDocs() {
             text={sampleText}
             startPosition="top top"
             endPosition="bottom bottom"
-            scroller={TEXT_REVEAL_PREVIEW_SCROLLER}
+            scroller={PREVIEW_SCROLL_REGION}
             trigger={TEXT_REVEAL_PREVIEW_TRIGGER}
             revealedColor="var(--foreground)"
             unrevealedColor="var(--foreground)"
@@ -86,7 +86,6 @@ export async function TextRevealDocs() {
       installSourceFilename="components/ui/text-reveal.tsx"
       usageCode={defaultCode}
       fullWidthPreview
-      scrollablePreview
       usageNote={
         <p className="text-sm text-muted-foreground">
           Compare all seven reveal combinations on the{" "}

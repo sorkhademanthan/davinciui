@@ -5,9 +5,12 @@ import * as ReactDOM from "react-dom"
 import { cn } from "@/lib/utils"
 import { RotateCcw, Search, SlidersHorizontal, Check, Maximize, Minimize, CodeXml, ChevronLeft, Copy } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
-import { PersonalizeDrawer } from "@/components/personalize-drawer"
 import { motion, AnimatePresence, useDragControls, type PanInfo } from "framer-motion"
 import { useDocStore } from "@/hooks/use-doc-store"
+import { usePlaygroundStore } from "@/hooks/use-playground-store"
+import { useInViewport } from "@/hooks/use-in-viewport"
+import { useModalDialog } from "@/hooks/use-modal-dialog"
+import { getPreviewDefinition } from "@/lib/preview-contract"
 
 const CommandMenu = React.lazy(() =>
   import("@/components/command-menu").then((mod) => ({ default: mod.CommandMenu }))
@@ -22,6 +25,8 @@ export interface VariantItem {
 
 interface DocsPreviewWrapperProps {
   children: React.ReactNode
+  /** Registry slug — resolves the shared preview contract (height, scrolling, fullscreen). */
+  slug?: string
   fullWidthPreview?: boolean
   scrollablePreview?: boolean
   unstyledPreview?: boolean
@@ -46,12 +51,14 @@ function PreviewIconButton({
   label,
   active,
   expanded,
+  className,
 }: {
   children: React.ReactNode
   onClick?: () => void
   label: string
   active?: boolean
   expanded?: boolean
+  className?: string
 }) {
   return (
     <button
@@ -60,10 +67,13 @@ function PreviewIconButton({
       aria-label={label}
       aria-pressed={active}
       title={label}
+      // Visual box stays 32px; an invisible 6px halo on every side lifts the
+      // effective touch target to 44px without changing toolbar density.
       className={cn(
-        "inline-flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
+        "relative inline-flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors before:absolute before:-inset-1.5 before:content-[''] hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
         active && "bg-accent text-accent-foreground",
         expanded && "hover:bg-accent",
+        className,
       )}
     >
       {children}
@@ -103,8 +113,9 @@ function PreviewVariantTab({
 
 export function DocsPreviewWrapper({
   children,
+  slug,
   fullWidthPreview,
-  scrollablePreview = false,
+  scrollablePreview,
   unstyledPreview = false,
   personalizeContent,
   sourceCodeFilename,
@@ -112,6 +123,17 @@ export function DocsPreviewWrapper({
   variants = [],
   hideDefaultVariant = false,
 }: DocsPreviewWrapperProps) {
+  // Shared preview contract: explicit props win, the per-slug definition
+  // fills the rest, historical behavior is the fallback.
+  const previewDef = slug ? getPreviewDefinition(slug) : null
+  const effectiveScrollable = scrollablePreview ?? previewDef?.scrollable ?? false
+  const fullscreenAllowed = previewDef?.fullscreen ?? true
+  // Capability-gated universal controls. Search + theme also collapse on
+  // small screens, where the site header already offers both — this keeps
+  // four thumb-friendly actions in the bar instead of six.
+  const showSearch = previewDef?.controls.search ?? true
+  const showReload = previewDef?.controls.reload ?? true
+  const showTheme = previewDef?.controls.theme ?? true
   const [key, setKey] = React.useState(0)
   const [showSource, setShowSource] = React.useState(false)
   const [mounted, setMounted] = React.useState(false)
@@ -126,29 +148,39 @@ export function DocsPreviewWrapper({
   ) // -1 = default preview
   const sourceDragControls = useDragControls()
   const previewRef = React.useRef<HTMLDivElement>(null)
+  const sourceDialogRef = React.useRef<HTMLDivElement | null>(null)
+  // Pause heavy main previews far offscreen (canvases, loops, autoplay stop
+  // with the unmount; toolbar/tabs/shell stay). Fullscreen and audio
+  // surfaces are exempt; slug-less wrappers (examples) are gated outside.
+  const { ref: viewportRef, inView: contentNearViewport } = useInViewport({
+    rootMargin: "300px 0px",
+  })
+  const showPreviewContent =
+    isExpanded || !previewDef?.unmountOffscreen || contentNearViewport
+  const closeSource = React.useCallback(() => setShowSource(false), [])
+  useModalDialog(showSource, {
+    dialogRef: sourceDialogRef,
+    onClose: closeSource,
+  })
   const fullscreenOriginRef = React.useRef<FullscreenOrigin | null>(null)
   const fullscreenAnimationRef = React.useRef<Animation | null>(null)
 
   const resolvedActiveVariant = hideDefaultVariant && activeVariant === -1 ? 0 : activeVariant
 
-  const { setActiveVariantIndex, personalizeOpen, registerPersonalizeContent, clearPersonalizeContent, setPersonalizeOpen } = useDocStore()
+  const { setActiveVariantIndex, personalizeOpen, setPersonalizeOpen } = useDocStore()
 
-  // Sync state with store
+  // Sync state with store — but only when this wrapper actually owns variant
+  // selection. Example wrappers render with no variants (hideDefaultVariant);
+  // letting them publish index 0 would hijack the shared Usage tabs and show
+  // variant code while the main preview shows the default.
   React.useEffect(() => {
+    if (variants.length === 0) return
     setActiveVariantIndex(resolvedActiveVariant)
-  }, [resolvedActiveVariant, setActiveVariantIndex])
+  }, [resolvedActiveVariant, setActiveVariantIndex, variants.length])
 
-  // Expose this preview's playground panel so the site header can offer
-  // the same Personalize entry point. Guarded by id so sibling previews
-  // never clobber each other on unmount.
-  const personalizeId = React.useId()
-  React.useEffect(() => {
-    if (!personalizeContent) return
-    registerPersonalizeContent(personalizeId, personalizeContent)
-    return () => {
-      clearPersonalizeContent(personalizeId)
-    }
-  }, [personalizeContent, personalizeId, registerPersonalizeContent, clearPersonalizeContent])
+  // Note: drawer rendering + registration live in the page-owned
+  // PersonalizeController (one portal per page). Wrappers only read the
+  // shared open state for their toolbar pill.
 
   const hasSourceCode = Boolean(sourceCodeKey)
 
@@ -268,14 +300,14 @@ export function DocsPreviewWrapper({
   }, [clearFullscreenAnimation, getOriginTransform, isExpanded])
 
   const selectVariant = React.useCallback((index: number) => {
-    if (scrollablePreview) {
+    if (effectiveScrollable) {
       const scroller = previewRef.current?.querySelector<HTMLElement>(
-        "[data-text-reveal-preview-scroll]",
+        "[data-preview-scroll-region]",
       )
       if (scroller) scroller.scrollTop = 0
     }
     setActiveVariant(index)
-  }, [scrollablePreview])
+  }, [effectiveScrollable])
 
   const handleSourceOpen = React.useCallback(async () => {
     setPersonalizeOpen(false)
@@ -449,9 +481,10 @@ export function DocsPreviewWrapper({
         </div>
 
         <div className="flex shrink-0 items-center" aria-label="Preview controls">
+          {showSearch && (
           <React.Suspense
             fallback={
-              <span className="inline-flex size-8 items-center justify-center text-muted-foreground/50">
+              <span className="hidden size-8 items-center justify-center text-muted-foreground/50 sm:inline-flex">
                 <Search className="size-4" />
               </span>
             }
@@ -462,13 +495,14 @@ export function DocsPreviewWrapper({
                   type="button"
                   aria-label="Search"
                   title="Search"
-                  className="inline-flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                  className="relative hidden size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors before:absolute before:-inset-1.5 before:content-[''] hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring sm:inline-flex"
                 >
                   <Search className="size-4" />
                 </button>
               }
             />
           </React.Suspense>
+          )}
 
           {hasSourceCode && (
             <PreviewIconButton
@@ -496,8 +530,13 @@ export function DocsPreviewWrapper({
             </PreviewIconButton>
           )}
 
+          {showReload && (
           <PreviewIconButton
             onClick={() => {
+              // True reset: restore the component's defaults first so the
+              // remount below renders pristine state (not surviving
+              // personalization), then replay the preview subtree.
+              if (slug) usePlaygroundStore.getState().resetPreview(slug)
               selectVariant(resolvedActiveVariant)
               setKey((k) => k + 1)
             }}
@@ -505,39 +544,46 @@ export function DocsPreviewWrapper({
           >
             <RotateCcw className={previewIconClass} />
           </PreviewIconButton>
+          )}
 
-          <PreviewIconButton
-            onClick={handleToggleExpanded}
-            label={isExpanded ? "Collapse preview pane" : "Expand preview pane"}
-            active={isExpanded}
-          >
-            {isExpanded ? <Minimize className={previewIconClass} /> : <Maximize className={previewIconClass} />}
-          </PreviewIconButton>
+          {fullscreenAllowed && (
+            <PreviewIconButton
+              onClick={handleToggleExpanded}
+              label={isExpanded ? "Collapse preview pane" : "Expand preview pane"}
+              active={isExpanded}
+            >
+              {isExpanded ? <Minimize className={previewIconClass} /> : <Maximize className={previewIconClass} />}
+            </PreviewIconButton>
+          )}
 
-          <ThemeToggle className="inline-flex size-8 shrink-0 items-center justify-center rounded-md border-0 bg-transparent text-muted-foreground shadow-none transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring" />
+          {showTheme && (
+          <ThemeToggle className="relative hidden size-8 shrink-0 items-center justify-center rounded-md border-0 bg-transparent text-muted-foreground shadow-none transition-colors before:absolute before:-inset-1.5 before:content-[''] hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring sm:inline-flex" />
+          )}
         </div>
       </div>
 
-      {/* The scrollable surface is opt-in; Text Reveal uses its own scroller. */}
-      <div className={cn(
+      {/* The scrollable surface is opt-in per the preview contract. */}
+      <div
+        ref={viewportRef}
+        className={cn(
         "flex w-full",
         unstyledPreview
           ? "bg-background"
           : "bg-muted/30 [background-image:radial-gradient(color-mix(in_oklab,var(--border)_55%,transparent)_1px,transparent_1px)] [background-size:20px_20px]",
-        scrollablePreview
+        effectiveScrollable
           ? "min-h-0 flex-1 flex-col items-stretch overflow-x-hidden overflow-y-auto overscroll-contain"
           : "h-full overflow-hidden",
-        !scrollablePreview && !fullWidthPreview && "items-center justify-center"
+        !effectiveScrollable && !fullWidthPreview && "items-center justify-center"
       )}
-        data-text-reveal-preview-scroll={scrollablePreview ? "true" : undefined}
-        role={scrollablePreview ? "region" : undefined}
-        aria-label={scrollablePreview ? "Scrollable Text Reveal preview" : undefined}
-        tabIndex={scrollablePreview ? 0 : undefined}
+        data-preview-scroll-region={effectiveScrollable ? "true" : undefined}
+        role={effectiveScrollable ? "region" : undefined}
+        aria-label={effectiveScrollable ? "Scrollable preview" : undefined}
+        tabIndex={effectiveScrollable ? 0 : undefined}
       >
         <div
           className={cn(
             "w-full",
-            scrollablePreview
+            effectiveScrollable
               ? "min-h-full"
               : (resolvedActiveVariant >= 0 && variants[resolvedActiveVariant]?.fullWidth) || fullWidthPreview
                 ? "h-full"
@@ -548,24 +594,32 @@ export function DocsPreviewWrapper({
             key={key}
             className={cn(
               "w-full",
-              scrollablePreview ? "min-h-full" : "h-full",
-              !scrollablePreview && !fullWidthPreview && "flex items-center justify-center"
+              effectiveScrollable ? "min-h-full" : "h-full",
+              !effectiveScrollable && !fullWidthPreview && "flex items-center justify-center"
             )}
           >
-            {resolvedActiveVariant === -1 ? children : variants[resolvedActiveVariant]?.preview}
+            {showPreviewContent ? (
+              resolvedActiveVariant === -1 ? children : variants[resolvedActiveVariant]?.preview
+            ) : (
+              <div data-lazy-placeholder aria-hidden="true" className="h-full w-full" />
+            )}
           </div>
         </div>
       </div>
 
-      {/* Personalize drawer — rendered by the preview that owns the panel,
-          opened from the toolbar or the site header via the doc store. */}
-      {personalizeContent && <PersonalizeDrawer />}
+      {/* Personalize drawer is page-owned (PersonalizeController) — never
+          rendered per-wrapper, so examples cannot spawn competing portals. */}
 
       {/* Source Code Panel Portal */}
       {mounted && ReactDOM.createPortal(
         <AnimatePresence>
           {showSource && (
             <motion.div
+              ref={sourceDialogRef}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Source code"
+              tabIndex={-1}
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
@@ -598,7 +652,8 @@ export function DocsPreviewWrapper({
                     <div className="flex items-center justify-between px-4 py-1">
                       <button
                         onClick={() => setShowSource(false)}
-                        className="inline-flex items-center gap-1.5 text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none"
+                        aria-label="Close source code panel"
+                        className="inline-flex items-center gap-1.5 rounded-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                       >
                         <ChevronLeft className="w-4 h-4" />
                         <span className="text-xs font-mono tracking-wide">Source Code</span>

@@ -10,14 +10,17 @@ import { DocsFooterSection } from "@/components/docs-footer-section"
 import { ComponentPagination } from "@/components/component-pagination"
 import { Section } from "@/components/component-layout"
 import { DocsPreviewWrapper, type VariantItem } from "@/components/docs-preview-wrapper"
+import { PersonalizeController } from "@/components/personalize-controller"
+import { LazyExamplePreview } from "@/components/lazy-example-preview"
 import { highlightCode } from "@/lib/shiki"
 import { splitImportAndUsage, stripImportFromCode } from "@/lib/split-import"
+import { getPreviewDefinition, previewStageMinHeight } from "@/lib/preview-contract"
+import { resolveComponentPagination } from "@/lib/component-pagination"
 import type { BundledLanguage } from "shiki"
-import { FloatingDocsSidebarLazy } from "@/components/floating-docs-sidebar-lazy"
 import { buildDocsPageMarkdown } from "@/lib/docs-page-markdown"
 import { DocsSnippet } from "@/components/docs-snippet"
+import { ComponentMobileRow } from "@/components/component-mobile-row"
 import { PageContextMenu } from "@/components/page-context-menu"
-import { ChevronRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 export interface PropItem {
@@ -94,6 +97,7 @@ export async function DocsPageLayout({
   installDependencies,
   installSourceFilename,
   importCode,
+  previewCode,
   usageCode,
   examples = [],
   props = [],
@@ -130,6 +134,14 @@ export async function DocsPageLayout({
   let resolvedUsageCode = ""
   let importHtml = ""
   let usageHtml = ""
+  // previewCode documents exactly what renders in the main preview. When it
+  // meaningfully differs from the full usage snippet it earns the Default
+  // tab, and the usage snippet keeps a dedicated Usage tab instead of being
+  // displaced. Otherwise everything behaves exactly as before.
+  let defaultTabCode = ""
+  let defaultTabHtml = ""
+  let usageTabCode = ""
+  let usageTabHtml = ""
 
   if (typeof usageCode === "string") {
     const split = splitImportAndUsage(usageCode)
@@ -152,27 +164,37 @@ export async function DocsPageLayout({
     if (resolvedUsageCode) {
       usageHtml = await highlightCode(resolvedUsageCode, "tsx" as BundledLanguage)
     }
+
+    defaultTabCode = resolvedUsageCode
+    defaultTabHtml = usageHtml
+    const previewStripped =
+      typeof previewCode === "string"
+        ? stripImportFromCode(previewCode).trim()
+        : ""
+    if (previewStripped && previewStripped !== resolvedUsageCode) {
+      defaultTabCode = previewStripped
+      defaultTabHtml = await highlightCode(previewStripped, "tsx" as BundledLanguage)
+      usageTabCode = resolvedUsageCode
+      usageTabHtml = usageHtml
+    }
   }
 
   const variantCodes = hideExamples ? [] : examples.map((ex) => stripImportFromCode(ex.code || ""))
   const variantTitles = hideExamples ? [] : examples.map((ex) => ex.title)
   const visibleExamples = hideExamples ? [] : examples
 
+  // One shared rulebook for preview surfaces: stage height, scrolling, and
+  // fullscreen come from the preview contract. An explicit opt-in wins;
+  // otherwise the per-slug definition decides (no prop defaults to false,
+  // so `||` — not `??` — is the correct fallback here).
+  const previewDef = getPreviewDefinition(installPackageName)
+  const pagination = resolveComponentPagination(installPackageName)
+  const resolvedScrollablePreview = scrollablePreview || previewDef.scrollable
+
   return (
     <div data-docs-layout className="w-full">
-      {/* Mobile docs nav — inline, shadcn-style (was a fixed overlay cluster) */}
-      <div className="border-b border-border/60 lg:hidden">
-        <div className="flex items-center gap-2 px-4 py-2.5">
-          <FloatingDocsSidebarLazy />
-          <nav aria-label="Breadcrumb" className="flex min-w-0 items-center gap-1.5 text-sm text-muted-foreground">
-            <Link href="/docs" className="shrink-0 transition-colors hover:text-foreground">
-              Docs
-            </Link>
-            <ChevronRight className="size-3.5 shrink-0 opacity-50" aria-hidden="true" />
-            <span className="truncate font-medium text-foreground">{title}</span>
-          </nav>
-        </div>
-      </div>
+      {/* Section-aware mobile row (docs drawer vs experience drawer). */}
+      <ComponentMobileRow title={title} />
 
       <div className="mx-auto w-full max-w-[1200px] px-4 py-6 sm:px-6 md:py-8 lg:px-8 lg:py-10">
         <div>
@@ -185,7 +207,10 @@ export async function DocsPageLayout({
                   {title}
                 </h1>
                 <div className="shrink-0 pt-1">
-                  <ComponentPagination currentSlug={installPackageName} />
+                  <ComponentPagination
+                    previous={pagination.previous}
+                    next={pagination.next}
+                  />
                 </div>
               </div>
               <p className="mt-3 max-w-2xl text-[15px] leading-7 text-muted-foreground">
@@ -200,12 +225,28 @@ export async function DocsPageLayout({
             <div
               className={cn(
                 "mt-6 grid w-full overflow-hidden",
-                scrollablePreview ? "max-h-[560px] min-h-[420px]" : "min-h-[420px] lg:min-h-[480px]",
+                !resolvedScrollablePreview && previewStageMinHeight(previewDef.height),
               )}
+              style={
+                previewDef.aspect || resolvedScrollablePreview
+                  ? {
+                      ...(previewDef.aspect ? { aspectRatio: previewDef.aspect } : undefined),
+                      // Definite height so the stage scrolls internally instead
+                      // of growing the page. Scrollable stages always carry
+                      // tall content by definition, so a fixed contract height
+                      // is correct here (and breaks any scroller/stage resize
+                      // feedback loop).
+                      ...(resolvedScrollablePreview
+                        ? { height: previewDef.scrollMaxHeight }
+                        : undefined),
+                    }
+                  : undefined
+              }
             >
               <DocsPreviewWrapper
+                slug={installPackageName}
                 fullWidthPreview={fullWidthPreview}
-                scrollablePreview={scrollablePreview}
+                scrollablePreview={resolvedScrollablePreview}
                 unstyledPreview={unstyledPreview}
                 personalizeContent={personalizeContent}
                 hideDefaultVariant={hideDefaultPreviewVariant}
@@ -216,6 +257,13 @@ export async function DocsPageLayout({
                 {preview}
               </DocsPreviewWrapper>
             </div>
+
+            {/* Single page-owned personalization drawer (one portal — example
+                wrappers never render their own). */}
+            <PersonalizeController
+              id={installPackageName}
+              content={personalizeContent}
+            />
 
             {/* Installation */}
             <Section title="Installation" className="mt-10 scroll-mt-24" id="installation">
@@ -234,20 +282,26 @@ export async function DocsPageLayout({
                         <div className="space-y-3">
                           <ImportCodeBlock html={importHtml} code={resolvedImportCode} />
                           <DynamicCodeBlock
-                            originalCode={resolvedUsageCode}
-                            defaultHtml={usageHtml}
+                            originalCode={defaultTabCode}
+                            defaultHtml={defaultTabHtml}
+                            usageTabCode={usageTabCode}
+                            usageTabHtml={usageTabHtml}
                             variantTitles={variantTitles}
                             variantCodes={variantCodes}
                             hideDefaultTab={hideDefaultPreviewVariant}
+                            personalizedSlug={installPackageName}
                           />
                         </div>
                       ) : (
                         <DynamicCodeBlock
-                          originalCode={resolvedUsageCode}
-                          defaultHtml={usageHtml}
+                          originalCode={defaultTabCode}
+                          defaultHtml={defaultTabHtml}
+                          usageTabCode={usageTabCode}
+                          usageTabHtml={usageTabHtml}
                           variantTitles={variantTitles}
                           variantCodes={variantCodes}
                           hideDefaultTab={hideDefaultPreviewVariant}
+                          personalizedSlug={installPackageName}
                         />
                       )}
                     </Suspense>
@@ -348,16 +402,12 @@ export async function DocsPageLayout({
               <div className="mt-4 space-y-8">
                 {visibleExamples.map((ex) => (
                   <Section key={ex.title} title={ex.title} level={3} className="scroll-mt-24 pt-4" id={slugify(ex.title)}>
-                    <div className="grid min-h-[280px] w-full overflow-hidden">
-                      <DocsPreviewWrapper
-                        unstyledPreview={unstyledPreview}
-                        personalizeContent={personalizeContent}
-                        hideDefaultVariant
-                        variants={[]}
-                      >
-                        {ex.preview}
-                      </DocsPreviewWrapper>
-                    </div>
+                    <LazyExamplePreview
+                      unstyledPreview={unstyledPreview}
+                      personalizeContent={personalizeContent}
+                    >
+                      {ex.preview}
+                    </LazyExamplePreview>
                   </Section>
                 ))}
               </div>
