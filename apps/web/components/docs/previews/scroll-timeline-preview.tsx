@@ -18,7 +18,7 @@ export function ScrollTimelinePreview({
     <div className={cn("relative h-full min-h-[600px] w-full overflow-hidden", className)}>
       <iframe
         src={src}
-        className="h-full w-full border-0 bg-transparent"
+        className="absolute inset-0 h-full w-full border-0 bg-transparent"
         title={title}
       />
     </div>
