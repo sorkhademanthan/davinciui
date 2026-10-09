@@ -128,7 +128,6 @@ export async function PreloaderProDocs() {
         <PreloaderProPreview
           src="/demo/preloader-pro"
           title="Preloader Pro Demo"
-          className="h-[420px]"
         />
       }
       previewCode={defaultCode}

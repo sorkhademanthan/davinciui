@@ -101,7 +101,6 @@ export async function StaircasePreloaderDocs() {
         <StaircasePreloaderPreview
           src="/demo/staircase-preloader"
           title="Staircase Preloader Demo"
-          className="h-[420px]"
         />
       }
       previewCode={defaultCode}

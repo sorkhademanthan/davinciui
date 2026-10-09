@@ -115,7 +115,6 @@ export async function PixelPreloaderDocs() {
         <PixelPreloaderPreview
           src="/demo/pixel-preloader"
           title="Pixel Preloader Demo"
-          className="h-[420px]"
         />
       }
       previewCode={defaultCode}
