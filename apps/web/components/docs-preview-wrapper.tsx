@@ -24,11 +24,20 @@ interface DocsPreviewWrapperProps {
   children: React.ReactNode
   fullWidthPreview?: boolean
   scrollablePreview?: boolean
+  unstyledPreview?: boolean
   personalizeContent?: React.ReactNode
   sourceCodeFilename?: string
   sourceCodeKey?: string
   variants?: VariantItem[]
   hideDefaultVariant?: boolean
+}
+
+interface FullscreenOrigin {
+  top: number
+  left: number
+  width: number
+  height: number
+  borderRadius: string
 }
 
 function PreviewIconButton({
@@ -92,19 +101,11 @@ function PreviewVariantTab({
   )
 }
 
-const PREVIEW_EXPAND_MS = 420
-const PREVIEW_EXPAND_EASING = "cubic-bezier(0.22, 1, 0.36, 1)"
-
-type PreviewRect = { top: number; left: number; width: number; height: number }
-
-function toPreviewRect(rect: DOMRect | PreviewRect): PreviewRect {
-  return { top: rect.top, left: rect.left, width: rect.width, height: rect.height }
-}
-
 export function DocsPreviewWrapper({
   children,
   fullWidthPreview,
   scrollablePreview = false,
+  unstyledPreview = false,
   personalizeContent,
   sourceCodeFilename,
   sourceCodeKey,
@@ -124,6 +125,9 @@ export function DocsPreviewWrapper({
     hideDefaultVariant && variants.length > 0 ? 0 : -1
   ) // -1 = default preview
   const sourceDragControls = useDragControls()
+  const previewRef = React.useRef<HTMLDivElement>(null)
+  const fullscreenOriginRef = React.useRef<FullscreenOrigin | null>(null)
+  const fullscreenAnimationRef = React.useRef<Animation | null>(null)
 
   const resolvedActiveVariant = hideDefaultVariant && activeVariant === -1 ? 0 : activeVariant
 
@@ -146,9 +150,122 @@ export function DocsPreviewWrapper({
     }
   }, [personalizeContent, personalizeId, registerPersonalizeContent, clearPersonalizeContent])
 
-  const previewRef = React.useRef<HTMLDivElement>(null)
-  const splitPreviewRectRef = React.useRef<PreviewRect | null>(null)
   const hasSourceCode = Boolean(sourceCodeKey)
+
+  const clearFullscreenAnimation = React.useCallback(() => {
+    const animation = fullscreenAnimationRef.current
+    if (!animation) return
+    fullscreenAnimationRef.current = null
+    animation.cancel()
+    if (previewRef.current) previewRef.current.style.willChange = ""
+  }, [])
+
+  const getOriginTransform = React.useCallback((origin: FullscreenOrigin) => {
+    const preview = previewRef.current
+    if (!preview) return "none"
+    const target = preview.getBoundingClientRect()
+    const scaleX = origin.width / Math.max(target.width, 1)
+    const scaleY = origin.height / Math.max(target.height, 1)
+    return `translate3d(${origin.left - target.left}px, ${origin.top - target.top}px, 0) scale(${scaleX}, ${scaleY})`
+  }, [])
+
+  const expandFullscreen = React.useCallback(() => {
+    const preview = previewRef.current
+    if (!preview || isExpanded) return
+
+    const rect = preview.getBoundingClientRect()
+    const origin: FullscreenOrigin = {
+      top: rect.top,
+      left: rect.left,
+      width: rect.width,
+      height: rect.height,
+      borderRadius: window.getComputedStyle(preview).borderRadius,
+    }
+    fullscreenOriginRef.current = origin
+    clearFullscreenAnimation()
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setIsExpanded(true)
+      return
+    }
+
+    ReactDOM.flushSync(() => setIsExpanded(true))
+    const expandedPreview = previewRef.current
+    if (!expandedPreview) return
+
+    expandedPreview.style.willChange = "transform, border-radius, box-shadow"
+    const animation = expandedPreview.animate(
+      [
+        {
+          transform: getOriginTransform(origin),
+          transformOrigin: "top left",
+          borderRadius: origin.borderRadius,
+          boxShadow: "0 10px 36px rgb(0 0 0 / 0.12)",
+        },
+        {
+          transform: "translate3d(0, 0, 0) scale(1)",
+          transformOrigin: "top left",
+          borderRadius: "0px",
+          boxShadow: "0 0 0 rgb(0 0 0 / 0)",
+        },
+      ],
+      {
+        duration: 420,
+        easing: "cubic-bezier(0.22, 1, 0.36, 1)",
+        fill: "both",
+      },
+    )
+    fullscreenAnimationRef.current = animation
+    void animation.finished.then(() => {
+      if (fullscreenAnimationRef.current !== animation) return
+      fullscreenAnimationRef.current = null
+      animation.cancel()
+      expandedPreview.style.willChange = ""
+    }).catch(() => {})
+  }, [clearFullscreenAnimation, getOriginTransform, isExpanded])
+
+  const collapseFullscreen = React.useCallback(() => {
+    const preview = previewRef.current
+    const origin = fullscreenOriginRef.current
+    if (!preview || !isExpanded) return
+
+    clearFullscreenAnimation()
+    if (!origin || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setIsExpanded(false)
+      return
+    }
+
+    preview.style.willChange = "transform, border-radius, box-shadow"
+    const animation = preview.animate(
+      [
+        {
+          transform: "translate3d(0, 0, 0) scale(1)",
+          transformOrigin: "top left",
+          borderRadius: "0px",
+          boxShadow: "0 0 0 rgb(0 0 0 / 0)",
+        },
+        {
+          transform: getOriginTransform(origin),
+          transformOrigin: "top left",
+          borderRadius: origin.borderRadius,
+          boxShadow: "0 10px 36px rgb(0 0 0 / 0.12)",
+        },
+      ],
+      {
+        duration: 320,
+        easing: "cubic-bezier(0.4, 0, 0.2, 1)",
+        fill: "both",
+      },
+    )
+    fullscreenAnimationRef.current = animation
+    void animation.finished.then(() => {
+      if (fullscreenAnimationRef.current !== animation) return
+      ReactDOM.flushSync(() => setIsExpanded(false))
+      fullscreenAnimationRef.current = null
+      animation.cancel()
+      preview.style.willChange = ""
+    }).catch(() => {})
+  }, [clearFullscreenAnimation, getOriginTransform, isExpanded])
 
   const selectVariant = React.useCallback((index: number) => {
     if (scrollablePreview) {
@@ -160,17 +277,10 @@ export function DocsPreviewWrapper({
     setActiveVariant(index)
   }, [scrollablePreview])
 
-  const cacheSplitPreviewRect = React.useCallback(() => {
-    const layout = previewRef.current?.closest("[data-docs-layout]")
-    const previewShell = layout?.querySelector<HTMLElement>("[data-docs-preview-shell]")
-    if (!previewShell || previewShell.style.position === "fixed") return
-    splitPreviewRectRef.current = toPreviewRect(previewShell.getBoundingClientRect())
-  }, [])
-
   const handleSourceOpen = React.useCallback(async () => {
     setPersonalizeOpen(false)
     if (isExpanded) {
-      setIsExpanded(false)
+      collapseFullscreen()
     }
     setShowSource(true)
 
@@ -199,148 +309,118 @@ export function DocsPreviewWrapper({
     } finally {
       setIsSourceLoading(false)
     }
-  }, [isExpanded, isSourceLoading, sourceCodeKey, sourceHtml, setPersonalizeOpen])
+  }, [collapseFullscreen, isExpanded, isSourceLoading, sourceCodeKey, sourceHtml, setPersonalizeOpen])
 
   const handleToggleExpanded = React.useCallback(() => {
-    setIsExpanded((prev) => {
-      const next = !prev
-      if (next) {
-        setShowSource(false)
-        setPersonalizeOpen(false)
-      }
-      return next
-    })
-  }, [setPersonalizeOpen])
+    if (isExpanded) {
+      collapseFullscreen()
+      return
+    }
+    setShowSource(false)
+    setPersonalizeOpen(false)
+    expandFullscreen()
+  }, [collapseFullscreen, expandFullscreen, isExpanded, setPersonalizeOpen])
 
   React.useEffect(() => {
     setMounted(true)
   }, [])
 
-  // Hide navbar/header when fullscreen so toolbar (search, source, preferences, replay, fullscreen, theme) is not covered
+  // Fullscreen belongs to this preview. Preserve the surrounding page's exact
+  // inline styles so exiting cannot overwrite state owned by another overlay.
   React.useEffect(() => {
-    const header = document.querySelector("header.fixed") as HTMLElement | null
-    if (!header) return
-    if (isExpanded) {
-      header.style.display = "none"
-      document.body.style.overflow = "hidden"
-    } else {
-      header.style.display = ""
-      document.body.style.overflow = ""
-    }
+    if (!isExpanded) return
+
+    const header = document.querySelector<HTMLElement>("[data-site-header]")
+    const previousHeaderDisplay = header?.style.display ?? ""
+    const previousBodyOverflow = document.body.style.overflow
+
+    if (header) header.style.display = "none"
+    document.body.style.overflow = "hidden"
+
     return () => {
-      header.style.display = ""
-      document.body.style.overflow = ""
+      if (header) header.style.display = previousHeaderDisplay
+      document.body.style.overflow = previousBodyOverflow
     }
   }, [isExpanded])
 
+  // Treat the expanded preview as a modal workspace: Escape closes it, Tab
+  // remains inside it, and focus returns to the expansion trigger on exit.
   React.useEffect(() => {
-    cacheSplitPreviewRect()
     if (!isExpanded) return
-    const onResize = () => {
-      cacheSplitPreviewRect()
-      const shell = previewRef.current
-        ?.closest("[data-docs-layout]")
-        ?.querySelector<HTMLElement>("[data-docs-preview-shell]")
-      if (shell?.dataset.previewExpanded !== "true") return
-      shell.style.width = `${window.innerWidth}px`
-      shell.style.height = `${window.innerHeight}px`
-      shell.style.padding = window.innerWidth < 1024 ? "0px" : "12px"
-    }
-    window.addEventListener("resize", onResize)
-    return () => window.removeEventListener("resize", onResize)
-  }, [isExpanded, cacheSplitPreviewRect, showSource])
+    const previousFocus = document.activeElement instanceof HTMLElement
+      ? document.activeElement
+      : null
 
-  React.useEffect(() => {
-    const layout = previewRef.current?.closest("[data-docs-layout]")
-    const previewShell = layout?.querySelector<HTMLElement>("[data-docs-preview-shell]")
-    if (!previewShell) return
-
-    const isMobile = window.matchMedia("(max-width: 1023px)").matches
-    const fullPadding = isMobile ? "0px" : "12px"
-    const splitPadding = isMobile ? "16px" : "12px 12px 12px 6px"
-    const transition = `top ${PREVIEW_EXPAND_MS}ms ${PREVIEW_EXPAND_EASING}, left ${PREVIEW_EXPAND_MS}ms ${PREVIEW_EXPAND_EASING}, width ${PREVIEW_EXPAND_MS}ms ${PREVIEW_EXPAND_EASING}, height ${PREVIEW_EXPAND_MS}ms ${PREVIEW_EXPAND_EASING}, padding ${PREVIEW_EXPAND_MS}ms ${PREVIEW_EXPAND_EASING}`
-
-    const applyFixedRect = (rect: PreviewRect, padding: string) => {
-      previewShell.style.position = "fixed"
-      previewShell.style.top = `${rect.top}px`
-      previewShell.style.left = `${rect.left}px`
-      previewShell.style.width = `${rect.width}px`
-      previewShell.style.height = `${rect.height}px`
-      previewShell.style.zIndex = "100"
-      previewShell.style.padding = padding
-      previewShell.classList.add("bg-background")
-    }
-
-    const clearFixedStyles = () => {
-      delete previewShell.dataset.previewExpanded
-      for (const prop of ["position", "top", "left", "width", "height", "zIndex", "padding", "transition"] as const) {
-        previewShell.style.removeProperty(prop)
-      }
-      previewShell.classList.remove("bg-background")
-      cacheSplitPreviewRect()
-    }
-
-    let onTransitionEnd: ((event: TransitionEvent) => void) | undefined
-
-    if (isExpanded) {
-      const from = toPreviewRect(previewShell.getBoundingClientRect())
-      splitPreviewRectRef.current = from
-
-      previewShell.style.transition = "none"
-      applyFixedRect(from, splitPadding)
-      void previewShell.offsetHeight
-
-      previewShell.style.transition = transition
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          applyFixedRect(
-            { top: 0, left: 0, width: window.innerWidth, height: window.innerHeight },
-            fullPadding
-          )
-          previewShell.dataset.previewExpanded = "true"
-        })
-      })
-    } else if (previewShell.style.position === "fixed") {
-      const rightColumn = layout?.querySelector<HTMLElement>("[data-docs-right-column]")
-      const col = rightColumn?.getBoundingClientRect()
-      const targetFromLayout: PreviewRect | null = col
-        ? isMobile
-          ? { top: col.top, left: col.left, width: col.width, height: Math.min(col.height, window.innerHeight * 0.55) }
-          : { top: col.top + 12, left: col.left + 6, width: col.width - 18, height: col.height - 24 }
+    const onKeyDown = (event: KeyboardEvent) => {
+      const activeElement = document.activeElement
+      const activeOverlay = activeElement instanceof Element
+        ? activeElement.closest('[role="dialog"], [role="menu"], [role="listbox"]')
         : null
-      const target = targetFromLayout ?? splitPreviewRectRef.current
-      if (!target) {
-        clearFixedStyles()
+
+      // Let a command menu or another portaled overlay above fullscreen own
+      // its keyboard interaction until that overlay is dismissed.
+      if (activeOverlay && activeOverlay !== previewRef.current && !previewRef.current?.contains(activeOverlay)) {
         return
       }
 
-      previewShell.style.transition = transition
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          applyFixedRect(target, splitPadding)
-        })
-      })
-
-      onTransitionEnd = (event: TransitionEvent) => {
-        if (event.target !== previewShell || event.propertyName !== "width") return
-        clearFixedStyles()
+      if (event.key === "Escape") {
+        event.preventDefault()
+        collapseFullscreen()
+        return
       }
-      previewShell.addEventListener("transitionend", onTransitionEnd)
-    } else {
-      clearFixedStyles()
+
+      if (event.key !== "Tab" || !previewRef.current) return
+
+      const focusable = Array.from(
+        previewRef.current.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      ).filter((element) => element.getClientRects().length > 0 && element.getAttribute("aria-hidden") !== "true")
+
+      if (focusable.length === 0) {
+        event.preventDefault()
+        previewRef.current.focus()
+        return
+      }
+
+      const first = focusable[0]!
+      const last = focusable[focusable.length - 1]!
+      const active = document.activeElement
+
+      if (event.shiftKey && (active === first || !previewRef.current.contains(active))) {
+        event.preventDefault()
+        last.focus()
+      } else if (!event.shiftKey && (active === last || !previewRef.current.contains(active))) {
+        event.preventDefault()
+        first.focus()
+      }
     }
+
+    document.addEventListener("keydown", onKeyDown)
 
     return () => {
-      if (onTransitionEnd) {
-        previewShell.removeEventListener("transitionend", onTransitionEnd)
-      }
+      document.removeEventListener("keydown", onKeyDown)
+      previousFocus?.focus()
     }
-  }, [isExpanded, cacheSplitPreviewRect])
+  }, [collapseFullscreen, isExpanded])
+
+  React.useEffect(() => clearFullscreenAnimation, [clearFullscreenAnimation])
 
   return (
-    <div className={cn(
-      "relative flex h-full w-full flex-col overflow-hidden rounded-md border border-border bg-background",
-    )} ref={previewRef}>
+    <div
+      ref={previewRef}
+      data-preview-expanded={isExpanded ? "true" : undefined}
+      role={isExpanded ? "dialog" : undefined}
+      aria-modal={isExpanded || undefined}
+      aria-label={isExpanded ? "Fullscreen component preview" : undefined}
+      tabIndex={isExpanded ? -1 : undefined}
+      className={cn(
+        "flex w-full flex-col overflow-hidden bg-background",
+        isExpanded
+          ? "fixed inset-0 z-40 h-dvh rounded-none border-0 pt-[env(safe-area-inset-top)] pr-[env(safe-area-inset-right)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)]"
+          : "relative h-full rounded-md border border-border",
+      )}
+    >
       {/* Toolbar — shadcn-style top bar: variant tabs left, actions right */}
       <div className="flex h-11 shrink-0 items-center gap-1 border-b border-border/60 px-2">
         <div
@@ -404,7 +484,7 @@ export function DocsPreviewWrapper({
             <PreviewIconButton
               onClick={() => {
                 if (isExpanded) {
-                  setIsExpanded(false)
+                  collapseFullscreen()
                 }
                 setPersonalizeOpen(true)
                 setShowSource(false)
@@ -440,7 +520,10 @@ export function DocsPreviewWrapper({
 
       {/* The scrollable surface is opt-in; Text Reveal uses its own scroller. */}
       <div className={cn(
-        "flex w-full bg-muted/30 [background-image:radial-gradient(color-mix(in_oklab,var(--border)_55%,transparent)_1px,transparent_1px)] [background-size:20px_20px]",
+        "flex w-full",
+        unstyledPreview
+          ? "bg-background"
+          : "bg-muted/30 [background-image:radial-gradient(color-mix(in_oklab,var(--border)_55%,transparent)_1px,transparent_1px)] [background-size:20px_20px]",
         scrollablePreview
           ? "min-h-0 flex-1 flex-col items-stretch overflow-x-hidden overflow-y-auto overscroll-contain"
           : "h-full overflow-hidden",
