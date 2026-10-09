@@ -24,7 +24,7 @@ export async function GSAPTextDocs() {
 
   return (
     <DocsPageLayout
-      title="Type Cascade"
+      title="GSAP Text"
       description="A cinematic kinetic typography component that creates a layered 3D depth effect using continuous vertical text motion."
       preview={<GSAPTextPlayground />}
       personalizeContent={<GSAPTextPersonalizePanel />}

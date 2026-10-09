@@ -6,7 +6,7 @@ import { GlitchLiquidText } from "@workspace/ui/components/glitch-liquid-text";
 import { useAmbientInnerDrive } from "./use-ambient-inner-drive";
 
 /**
- * Self-playing card thumbnail for Chromatic Melt.
+ * Self-playing card thumbnail for Glitch Liquid Text.
  * The inner driver dispatches pointerenter + pointermove directly on the
  * component root and sweeps the text band — the same chromatic melt you
  * get from dragging the cursor across the DAVINCIUI text, with no hover

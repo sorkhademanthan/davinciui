@@ -108,7 +108,7 @@ export const components: Record<string, ComponentMetadata> = {
     addedAt: "2026-08-08",
   },
   "fluid-particle-text": {
-    title: "Particle Flow",
+    title: "Fluid Particle Text",
     description:
       "Interactive particle typography sampled from rasterized text — solid at rest, liquid around your cursor.",
     category: "Text Animations",
@@ -132,7 +132,7 @@ export const components: Record<string, ComponentMetadata> = {
     addedAt: "2026-09-11",
   },
   "gsap-text": {
-    title: "Type Cascade",
+    title: "GSAP Text",
     description:
       "A cinematic kinetic typography component that creates a layered 3D depth effect using continuous vertical text motion.",
     category: "Text Animations",
@@ -140,7 +140,7 @@ export const components: Record<string, ComponentMetadata> = {
     addedAt: "2026-09-03",
   },
   "glitch-liquid-text": {
-    title: "Chromatic Melt",
+    title: "Glitch Liquid Text",
     description:
       "GPU-rendered interactive typography on a liquid membrane — cursor-driven fluid distortion with chromatic glitch edges, light rays, and a magnetic custom cursor.",
     category: "Text Animations",
@@ -148,7 +148,7 @@ export const components: Record<string, ComponentMetadata> = {
     addedAt: "2026-09-10",
   },
   "media-text-hover": {
-    title: "Hover Media",
+    title: "Media Text Hover",
     description:
       "A split branding headline that opens an image or video window with a responsive spring hover interaction.",
     category: "Text Animations",
@@ -835,7 +835,7 @@ export const components: Record<string, ComponentMetadata> = {
     addedAt: "2026-09-22",
   },
   "burn-plus": {
-    title: "Ash Reveal",
+    title: "Burn Plus",
     description:
       "A WebGL organic burn/dissolve mask — warped multi-octave noise eats through a dark surface to reveal your media, driven by hover, scroll, tap, load, or direct control.",
     category: "Visual Effects",

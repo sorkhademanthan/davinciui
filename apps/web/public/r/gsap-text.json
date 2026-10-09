@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "gsap-text",
   "type": "registry:ui",
-  "title": "Type Cascade",
+  "title": "GSAP Text",
   "dependencies": [
     "gsap"
   ],

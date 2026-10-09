@@ -3,7 +3,7 @@
 import { KineticText } from "@workspace/ui/components/gsap-text";
 
 /**
- * Homepage tile — the exact Type Cascade (gsap-text) gallery animation:
+ * Homepage tile — the exact GSAP Text (gsap-text) gallery animation:
  * DAVINCIUI centered, layered 3D depth, continuous vertical motion.
  */
 export function GSAPTextCardPreview({ fontSize = 46 }: { fontSize?: number }) {

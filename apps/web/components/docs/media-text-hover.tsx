@@ -23,7 +23,7 @@ export async function MediaTextHoverDocs() {
 
   return (
     <DocsPageLayout
-      title="Hover Media"
+      title="Media Text Hover"
       description="A bold split headline that opens a responsive image or video window on hover, focus, or touch. Choose a centered brand reveal or let the split follow the pointer."
       preview={<MediaTextHoverPlayground />}
       personalizeContent={<MediaTextHoverPersonalizePanel />}

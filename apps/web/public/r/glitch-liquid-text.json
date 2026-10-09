@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "glitch-liquid-text",
   "type": "registry:ui",
-  "title": "Chromatic Melt",
+  "title": "Glitch Liquid Text",
   "dependencies": [],
   "devDependencies": [],
   "registryDependencies": [],

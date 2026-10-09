@@ -29,7 +29,7 @@ export async function BurnPlusDocs() {
 
   return (
     <DocsPageLayout
-      title="Ash Reveal"
+      title="Burn Plus"
       description="A WebGL organic burn/dissolve mask — warped multi-octave noise eats through a dark surface to reveal your media, driven by hover, scroll, tap, load, or direct control."
       preview={<BurnPlusPreview />}
       personalizeContent={<BurnPlusPersonalizePanel />}

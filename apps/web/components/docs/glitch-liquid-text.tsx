@@ -42,7 +42,7 @@ export async function GlitchLiquidTextDocs() {
 
     return (
         <DocsPageLayout
-            title="Chromatic Melt"
+            title="Glitch Liquid Text"
             description="GPU-rendered interactive typography printed on a thin liquid membrane. The cursor stretches glyphs with viscous fluid distortion, velocity-driven smear, localized RGB channel separation, subtle glitch slices, and cinematic light rays — while untouched type stays razor sharp."
             preview={
                 <div className="relative h-full min-h-[560px] w-full p-6 sm:p-10">

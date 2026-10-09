@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { MediaTextHover } from "@workspace/ui/components/media-text-hover";
 
 /**
- * Self-playing card thumbnail for Hover Media.
+ * Self-playing card thumbnail for Media Text Hover.
  * Card-scale 2:1 media window (42×21), height matched to the exact
  * cap-height of the 30px headline — the same proportions the right-side
  * docs preview and fullscreen mode share (128×64).

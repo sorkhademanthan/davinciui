@@ -15,8 +15,8 @@ interface AmbientInnerDriveOptions {
 }
 
 /**
- * Self-playing driver for text-effect card thumbnails (Particle Flow,
- * Chromatic Melt) whose pointer listeners live on the component's own
+ * Self-playing driver for text-effect card thumbnails (Fluid Particle Text,
+ * Glitch Liquid Text) whose pointer listeners live on the component's own
  * root element — a child of the preview wrapper.
  *
  * Synthetic events dispatched on an ancestor never reach a descendant's

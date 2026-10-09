@@ -6,7 +6,7 @@ import { FluidParticleText } from "@workspace/ui/components/fluid-particle-text"
 import { useAmbientInnerDrive } from "./use-ambient-inner-drive";
 
 /**
- * Self-playing card thumbnail for Particle Flow.
+ * Self-playing card thumbnail for Fluid Particle Text.
  * Same tuning as the docs-side preview (showcase preset, roomy padding,
  * bold stroke) with a slow, narrow ambient sweep so the type mostly rests
  * solid and only breathes liquid around the drifting pointer — calm, not

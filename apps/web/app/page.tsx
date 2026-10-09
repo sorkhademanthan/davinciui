@@ -283,7 +283,7 @@ export default function Home() {
               <motion.div variants={cardVariants} className="lg:col-span-4">
                 <FeatureCard
                   href="/experience/components/gsap-text"
-                  title="Type Cascade"
+                  title="GSAP Text"
                   blurb="Layered 3D kinetic typography in motion"
                   tag="Typography"
                 >

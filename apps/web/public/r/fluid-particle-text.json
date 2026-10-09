@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "fluid-particle-text",
   "type": "registry:ui",
-  "title": "Particle Flow",
+  "title": "Fluid Particle Text",
   "dependencies": [],
   "devDependencies": [],
   "registryDependencies": [],
