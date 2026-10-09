@@ -1,23 +1,10 @@
+"use client"
+
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { ArrowLeft, ArrowRight } from "lucide-react"
 
-import { docsConfig } from "@/config/docs"
-
-interface ComponentPaginationProps {
-  currentSlug: string
-}
-
-const componentItems = docsConfig.nav.flatMap((group) => {
-  const flat: typeof group.items = []
-  const collect = (items: typeof group.items) => {
-    for (const item of items) {
-      if (item.href.startsWith("/docs/components/")) flat.push(item)
-      if (item.items) collect(item.items)
-    }
-  }
-  collect(group.items)
-  return flat
-})
+import type { PaginationItem } from "@/lib/component-pagination"
 
 const paginationLinkClass =
   "group inline-flex size-8 items-center justify-center rounded-md border border-input bg-background text-muted-foreground shadow-xs transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
@@ -25,18 +12,27 @@ const paginationLinkClass =
 const paginationDisabledClass =
   "inline-flex size-8 items-center justify-center rounded-md border border-input/50 bg-background text-muted-foreground/40"
 
+/**
+ * Previous/next component stepping that stays in the visitor's section:
+ * Docs pages paginate within /docs, Experience pages within /experience —
+ * no unexpected shell switching. Items resolve server-side; only the
+ * prefix rewrite needs the client pathname.
+ */
 export function ComponentPagination({
-  currentSlug,
-}: ComponentPaginationProps) {
-  const currentHref = `/docs/components/${currentSlug}`
-  const currentIndex = componentItems.findIndex(
-    (item) => item.href === currentHref
-  )
-
-  if (currentIndex === -1) return null
-
-  const previous = componentItems[currentIndex - 1]
-  const next = componentItems[currentIndex + 1]
+  previous,
+  next,
+}: {
+  previous?: PaginationItem
+  next?: PaginationItem
+}) {
+  const pathname = usePathname()
+  const base = pathname.startsWith("/experience/")
+    ? "/experience/components"
+    : "/docs/components"
+  const toHref = (href: string) =>
+    base !== "/docs/components"
+      ? href.replace("/docs/components/", `${base}/`)
+      : href
 
   if (!previous && !next) return null
 
@@ -47,7 +43,7 @@ export function ComponentPagination({
     >
       {previous ? (
         <Link
-          href={previous.href}
+          href={toHref(previous.href)}
           rel="prev"
           aria-label={`Previous component: ${previous.title}`}
           title={`Previous: ${previous.title}`}
@@ -70,7 +66,7 @@ export function ComponentPagination({
 
       {next ? (
         <Link
-          href={next.href}
+          href={toHref(next.href)}
           rel="next"
           aria-label={`Next component: ${next.title}`}
           title={`Next: ${next.title}`}

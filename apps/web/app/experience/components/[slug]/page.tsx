@@ -4,6 +4,9 @@ import { getComponent } from "@/registry"
 import { absoluteUrl } from "@/lib/site"
 import { getDocsImporter, getDocsSlugs } from "@/components/docs/lazy-registry"
 import { Breadcrumbs } from "@/components/breadcrumbs"
+import { ComponentDetailShell } from "@/components/component-detail-shell"
+import { ExperienceSidebarNav } from "@/components/experience-sidebar-nav"
+import { NavDrawer } from "@/components/nav-drawer"
 import { Suspense } from "react"
 
 // Aliases for renamed / shortened slugs (e.g. /dropdown → /dropdown-menu)
@@ -28,10 +31,24 @@ export default async function Page({params}:{params: Promise<{slug:string}>}){
   if (alias) redirect(`/experience/components/${alias}`);
   const c=getComponent(slug); const imp=getDocsImporter(slug)
   if(imp){
-    // No padded wrapper here: DocsPageLayout renders its own breadcrumbs
-    // inside the scroll column so the preview pane fits one viewport.
-    return (<div className="w-full max-w-none m-0 p-0 min-w-0">
-      <Suspense><DocsContent slug={slug} /></Suspense></div>)
+    // Same shared detail shell as Docs (grid + rails); only the left nav is
+    // section-specific. Hide the shell mobile row — DocsPageLayout renders
+    // its own section-aware row.
+    return (
+      <ComponentDetailShell
+        nav={<ExperienceSidebarNav />}
+        drawer={
+          <NavDrawer label="Components">
+            <ExperienceSidebarNav />
+          </NavDrawer>
+        }
+        homeHref="/experience/components"
+        homeLabel="Components"
+        hideMobileRow
+      >
+        <Suspense><DocsContent slug={slug} /></Suspense>
+      </ComponentDetailShell>
+    )
   }
   const crumbs = [
     { label: "Home", href: "/" },
@@ -39,5 +56,19 @@ export default async function Page({params}:{params: Promise<{slug:string}>}){
     { label: c?.title ?? slug },
   ]
   if(!c) return notFound();
-  return (<div className="w-full max-w-none m-0 p-0 min-w-0 px-6 py-6"><Breadcrumbs className="mb-4" items={crumbs} /><h1 className="text-2xl font-semibold">{c.title}</h1><p className="text-sm text-muted-foreground">{c.description}</p></div>)
+  return (
+    <ComponentDetailShell
+      nav={<ExperienceSidebarNav />}
+      drawer={
+        <NavDrawer label="Components">
+          <ExperienceSidebarNav />
+        </NavDrawer>
+      }
+      homeHref="/experience/components"
+      homeLabel="Components"
+      hideMobileRow
+    >
+      <div className="w-full max-w-none min-w-0 px-6 py-6"><Breadcrumbs className="mb-4" items={crumbs} /><h1 className="text-2xl font-semibold">{c.title}</h1><p className="text-sm text-muted-foreground">{c.description}</p></div>
+    </ComponentDetailShell>
+  )
 }

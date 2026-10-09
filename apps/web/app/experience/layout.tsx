@@ -1,7 +1,7 @@
 import type React from "react"
 import type { Metadata } from "next"
 import { SiteHeader } from "@/components/site-header"
-import { ExperienceSidebarNav } from "@/components/experience-sidebar-nav"
+import { ExperienceChrome } from "@/components/experience-chrome"
 
 export const metadata: Metadata = {
   title: "Components — DavinciUI",
@@ -12,12 +12,7 @@ export default function ExperienceLayout({ children }: { children: React.ReactNo
   return (
     <div className="min-h-svh flex flex-col bg-background">
       <SiteHeader />
-      <div className="flex-1 grid grid-cols-1 md:grid-cols-[220px_minmax(0,1fr)] pt-18">
-        <aside className="hidden md:flex md:flex-col sticky top-18 h-[calc(100vh-4.5rem)] border-r border-border/40 bg-white dark:bg-[#0a0a0a] overflow-hidden">
-          <ExperienceSidebarNav />
-        </aside>
-        <main className="min-w-0 w-full max-w-none m-0 overflow-hidden bg-white dark:bg-background">{children}</main>
-      </div>
+      <ExperienceChrome>{children}</ExperienceChrome>
     </div>
   )
 }
