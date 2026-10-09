@@ -149,13 +149,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>): React.JSX.Element {
   return (
-    <html
-      lang="en"
-      suppressHydrationWarning
-      style={{ backgroundColor: "#0a0a0a", colorScheme: "dark" }}
-    >
+    // NOTE: no hardcoded style on <html> — a blocking script in <head>
+    // resolves the theme (stored pref → system → default dark) and sets the
+    // class + colorScheme before first paint, so neither dark nor light
+    // users see a cold-start flash. `suppressHydrationWarning` is required
+    // because that pre-hydration class mutation is intentional.
+    <html lang="en" suppressHydrationWarning>
       <Analytics />
       <head>
+        <script
+          // Blocking (no async/defer): must run before CSS paint.
+          // Mirrors the NextThemesProvider config in providers.tsx:
+          // storageKey "theme", defaultTheme "dark", enableSystem.
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var d=document.documentElement;var s=null;try{s=localStorage.getItem("theme")}catch(e){}var r=s||"dark";if(r==="system"){try{r=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}catch(e){r="dark"}}var t=r==="light"?"light":"dark";d.classList.remove("light","dark");d.classList.add(t);d.style.colorScheme=t;}catch(e){}}})();`,
+          }}
+        />
         <JsonLd />
       </head>
       <body
