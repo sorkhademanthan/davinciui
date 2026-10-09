@@ -23,7 +23,7 @@ export function CMSScrollGalleryPreview({
     >
       <iframe
         src={src}
-        className="h-full w-full border-0 bg-transparent"
+        className="absolute inset-0 h-full w-full border-0 bg-transparent"
         title={title}
       />
     </div>

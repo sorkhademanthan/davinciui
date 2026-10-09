@@ -15,7 +15,7 @@ export function ScrollRevealImagePreview({
 }: ScrollRevealImagePreviewProps) {
   return (
     <div className={cn("relative h-full min-h-[640px] w-full overflow-hidden", className)}>
-      <iframe src={src} title={title} className="h-full w-full border-0" />
+      <iframe src={src} title={title} className="absolute inset-0 h-full w-full border-0" />
     </div>
   );
 }
