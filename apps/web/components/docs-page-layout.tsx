@@ -99,6 +99,7 @@ export async function DocsPageLayout({
   props = [],
   fullWidthPreview = false,
   scrollablePreview = false,
+  unstyledPreview = false,
   personalizeContent,
   hideDefaultPreviewVariant = false,
   hideExamples = false,
@@ -198,13 +199,14 @@ export async function DocsPageLayout({
             {/* Preview — sits directly under the header, shadcn-style */}
             <div
               className={cn(
-                "mt-6 w-full overflow-hidden",
+                "mt-6 grid w-full overflow-hidden",
                 scrollablePreview ? "max-h-[560px] min-h-[420px]" : "min-h-[420px] lg:min-h-[480px]",
               )}
             >
               <DocsPreviewWrapper
                 fullWidthPreview={fullWidthPreview}
                 scrollablePreview={scrollablePreview}
+                unstyledPreview={unstyledPreview}
                 personalizeContent={personalizeContent}
                 hideDefaultVariant={hideDefaultPreviewVariant}
                 sourceCodeFilename={installSourceCode ? (installSourceFilename || `${installPackageName}.tsx`) : undefined}
@@ -346,8 +348,9 @@ export async function DocsPageLayout({
               <div className="mt-4 space-y-8">
                 {visibleExamples.map((ex) => (
                   <Section key={ex.title} title={ex.title} level={3} className="scroll-mt-24 pt-4" id={slugify(ex.title)}>
-                    <div className="min-h-[280px] w-full overflow-hidden">
+                    <div className="grid min-h-[280px] w-full overflow-hidden">
                       <DocsPreviewWrapper
+                        unstyledPreview={unstyledPreview}
                         personalizeContent={personalizeContent}
                         hideDefaultVariant
                         variants={[]}
