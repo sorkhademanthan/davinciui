@@ -989,7 +989,7 @@ function ColorPreview({ system, palette }: { system: DesignSystemConfig; palette
             placeholder="you@example.com"
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
-            className="min-h-11 w-full rounded-md border bg-transparent px-3 py-2 text-sm outline-none"
+            className="min-h-11 w-full rounded-md border bg-transparent px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
             style={{
               borderColor: border.value ?? undefined,
               boxShadow: focused && ring.configured ? `0 0 0 3px ${ring.value}` : undefined,

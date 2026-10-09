@@ -46,10 +46,7 @@ export async function HorizontalScrollGalleryDocs() {
       description="A pinned variable-width film strip — vertical page scroll drives a continuous horizontal image track with no snapping, no controls, and no autoplay. Fully reversible, dimension-driven, with responsive redistribution and reduced-motion fallback."
       fullWidthPreview
       preview={
-        <HorizontalScrollGalleryPreview
-          src="/demo/horizontal-scroll-gallery"
-          title="Horizontal Scroll Gallery Demo"
-        />
+        <HorizontalScrollGalleryPreview />
       }
       previewCode={defaultCode}
       installPackageName="horizontal-scroll-gallery"

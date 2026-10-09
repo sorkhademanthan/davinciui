@@ -70,7 +70,7 @@ export function CustomWorkCta() {
                 href="https://x.com/ManthanSorkhade"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex min-h-[92px] items-center gap-4 px-5 py-6 transition-colors hover:bg-zinc-50 focus-visible:bg-zinc-50 focus-visible:outline-none dark:hover:bg-white/[0.04] dark:focus-visible:bg-white/[0.04] sm:px-6"
+                className="group flex min-h-[92px] items-center gap-4 px-5 py-6 transition-colors hover:bg-zinc-50 focus-visible:bg-zinc-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset dark:hover:bg-white/[0.04] dark:focus-visible:bg-white/[0.04] sm:px-6"
               >
                 <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-zinc-100 text-zinc-800 dark:bg-white/[0.08] dark:text-zinc-100">
                   <XIcon />
