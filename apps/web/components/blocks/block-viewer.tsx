@@ -138,7 +138,7 @@ function CopyIconButton({
 
 function CopyCommandButton({ command }: { command: string }) {
   const [copied, setCopied] = React.useState(false);
-  const registryItem = command.replace("npx shadcn@latest add ", "");
+  const registryItem = command.replace("pnpm dlx shadcn@latest add ", "");
 
   return (
     <button
@@ -156,7 +156,7 @@ function CopyCommandButton({ command }: { command: string }) {
         <Terminal className="size-4 text-muted-foreground" />
       )}
       <span className="hidden sm:inline">
-        <span className="text-muted-foreground">npx shadcn add</span>{" "}
+        <span className="text-muted-foreground">pnpm dlx shadcn add</span>{" "}
         {registryItem}
       </span>
       <span className="sm:hidden">Install</span>
@@ -185,7 +185,7 @@ export function BlockViewer({
     highlightedFiles[0];
   const activeFileName = file ? getFileName(file.target) : "";
   const activeFileFolder = file ? getFileFolder(file.target) : "";
-  const installCommand = `npx shadcn@latest add ${getRegistryItemNamespace(item.name)}`;
+  const installCommand = `pnpm dlx shadcn@latest add ${getRegistryItemNamespace(item.name)}`;
   const previewUrl = `/preview/${item.name}`;
 
   return (

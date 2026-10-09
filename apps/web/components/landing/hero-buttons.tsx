@@ -6,7 +6,7 @@ import { CopyButton } from "@/components/copy-button";
 import posthog from "posthog-js";
 
 export function HeroButtons() {
-  const installCommand = "npx shadcn@latest add @davinciui/cinematic-card-carousel";
+  const installCommand = "pnpm dlx shadcn@latest add @davinciui/cinematic-card-carousel";
 
   return (
     <div className="flex w-full min-w-0 flex-col items-stretch justify-center gap-3 pt-6 pb-2 sm:w-auto sm:flex-row sm:items-start">

@@ -24,7 +24,7 @@ export function HomeHero() {
   const tabs = useRef<Array<HTMLButtonElement | null>>([]);
   const resetTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const demo = demos[active]!;
-  const command = `npx shadcn@latest add @davinciui/${demo.slug}`;
+  const command = `pnpm dlx shadcn@latest add @davinciui/${demo.slug}`;
 
   useEffect(() => () => {
     if (resetTimer.current) clearTimeout(resetTimer.current);

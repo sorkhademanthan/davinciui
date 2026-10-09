@@ -378,7 +378,7 @@ export function UrlDemo() {
 
 export function CopyDemo() {
   const [copied, setCopied] = React.useState(false);
-  const value = "npx shadcn@latest add input-group";
+  const value = "pnpm dlx shadcn@latest add @davinciui/input-group";
   return (
     <DemoShell readout={copied ? "Copied ✓" : undefined}>
       <InputGroup>
