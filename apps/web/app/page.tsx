@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 import { SiteHeader } from "@/components/site-header";
 import { HeroButtons } from "@/components/landing/hero-buttons";
@@ -104,6 +104,7 @@ function FeatureCard({
 }
 
 export default function Home() {
+  const reduceMotion = useReducedMotion();
   return (
     <div
       data-route-home
@@ -111,12 +112,12 @@ export default function Home() {
     >
       <HeroAtmosphere />
       <SiteHeader landingGutter />
-      <main className="relative z-10 flex min-h-screen min-w-0 flex-col justify-start overflow-x-clip pt-36 pb-32 sm:pt-44 lg:pt-48">
+      <main id="main-content" className="relative z-10 flex min-h-screen min-w-0 flex-col justify-start overflow-x-clip pt-36 pb-32 sm:pt-44 lg:pt-48">
         <LandingGutter>
           <LandingContent className="pb-0">
             <section className="relative z-10 mx-auto flex max-w-5xl flex-col items-center text-center">
               <motion.div
-                initial={{ opacity: 0 }}
+                initial={reduceMotion ? false : { opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{
                   duration: 0.4,
@@ -131,7 +132,7 @@ export default function Home() {
                   className="group inline-flex items-center gap-2 rounded-full border border-zinc-950/[0.08] bg-white/60 py-1 pl-3 pr-2.5 text-[11px] font-medium text-zinc-600 backdrop-blur transition-colors hover:border-zinc-950/[0.16] hover:text-zinc-950 dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-zinc-400 dark:hover:border-white/[0.16] dark:hover:text-white sm:text-xs"
                 >
                   <span className="relative flex size-1.5" aria-hidden="true">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-60" />
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-60 motion-reduce:animate-none" />
                     <span className="relative inline-flex size-1.5 rounded-full bg-emerald-500" />
                   </span>
                   Open source · Free forever
@@ -140,7 +141,9 @@ export default function Home() {
               </motion.div>
 
               <motion.h1
-                initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
+                initial={
+                  reduceMotion ? false : { opacity: 0, y: 30, filter: "blur(8px)" }
+                }
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 transition={{
                   duration: 0.8,
@@ -155,7 +158,9 @@ export default function Home() {
               </motion.h1>
 
               <motion.p
-                initial={{ opacity: 0, y: 20, filter: "blur(4px)" }}
+                initial={
+                  reduceMotion ? false : { opacity: 0, y: 20, filter: "blur(4px)" }
+                }
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 transition={{
                   duration: 0.6,
@@ -177,7 +182,7 @@ export default function Home() {
               </motion.p>
 
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={reduceMotion ? false : { opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{
                   duration: 0.6,
