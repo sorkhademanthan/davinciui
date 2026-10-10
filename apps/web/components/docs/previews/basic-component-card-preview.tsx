@@ -13,6 +13,8 @@ import {
 } from "lucide-react";
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@workspace/ui/components/accordion";
+import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from "@workspace/ui/components/alert-dialog";
+import { AspectRatio } from "@workspace/ui/components/aspect-ratio";
 import { Alert, AlertBody, AlertDescription, AlertIcon, AlertTitle } from "@workspace/ui/components/alert";
 import { Attachment, AttachmentContent, AttachmentDescription, AttachmentMedia, AttachmentTitle } from "@workspace/ui/components/attachment";
 import { Avatar, AvatarFallback } from "@workspace/ui/components/avatar";
@@ -39,6 +41,7 @@ import { Form, FormControl, FormItem, FormLabel } from "@workspace/ui/components
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@workspace/ui/components/hover-card";
 import { Input } from "@workspace/ui/components/input";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@workspace/ui/components/input-group";
+import { Label } from "@workspace/ui/components/label";
 import { InputOTP } from "@workspace/ui/components/input-otp";
 import { Item, ItemContent, ItemDescription, ItemMedia, ItemTitle } from "@workspace/ui/components/item";
 import { Link } from "@workspace/ui/components/link";
@@ -271,6 +274,15 @@ export function BasicComponentCardPreview({ slug }: { slug: BasicPreviewSlug }) 
       return (
         <Stage>
           <Input className="w-44" placeholder="Enter text" defaultValue="Hello" />
+        </Stage>
+      );
+    case "label":
+      return (
+        <Stage>
+          <div className="w-44 space-y-1.5">
+            <Label htmlFor="card-label-demo">Email</Label>
+            <Input id="card-label-demo" className="h-9 text-xs" placeholder="you@example.com" />
+          </div>
         </Stage>
       );
     case "textarea":
@@ -632,6 +644,38 @@ export function BasicComponentCardPreview({ slug }: { slug: BasicPreviewSlug }) 
               </DialogHeader>
             </DialogContent>
           </Dialog>
+        </Stage>
+      );
+    case "alert-dialog":
+      return (
+        <Stage>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button size="sm" variant="outline">
+                Show Dialog
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                <AlertDialogDescription>This action cannot be undone.</AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction>Continue</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </Stage>
+      );
+    case "aspect-ratio":
+      return (
+        <Stage>
+          <AspectRatio ratio={16 / 9} className="w-44 overflow-hidden rounded-md border border-border bg-muted">
+            <div className="absolute inset-0 flex items-center justify-center font-mono text-xs text-muted-foreground">
+              16 / 9
+            </div>
+          </AspectRatio>
         </Stage>
       );
     case "drawer":
