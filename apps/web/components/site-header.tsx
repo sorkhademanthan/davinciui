@@ -266,7 +266,7 @@ export function SiteHeader({ sidebarToggle, landingGutter }: SiteHeaderProps) {
                         </Link>
                         <button
                             type="button"
-                            className="group relative flex size-8 touch-manipulation flex-col items-center justify-center gap-1 rounded-md border-none transition-colors before:absolute before:-inset-x-2 before:-top-8 before:-bottom-1 active:scale-none aria-expanded:bg-accent lg:hidden"
+                            className="group relative flex size-11 touch-manipulation flex-col items-center justify-center gap-1 rounded-md border-none transition-colors active:scale-none aria-expanded:bg-accent lg:hidden"
                             aria-label={mobileNavOpen ? "Close navigation" : "Open navigation"}
                             aria-expanded={mobileNavOpen}
                             onClick={() => setMobileNavOpen((open) => !open)}
