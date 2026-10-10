@@ -238,7 +238,7 @@ function UsageSection() {
         <li>
           <p className="text-sm font-medium"><span className="mr-2 inline-grid size-5 place-items-center rounded-full bg-muted text-[11px] font-semibold">3</span>Reference the tokens</p>
           <p className="mt-1.5 text-xs leading-5 text-muted-foreground">Use any <code className="rounded bg-muted px-1 py-0.5 font-mono">--ds-*</code> name from the file — pick exact names from your download:</p>
-          <div className="mt-2.5"><DocsSnippet variant="muted" code={`.card {\n  background: var(--ds-surface);\n  color: var(--ds-text);\n  border-radius: var(--ds-radius-md);\n}`} /></div>
+          <div className="mt-2.5"><DocsSnippet variant="muted" code={`.card {\n  background: var(--ds-surface-default);\n  color: var(--ds-text-primary);\n  border-radius: var(--ds-radius-md);\n}`} /></div>
         </li>
       </ol>
     </section>
