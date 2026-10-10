@@ -27,7 +27,7 @@ Goal: the most premium free component library on the internet. Generated from a 
 ## P2 — Nice-to-have (week two)
 
 - [x] Footer support links (Report bug / Request feature / Email) + version pill `v0.1.0` — done in `components/footer.tsx:64-71,202`. (Verified Oct 9, 2026.)
-- [ ] Skip-to-content link (no match in `components`/`app`), reduced-motion gating on hero (`app/page.tsx:119-191` animates without `useReducedMotion`), hamburger tap target (`site-header.tsx:266-272` is `size-8`/32px with extended `before:` hit area — bump to `size-11` or accept hit-slop and close).
+- [x] Skip-to-content link + reduced-motion hero + hamburger target (done). New `components/skip-to-content.tsx` rendered first in `app/layout.tsx` — focuses the page's primary `<main>` on activation (no per-page ids needed across 40+ mains); home `<main>` also gained `id="main-content"` as the anchor fallback. Hero (`app/page.tsx:119-191`): all 4 entrance motions gated behind `useReducedMotion()` (`initial={false}` renders final state instantly) + `motion-reduce:animate-none` on the ping dot (`HeroAtmosphere` already respected it). Hamburger (`site-header.tsx`) bumped `size-8` → `size-11` (44px touch target) and the `before:` hit-slop hack removed. `tsc` + `eslint` clean. (Done Oct 10, 2026.)
 
 ## Post-deploy verification (registry goes live with the deploy)
 
