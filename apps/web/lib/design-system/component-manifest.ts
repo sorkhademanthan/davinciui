@@ -478,8 +478,12 @@ function buildEntry(id: string): ComponentManifestEntry {
  * Documented slugs without registry metadata yet (docs pages exist, the
  * metadata record has not landed). Extracted from `getDocsSlugs()` minus
  * registry keys; verify with `node scripts/check-component-manifest.mjs`.
+ * Currently empty: former entries `alert-dialog` and `aspect-ratio`
+ * graduated to full registry metadata, so they flow through the normal
+ * registry path in `buildEntry`. Keep the mechanism for future docs-only
+ * slugs.
  */
-const DOCS_ONLY_SLUGS: readonly string[] = ["alert-dialog", "aspect-ratio"];
+const DOCS_ONLY_SLUGS: readonly string[] = [];
 
 function buildManifest(): ComponentManifestEntry[] {
   const registryIds = Object.keys(registryComponents);

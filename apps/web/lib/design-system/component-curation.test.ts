@@ -77,12 +77,13 @@ test("manifest ids/routes match the source catalog", () => {
   }
   assert.equal(manifestById("button")?.name, "Button");
   assert.equal(manifestById("text-morph")?.name, "Text Morph");
-  // Docs-only entries without registry metadata stay discoverable.
+  // Former docs-only entries graduated to full registry metadata —
+  // both stay discoverable with docs + registry availability.
   for (const id of ["alert-dialog", "aspect-ratio"]) {
     const entry = manifestById(id);
     assert.ok(entry, id);
     assert.equal(entry?.docsAvailable, true);
-    assert.equal(entry?.registryAvailable, false);
+    assert.equal(entry?.registryAvailable, true);
   }
   assert.equal(manifestById("no-such-component"), undefined);
 });
