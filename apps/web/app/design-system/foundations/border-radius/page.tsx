@@ -3,7 +3,7 @@ import DocsPage from "@/app/docs/foundations/border-radius/page"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 
 export const metadata: Metadata = {
-  title: "uborder radius — Foundations | Design System",
+  title: "Border radius — Foundations | Design System",
 }
 
 export default function Page() {

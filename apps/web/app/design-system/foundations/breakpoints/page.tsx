@@ -3,7 +3,7 @@ import DocsPage from "@/app/docs/foundations/breakpoints/page"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 
 export const metadata: Metadata = {
-  title: "ubreakpoints — Foundations | Design System",
+  title: "Breakpoints — Foundations | Design System",
 }
 
 export default function Page() {

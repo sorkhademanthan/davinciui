@@ -3,7 +3,7 @@ import DocsPage from "@/app/docs/foundations/borders/page"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 
 export const metadata: Metadata = {
-  title: "uborders — Foundations | Design System",
+  title: "Borders — Foundations | Design System",
 }
 
 export default function Page() {
