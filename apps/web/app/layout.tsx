@@ -10,6 +10,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import Script from "next/script";
 import "@workspace/ui/globals.css";
 import { Providers } from "@/components/providers";
+import { SkipToContent } from "@/components/skip-to-content";
 import { CookieConsent } from "@/components/cookie-consent";
 import { JsonLd } from "@/components/seo/json-ld";
 import { RouteScrollbarController } from "@/components/route-scrollbar-controller";
@@ -174,6 +175,7 @@ export default function RootLayout({
         }
       >
         <div className="isolate relative flex min-h-svh flex-col">
+          <SkipToContent />
           <RouteScrollbarController />
           <Providers>{children}</Providers>
         </div>
