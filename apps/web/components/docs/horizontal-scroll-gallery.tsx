@@ -70,6 +70,7 @@ export async function HorizontalScrollGalleryDocs() {
         { name: "objectPosition", type: "string", default: '"50% 50%"', description: "Image focal point (CSS object-position)." },
         { name: "enabled", type: "boolean", default: "true", description: "When false, renders a static accessible row instead of the pinned scroll effect." },
         { name: "pauseWhenOffscreen", type: "boolean", default: "true", description: "Pause transform work while the gallery is far offscreen (IntersectionObserver with 400px margin)." },
+        { name: "scrollRoot", type: "React.RefObject<HTMLElement | null>", description: "Optional scroll-container ref for fixed-height previews or panels. When omitted, the gallery follows page scroll." },
         { name: "className", type: "string", description: "Additional classes applied to the scroll section." },
       ]}
     />
