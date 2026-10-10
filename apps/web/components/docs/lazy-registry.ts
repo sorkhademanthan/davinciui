@@ -373,6 +373,10 @@ const docsImportMap: Record<
     import("@/components/docs/input-otp").then((m) => ({
       default: m.InputOTPDocs,
     })),
+  label: () =>
+    import("@/components/docs/label").then((m) => ({
+      default: m.LabelDocs,
+    })),
   "native-select": () =>
     import("@/components/docs/native-select").then((m) => ({
       default: m.NativeSelectDocs,
