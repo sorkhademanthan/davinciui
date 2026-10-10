@@ -72,6 +72,11 @@ export interface HorizontalScrollGalleryProps {
   enabled?: boolean;
   /** Pause transform work while the gallery is far offscreen. */
   pauseWhenOffscreen?: boolean;
+  /**
+   * Optional scroll container. By default the gallery follows page scroll.
+   * Pass a ref when the gallery lives inside a fixed-height preview or panel.
+   */
+  scrollRoot?: React.RefObject<HTMLElement | null>;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -180,6 +185,7 @@ export function HorizontalScrollGallery({
   objectPosition = "50% 50%",
   enabled = true,
   pauseWhenOffscreen = true,
+  scrollRoot,
   className,
   style,
 }: HorizontalScrollGalleryProps) {
@@ -209,7 +215,12 @@ export function HorizontalScrollGallery({
     scrollable: 1,
   });
   const firstFrameRef = useRef(true);
-  const configRef = useRef({ smoothing, startOffset, endOffset, scrollDistance });
+  const configRef = useRef({
+    smoothing,
+    startOffset,
+    endOffset,
+    scrollDistance,
+  });
   configRef.current = { smoothing, startOffset, endOffset, scrollDistance };
 
   const [reducedMotion, setReducedMotion] = useState(false);
@@ -271,8 +282,12 @@ export function HorizontalScrollGallery({
       // Drive the runway with an explicit pixel height so the
       // scroll-to-horizontal ratio stays exact after layout.
       section.style.height = `${sectionH}px`;
-      const sectionTop =
-        window.scrollY + section.getBoundingClientRect().top;
+      const root = scrollRoot?.current;
+      const sectionTop = root
+        ? root.scrollTop +
+          section.getBoundingClientRect().top -
+          root.getBoundingClientRect().top
+        : window.scrollY + section.getBoundingClientRect().top;
       metricsRef.current = {
         viewportH,
         travel,
@@ -314,7 +329,7 @@ export function HorizontalScrollGallery({
       window.removeEventListener("resize", schedule);
       window.removeEventListener("load", schedule);
     };
-  }, [motionActive, breakpoint, list.length, viewportHeight]);
+  }, [motionActive, breakpoint, list.length, viewportHeight, scrollRoot]);
 
   /* Pause work while far offscreen. */
   useEffect(() => {
@@ -337,30 +352,35 @@ export function HorizontalScrollGallery({
   /* Read normalized vertical progress (cached geometry — no layout per frame). */
   useEffect(() => {
     if (!motionActive) return;
+    const root = scrollRoot?.current;
     const updateTarget = () => {
       const m = metricsRef.current;
+      const scrollPosition = root ? root.scrollTop : window.scrollY;
       targetRef.current = clamp(
-        (window.scrollY - m.sectionTop) / m.scrollable,
+        (scrollPosition - m.sectionTop) / m.scrollable,
         0,
         1,
       );
     };
     updateTarget();
-    window.addEventListener("scroll", updateTarget, { passive: true });
+    const scrollTarget: Window | HTMLElement = root ?? window;
+    scrollTarget.addEventListener("scroll", updateTarget, { passive: true });
     window.addEventListener("resize", updateTarget);
     return () => {
-      window.removeEventListener("scroll", updateTarget);
+      scrollTarget.removeEventListener("scroll", updateTarget);
       window.removeEventListener("resize", updateTarget);
     };
-  }, [motionActive]);
+  }, [motionActive, scrollRoot]);
 
   /* Single rAF loop with spring smoothing; fully reversible. */
   useEffect(() => {
     if (!motionActive) return;
+    const root = scrollRoot?.current;
     // Snap to the live position on mount so a refresh inside the
     // section never flashes the wrong frame.
     targetRef.current = clamp(
-      (window.scrollY - metricsRef.current.sectionTop) /
+      ((root ? root.scrollTop : window.scrollY) -
+        metricsRef.current.sectionTop) /
         metricsRef.current.scrollable,
       0,
       1,
@@ -413,10 +433,7 @@ export function HorizontalScrollGallery({
         const stiffness = 420 - 350 * k;
         const omega = Math.sqrt(stiffness);
         const damping = 2 * omega;
-        const instVel = Math.max(
-          -6,
-          Math.min(6, (target - s.prevTarget) / dt),
-        );
+        const instVel = Math.max(-6, Math.min(6, (target - s.prevTarget) / dt));
         s.prevTarget = target;
         s.tVel += (instVel - s.tVel) * (1 - Math.exp(-dt / 0.09));
         if (Math.abs(s.tVel) < 0.0005) s.tVel = 0;
@@ -458,7 +475,7 @@ export function HorizontalScrollGallery({
 
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [motionActive, pauseWhenOffscreen]);
+  }, [motionActive, pauseWhenOffscreen, scrollRoot]);
 
   function renderFrame(progress: number) {
     const track = trackRef.current;
@@ -498,6 +515,9 @@ export function HorizontalScrollGallery({
         <div
           className="flex w-full gap-3 overflow-x-auto px-5 py-16"
           style={{ gap, paddingInline: inset, scrollbarWidth: "thin" }}
+          tabIndex={0}
+          role="region"
+          aria-label="Horizontal scroll gallery items"
         >
           {list.map((entry, i) => (
             <figure
@@ -536,11 +556,37 @@ export function HorizontalScrollGallery({
       ref={sectionRef}
       aria-label="Horizontal scroll gallery"
       data-testid="horizontal-scroll-gallery-track"
-      className={cn("relative w-full bg-white dark:bg-black", className)}
+      className={cn(
+        "relative w-full bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset dark:bg-black",
+        className,
+      )}
       style={{
         ...(background ? { background } : null),
         overflowX: "clip",
         ...style,
+      }}
+      tabIndex={0}
+      onKeyDown={(event) => {
+        // Keyboard scrubbing: arrows move the track, Home/End jump to the
+        // ends. The spring loop animates to the new target smoothly.
+        const step =
+          event.key === "ArrowRight"
+            ? 0.06
+            : event.key === "ArrowLeft"
+              ? -0.06
+              : 0;
+        if (event.key === "Home" || event.key === "End" || step !== 0) {
+          event.preventDefault();
+          targetRef.current = clamp(
+            event.key === "Home"
+              ? 0
+              : event.key === "End"
+                ? 1
+                : targetRef.current + step,
+            0,
+            1,
+          );
+        }
       }}
     >
       <div
