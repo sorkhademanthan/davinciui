@@ -12,7 +12,7 @@ export function GeometricTrailCursorPreview() {
   return (
     <div
       ref={previewRef}
-      className="relative h-full min-h-[600px] overflow-hidden bg-zinc-100 dark:bg-black"
+      className="relative h-full min-h-[600px] cursor-none overflow-hidden bg-zinc-100 dark:bg-black"
     >
       <GeometricTrailCursor
         containerRef={previewRef}
