@@ -20,7 +20,7 @@ export function GeometricTrailCursorCardPreview() {
   return (
     <div
       ref={previewRef}
-      className="absolute inset-0 overflow-hidden bg-zinc-100 dark:bg-black"
+      className="absolute inset-0 cursor-none overflow-hidden bg-zinc-100 dark:bg-black"
       style={{ containerType: "inline-size" }}
     >
       <GeometricTrailCursor
