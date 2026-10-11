@@ -492,14 +492,16 @@ export function GeometricTrailCursor({
         size: target * 0.55,
         targetSize: target,
         rotation,
-        rotationVelocity: rand(-0.028, 0.028),
+        rotationVelocity: rand(-0.004, 0.004),
         direction,
         stretch,
         sides,
         jitter,
         color,
-        vx: Math.cos(direction) * speed * 0.012 * rand(0.2, 0.7),
-        vy: Math.sin(direction) * speed * 0.012 * rand(0.2, 0.7),
+        // Anchored to the exact cursor path — no positional drift so the
+        // ghost skeleton matches where the pointer actually travelled.
+        vx: 0,
+        vy: 0,
         scale: 0.55,
         birth: now,
       });
@@ -533,13 +535,23 @@ export function GeometricTrailCursor({
         pointer.lastEventTime = now;
         hasPrevEmission = false;
         distanceSinceShape = 0;
+        // Anchor one shape immediately under the cursor so the trail starts
+        // exactly where the pointer is, not one event late.
+        spawnPolygon(local.x, local.y, 0, 0, now);
         return;
       }
 
       const dx = local.x - pointer.x;
       const dy = local.y - pointer.y;
       const distance = Math.hypot(dx, dy);
-      if (distance < 0.5) return;
+      if (distance < 0.5) {
+        // Micro-move: keep the head exactly on the cursor and keep the
+        // clock fresh so the next speed sample doesn't spike.
+        pointer.x = local.x;
+        pointer.y = local.y;
+        pointer.lastEventTime = now;
+        return;
+      }
 
       const dt = Math.max(1, now - pointer.lastEventTime);
       // Normalize to ~per-frame pixels so size response is refresh-rate stable.
@@ -570,7 +582,9 @@ export function GeometricTrailCursor({
     const onPointerMove = (e: PointerEvent) => {
       const s = settingsRef.current;
       if (e.pointerType === "touch" && !s.enableTouch) return;
-      handleMove(e.clientX, e.clientY, e.timeStamp || performance.now());
+      // Use a single clock (performance.now) for events + aging so the
+      // head and the trail never disagree about "now".
+      handleMove(e.clientX, e.clientY, performance.now());
     };
     const onPointerDown = (e: PointerEvent) => {
       const s = settingsRef.current;
@@ -581,9 +595,10 @@ export function GeometricTrailCursor({
       pointer.x = local.x;
       pointer.y = local.y;
       pointer.has = true;
-      pointer.lastEventTime = e.timeStamp || performance.now();
+      pointer.lastEventTime = performance.now();
       hasPrevEmission = false;
       distanceSinceShape = 0;
+      spawnPolygon(local.x, local.y, 0, 0, performance.now());
     };
     const onPointerLeave = () => {
       pointer.has = false;
@@ -680,14 +695,12 @@ export function GeometricTrailCursor({
         if (!sh) continue;
         const age = now - sh.birth;
 
-        // Subtle evolution — strongly anchored, never drifting away.
+        // Subtle evolution — shapes stay anchored to the exact emission
+        // point (no x/y drift) so the trail matches the cursor path 1:1.
+        // Only rotation/scale settle; position never leaves the path.
         sh.rotation += sh.rotationVelocity * dtScale;
         sh.scale += (1 - sh.scale) * Math.min(1, 0.09 * dtScale);
         sh.size += (sh.targetSize * sh.scale - sh.size) * Math.min(1, 0.18 * dtScale);
-        sh.x += sh.vx * dtScale;
-        sh.y += sh.vy * dtScale;
-        sh.vx *= Math.pow(0.955, dtScale);
-        sh.vy *= Math.pow(0.955, dtScale);
 
         let r: number;
         let g: number;
