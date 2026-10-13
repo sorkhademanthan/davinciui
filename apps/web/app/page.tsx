@@ -11,7 +11,9 @@ import {
   LandingGutter,
 } from "@/components/landing/landing-frame";
 import { CustomWorkCta } from "@/components/landing/custom-work-cta";
+import { FaqSection } from "@/components/landing/faq-section";
 import { ComponentWorkbench } from "@/components/landing/component-workbench";
+import { DesignSystemWorkbench } from "@/components/landing/design-system-workbench";
 import { Footer } from "@/components/footer";
 
 // DavinciUI Previews for Bento
@@ -354,12 +356,16 @@ export default function Home() {
             </motion.div>
           </LandingContent>
           <ComponentWorkbench />
+          <DesignSystemWorkbench />
         </LandingGutter>
       </main>
 
       {/* Testimonials hidden pre-launch — content/testimonials.json is still
           AI-generated sample data. Re-enable <Testimonials /> here once we
           have 3–4 real quotes with sourceUrl. */}
+      <LandingGutter>
+        <FaqSection />
+      </LandingGutter>
       <LandingGutter>
         <CustomWorkCta />
       </LandingGutter>
