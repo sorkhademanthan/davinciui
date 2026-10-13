@@ -139,7 +139,7 @@ function InputGroupAddon({ align = "inline-start", className, ...props }: InputG
   );
 }
 
-export interface InputGroupTextProps extends React.HTMLAttributes<HTMLSpanElement> {}
+export type InputGroupTextProps = React.HTMLAttributes<HTMLSpanElement>;
 
 function InputGroupText({ className, ...props }: InputGroupTextProps) {
   return (
