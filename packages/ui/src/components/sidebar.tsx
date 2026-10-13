@@ -532,7 +532,7 @@ export const AnimatedSidebar = forwardRef<HTMLElement, AnimatedSidebarProps>(fun
   );
 });
 
-export interface AnimatedSidebarTriggerProps extends ButtonHTMLAttributes<HTMLButtonElement> {}
+export type AnimatedSidebarTriggerProps = ButtonHTMLAttributes<HTMLButtonElement>;
 
 export const AnimatedSidebarTrigger = forwardRef<HTMLButtonElement, AnimatedSidebarTriggerProps>(function AnimatedSidebarTrigger(
   { className, onClick, type = "button", children, ...props },
@@ -568,7 +568,7 @@ export const AnimatedSidebarTrigger = forwardRef<HTMLButtonElement, AnimatedSide
   );
 });
 
-export interface AnimatedSidebarCloseProps extends ButtonHTMLAttributes<HTMLButtonElement> {}
+export type AnimatedSidebarCloseProps = ButtonHTMLAttributes<HTMLButtonElement>;
 
 export const AnimatedSidebarClose = forwardRef<HTMLButtonElement, AnimatedSidebarCloseProps>(function AnimatedSidebarClose(
   { className, onClick, type = "button", ...props },
@@ -592,7 +592,7 @@ export const AnimatedSidebarClose = forwardRef<HTMLButtonElement, AnimatedSideba
   );
 });
 
-export interface AnimatedSidebarRailProps extends ButtonHTMLAttributes<HTMLButtonElement> {}
+export type AnimatedSidebarRailProps = ButtonHTMLAttributes<HTMLButtonElement>;
 
 export const AnimatedSidebarRail = forwardRef<HTMLButtonElement, AnimatedSidebarRailProps>(function AnimatedSidebarRail(
   { className, onClick, type = "button", ...props },
@@ -622,7 +622,7 @@ export const AnimatedSidebarRail = forwardRef<HTMLButtonElement, AnimatedSidebar
   );
 });
 
-export interface AnimatedSidebarInsetProps extends HTMLMotionProps<"main"> {}
+export type AnimatedSidebarInsetProps = HTMLMotionProps<"main">;
 
 export const AnimatedSidebarInset = forwardRef<HTMLElement, AnimatedSidebarInsetProps>(function AnimatedSidebarInset({ className, ...props }, forwardedRef) {
   return (
@@ -961,6 +961,7 @@ export const SidebarMenuItem = AnimatedSidebarMenuItem;
 // Compat wrapper: legacy preview uses size/asChild/tooltip/onClick/children with icons as JSX
 export function SidebarMenuButton(props: Record<string, unknown> & { isActive?: boolean; onSelect?: () => void; onClick?: () => void; tooltip?: string; size?: string; asChild?: boolean; icon?: ReactNode; badge?: ReactNode; children?: ReactNode; className?: string }) {
   const { size: _size, asChild: _asChild, tooltip, onClick, onSelect, children, className, ...rest } = props as Record<string, unknown> & { size?: string; asChild?: boolean; tooltip?: string; onClick?: () => void; onSelect?: () => void; children?: ReactNode; className?: string };
+  void _size;
   const handleSelect = (onSelect as (() => void) | undefined) ?? (onClick as (() => void) | undefined);
   // asChild path: preview passes <a> as child — render a styled container that preserves animation trigger
   if (_asChild) {
