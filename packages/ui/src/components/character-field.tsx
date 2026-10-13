@@ -573,7 +573,6 @@ export function CharacterField({
     };
     // Mount-once engine: live values flow through refs. Grid-affecting
     // settings are detected by re-running this effect.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     fontSize,
     fontFamily,

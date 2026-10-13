@@ -347,7 +347,6 @@ export function TextVideoMask({
       height: containerSize.h,
     });
     setMaskUrl((prev) => (prev === url ? prev : url));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     text,
     fontFamily,
