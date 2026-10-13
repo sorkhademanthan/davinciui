@@ -276,7 +276,7 @@ function CarouselContent({
       "aria-label"
     ]
     if (existing) return child
-    return React.cloneElement(child as React.ReactElement<any>, {
+    return React.cloneElement(child as React.ReactElement<{ "aria-label"?: string }>, {
       "aria-label": `Slide ${index + 1} of ${count}`,
     })
   })
