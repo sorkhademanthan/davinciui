@@ -298,15 +298,6 @@ export function RandomTextReveal({
         rotation: motionRotation,
       });
     };
-    const setToState = (): void => {
-      gsap.set(chars, {
-        opacity: toOpacity,
-        x: 0,
-        y: 0,
-        scale: 1,
-        rotation: 0,
-      });
-    };
 
     let timeline: gsap.core.Timeline | null = null;
     let loopCall: gsap.core.Tween | null = null;
@@ -428,7 +419,6 @@ export function RandomTextReveal({
       ctx.revert();
       timeline = null;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     text,
     fromOpacity,
