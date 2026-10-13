@@ -49,9 +49,9 @@ const MAX_TOASTS = 5;
 const EXIT_MS = 200;
 
 let seq = 0;
-let listeners = new Set<() => void>();
+const listeners = new Set<() => void>();
 let items: ToastItem[] = [];
-let removeTimers = new Map<string | number, ReturnType<typeof setTimeout>>();
+const removeTimers = new Map<string | number, ReturnType<typeof setTimeout>>();
 
 // Single-flight: every Toaster on the page shares one store, but only the
 // first mounted instance renders — otherwise docs-style pages with a Toaster
