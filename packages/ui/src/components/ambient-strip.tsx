@@ -26,6 +26,7 @@ export interface AmbientStripProps extends Omit<
   blur?: number;
   loop?: boolean;
   restColor?: string;
+  activeIndex?: number | null;
   badge?: React.ReactNode;
   className?: string;
   onActiveChange?: (index: number | null) => void;
@@ -460,6 +461,7 @@ export function AmbientStrip({
   blur = 72,
   loop = true,
   restColor = "#c8c8c8",
+  activeIndex,
   badge,
   className,
   style,
@@ -514,11 +516,24 @@ export function AmbientStrip({
   const dragRef = React.useRef<DragState | null>(null);
   const momentumRef = React.useRef<number | null>(null);
 
+  const controlledActive = activeIndex !== undefined;
+  const controlledTarget: ActiveTarget | null =
+    activeIndex === undefined ||
+    activeIndex === null ||
+    activeIndex < 0 ||
+    activeIndex >= count
+      ? null
+      : {
+          copyIndex: loop ? count + activeIndex : activeIndex,
+          itemIndex: activeIndex,
+        };
   const activeTarget = dragging
     ? null
-    : centerMode
-      ? centerActive
-      : (hovered ?? focused);
+    : controlledActive
+      ? controlledTarget
+      : centerMode
+        ? centerActive
+        : (hovered ?? focused);
   const activeItemIndex = activeTarget?.itemIndex ?? null;
   const anyActive = activeTarget !== null;
 
@@ -678,6 +693,42 @@ export function AmbientStrip({
     resolvedGap,
     scheduleCenterUpdate,
     setWidth,
+  ]);
+
+  React.useEffect(() => {
+    if (activeIndex === undefined || activeIndex === null) return;
+
+    const scroller = scrollRef.current;
+    if (!scroller || count === 0 || activeIndex < 0 || activeIndex >= count) {
+      return;
+    }
+
+    const step = resolvedCardWidth + resolvedGap;
+    if (step <= 0) return;
+
+    let target = activeIndex;
+    if (loop) {
+      const center = scroller.scrollLeft + scroller.clientWidth / 2;
+      const current = (center - resolvedCardWidth / 2) / step;
+      target = clamp(
+        activeIndex + Math.round((current - activeIndex) / count) * count,
+        0,
+        totalCards - 1,
+      );
+    }
+
+    scroller.scrollTo({
+      left: target * step + resolvedCardWidth / 2 - scroller.clientWidth / 2,
+      behavior: reduceMotion ? "auto" : "smooth",
+    });
+  }, [
+    activeIndex,
+    count,
+    loop,
+    reduceMotion,
+    resolvedCardWidth,
+    resolvedGap,
+    totalCards,
   ]);
 
   React.useEffect(() => {

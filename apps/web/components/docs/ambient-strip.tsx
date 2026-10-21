@@ -127,6 +127,12 @@ export async function AmbientStripDocs() {
           description: "Flat surface behind the strip when no frame is active.",
         },
         {
+          name: "activeIndex",
+          type: "number | null",
+          description:
+            "Controlled active frame. When provided, the strip scrolls that frame toward the center and ignores hover, focus, and center-snap. Pass null to show the rest state.",
+        },
+        {
           name: "badge",
           type: "ReactNode",
           description:
