@@ -460,7 +460,7 @@ export function AmbientStrip({
   gap = 14,
   blur = 72,
   loop = true,
-  restColor = "#c8c8c8",
+  restColor,
   activeIndex,
   badge,
   className,
@@ -939,16 +939,13 @@ export function AmbientStrip({
       aria-roledescription="carousel"
       aria-label="Ambient media strip"
       className={cn(
-        "relative isolate flex w-full min-h-[100svh] flex-col justify-center overflow-hidden",
+        "relative isolate flex min-h-[100svh] w-full flex-col justify-center overflow-hidden bg-[#c8c8c8] transition-colors duration-300 dark:bg-[#0b0b0d]",
         className,
       )}
-      style={
-        {
-          "--ambient-rest": restColor,
-          backgroundColor: restColor,
-          ...style,
-        } as React.CSSProperties
-      }
+      style={{
+        ...(restColor ? { backgroundColor: restColor } : null),
+        ...style,
+      }}
       {...props}
     >
       <div

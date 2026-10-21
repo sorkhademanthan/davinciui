@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { useReducedMotion } from "framer-motion";
-import { useTheme } from "next-themes";
 
 import { AmbientStrip } from "@workspace/ui/components/ambient-strip";
 
@@ -16,7 +15,6 @@ const ACTIVE_ORDER = [2, 3, 4, 5, 6, 5, 4, 3];
 
 export function AmbientStripCardPreview() {
   const reduceMotion = useReducedMotion() ?? false;
-  const { resolvedTheme } = useTheme();
   const [step, setStep] = React.useState(0);
 
   React.useEffect(() => {
@@ -32,14 +30,17 @@ export function AmbientStripCardPreview() {
   const activeIndex = reduceMotion ? 3 : (ACTIVE_ORDER[step] ?? 3);
 
   return (
-    <AmbientStrip
-      items={MINI_ITEMS}
-      activeIndex={activeIndex}
-      cardWidth={92}
-      gap={8}
-      blur={44}
-      restColor={resolvedTheme === "dark" ? "#101012" : "#c8c8c8"}
-      className="pointer-events-none absolute inset-0 h-full min-h-0"
-    />
+    <div className="absolute inset-0 bg-[#f0efec] p-2.5 transition-colors duration-300 dark:bg-[#08080a]">
+      <div className="relative h-full w-full overflow-hidden rounded-[8px] ring-1 ring-black/5 dark:ring-white/10">
+        <AmbientStrip
+          items={MINI_ITEMS}
+          activeIndex={activeIndex}
+          cardWidth={92}
+          gap={8}
+          blur={44}
+          className="pointer-events-none absolute inset-0 h-full min-h-0"
+        />
+      </div>
+    </div>
   );
 }

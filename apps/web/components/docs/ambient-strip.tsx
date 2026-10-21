@@ -54,7 +54,6 @@ export default function MediaStrip() {
       cardWidth="auto"
       expandScale={1.18}
       blur={72}
-      restColor="#c8c8c8"
       loop
       onActiveChange={(index) => console.log("active card:", index)}
     />
@@ -123,8 +122,9 @@ export async function AmbientStripDocs() {
         {
           name: "restColor",
           type: "string",
-          default: '"#c8c8c8"',
-          description: "Flat surface behind the strip when no frame is active.",
+          default: '"theme surface"',
+          description:
+            "Override the flat surface behind the strip. Defaults to light gray in light mode and near-black in dark mode.",
         },
         {
           name: "activeIndex",
