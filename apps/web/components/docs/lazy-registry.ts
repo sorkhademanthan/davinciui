@@ -238,9 +238,18 @@ const docsImportMap: Record<
     import("@/components/docs/interaction-sound-kit").then((m) => ({
       default: m.InteractionSoundKitDocs,
     })),
-  "voice-recorder": () => import("@/components/docs/voice-recorder").then((m) => ({ default: m.VoiceRecorderDocs })),
-  "keyboard-command-sounds": () => import("@/components/docs/keyboard-command-sounds").then((m) => ({ default: m.KeyboardCommandSoundsDocs })),
-  "upload-sound-status": () => import("@/components/docs/upload-sound-status").then((m) => ({ default: m.UploadSoundStatusDocs })),
+  "voice-recorder": () =>
+    import("@/components/docs/voice-recorder").then((m) => ({
+      default: m.VoiceRecorderDocs,
+    })),
+  "keyboard-command-sounds": () =>
+    import("@/components/docs/keyboard-command-sounds").then((m) => ({
+      default: m.KeyboardCommandSoundsDocs,
+    })),
+  "upload-sound-status": () =>
+    import("@/components/docs/upload-sound-status").then((m) => ({
+      default: m.UploadSoundStatusDocs,
+    })),
   "liquid-chrome": () =>
     import("@/components/docs/liquid-chrome").then((m) => ({
       default: m.LiquidChromeDocs,
@@ -408,6 +417,10 @@ const docsImportMap: Record<
   "orbit-spiral-gallery": () =>
     import("@/components/docs/orbit-spiral-gallery").then((m) => ({
       default: m.OrbitSpiralGalleryDocs,
+    })),
+  "ambient-strip": () =>
+    import("@/components/docs/ambient-strip").then((m) => ({
+      default: m.AmbientStripDocs,
     })),
   "navigation-menu": () =>
     import("@/components/docs/navigation-menu").then((m) => ({
