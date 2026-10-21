@@ -9,7 +9,8 @@ import { ambientStripDemoItems } from "./ambient-strip-items";
 
 const MINI_ITEMS = ambientStripDemoItems
   .filter((item) => item.type !== "video")
-  .slice(0, 7);
+  .slice(0, 7)
+  .map((item) => ({ ...item, title: undefined, subtitle: undefined }));
 
 const ACTIVE_ORDER = [2, 3, 4, 5, 6, 5, 4, 3];
 
