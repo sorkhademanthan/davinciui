@@ -122,7 +122,7 @@ export const CARD_LIVE_SLUGS = [
   "media-text-hover", "text-video-mask", "random-text-reveal", "shader-text",
   "text-reveal", "rolling-text", "character-field", "pixel-flow",
   "pixel-wipe-carousel", "segmented-image-carousel", "cinematic-card-carousel",
-  "radial-fan-deck", "neon-mesh-bg", "spectra-noise", "noiser", "sunlight-effect",
+  "arc-carousel", "radial-fan-deck", "neon-mesh-bg", "spectra-noise", "noiser", "sunlight-effect",
   "vertical-image-marquee", "hover-cards", "profile-carousel", "services-showcase",
   "glass-scene-dock", "lens-drift-grid", "orbit-spiral-gallery",
   "liquid-reveal-button", "animated-metric", "nudge-button", "animated-pill-button",
@@ -180,6 +180,7 @@ const CATEGORY_FAMILY: Record<string, ComponentFamily> = {
 /** Per-slug family corrections where the category default misleads. */
 const FAMILY_OVERRIDES: Record<string, ComponentFamily> = {
   carousel: "carousel",
+  "arc-carousel": "carousel",
   "cinematic-card-carousel": "carousel",
   "profile-carousel": "carousel",
   "segmented-image-carousel": "carousel",

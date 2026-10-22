@@ -675,6 +675,14 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "scroll-timeline",
     addedAt: "2026-09-17",
   },
+  "arc-carousel": {
+    title: "Arc Carousel",
+    description:
+      "A drag, wheel, and keyboard driven fan of media riding a circular arc with tangent tiles, infinite wrap, and critically damped inertia.",
+    category: "Premium Components",
+    slug: "arc-carousel",
+    addedAt: "2026-10-21",
+  },
   "orbit-spiral-gallery": {
     title: "Orbit Spiral Gallery",
     description:
@@ -1065,6 +1073,7 @@ export function getComponent(slug: string) {
 // ─────────────────────────────────────────────────────────────
 export const FEATURED_SLUGS = [
   "cinematic-card-carousel",
+  "arc-carousel",
   "lens-drift-grid",
   "tubes-cursor",
   "text-video-mask",
