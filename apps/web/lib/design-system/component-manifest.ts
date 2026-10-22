@@ -154,6 +154,7 @@ export const CARD_LIVE_SLUGS = [
   "segmented-image-carousel",
   "cinematic-card-carousel",
   "ambient-strip",
+  "arc-carousel",
   "radial-fan-deck",
   "neon-mesh-bg",
   "spectra-noise",
@@ -242,6 +243,7 @@ const CATEGORY_FAMILY: Record<string, ComponentFamily> = {
 const FAMILY_OVERRIDES: Record<string, ComponentFamily> = {
   carousel: "carousel",
   "ambient-strip": "carousel",
+  "arc-carousel": "carousel",
   "cinematic-card-carousel": "carousel",
   "profile-carousel": "carousel",
   "segmented-image-carousel": "carousel",
