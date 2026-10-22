@@ -33,6 +33,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "arc-carousel",
+      "type": "registry:ui"
+    },
+    {
       "name": "aspect-ratio",
       "type": "registry:ui"
     },

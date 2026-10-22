@@ -78,6 +78,7 @@ function hasLiveCardPreview(
   | "pixel-wipe-carousel"
   | "segmented-image-carousel"
   | "cinematic-card-carousel"
+  | "arc-carousel"
   | "radial-fan-deck"
   | "neon-mesh-bg"
   | "spectra-noise"
@@ -150,6 +151,7 @@ function hasLiveCardPreview(
     slug === "pixel-wipe-carousel" ||
     slug === "segmented-image-carousel" ||
     slug === "cinematic-card-carousel" ||
+    slug === "arc-carousel" ||
     slug === "radial-fan-deck" ||
     slug === "neon-mesh-bg" ||
     slug === "spectra-noise" ||

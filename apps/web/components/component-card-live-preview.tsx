@@ -185,6 +185,14 @@ const RadialFanDeckCardPreview = dynamic(
   { ssr: false },
 );
 
+const ArcCarouselCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/arc-carousel-card-preview").then(
+      (module) => module.ArcCarouselCardPreview,
+    ),
+  { ssr: false },
+);
+
 const NeonMeshBGCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/neon-mesh-bg-card-preview").then(
@@ -586,6 +594,7 @@ type ComponentCardLivePreviewProps = {
     | "pixel-wipe-carousel"
     | "segmented-image-carousel"
     | "cinematic-card-carousel"
+    | "arc-carousel"
     | "radial-fan-deck"
     | "neon-mesh-bg"
     | "spectra-noise"
@@ -777,6 +786,8 @@ export function ComponentCardLivePreview({
         <SegmentedImageCarouselCardPreview />
       ) : slug === "cinematic-card-carousel" ? (
         <CinematicCardCarouselCardPreview />
+      ) : slug === "arc-carousel" ? (
+        <ArcCarouselCardPreview />
       ) : slug === "radial-fan-deck" ? (
         <RadialFanDeckCardPreview />
       ) : slug === "neon-mesh-bg" ? (

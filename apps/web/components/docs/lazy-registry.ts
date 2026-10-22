@@ -269,6 +269,10 @@ const docsImportMap: Record<
     import("@/components/docs/cinematic-card-carousel").then((m) => ({
       default: m.CinematicCardCarouselDocs,
     })),
+  "arc-carousel": () =>
+    import("@/components/docs/arc-carousel").then((m) => ({
+      default: m.ArcCarouselDocs,
+    })),
   "cms-scroll-gallery": () =>
     import("@/components/docs/cms-scroll-gallery").then((m) => ({
       default: m.CMSScrollGalleryDocs,

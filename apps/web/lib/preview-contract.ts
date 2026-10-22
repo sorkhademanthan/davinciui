@@ -144,6 +144,7 @@ const SCROLLABLE_SLUGS: ReadonlySet<string> = new Set(["text-reveal"]);
 const REDUCE_MOTION_SAFE_SLUGS: ReadonlySet<string> = new Set([
   "ambient-audio-toggle",
   "animated-metric",
+  "arc-carousel",
   "animated-pill-button",
   "burn-plus",
   "character-field",
