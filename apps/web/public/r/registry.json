@@ -2,7 +2,11 @@
   "$schema": "https://ui.shadcn.com/schema/registry.json",
   "name": "davinciui",
   "homepage": "https://davinciui.com",
-  "aliases": ["davinciui", "ui", "cmp"],
+  "aliases": [
+    "davinciui",
+    "ui",
+    "cmp"
+  ],
   "items": [
     {
       "name": "accordion",
@@ -186,6 +190,10 @@
     },
     {
       "name": "fluid-particle-text",
+      "type": "registry:ui"
+    },
+    {
+      "name": "focus-carousel",
       "type": "registry:ui"
     },
     {
