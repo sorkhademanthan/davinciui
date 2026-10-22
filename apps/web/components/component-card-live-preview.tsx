@@ -177,6 +177,14 @@ const CinematicCardCarouselCardPreview = dynamic(
   { ssr: false },
 );
 
+const FocusCarouselCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/focus-carousel-card-preview").then(
+      (module) => module.FocusCarouselCardPreview,
+    ),
+  { ssr: false },
+);
+
 const AmbientStripCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/ambient-strip-card-preview").then(
@@ -620,6 +628,7 @@ type ComponentCardLivePreviewProps = {
     | "pixel-wipe-carousel"
     | "segmented-image-carousel"
     | "cinematic-card-carousel"
+    | "focus-carousel"
     | "ambient-strip"
     | "arc-carousel"
     | "radial-fan-deck"
@@ -813,6 +822,8 @@ export function ComponentCardLivePreview({
         <SegmentedImageCarouselCardPreview />
       ) : slug === "cinematic-card-carousel" ? (
         <CinematicCardCarouselCardPreview />
+      ) : slug === "focus-carousel" ? (
+        <FocusCarouselCardPreview />
       ) : slug === "ambient-strip" ? (
         <AmbientStripCardPreview />
       ) : slug === "arc-carousel" ? (
