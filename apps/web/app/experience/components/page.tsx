@@ -1,18 +1,21 @@
-"use client"
+"use client";
 
-import { Suspense, useEffect, useState, useMemo } from "react"
-import Link from "next/link"
-import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { Search, ArrowUpRight } from "lucide-react"
-import { Breadcrumbs } from "@/components/breadcrumbs"
-import { ComponentCardLivePreview } from "@/components/component-card-live-preview"
-import { isBasicPreviewSlug, type BasicPreviewSlug } from "@/components/docs/previews/basic-component-card-slugs"
-import { components, sortByFeatured, getFeaturedRank } from "@/registry"
-import { BASIC_GROUPS, BASIC_SUBS } from "@/lib/component-groups"
-import { cn } from "@/lib/utils"
+import { Suspense, useEffect, useState, useMemo } from "react";
+import Link from "next/link";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { Search, ArrowUpRight } from "lucide-react";
+import { Breadcrumbs } from "@/components/breadcrumbs";
+import { ComponentCardLivePreview } from "@/components/component-card-live-preview";
+import {
+  isBasicPreviewSlug,
+  type BasicPreviewSlug,
+} from "@/components/docs/previews/basic-component-card-slugs";
+import { components, sortByFeatured, getFeaturedRank } from "@/registry";
+import { BASIC_GROUPS, BASIC_SUBS } from "@/lib/component-groups";
+import { cn } from "@/lib/utils";
 
-const BASIC_SLUGS: Record<string, string[]> = BASIC_GROUPS
-const BASIC_ALL = Object.values(BASIC_SLUGS).flat()
+const BASIC_SLUGS: Record<string, string[]> = BASIC_GROUPS;
+const BASIC_ALL = Object.values(BASIC_SLUGS).flat();
 
 // Scroll-driven experiences showcased under Components > Scroll.
 const SCROLL_SLUGS = new Set([
@@ -24,11 +27,24 @@ const SCROLL_SLUGS = new Set([
   "horizontal-scroll-gallery",
   "scroll-reveal-image",
   "scroll-timeline",
-])
+]);
 
-const TOP_FILTERS = ["All", "Basic", "Text Animations", "Premium Components", "Hero Backgrounds", "Sound", "Visual Effects", "Preloaders", "Interactions", "Cursor Effects", "Motion", "Scroll"] as const
+const TOP_FILTERS = [
+  "All",
+  "Basic",
+  "Text Animations",
+  "Premium Components",
+  "Hero Backgrounds",
+  "Sound",
+  "Visual Effects",
+  "Preloaders",
+  "Interactions",
+  "Cursor Effects",
+  "Motion",
+  "Scroll",
+] as const;
 
-const BASIC_SUBS_ALL: readonly string[] = BASIC_SUBS
+const BASIC_SUBS_ALL: readonly string[] = BASIC_SUBS;
 
 // Featured-first order for the Text Animations gallery.
 // Mirrors the global FEATURED_SLUGS relative order so the shuffled
@@ -46,14 +62,14 @@ const TEXT_ANIMATION_ORDER = [
   "encrypted-text",
   "glitch-liquid-text",
   "text-reveal",
-] as const
+] as const;
 
 const TEXT_ANIMATION_RANK = new Map<string, number>(
   TEXT_ANIMATION_ORDER.map((slug, index) => [slug, index]),
-)
+);
 
-type TopFilter = (typeof TOP_FILTERS)[number]
-type BasicSub = (typeof BASIC_SUBS)[number]
+type TopFilter = (typeof TOP_FILTERS)[number];
+type BasicSub = (typeof BASIC_SUBS)[number];
 
 function hasLiveCardPreview(
   slug: string,
@@ -78,6 +94,7 @@ function hasLiveCardPreview(
   | "pixel-wipe-carousel"
   | "segmented-image-carousel"
   | "cinematic-card-carousel"
+  | "ambient-strip"
   | "arc-carousel"
   | "radial-fan-deck"
   | "neon-mesh-bg"
@@ -151,6 +168,7 @@ function hasLiveCardPreview(
     slug === "pixel-wipe-carousel" ||
     slug === "segmented-image-carousel" ||
     slug === "cinematic-card-carousel" ||
+    slug === "ambient-strip" ||
     slug === "arc-carousel" ||
     slug === "radial-fan-deck" ||
     slug === "neon-mesh-bg" ||
@@ -203,16 +221,20 @@ function hasLiveCardPreview(
     slug === "geometric-trail-cursor" ||
     slug === "elastic-blob-cursor" ||
     isBasicPreviewSlug(slug)
-  )
+  );
 }
 function validTop(value: string | null): TopFilter | null {
-  if (!value) return null
-  return (TOP_FILTERS as readonly string[]).includes(value) ? (value as TopFilter) : null
+  if (!value) return null;
+  return (TOP_FILTERS as readonly string[]).includes(value)
+    ? (value as TopFilter)
+    : null;
 }
 
 function validSub(value: string | null): BasicSub | null {
-  if (!value) return null
-  return (BASIC_SUBS_ALL as readonly string[]).includes(value) ? (value as BasicSub) : null
+  if (!value) return null;
+  return (BASIC_SUBS_ALL as readonly string[]).includes(value)
+    ? (value as BasicSub)
+    : null;
 }
 
 export default function ComponentsGalleryPage() {
@@ -220,84 +242,99 @@ export default function ComponentsGalleryPage() {
     <Suspense>
       <ComponentsGallery />
     </Suspense>
-  )
+  );
 }
 
 function ComponentsGallery() {
-  const searchParams = useSearchParams()
-  const router = useRouter()
-  const pathname = usePathname()
-  const [q, setQ] = useState("")
-  const [activeTop, setActiveTop] = useState<TopFilter>(() => validTop(searchParams.get("tab")) ?? "All")
-  const [activeSub, setActiveSub] = useState<BasicSub>(() => validSub(searchParams.get("sub")) ?? "All")
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  const [q, setQ] = useState("");
+  const [activeTop, setActiveTop] = useState<TopFilter>(
+    () => validTop(searchParams.get("tab")) ?? "All",
+  );
+  const [activeSub, setActiveSub] = useState<BasicSub>(
+    () => validSub(searchParams.get("sub")) ?? "All",
+  );
 
   // Keep the active tabs in the URL so browser-back, reloads and shared
   // links restore the exact filtered view.
   useEffect(() => {
-    const params = new URLSearchParams()
-    if (activeTop !== "All") params.set("tab", activeTop)
-    if (activeTop === "Basic" && activeSub !== "All") params.set("sub", activeSub)
-    const query = params.toString()
+    const params = new URLSearchParams();
+    if (activeTop !== "All") params.set("tab", activeTop);
+    if (activeTop === "Basic" && activeSub !== "All")
+      params.set("sub", activeSub);
+    const query = params.toString();
     router.replace(query ? `${pathname}?${query}` : pathname, {
       scroll: false,
-    })
-  }, [activeTop, activeSub, pathname, router])
+    });
+  }, [activeTop, activeSub, pathname, router]);
 
-  const all = useMemo(() => sortByFeatured(Object.values(components)), [])
+  const all = useMemo(() => sortByFeatured(Object.values(components)), []);
 
   // Slugs hidden from the gallery grid. The components themselves (docs,
   // registry, source) stay intact — they just don't get a card here.
-  const HIDDEN_SLUGS = useMemo(() => new Set(["liquid-chrome"]), [])
+  const HIDDEN_SLUGS = useMemo(() => new Set(["liquid-chrome"]), []);
 
   const filtered = useMemo(() => {
     const matches = all.filter((c) => {
-      if (HIDDEN_SLUGS.has(c.slug)) return false
-      const matchesSearch = !q.trim() || c.title.toLowerCase().includes(q.toLowerCase()) || c.description.toLowerCase().includes(q.toLowerCase())
-      if (!matchesSearch) return false
+      if (HIDDEN_SLUGS.has(c.slug)) return false;
+      const matchesSearch =
+        !q.trim() ||
+        c.title.toLowerCase().includes(q.toLowerCase()) ||
+        c.description.toLowerCase().includes(q.toLowerCase());
+      if (!matchesSearch) return false;
       // "All" showcases non-Basic work — Basics live under the Basic tab.
       // A search query still spans everything so nothing is undiscoverable.
       if (activeTop === "All") {
-        if (BASIC_ALL.includes(c.slug)) return q.trim() !== ""
-        return true
+        if (BASIC_ALL.includes(c.slug)) return q.trim() !== "";
+        return true;
       }
       if (activeTop === "Basic") {
-        if (activeSub === "All") return BASIC_ALL.includes(c.slug)
-        return (BASIC_SLUGS[activeSub] || []).includes(c.slug)
+        if (activeSub === "All") return BASIC_ALL.includes(c.slug);
+        return (BASIC_SLUGS[activeSub] || []).includes(c.slug);
       }
-      if (activeTop === "Text Animations") return c.category === "Text Animations"
-      if (activeTop === "Premium Components") return c.category === "Premium Components"
-      if (activeTop === "Hero Backgrounds") return c.category === "Hero Backgrounds"
-      if (activeTop === "Sound") return c.category === "Sound"
-      if (activeTop === "Visual Effects") return c.category === "Visual Effects"
-      if (activeTop === "Preloaders") return c.category === "Preloaders"
-      if (activeTop === "Interactions") return c.category === "Interactions"
-      if (activeTop === "Cursor Effects") return c.category === "Cursor Effects"
-      if (activeTop === "Motion") return c.category === "Motion"
-      if (activeTop === "Scroll") return SCROLL_SLUGS.has(c.slug)
-      return false
-    })
+      if (activeTop === "Text Animations")
+        return c.category === "Text Animations";
+      if (activeTop === "Premium Components")
+        return c.category === "Premium Components";
+      if (activeTop === "Hero Backgrounds")
+        return c.category === "Hero Backgrounds";
+      if (activeTop === "Sound") return c.category === "Sound";
+      if (activeTop === "Visual Effects")
+        return c.category === "Visual Effects";
+      if (activeTop === "Preloaders") return c.category === "Preloaders";
+      if (activeTop === "Interactions") return c.category === "Interactions";
+      if (activeTop === "Cursor Effects")
+        return c.category === "Cursor Effects";
+      if (activeTop === "Motion") return c.category === "Motion";
+      if (activeTop === "Scroll") return SCROLL_SLUGS.has(c.slug);
+      return false;
+    });
 
     if (activeTop === "Text Animations") {
       return matches.sort((a, b) => {
-        const aRank = TEXT_ANIMATION_RANK.get(a.slug) ?? Number.MAX_SAFE_INTEGER
-        const bRank = TEXT_ANIMATION_RANK.get(b.slug) ?? Number.MAX_SAFE_INTEGER
-        return aRank - bRank || a.title.localeCompare(b.title)
-      })
+        const aRank =
+          TEXT_ANIMATION_RANK.get(a.slug) ?? Number.MAX_SAFE_INTEGER;
+        const bRank =
+          TEXT_ANIMATION_RANK.get(b.slug) ?? Number.MAX_SAFE_INTEGER;
+        return aRank - bRank || a.title.localeCompare(b.title);
+      });
     }
 
     // Every other tab (including "All") leads with the featured best,
     // then falls back to alphabetical — so your top 27 always show first.
     return [...matches].sort((a, b) => {
-      const rankDiff = getFeaturedRank(a.slug) - getFeaturedRank(b.slug)
-      if (rankDiff !== 0) return rankDiff
-      return a.title.localeCompare(b.title)
-    })
-  }, [q, activeTop, activeSub, all, HIDDEN_SLUGS])
+      const rankDiff = getFeaturedRank(a.slug) - getFeaturedRank(b.slug);
+      if (rankDiff !== 0) return rankDiff;
+      return a.title.localeCompare(b.title);
+    });
+  }, [q, activeTop, activeSub, all, HIDDEN_SLUGS]);
 
   const handleTopChange = (t: TopFilter) => {
-    setActiveTop(t)
-    if (t !== "Basic") setActiveSub("All")
-  }
+    setActiveTop(t);
+    if (t !== "Basic") setActiveSub("All");
+  };
 
   return (
     <div className="w-full max-w-[1280px] px-6 lg:px-8 py-6">
@@ -305,7 +342,10 @@ function ComponentsGallery() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Components</h1>
-          <p className="text-sm text-muted-foreground mt-1">Production-ready components — click a card to open docs with live preview on the right.</p>
+          <p className="text-sm text-muted-foreground mt-1">
+            Production-ready components — click a card to open docs with live
+            preview on the right.
+          </p>
         </div>
         <div className="relative w-full sm:w-64">
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
@@ -357,27 +397,39 @@ function ComponentsGallery() {
       <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {filtered.map((c) => {
           const getSources = (url?: string) => {
-            if (!url) return null
+            if (!url) return null;
             // Derive webm/mp4 from any extension (mov/webm/mp4) for resilient playback
-            const m = url.match(/^(.*)\.(mov|mp4|webm)(\?.*)?$/i)
-            if (!m) return { webm: url, mp4: url }
-            const base = m[1]
-            const q = m[3] || ""
-            return { webm: `${base}.webm${q}`, mp4: `${base}.mp4${q}` }
-          }
-          const sources = getSources(c.previewVideo)
-          const cardClassName = "group relative flex flex-col rounded-2xl border border-border bg-white dark:bg-zinc-900/50 overflow-hidden hover:border-input hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-300"
+            const m = url.match(/^(.*)\.(mov|mp4|webm)(\?.*)?$/i);
+            if (!m) return { webm: url, mp4: url };
+            const base = m[1];
+            const q = m[3] || "";
+            return { webm: `${base}.webm${q}`, mp4: `${base}.mp4${q}` };
+          };
+          const sources = getSources(c.previewVideo);
+          const cardClassName =
+            "group relative flex flex-col rounded-2xl border border-border bg-white dark:bg-zinc-900/50 overflow-hidden hover:border-input hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-300";
           const cardContent = (
             <>
               <div className="p-1.5">
                 <div className="relative h-48 rounded-xl border border-border bg-zinc-100 dark:bg-zinc-900 overflow-hidden">
                   {sources ? (
-                    <video autoPlay muted loop playsInline preload="metadata" className="absolute inset-0 h-full w-full object-cover">
+                    <video
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      preload="metadata"
+                      className="absolute inset-0 h-full w-full object-cover"
+                    >
                       <source src={sources.webm} type="video/webm" />
                       <source src={sources.mp4} type="video/mp4" />
                     </video>
                   ) : c.previewImage ? (
-                    <img src={c.previewImage} alt={c.title} className="absolute inset-0 h-full w-full object-cover" />
+                    <img
+                      src={c.previewImage}
+                      alt={c.title}
+                      className="absolute inset-0 h-full w-full object-cover"
+                    />
                   ) : hasLiveCardPreview(c.slug) ? (
                     <ComponentCardLivePreview slug={c.slug} />
                   ) : (
@@ -398,26 +450,39 @@ function ComponentsGallery() {
               <div className="px-4 pb-4 pt-1">
                 <h3 className="text-sm font-medium flex items-center gap-1.5">
                   {c.category === "Sound" ? (
-                    <Link href={`/experience/components/${c.slug}`} className="inline-flex items-center gap-1.5">
-                      {c.title} <ArrowUpRight className="size-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <Link
+                      href={`/experience/components/${c.slug}`}
+                      className="inline-flex items-center gap-1.5"
+                    >
+                      {c.title}{" "}
+                      <ArrowUpRight className="size-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
                     </Link>
                   ) : (
                     <>
-                      {c.title} <ArrowUpRight className="size-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      {c.title}{" "}
+                      <ArrowUpRight className="size-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
                     </>
                   )}
                 </h3>
-                <p className="text-xs text-muted-foreground line-clamp-2 mt-1">{c.description}</p>
+                <p className="text-xs text-muted-foreground line-clamp-2 mt-1">
+                  {c.description}
+                </p>
               </div>
             </>
-          )
+          );
           return c.category === "Sound" ? (
-            <div key={c.slug} className={cardClassName}>{cardContent}</div>
+            <div key={c.slug} className={cardClassName}>
+              {cardContent}
+            </div>
           ) : (
-            <Link key={c.slug} href={`/experience/components/${c.slug}`} className={cardClassName}>
+            <Link
+              key={c.slug}
+              href={`/experience/components/${c.slug}`}
+              className={cardClassName}
+            >
               {cardContent}
             </Link>
-          )
+          );
         })}
       </div>
 
@@ -425,17 +490,26 @@ function ComponentsGallery() {
         <div className="mt-12 text-center space-y-3">
           <p className="text-sm text-muted-foreground">
             No components match “{q}” in {activeTop}
-            {activeTop === "Basic" && activeSub !== "All" ? ` › ${activeSub}` : ""}.
+            {activeTop === "Basic" && activeSub !== "All"
+              ? ` › ${activeSub}`
+              : ""}
+            .
           </p>
           {(activeTop === "Motion" || activeTop === "Scroll") && (
             <div className="flex justify-center gap-2 text-xs">
               {activeTop === "Motion" && (
-                <Link href="/docs/motion/components" className="px-3 py-1.5 rounded-full border bg-white hover:bg-zinc-50 dark:bg-zinc-900">
+                <Link
+                  href="/docs/motion/components"
+                  className="px-3 py-1.5 rounded-full border bg-white hover:bg-zinc-50 dark:bg-zinc-900"
+                >
                   Go to Motion →
                 </Link>
               )}
               {activeTop === "Scroll" && (
-                <Link href="/experience/components?tab=Scroll" className="px-3 py-1.5 rounded-full border bg-white hover:bg-zinc-50 dark:bg-zinc-900">
+                <Link
+                  href="/experience/components?tab=Scroll"
+                  className="px-3 py-1.5 rounded-full border bg-white hover:bg-zinc-50 dark:bg-zinc-900"
+                >
                   Go to Scroll →
                 </Link>
               )}
@@ -444,5 +518,5 @@ function ComponentsGallery() {
         </div>
       )}
     </div>
-  )
+  );
 }

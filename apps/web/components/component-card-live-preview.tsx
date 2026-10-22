@@ -177,6 +177,14 @@ const CinematicCardCarouselCardPreview = dynamic(
   { ssr: false },
 );
 
+const AmbientStripCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/ambient-strip-card-preview").then(
+      (module) => module.AmbientStripCardPreview,
+    ),
+  { ssr: false },
+);
+
 const RadialFanDeckCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/radial-fan-deck-card-preview").then(
@@ -352,9 +360,27 @@ const InteractionSoundKitCardPreview = dynamic(
     ),
   { ssr: false },
 );
-const VoiceRecorderCardPreview = dynamic(() => import("@/components/docs/previews/voice-recorder-card-preview").then((module) => module.VoiceRecorderCardPreview), { ssr: false });
-const KeyboardCommandSoundsCardPreview = dynamic(() => import("@/components/docs/previews/keyboard-command-sounds-card-preview").then((module) => module.KeyboardCommandSoundsCardPreview), { ssr: false });
-const UploadSoundStatusCardPreview = dynamic(() => import("@/components/docs/previews/upload-sound-status-card-preview").then((module) => module.UploadSoundStatusCardPreview), { ssr: false });
+const VoiceRecorderCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/voice-recorder-card-preview").then(
+      (module) => module.VoiceRecorderCardPreview,
+    ),
+  { ssr: false },
+);
+const KeyboardCommandSoundsCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/keyboard-command-sounds-card-preview").then(
+      (module) => module.KeyboardCommandSoundsCardPreview,
+    ),
+  { ssr: false },
+);
+const UploadSoundStatusCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/upload-sound-status-card-preview").then(
+      (module) => module.UploadSoundStatusCardPreview,
+    ),
+  { ssr: false },
+);
 
 const MotionHamburgerCardPreview = dynamic(
   () =>
@@ -594,6 +620,7 @@ type ComponentCardLivePreviewProps = {
     | "pixel-wipe-carousel"
     | "segmented-image-carousel"
     | "cinematic-card-carousel"
+    | "ambient-strip"
     | "arc-carousel"
     | "radial-fan-deck"
     | "neon-mesh-bg"
@@ -604,16 +631,16 @@ type ComponentCardLivePreviewProps = {
     | "hover-cards"
     | "profile-carousel"
     | "services-showcase"
-      | "glass-scene-dock"
-      | "lens-drift-grid"
-      | "orbit-spiral-gallery"
+    | "glass-scene-dock"
+    | "lens-drift-grid"
+    | "orbit-spiral-gallery"
     | "liquid-reveal-button"
     | "animated-metric"
     | "nudge-button"
     | "animated-pill-button"
     | "burn-plus"
-      | "team-slide-reveal"
-      | "hover-transition"
+    | "team-slide-reveal"
+    | "hover-transition"
     | "ambient-audio-toggle"
     | "interaction-sound-kit"
     | "voice-recorder"
@@ -786,6 +813,8 @@ export function ComponentCardLivePreview({
         <SegmentedImageCarouselCardPreview />
       ) : slug === "cinematic-card-carousel" ? (
         <CinematicCardCarouselCardPreview />
+      ) : slug === "ambient-strip" ? (
+        <AmbientStripCardPreview />
       ) : slug === "arc-carousel" ? (
         <ArcCarouselCardPreview />
       ) : slug === "radial-fan-deck" ? (

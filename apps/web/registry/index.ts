@@ -691,6 +691,14 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "orbit-spiral-gallery",
     addedAt: "2026-08-08",
   },
+  "ambient-strip": {
+    title: "Ambient Strip",
+    description:
+      "A horizontal portrait strip that expands the active frame while a blurred, full-bleed copy of the same artwork crossfades behind it — drag, wheel, keyboard, and center-snap on touch.",
+    category: "Premium Components",
+    slug: "ambient-strip",
+    addedAt: "2026-10-21",
+  },
   // Hero Backgrounds
   "silk-aurora": {
     title: "Silk Aurora",
@@ -764,9 +772,30 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "interaction-sound-kit",
     addedAt: "2026-09-25",
   },
-  "voice-recorder": { title: "Voice Recorder", description: "Browser microphone capture with a recording timer, live waveform treatment, and playback.", category: "Sound", slug: "voice-recorder", addedAt: "2026-09-25" },
-  "keyboard-command-sounds": { title: "Keyboard & Command Sounds", description: "Optional keyboard and command feedback for focused productivity interfaces.", category: "Sound", slug: "keyboard-command-sounds", addedAt: "2026-09-25" },
-  "upload-sound-status": { title: "Upload Sound Status", description: "Transfer progress with a subtle completion cue and a reusable upload-state surface.", category: "Sound", slug: "upload-sound-status", addedAt: "2026-09-25" },
+  "voice-recorder": {
+    title: "Voice Recorder",
+    description:
+      "Browser microphone capture with a recording timer, live waveform treatment, and playback.",
+    category: "Sound",
+    slug: "voice-recorder",
+    addedAt: "2026-09-25",
+  },
+  "keyboard-command-sounds": {
+    title: "Keyboard & Command Sounds",
+    description:
+      "Optional keyboard and command feedback for focused productivity interfaces.",
+    category: "Sound",
+    slug: "keyboard-command-sounds",
+    addedAt: "2026-09-25",
+  },
+  "upload-sound-status": {
+    title: "Upload Sound Status",
+    description:
+      "Transfer progress with a subtle completion cue and a reusable upload-state surface.",
+    category: "Sound",
+    slug: "upload-sound-status",
+    addedAt: "2026-09-25",
+  },
   "liquid-chrome": {
     title: "Liquid Chrome",
     description: "Premium fluid liquid metal shader background effect.",
@@ -1083,6 +1112,7 @@ export const FEATURED_SLUGS = [
   "pixel-preloader",
   "scroll-sync-gallery",
   "hover-cards",
+  "ambient-strip",
   "silk-aurora",
   "rolling-text",
   "orbit-spiral-gallery",

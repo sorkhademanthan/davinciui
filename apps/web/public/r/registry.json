@@ -2,11 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry.json",
   "name": "davinciui",
   "homepage": "https://davinciui.com",
-  "aliases": [
-    "davinciui",
-    "ui",
-    "cmp"
-  ],
+  "aliases": ["davinciui", "ui", "cmp"],
   "items": [
     {
       "name": "accordion",
@@ -22,6 +18,10 @@
     },
     {
       "name": "ambient-audio-toggle",
+      "type": "registry:ui"
+    },
+    {
+      "name": "ambient-strip",
       "type": "registry:ui"
     },
     {
@@ -209,6 +209,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "gradient-hero-01",
+      "type": "registry:block"
+    },
+    {
       "name": "gsap-text",
       "type": "registry:ui"
     },
@@ -383,6 +387,14 @@
     {
       "name": "preloader-pro",
       "type": "registry:ui"
+    },
+    {
+      "name": "pricing-01",
+      "type": "registry:block"
+    },
+    {
+      "name": "pricing-02",
+      "type": "registry:block"
     },
     {
       "name": "profile-carousel",
@@ -595,18 +607,6 @@
     {
       "name": "wave-bars-loader",
       "type": "registry:ui"
-    },
-    {
-      "name": "gradient-hero-01",
-      "type": "registry:block"
-    },
-    {
-      "name": "pricing-01",
-      "type": "registry:block"
-    },
-    {
-      "name": "pricing-02",
-      "type": "registry:block"
     }
   ]
 }

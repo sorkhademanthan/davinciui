@@ -37,9 +37,19 @@ export interface SupportStatus {
   note: string;
 }
 
-export type MotionModality = "hover" | "pointer" | "scroll" | "autoplay" | "ambient" | "not-applicable";
+export type MotionModality =
+  | "hover"
+  | "pointer"
+  | "scroll"
+  | "autoplay"
+  | "ambient"
+  | "not-applicable";
 
-export type ReducedMotionFallback = "static" | "simplified" | "disabled" | "not-applicable";
+export type ReducedMotionFallback =
+  | "static"
+  | "simplified"
+  | "disabled"
+  | "not-applicable";
 
 export interface PremiumTokenBridge {
   canvas?: string;
@@ -115,25 +125,77 @@ function humanizeSlug(slug: string): string {
  * system-aware bridge card — and `pnpm check:manifest` flags the drift.
  */
 export const CARD_LIVE_SLUGS = [
-  "circle-cursor", "electric-vijdi-cursor", "tubes-cursor", "magic-cursor-pro",
-  "chromatic-cursor", "fluid-cursor", "geometric-trail-cursor", "elastic-blob-cursor",
-  "gsap-text", "text-morph", "shake-text", "encrypted-text", "fluid-particle-text",
-  "glitch-liquid-text", "ink-flow", "silk-aurora", "soft-fluid-gradient",
-  "media-text-hover", "text-video-mask", "random-text-reveal", "shader-text",
-  "text-reveal", "rolling-text", "character-field", "pixel-flow",
-  "pixel-wipe-carousel", "segmented-image-carousel", "cinematic-card-carousel",
-  "arc-carousel", "radial-fan-deck", "neon-mesh-bg", "spectra-noise", "noiser", "sunlight-effect",
-  "vertical-image-marquee", "hover-cards", "profile-carousel", "services-showcase",
-  "glass-scene-dock", "lens-drift-grid", "orbit-spiral-gallery",
-  "liquid-reveal-button", "animated-metric", "nudge-button", "animated-pill-button",
-  "burn-plus", "team-slide-reveal", "ambient-audio-toggle", "interaction-sound-kit",
-  "voice-recorder", "keyboard-command-sounds", "upload-sound-status",
-  "motion-hamburger", "liquid-chrome-button", "scroll-reveal-image",
-  "cms-scroll-gallery", "interactive-media-accordion", "stacked-scroll-gallery",
-  "scroll-sync-gallery", "horizontal-scroll-gallery", "scroll-media-expand",
-  "scroll-timeline", "fill-preloader", "staircase-preloader", "pixel-preloader",
-  "editorial-wipe-preloader", "geometric-preloader", "preloader-pro",
-  "wave-bars-loader", "kinetic-split-text",
+  "circle-cursor",
+  "electric-vijdi-cursor",
+  "tubes-cursor",
+  "magic-cursor-pro",
+  "chromatic-cursor",
+  "fluid-cursor",
+  "geometric-trail-cursor",
+  "elastic-blob-cursor",
+  "gsap-text",
+  "text-morph",
+  "shake-text",
+  "encrypted-text",
+  "fluid-particle-text",
+  "glitch-liquid-text",
+  "ink-flow",
+  "silk-aurora",
+  "soft-fluid-gradient",
+  "media-text-hover",
+  "text-video-mask",
+  "random-text-reveal",
+  "shader-text",
+  "text-reveal",
+  "rolling-text",
+  "character-field",
+  "pixel-flow",
+  "pixel-wipe-carousel",
+  "segmented-image-carousel",
+  "cinematic-card-carousel",
+  "ambient-strip",
+  "arc-carousel",
+  "radial-fan-deck",
+  "neon-mesh-bg",
+  "spectra-noise",
+  "noiser",
+  "sunlight-effect",
+  "vertical-image-marquee",
+  "hover-cards",
+  "profile-carousel",
+  "services-showcase",
+  "glass-scene-dock",
+  "lens-drift-grid",
+  "orbit-spiral-gallery",
+  "liquid-reveal-button",
+  "animated-metric",
+  "nudge-button",
+  "animated-pill-button",
+  "burn-plus",
+  "team-slide-reveal",
+  "ambient-audio-toggle",
+  "interaction-sound-kit",
+  "voice-recorder",
+  "keyboard-command-sounds",
+  "upload-sound-status",
+  "motion-hamburger",
+  "liquid-chrome-button",
+  "scroll-reveal-image",
+  "cms-scroll-gallery",
+  "interactive-media-accordion",
+  "stacked-scroll-gallery",
+  "scroll-sync-gallery",
+  "horizontal-scroll-gallery",
+  "scroll-media-expand",
+  "scroll-timeline",
+  "fill-preloader",
+  "staircase-preloader",
+  "pixel-preloader",
+  "editorial-wipe-preloader",
+  "geometric-preloader",
+  "preloader-pro",
+  "wave-bars-loader",
+  "kinetic-split-text",
 ] as const;
 
 /** True when a real lazy card preview exists for the slug (never a placeholder). */
@@ -180,6 +242,7 @@ const CATEGORY_FAMILY: Record<string, ComponentFamily> = {
 /** Per-slug family corrections where the category default misleads. */
 const FAMILY_OVERRIDES: Record<string, ComponentFamily> = {
   carousel: "carousel",
+  "ambient-strip": "carousel",
   "arc-carousel": "carousel",
   "cinematic-card-carousel": "carousel",
   "profile-carousel": "carousel",
@@ -220,61 +283,121 @@ const FAMILY_BRIDGES: Record<ComponentFamily, FamilyBridge> = {
   text: {
     modality: "autoplay",
     fallback: "static",
-    bridge: { foreground: "text.primary", accent: "action.primary.background", typographyRole: "display", motionDuration: "slow", motionEasing: "enter" },
+    bridge: {
+      foreground: "text.primary",
+      accent: "action.primary.background",
+      typographyRole: "display",
+      motionDuration: "slow",
+      motionEasing: "enter",
+    },
     staticFallback: "Renders the final text statically in the system typeface.",
   },
   background: {
     modality: "ambient",
     fallback: "static",
-    bridge: { canvas: "background.canvas", surface: "surface.default", accent: "action.primary.background", motionDuration: "slow", motionEasing: "linear" },
-    staticFallback: "Renders a flat first-frame gradient from system canvas/surface.",
+    bridge: {
+      canvas: "background.canvas",
+      surface: "surface.default",
+      accent: "action.primary.background",
+      motionDuration: "slow",
+      motionEasing: "linear",
+    },
+    staticFallback:
+      "Renders a flat first-frame gradient from system canvas/surface.",
   },
   cursor: {
     modality: "pointer",
     fallback: "disabled",
-    bridge: { accent: "action.primary.background", motionDuration: "fast", motionEasing: "standard" },
-    staticFallback: "Hidden entirely; the native cursor remains (also on touch devices).",
+    bridge: {
+      accent: "action.primary.background",
+      motionDuration: "fast",
+      motionEasing: "standard",
+    },
+    staticFallback:
+      "Hidden entirely; the native cursor remains (also on touch devices).",
   },
   scroll: {
     modality: "scroll",
     fallback: "static",
-    bridge: { surface: "surface.default", foreground: "text.primary", motionDuration: "slow", motionEasing: "enter" },
-    staticFallback: "Renders the end state statically; content stays readable without scrolling.",
+    bridge: {
+      surface: "surface.default",
+      foreground: "text.primary",
+      motionDuration: "slow",
+      motionEasing: "enter",
+    },
+    staticFallback:
+      "Renders the end state statically; content stays readable without scrolling.",
   },
   media: {
     modality: "hover",
     fallback: "static",
-    bridge: { surface: "surface.default", foreground: "text.primary", radiusToken: "md", shadowToken: "shadow.md", motionDuration: "normal", motionEasing: "standard" },
-    staticFallback: "Renders the resting frame statically; hover-only content stays reachable.",
+    bridge: {
+      surface: "surface.default",
+      foreground: "text.primary",
+      radiusToken: "md",
+      shadowToken: "shadow.md",
+      motionDuration: "normal",
+      motionEasing: "standard",
+    },
+    staticFallback:
+      "Renders the resting frame statically; hover-only content stays reachable.",
   },
   carousel: {
     modality: "autoplay",
     fallback: "simplified",
-    bridge: { surface: "surface.default", foreground: "text.primary", accent: "action.primary.background", radiusToken: "md", motionDuration: "slow", motionEasing: "enter" },
+    bridge: {
+      surface: "surface.default",
+      foreground: "text.primary",
+      accent: "action.primary.background",
+      radiusToken: "md",
+      motionDuration: "slow",
+      motionEasing: "enter",
+    },
     staticFallback: "Autoplay off; first slide with manual controls.",
   },
   feedback: {
     modality: "autoplay",
     fallback: "simplified",
-    bridge: { foreground: "text.muted", accent: "action.primary.background", motionDuration: "normal", motionEasing: "linear" },
+    bridge: {
+      foreground: "text.muted",
+      accent: "action.primary.background",
+      motionDuration: "normal",
+      motionEasing: "linear",
+    },
     staticFallback: "Simplified static indicator with text status.",
   },
   actions: {
     modality: "hover",
     fallback: "static",
-    bridge: { foreground: "action.primary.foreground", accent: "action.primary.background", motionDuration: "fast", motionEasing: "standard" },
+    bridge: {
+      foreground: "action.primary.foreground",
+      accent: "action.primary.background",
+      motionDuration: "fast",
+      motionEasing: "standard",
+    },
     staticFallback: "Renders the resting button state statically.",
   },
   navigation: {
     modality: "hover",
     fallback: "static",
-    bridge: { foreground: "text.primary", accent: "action.primary.background", motionDuration: "fast", motionEasing: "standard" },
+    bridge: {
+      foreground: "text.primary",
+      accent: "action.primary.background",
+      motionDuration: "fast",
+      motionEasing: "standard",
+    },
     staticFallback: "Renders the resting navigation state statically.",
   },
   "data-display": {
     modality: "autoplay",
     fallback: "static",
-    bridge: { foreground: "text.primary", accent: "action.primary.background", typographyRole: "display", motionDuration: "normal", motionEasing: "enter" },
+    bridge: {
+      foreground: "text.primary",
+      accent: "action.primary.background",
+      typographyRole: "display",
+      motionDuration: "normal",
+      motionEasing: "enter",
+    },
     staticFallback: "Renders the final value statically.",
   },
   inputs: {
@@ -300,9 +423,22 @@ const FAMILY_BRIDGES: Record<ComponentFamily, FamilyBridge> = {
 /** Meaningful slots for flagship core components; other core entries use family fallbacks. */
 const CORE_SLOTS: Record<string, CoreSlot[]> = {
   button: [
-    { slot: "background", variants: ["primary", "secondary", "destructive"], states: ["default", "hover", "disabled"], notes: "Destructive maps to status.danger for backgrounds." },
-    { slot: "foreground", variants: ["primary", "secondary", "destructive"], states: ["default", "disabled"] },
-    { slot: "border", variants: ["secondary"], notes: "Primary is borderless by default." },
+    {
+      slot: "background",
+      variants: ["primary", "secondary", "destructive"],
+      states: ["default", "hover", "disabled"],
+      notes: "Destructive maps to status.danger for backgrounds.",
+    },
+    {
+      slot: "foreground",
+      variants: ["primary", "secondary", "destructive"],
+      states: ["default", "disabled"],
+    },
+    {
+      slot: "border",
+      variants: ["secondary"],
+      notes: "Primary is borderless by default.",
+    },
     { slot: "ring", states: ["focus-visible"] },
     { slot: "radius", notes: "Shared radius scale." },
     { slot: "spacing", notes: "Padding rhythm from spacing scale." },
@@ -370,12 +506,37 @@ const CORE_SLOTS: Record<string, CoreSlot[]> = {
 };
 
 const FAMILY_SLOTS: Record<string, CoreSlot[]> = {
-  inputs: [{ slot: "background" }, { slot: "foreground" }, { slot: "border" }, { slot: "ring", states: ["focus-visible"] }],
-  actions: [{ slot: "background" }, { slot: "foreground" }, { slot: "border" }, { slot: "ring", states: ["focus-visible"] }],
-  navigation: [{ slot: "foreground", states: ["default", "active"] }, { slot: "background", states: ["active"] }],
-  feedback: [{ slot: "background" }, { slot: "foreground" }, { slot: "border" }],
-  overlays: [{ slot: "background" }, { slot: "border" }, { slot: "foreground" }],
-  "data-display": [{ slot: "foreground" }, { slot: "background" }, { slot: "border" }],
+  inputs: [
+    { slot: "background" },
+    { slot: "foreground" },
+    { slot: "border" },
+    { slot: "ring", states: ["focus-visible"] },
+  ],
+  actions: [
+    { slot: "background" },
+    { slot: "foreground" },
+    { slot: "border" },
+    { slot: "ring", states: ["focus-visible"] },
+  ],
+  navigation: [
+    { slot: "foreground", states: ["default", "active"] },
+    { slot: "background", states: ["active"] },
+  ],
+  feedback: [
+    { slot: "background" },
+    { slot: "foreground" },
+    { slot: "border" },
+  ],
+  overlays: [
+    { slot: "background" },
+    { slot: "border" },
+    { slot: "foreground" },
+  ],
+  "data-display": [
+    { slot: "foreground" },
+    { slot: "background" },
+    { slot: "border" },
+  ],
   layout: [{ slot: "background" }, { slot: "border" }],
 };
 
@@ -388,11 +549,18 @@ function fullSupport(note: string): SupportStatus {
 }
 
 function buildEntry(id: string): ComponentManifestEntry {
-  const meta = (registryComponents as Record<string, { title: string; description: string; category: string; slug: string } | undefined>)[id];
+  const meta = (
+    registryComponents as Record<
+      string,
+      | { title: string; description: string; category: string; slug: string }
+      | undefined
+    >
+  )[id];
   const registryCategory: string | null = meta?.category ?? null;
   const name = meta?.title ?? humanizeSlug(id);
   const description =
-    meta?.description ?? `${name}: documented component without registry metadata yet.`;
+    meta?.description ??
+    `${name}: documented component without registry metadata yet.`;
   const resolvedTier: ComponentTier =
     registryCategory === null
       ? id === "alert-dialog" || id === "aspect-ratio"
@@ -411,18 +579,28 @@ function buildEntry(id: string): ComponentManifestEntry {
   const experienceRoute = `/experience/components/${id}`;
 
   if (resolvedTier === "core") {
-    const slots = CORE_SLOTS[id] ?? FAMILY_SLOTS[family] ?? [{ slot: "foreground" }, { slot: "background" }];
+    const slots = CORE_SLOTS[id] ??
+      FAMILY_SLOTS[family] ?? [{ slot: "foreground" }, { slot: "background" }];
     return {
-      id, name, description, tier: "core", family,
+      id,
+      name,
+      description,
+      tier: "core",
+      family,
       maturity: "ready",
-      registryCategory, docsRoute, experienceRoute,
-      docsAvailable: true, registryAvailable: registryCategory !== null,
+      registryCategory,
+      docsRoute,
+      experienceRoute,
+      docsAvailable: true,
+      registryAvailable: registryCategory !== null,
       livePreview,
       responsive: fullSupport("Core primitives reflow with the grid profile."),
       lightTheme: fullSupport("Token-driven; follows the light theme."),
       darkTheme: fullSupport("Token-driven; follows the dark theme."),
       reducedMotion: fullSupport("Defers to the system reduced-motion policy."),
-      keyboard: fullSupport("Documented keyboard support; verify in the docs demo."),
+      keyboard: fullSupport(
+        "Documented keyboard support; verify in the docs demo.",
+      ),
       missingChecks: [],
       motionModality: "not-applicable",
       reducedMotionFallback: "not-applicable",
@@ -435,28 +613,51 @@ function buildEntry(id: string): ComponentManifestEntry {
 
   const preset = FAMILY_BRIDGES[family];
   const missingChecks: string[] = ["dark-theme evidence"];
-  if (preset.modality !== "not-applicable") missingChecks.push("reduced-motion fallback verification");
+  if (preset.modality !== "not-applicable")
+    missingChecks.push("reduced-motion fallback verification");
   // Cursor effects declare pointer-only limits in their responsive status instead.
-  if (family !== "cursor") missingChecks.push("responsive verification at 390px and desktop");
+  if (family !== "cursor")
+    missingChecks.push("responsive verification at 390px and desktop");
   const responsive: SupportStatus =
     family === "cursor"
       ? { level: "partial", note: "Pointer devices only; disabled on touch." }
       : { level: "unknown", note: "Verify at 390px and desktop widths." };
   const keyboard: SupportStatus =
     family === "cursor"
-      ? { level: "none", note: "Pointer-only decorative effect; never carries required actions." }
+      ? {
+          level: "none",
+          note: "Pointer-only decorative effect; never carries required actions.",
+        }
       : family === "text"
-        ? { level: "partial", note: "Static text fallback stays readable; the effect itself is decorative." }
-        : { level: "partial", note: "Verify focus and keyboard paths in the docs demo." };
+        ? {
+            level: "partial",
+            note: "Static text fallback stays readable; the effect itself is decorative.",
+          }
+        : {
+            level: "partial",
+            note: "Verify focus and keyboard paths in the docs demo.",
+          };
   return {
-    id, name, description, tier: "premium", family,
+    id,
+    name,
+    description,
+    tier: "premium",
+    family,
     maturity: "needs-review",
-    registryCategory, docsRoute, experienceRoute,
-    docsAvailable: true, registryAvailable: registryCategory !== null,
+    registryCategory,
+    docsRoute,
+    experienceRoute,
+    docsAvailable: true,
+    registryAvailable: registryCategory !== null,
     livePreview,
     responsive,
-    lightTheme: fullSupport("Renders on light canvas; frame follows the theme."),
-    darkTheme: { level: "unknown", note: "No per-effect dark-theme evidence recorded." },
+    lightTheme: fullSupport(
+      "Renders on light canvas; frame follows the theme.",
+    ),
+    darkTheme: {
+      level: "unknown",
+      note: "No per-effect dark-theme evidence recorded.",
+    },
     reducedMotion: {
       level: preset.fallback === "not-applicable" ? "unknown" : "partial",
       note:
@@ -492,15 +693,17 @@ function buildManifest(): ComponentManifestEntry[] {
   return ids.map(buildEntry);
 }
 
-export const COMPONENT_MANIFEST: readonly ComponentManifestEntry[] = buildManifest();
+export const COMPONENT_MANIFEST: readonly ComponentManifestEntry[] =
+  buildManifest();
 
 export const CORE_COMPONENT_IDS: readonly string[] = COMPONENT_MANIFEST.filter(
   (entry) => entry.tier === "core",
 ).map((entry) => entry.id);
 
-export const PREMIUM_COMPONENT_IDS: readonly string[] = COMPONENT_MANIFEST.filter(
-  (entry) => entry.tier === "premium",
-).map((entry) => entry.id);
+export const PREMIUM_COMPONENT_IDS: readonly string[] =
+  COMPONENT_MANIFEST.filter((entry) => entry.tier === "premium").map(
+    (entry) => entry.id,
+  );
 
 export function manifestById(id: string): ComponentManifestEntry | undefined {
   return COMPONENT_MANIFEST.find((entry) => entry.id === id);
