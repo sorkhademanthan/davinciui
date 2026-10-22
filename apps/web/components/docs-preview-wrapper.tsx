@@ -165,7 +165,13 @@ export function DocsPreviewWrapper({
   const fullscreenOriginRef = React.useRef<FullscreenOrigin | null>(null)
   const fullscreenAnimationRef = React.useRef<Animation | null>(null)
 
-  const resolvedActiveVariant = hideDefaultVariant && activeVariant === -1 ? 0 : activeVariant
+  // Example wrappers hide variant tabs and pass no variants, so they must keep
+  // rendering `children`; only promote to variant 0 when variants exist.
+  const resolvedActiveVariant = variants.length === 0
+    ? -1
+    : hideDefaultVariant && activeVariant === -1
+      ? 0
+      : activeVariant
 
   const { setActiveVariantIndex, personalizeOpen, setPersonalizeOpen } = useDocStore()
 
