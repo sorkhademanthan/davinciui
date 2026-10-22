@@ -11,6 +11,7 @@
     "generate:og": "node scripts/generate-og-image.mjs",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "screenshot": "node scripts/screenshot.js",
+    "test:focus-carousel": "node scripts/test-focus-carousel.mjs",
     "optimize:previews": "./scripts/optimize-preview-videos.sh",
     "recompress:previews": "scripts/venv/bin/python scripts/recompress-and-reupload-previews.py"
   },
