@@ -887,6 +887,14 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "cinematic-card-carousel",
     addedAt: "2026-09-22",
   },
+  "focus-carousel": {
+    title: "Focus Carousel",
+    description:
+      "An infinite, horizontally centred media gallery where one sharp card holds focus while neighbours shrink, desaturate, and blur as a continuous function of distance.",
+    category: "Visual Effects",
+    slug: "focus-carousel",
+    addedAt: "2026-10-22",
+  },
   "vertical-image-marquee": {
     title: "Vertical Image Marquee",
     description:
