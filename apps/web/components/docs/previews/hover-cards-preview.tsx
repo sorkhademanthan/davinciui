@@ -57,6 +57,7 @@ export function HoverCardsPreview() {
   return (
     <HoverCards
       items={hoverCardsDemoItems}
+      showText={false}
       className="h-full min-h-[560px]"
     />
   );

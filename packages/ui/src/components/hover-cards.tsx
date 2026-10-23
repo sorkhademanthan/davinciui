@@ -36,6 +36,8 @@ export interface HoverCardsProps extends Omit<
   autoPlayInterval?: number;
   /** Pause auto-play while the pointer hovers or focus is inside. @default true */
   pauseAutoPlayOnHover?: boolean;
+  /** Hide the title, index numbers, labels, and descriptions. @default true */
+  showText?: boolean;
 }
 
 const clampIndex = (index: number | null | undefined, count: number) => {
@@ -54,6 +56,7 @@ export function HoverCards({
   autoPlay = false,
   autoPlayInterval = 3000,
   pauseAutoPlayOnHover = true,
+  showText = true,
   className,
   style,
   onPointerEnter,
@@ -224,19 +227,21 @@ export function HoverCards({
         )}
       />
 
-      <div
-        className={cn(
-          "pointer-events-none absolute inset-x-0 z-20 text-center text-[clamp(9px,1.4cqw,22px)] font-normal leading-none tracking-[-0.035em] transition-colors duration-500",
-          activeItem
-            ? textIsLight
-              ? "text-white"
-              : "text-black"
-            : "text-[#181816] dark:text-[#f4f2ed]",
-        )}
-        style={{ top: "calc(var(--hover-cards-height, 30rem) * 0.013)" }}
-      >
-        {title}
-      </div>
+      {showText ? (
+        <div
+          className={cn(
+            "pointer-events-none absolute inset-x-0 z-20 text-center text-[clamp(9px,1.4cqw,22px)] font-normal leading-none tracking-[-0.035em] transition-colors duration-500",
+            activeItem
+              ? textIsLight
+                ? "text-white"
+                : "text-black"
+              : "text-[#181816] dark:text-[#f4f2ed]",
+          )}
+          style={{ top: "calc(var(--hover-cards-height, 30rem) * 0.013)" }}
+        >
+          {title}
+        </div>
+      ) : null}
 
       <div
         role="list"
@@ -280,23 +285,25 @@ export function HoverCards({
                   "focus-visible:ring-2 focus-visible:ring-current focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
                 )}
               >
-                <span
-                  className={cn(
-                    "block font-mono text-[clamp(7px,0.75cqw,15px)] italic leading-none tracking-[-0.08em] transition-[color,opacity] duration-500",
-                    activeItem
-                      ? textIsLight
-                        ? "text-white"
-                        : "text-black"
-                      : "text-[#181816] dark:text-[#f4f2ed]",
-                    isDimmed ? "opacity-45" : "opacity-100",
-                  )}
-                  style={{
-                    marginBottom:
-                      "calc(var(--hover-cards-height, 30rem) * 0.0205)",
-                  }}
-                >
-                  {String(index + 1).padStart(3, "0")}
-                </span>
+                {showText ? (
+                  <span
+                    className={cn(
+                      "block font-mono text-[clamp(7px,0.75cqw,15px)] italic leading-none tracking-[-0.08em] transition-[color,opacity] duration-500",
+                      activeItem
+                        ? textIsLight
+                          ? "text-white"
+                          : "text-black"
+                        : "text-[#181816] dark:text-[#f4f2ed]",
+                      isDimmed ? "opacity-45" : "opacity-100",
+                    )}
+                    style={{
+                      marginBottom:
+                        "calc(var(--hover-cards-height, 30rem) * 0.0205)",
+                    }}
+                  >
+                    {String(index + 1).padStart(3, "0")}
+                  </span>
+                ) : null}
 
                 <span
                   className={cn(
@@ -322,44 +329,48 @@ export function HoverCards({
                   />
                 </span>
 
-                <span
-                  className={cn(
-                    "block truncate text-[clamp(7px,0.85cqw,16px)] leading-none tracking-[-0.045em] transition-[color,opacity,transform] duration-500",
-                    activeItem
-                      ? textIsLight
-                        ? "text-white"
-                        : "text-black"
-                      : "text-[#181816] dark:text-[#f4f2ed]",
-                    isActive
-                      ? "pointer-events-none -translate-y-1 opacity-0"
-                      : isDimmed
-                        ? "opacity-45"
-                        : "opacity-100",
-                  )}
-                  style={{
-                    marginTop:
-                      "calc(var(--hover-cards-height, 30rem) * 0.0225)",
-                  }}
-                >
-                  {item.label}
-                </span>
+                {showText ? (
+                  <>
+                    <span
+                      className={cn(
+                        "block truncate text-[clamp(7px,0.85cqw,16px)] leading-none tracking-[-0.045em] transition-[color,opacity,transform] duration-500",
+                        activeItem
+                          ? textIsLight
+                            ? "text-white"
+                            : "text-black"
+                          : "text-[#181816] dark:text-[#f4f2ed]",
+                        isActive
+                          ? "pointer-events-none -translate-y-1 opacity-0"
+                          : isDimmed
+                            ? "opacity-45"
+                            : "opacity-100",
+                      )}
+                      style={{
+                        marginTop:
+                          "calc(var(--hover-cards-height, 30rem) * 0.0225)",
+                      }}
+                    >
+                      {item.label}
+                    </span>
 
-                <span
-                  className={cn(
-                    "block max-w-[30ch] text-balance text-[clamp(8px,0.9cqw,16px)] leading-[1.22] tracking-[-0.04em] transition-[color,opacity,transform] duration-500",
-                    textIsLight ? "text-white" : "text-black",
-                    isActive
-                      ? "translate-y-0 opacity-100 delay-100"
-                      : "pointer-events-none translate-y-2 opacity-0",
-                    "@max-[420px]:hidden",
-                  )}
-                  style={{
-                    marginTop:
-                      "calc(var(--hover-cards-height, 30rem) * -0.012)",
-                  }}
-                >
-                  {item.description}
-                </span>
+                    <span
+                      className={cn(
+                        "block max-w-[30ch] text-balance text-[clamp(8px,0.9cqw,16px)] leading-[1.22] tracking-[-0.04em] transition-[color,opacity,transform] duration-500",
+                        textIsLight ? "text-white" : "text-black",
+                        isActive
+                          ? "translate-y-0 opacity-100 delay-100"
+                          : "pointer-events-none translate-y-2 opacity-0",
+                        "@max-[420px]:hidden",
+                      )}
+                      style={{
+                        marginTop:
+                          "calc(var(--hover-cards-height, 30rem) * -0.012)",
+                      }}
+                    >
+                      {item.description}
+                    </span>
+                  </>
+                ) : null}
               </button>
             </div>
           );
