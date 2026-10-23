@@ -1,3 +1,5 @@
+import { CinematicCardCarousel } from "@workspace/ui/components/cinematic-card-carousel";
+import { cinematicDemoCards } from "@/components/docs/previews/cinematic-card-carousel-items";
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import { CinematicCardCarouselPreview } from "@/components/docs/previews/cinematic-card-carousel-preview";
 import { readComponentSource } from "@/lib/source-code";
@@ -80,6 +82,50 @@ import {
   type CinematicCardItem,
 } from "@/components/ui/cinematic-card-carousel";`}
       usageCode={usageCode}
+      examples={[
+        {
+          title: "Stacked deck",
+          preview: (
+            <div className="relative h-[360px] w-full overflow-hidden rounded-xl">
+              <CinematicCardCarousel
+                items={cinematicDemoCards}
+                initialIndex={0}
+                className="h-full"
+              />
+            </div>
+          ),
+          code: `import { CinematicCardCarousel } from "@/components/ui/cinematic-card-carousel"
+
+<div className="relative h-[420px] w-full overflow-hidden rounded-xl">
+  <CinematicCardCarousel items={items} initialIndex={0} className="h-full" />
+</div>`,
+        },
+        {
+          title: "Auto-advancing, no arrows",
+          preview: (
+            <div className="relative h-[360px] w-full overflow-hidden rounded-xl">
+              <CinematicCardCarousel
+                items={cinematicDemoCards}
+                initialIndex={2}
+                autoPlayInterval={4000}
+                showArrows={false}
+                className="h-full"
+              />
+            </div>
+          ),
+          code: `import { CinematicCardCarousel } from "@/components/ui/cinematic-card-carousel"
+
+<div className="relative h-[420px] w-full overflow-hidden rounded-xl">
+  <CinematicCardCarousel
+    items={items}
+    initialIndex={2}
+    autoPlayInterval={4000}
+    showArrows={false}
+    className="h-full"
+  />
+</div>`,
+        },
+      ]}
       fullWidthPreview
       props={[
         {
@@ -117,14 +163,13 @@ import {
           type: 'false | "horizontal" | "both"',
           default: '"horizontal"',
           description:
-            "Sideways trackpad/mouse scroll moves the deck. \"both\" also captures vertical scroll; vertical page scroll is never trapped in \"horizontal\" mode.",
+            'Sideways trackpad/mouse scroll moves the deck. "both" also captures vertical scroll; vertical page scroll is never trapped in "horizontal" mode.',
         },
         {
           name: "showArrows",
           type: "boolean",
           default: "true",
-          description:
-            "Show minimal translucent previous/next edge controls.",
+          description: "Show minimal translucent previous/next edge controls.",
         },
         {
           name: "className",

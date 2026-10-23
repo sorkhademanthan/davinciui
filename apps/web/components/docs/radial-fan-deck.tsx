@@ -1,3 +1,4 @@
+import { RadialFanDeck } from "@workspace/ui/components/radial-fan-deck";
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import { RadialFanDeckPreview } from "@/components/docs/previews/radial-fan-deck-preview";
 import { readComponentSource } from "@/lib/source-code";
@@ -27,6 +28,56 @@ export async function RadialFanDeckDocs() {
       installSourceCode={sourceCode}
       installSourceFilename="components/ui/radial-fan-deck.tsx"
       usageCode={defaultCode}
+      examples={[
+        {
+          title: "Fully fanned",
+          preview: (
+            <div className="relative h-[360px] w-full overflow-hidden rounded-xl bg-zinc-100 dark:bg-zinc-950">
+              <RadialFanDeck
+                cardWidth={220}
+                scrollProgress={1}
+                fanAngle={110}
+                className="h-full"
+              />
+            </div>
+          ),
+          code: `import { RadialFanDeck } from "@/components/ui/radial-fan-deck"
+
+<div className="relative h-[420px] w-full overflow-hidden rounded-xl bg-zinc-100 dark:bg-zinc-950">
+  <RadialFanDeck
+    cardWidth={220}
+    scrollProgress={1}
+    fanAngle={110}
+    className="h-full"
+  />
+</div>`,
+        },
+        {
+          title: "Half unfolded",
+          preview: (
+            <div className="relative h-[360px] w-full overflow-hidden rounded-xl bg-zinc-100 dark:bg-zinc-950">
+              <RadialFanDeck
+                cardWidth={250}
+                scrollProgress={0.4}
+                startAngle={-40}
+                fanAngle={80}
+                className="h-full"
+              />
+            </div>
+          ),
+          code: `import { RadialFanDeck } from "@/components/ui/radial-fan-deck"
+
+<div className="relative h-[420px] w-full overflow-hidden rounded-xl bg-zinc-100 dark:bg-zinc-950">
+  <RadialFanDeck
+    cardWidth={250}
+    scrollProgress={0.4}
+    startAngle={-40}
+    fanAngle={80}
+    className="h-full"
+  />
+</div>`,
+        },
+      ]}
       fullWidthPreview
       props={[
         {
@@ -49,13 +100,15 @@ export async function RadialFanDeckDocs() {
         {
           name: "scrollProgress",
           type: "number",
-          description: "Optional controlled scroll position from 0 (closed) to 1 (fully fanned).",
+          description:
+            "Optional controlled scroll position from 0 (closed) to 1 (fully fanned).",
         },
         {
           name: "startAngle / fanAngle",
           type: "number",
           default: "-24 / 332",
-          description: "Starting angle and total angular sweep of the fan in degrees.",
+          description:
+            "Starting angle and total angular sweep of the fan in degrees.",
         },
         {
           name: "ariaLabel",

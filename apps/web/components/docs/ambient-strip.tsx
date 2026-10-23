@@ -1,3 +1,5 @@
+import { AmbientStrip } from "@workspace/ui/components/ambient-strip";
+import { ambientStripDemoItems } from "@/components/docs/previews/ambient-strip-items";
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import { AmbientStripPreview } from "@/components/docs/previews/ambient-strip-preview";
 import { readComponentSource } from "@/lib/source-code";
@@ -76,6 +78,62 @@ export async function AmbientStripDocs() {
       installDependencies="clsx tailwind-merge framer-motion"
       installSourceCode={sourceCode}
       installSourceFilename="components/ui/ambient-strip.tsx"
+      examples={[
+        {
+          title: "Compact film strip",
+          preview: (
+            <div className="relative h-[360px] w-full overflow-hidden rounded-xl">
+              <AmbientStrip
+                items={ambientStripDemoItems}
+                cardWidth={180}
+                gap={10}
+                loop
+                badge="Drag to explore"
+                className="h-full"
+              />
+            </div>
+          ),
+          code: `import { AmbientStrip } from "@/components/ui/ambient-strip"
+
+<div className="relative h-[420px] w-full overflow-hidden rounded-xl">
+  <AmbientStrip
+    items={items}
+    cardWidth={180}
+    gap={10}
+    loop
+    badge="Drag to explore"
+    className="h-full"
+  />
+</div>`,
+        },
+        {
+          title: "Soft focus, no badge",
+          preview: (
+            <div className="relative h-[360px] w-full overflow-hidden rounded-xl">
+              <AmbientStrip
+                items={ambientStripDemoItems}
+                cardWidth={210}
+                blur={18}
+                expandScale={1.05}
+                loop
+                className="h-full"
+              />
+            </div>
+          ),
+          code: `import { AmbientStrip } from "@/components/ui/ambient-strip"
+
+<div className="relative h-[420px] w-full overflow-hidden rounded-xl">
+  <AmbientStrip
+    items={items}
+    cardWidth={210}
+    blur={18}
+    expandScale={1.05}
+    loop
+    className="h-full"
+  />
+</div>`,
+        },
+      ]}
       fullWidthPreview
       unstyledPreview
       props={[
@@ -151,8 +209,6 @@ export async function AmbientStripDocs() {
             "Additional classes for the host section, including its minimum height.",
         },
       ]}
-      accessibilityNote="Each frame is a labelled group with a screen-reader caption built from its title and subtitle (falling back to alt). Only one tiled set stays in the tab order, arrow keys move between frames, and focus outlines stay visible against the ambient artwork."
-      motionNote="Expansion and ambient crossfades use spring and ease-out motion. When the user prefers reduced motion, transitions shorten to near-instant fades and the ambient drift is disabled."
     />
   );
 }

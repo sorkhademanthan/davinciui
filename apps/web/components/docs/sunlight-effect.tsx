@@ -1,3 +1,4 @@
+import { SunlightEffect } from "@workspace/ui/components/sunlight-effect";
 import { Section } from "@/components/component-layout";
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import {
@@ -107,6 +108,50 @@ export async function SunlightEffectDocs() {
       installPackageName="sunlight-effect"
       installSourceCode={sourceCode}
       installSourceFilename="components/ui/sunlight-effect.tsx"
+      examples={[
+        {
+          title: "Mint ray burst",
+          preview: (
+            <div className="relative h-[320px] w-full overflow-hidden rounded-xl">
+              <SunlightEffect className="h-full w-full" />
+            </div>
+          ),
+          code: `import { SunlightEffect } from "@/components/ui/sunlight-effect"
+
+<div className="relative h-[420px] w-full overflow-hidden rounded-xl">
+  <SunlightEffect className="h-full w-full" />
+</div>`,
+        },
+        {
+          title: "Amber dusk",
+          preview: (
+            <div className="relative h-[320px] w-full overflow-hidden rounded-xl">
+              <SunlightEffect
+                colors={["#ffd9a0", "#ffb066", "#ff8c42", "#ff6b35", "#ffa94d"]}
+                backgroundColor="#140b05"
+                bloomColor="#ffb066"
+                bloom={1}
+                intensity={1.2}
+                speed={0.6}
+                className="h-full w-full"
+              />
+            </div>
+          ),
+          code: `import { SunlightEffect } from "@/components/ui/sunlight-effect"
+
+<div className="relative h-[420px] w-full overflow-hidden rounded-xl">
+  <SunlightEffect
+    colors={["#ffd9a0", "#ffb066", "#ff8c42", "#ff6b35", "#ffa94d"]}
+    backgroundColor="#140b05"
+    bloomColor="#ffb066"
+    bloom={1}
+    intensity={1.2}
+    speed={0.6}
+    className="h-full w-full"
+  />
+</div>`,
+        },
+      ]}
       fullWidthPreview
       unstyledPreview
       props={[

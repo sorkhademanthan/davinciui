@@ -1,3 +1,4 @@
+import { GlassSceneDock } from "@workspace/ui/components/glass-scene-dock";
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import { GlassSceneDockPreview } from "@/components/docs/previews/glass-scene-dock-preview";
 import { readComponentSource } from "@/lib/source-code";
@@ -41,6 +42,53 @@ export async function GlassSceneDockDocs() {
       installDependencies="framer-motion, lucide-react"
       installSourceCode={sourceCode}
       installSourceFilename="components/ui/glass-scene-dock.tsx"
+      examples={[
+        {
+          title: "Card dock",
+          preview: (
+            <div className="relative h-[320px] w-full overflow-hidden rounded-xl">
+              <GlassSceneDock
+                mode="card"
+                defaultIndex={0}
+                enableScroll={false}
+                className="h-full"
+              />
+            </div>
+          ),
+          code: `import { GlassSceneDock } from "@/components/ui/glass-scene-dock"
+
+<div className="relative h-[420px] w-full overflow-hidden rounded-xl">
+  <GlassSceneDock mode="card" defaultIndex={0} enableScroll={false} className="h-full" />
+</div>`,
+        },
+        {
+          title: "Hover-only transitions",
+          preview: (
+            <div className="relative h-[320px] w-full overflow-hidden rounded-xl">
+              <GlassSceneDock
+                mode="preview"
+                defaultIndex={1}
+                enableScroll={false}
+                enableHover
+                transitionDuration={0.6}
+                className="h-full"
+              />
+            </div>
+          ),
+          code: `import { GlassSceneDock } from "@/components/ui/glass-scene-dock"
+
+<div className="relative h-[420px] w-full overflow-hidden rounded-xl">
+  <GlassSceneDock
+    mode="preview"
+    defaultIndex={1}
+    enableScroll={false}
+    enableHover
+    transitionDuration={0.6}
+    className="h-full"
+  />
+</div>`,
+        },
+      ]}
       fullWidthPreview
       unstyledPreview
       props={[
@@ -93,7 +141,8 @@ export async function GlassSceneDockDocs() {
         {
           name: "onSceneChange",
           type: "(index: number) => void",
-          description: "Fires when the active scene changes via scroll, click, or keyboard.",
+          description:
+            "Fires when the active scene changes via scroll, click, or keyboard.",
         },
       ]}
     />
