@@ -8,6 +8,10 @@ export interface DocsPageMarkdownInput {
   usageCode: string
   examples?: { title: string; code: string }[]
   props?: { name: string; type: string; default?: string; description: string }[]
+  accessibilityNote?: string
+  motionNote?: string
+  customizationNote?: string
+  constraintsNote?: string
 }
 
 export function buildDocsPageMarkdown(props: DocsPageMarkdownInput): string {
@@ -61,6 +65,34 @@ export function buildDocsPageMarkdown(props: DocsPageMarkdownInput): string {
       const defaultVal = prop.default ? `\`${prop.default}\`` : "-"
       lines.push(`| ${name} | ${type} | ${defaultVal} | ${prop.description} |`)
     }
+    lines.push("")
+  }
+
+  if (props.accessibilityNote) {
+    lines.push("## Accessibility")
+    lines.push("")
+    lines.push(props.accessibilityNote)
+    lines.push("")
+  }
+
+  if (props.motionNote) {
+    lines.push("## Motion")
+    lines.push("")
+    lines.push(props.motionNote)
+    lines.push("")
+  }
+
+  if (props.customizationNote) {
+    lines.push("## Customization")
+    lines.push("")
+    lines.push(props.customizationNote)
+    lines.push("")
+  }
+
+  if (props.constraintsNote) {
+    lines.push("## Known constraints")
+    lines.push("")
+    lines.push(props.constraintsNote)
     lines.push("")
   }
 
