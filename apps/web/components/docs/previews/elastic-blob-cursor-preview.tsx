@@ -12,15 +12,57 @@ export function ElasticBlobCursorPreview() {
       data-slot="elastic-blob-preview"
       className="relative h-full min-h-[600px] cursor-none overflow-hidden bg-zinc-100 dark:bg-black"
     >
-      <ElasticBlobCursor containerRef={previewRef} mode="container" zIndex={10} />
+      <ElasticBlobCursor
+        containerRef={previewRef}
+        mode="container"
+        zIndex={10}
+      />
       <div className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center px-8 mix-blend-difference">
         <p className="text-center text-[clamp(2.5rem,7vw,5.5rem)] font-black tracking-[-0.07em] text-white">
           DAVINCIUI
         </p>
       </div>
       <p className="pointer-events-none absolute inset-x-0 bottom-6 text-center text-sm text-zinc-500 dark:text-white/40">
-        Move across the stage — the blob stretches along your direction of travel
+        Move across the stage — the blob stretches along your direction of
+        travel
       </p>
+    </div>
+  );
+}
+
+export function ElasticBlobCursorExampleStage({
+  size = 56,
+  color = "#111111",
+  maxStretch = 1.8,
+  label = "Flick to stretch",
+}: {
+  size?: number;
+  color?: string;
+  maxStretch?: number;
+  label?: string;
+}) {
+  const stageRef = useRef<HTMLDivElement>(null);
+  return (
+    <div
+      ref={stageRef}
+      className="relative flex h-[260px] w-full cursor-none items-center justify-center overflow-hidden rounded-xl bg-zinc-100 dark:bg-zinc-950"
+    >
+      <ElasticBlobCursor
+        containerRef={stageRef}
+        mode="container"
+        size={size}
+        color={color}
+        maxStretch={maxStretch}
+        zIndex={10}
+      />
+      <div className="pointer-events-none relative z-20 text-center">
+        <p className="text-3xl font-semibold tracking-[-0.04em] text-zinc-950 dark:text-white">
+          DAVINCIUI
+        </p>
+        <p className="mt-2 text-[11px] uppercase tracking-[0.18em] text-zinc-500">
+          {label}
+        </p>
+      </div>
     </div>
   );
 }
