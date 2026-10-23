@@ -1,3 +1,5 @@
+import { SegmentedImageCarousel } from "@workspace/ui/components/segmented-image-carousel";
+
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import { SegmentedImageCarouselPreview } from "@/components/docs/previews/segmented-image-carousel-preview";
 import { readComponentSource } from "@/lib/source-code";
@@ -28,6 +30,22 @@ const slides = [
   className="aspect-[4/5] w-full max-w-xl"
 />`;
 
+const segmentedSlides = [
+  {
+    src: "/images/spiral-3d-slider/blue-double.jpg",
+    alt: "Blue double exposure",
+  },
+  {
+    src: "/images/spiral-3d-slider/crimson-profile.jpg",
+    alt: "Crimson profile",
+  },
+  {
+    src: "/images/spiral-3d-slider/ghosted-portrait.jpg",
+    alt: "Ghosted portrait",
+  },
+  { src: "/images/spiral-3d-slider/teal-echo.jpg", alt: "Teal echo portrait" },
+];
+
 export async function SegmentedImageCarouselDocs() {
   const sourceCode =
     (await readComponentSource("segmented-image-carousel")) ||
@@ -45,6 +63,60 @@ export async function SegmentedImageCarouselDocs() {
       installSourceFilename="components/ui/segmented-image-carousel.tsx"
       usageCode={defaultCode}
       fullWidthPreview
+      examples={[
+        {
+          title: "Coarse handoff",
+          preview: (
+            <div className="flex min-h-[440px] items-center justify-center px-6">
+              <SegmentedImageCarousel
+                slides={segmentedSlides}
+                rows={5}
+                columns={4}
+                interval={1800}
+                transitionDuration={500}
+                className="aspect-[4/5] w-full max-w-sm"
+              />
+            </div>
+          ),
+          code: `import { SegmentedImageCarousel } from "@/components/ui/segmented-image-carousel"
+
+<SegmentedImageCarousel
+  slides={slides}
+  rows={5}
+  columns={4}
+  interval={1800}
+  transitionDuration={500}
+  className="aspect-[4/5] w-full max-w-sm"
+/>`,
+        },
+        {
+          title: "Fine grid, slower handoff",
+          preview: (
+            <div className="flex min-h-[440px] items-center justify-center px-6">
+              <SegmentedImageCarousel
+                slides={segmentedSlides}
+                rows={12}
+                columns={3}
+                interval={2600}
+                transitionDuration={900}
+                showGrid={false}
+                className="aspect-[4/5] w-full max-w-sm"
+              />
+            </div>
+          ),
+          code: `import { SegmentedImageCarousel } from "@/components/ui/segmented-image-carousel"
+
+<SegmentedImageCarousel
+  slides={slides}
+  rows={12}
+  columns={3}
+  interval={2600}
+  transitionDuration={900}
+  showGrid={false}
+  className="aspect-[4/5] w-full max-w-sm"
+/>`,
+        },
+      ]}
       props={[
         {
           name: "slides",

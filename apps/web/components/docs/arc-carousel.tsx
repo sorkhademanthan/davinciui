@@ -1,3 +1,5 @@
+import { ArcCarousel } from "@workspace/ui/components/arc-carousel";
+
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import { ArcCarouselPreview } from "@/components/docs/previews/arc-carousel-preview";
 import { readComponentSource } from "@/lib/source-code";
@@ -54,6 +56,27 @@ export function WorkFan({ items }: { items: ArcCarouselItem[] }) {
   )
 }`;
 
+const arcExampleItems = [
+  {
+    src: "/images/spiral-3d-slider/blue-double.jpg",
+    alt: "Blue double exposure",
+  },
+  { src: "/images/spiral-3d-slider/red-echo.jpg", alt: "Red echo portrait" },
+  { src: "/images/spiral-3d-slider/prism-portrait.jpg", alt: "Prism portrait" },
+  {
+    src: "/images/spiral-3d-slider/silver-motion.jpg",
+    alt: "Silver motion study",
+  },
+  {
+    src: "/images/spiral-3d-slider/orange-haze.jpg",
+    alt: "Orange haze figure",
+  },
+  {
+    src: "/images/spiral-3d-slider/green-portrait.jpg",
+    alt: "Green lit portrait",
+  },
+];
+
 export async function ArcCarouselDocs() {
   const sourceCode =
     (await readComponentSource("arc-carousel")) ||
@@ -71,6 +94,54 @@ export async function ArcCarouselDocs() {
       installSourceFilename="components/ui/arc-carousel.tsx"
       usageCode={usageCode}
       fullWidthPreview
+      examples={[
+        {
+          title: "Tighter fan with a heading",
+          preview: (
+            <div className="w-full">
+              <ArcCarousel
+                items={arcExampleItems}
+                stepAngle={12}
+                eyebrow="Selected"
+                heading="Recent work"
+                className="h-[420px]"
+              />
+            </div>
+          ),
+          code: `import { ArcCarousel } from "@/components/ui/arc-carousel"
+
+<ArcCarousel
+  items={items}
+  stepAngle={12}
+  eyebrow="Selected"
+  heading="Recent work"
+  className="h-[420px]"
+/>`,
+        },
+        {
+          title: "Autoplay, wider spread",
+          preview: (
+            <div className="w-full">
+              <ArcCarousel
+                items={arcExampleItems.slice(0, 4)}
+                stepAngle={26}
+                autoPlay
+                snap={false}
+                className="h-[420px]"
+              />
+            </div>
+          ),
+          code: `import { ArcCarousel } from "@/components/ui/arc-carousel"
+
+<ArcCarousel
+  items={items}
+  stepAngle={26}
+  autoPlay
+  snap={false}
+  className="h-[420px]"
+/>`,
+        },
+      ]}
       props={[
         {
           name: "items",

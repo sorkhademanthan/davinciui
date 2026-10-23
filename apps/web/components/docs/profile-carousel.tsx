@@ -1,3 +1,8 @@
+import {
+  ProfileCarousel,
+  type Profile,
+} from "@workspace/ui/components/profile-carousel";
+
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import { ProfileCarouselPreview } from "@/components/docs/previews/profile-carousel-preview";
 import { readComponentSource } from "@/lib/source-code";
@@ -31,6 +36,38 @@ export default function TeamGallery() {
   )
 }`;
 
+const exampleProfiles: Profile[] = [
+  {
+    id: "marcus-berendt",
+    name: "Marcus Berendt",
+    image: "/images/spiral-3d-slider/red-echo.jpg",
+    description: "Product Designer focused on intuitive digital experiences.",
+    category: "Product Design",
+    objectPosition: "50% 20%",
+  },
+  {
+    id: "ava-kim",
+    name: "Ava Kim",
+    image: "/images/spiral-3d-slider/prism-portrait.jpg",
+    description: "UX researcher turning insight into clear direction.",
+    category: "UX Research",
+  },
+  {
+    id: "noa-park",
+    name: "Noa Park",
+    image: "/images/spiral-3d-slider/blue-profile.jpg",
+    description: "Design engineer shipping polished interfaces.",
+    category: "Engineering",
+  },
+  {
+    id: "ari-vega",
+    name: "Ari Vega",
+    image: "/images/spiral-3d-slider/green-portrait.jpg",
+    description: "Creative director shaping brand systems.",
+    category: "Creative Direction",
+  },
+];
+
 export async function ProfileCarouselDocs() {
   const sourceCode =
     (await readComponentSource("profile-carousel")) ||
@@ -49,6 +86,46 @@ export async function ProfileCarouselDocs() {
       installSourceFilename="components/ui/profile-carousel.tsx"
       fullWidthPreview
       unstyledPreview
+      examples={[
+        {
+          title: "Autoplay through the team",
+          preview: (
+            <div className="w-full">
+              <ProfileCarousel
+                profiles={exampleProfiles}
+                autoplay
+                autoplayInterval={3000}
+              />
+            </div>
+          ),
+          code: `import { ProfileCarousel } from "@/components/ui/profile-carousel"
+
+<ProfileCarousel
+  profiles={profiles}
+  autoplay
+  autoplayInterval={3000}
+/>`,
+        },
+        {
+          title: "Starts on the second profile",
+          preview: (
+            <div className="w-full">
+              <ProfileCarousel
+                profiles={exampleProfiles}
+                initialIndex={1}
+                loop={false}
+              />
+            </div>
+          ),
+          code: `import { ProfileCarousel } from "@/components/ui/profile-carousel"
+
+<ProfileCarousel
+  profiles={profiles}
+  initialIndex={1}
+  loop={false}
+/>`,
+        },
+      ]}
       props={[
         {
           name: "profiles",
@@ -99,7 +176,8 @@ export async function ProfileCarouselDocs() {
         {
           name: "onProfileClick",
           type: "(profile: Profile) => void",
-          description: "Called when a card's View Profile control is activated.",
+          description:
+            "Called when a card's View Profile control is activated.",
         },
         {
           name: "onIndexChange",

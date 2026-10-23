@@ -1,3 +1,5 @@
+import { ServicesShowcase } from "@workspace/ui/components/services-showcase";
+
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import { ServicesShowcasePreview } from "@/components/docs/previews/services-showcase-preview";
 import { readComponentSource } from "@/lib/source-code";
@@ -35,6 +37,30 @@ export async function ServicesShowcaseDocs() {
       preview={<ServicesShowcasePreview />}
       previewCode={usageCode}
       usageCode={usageCode}
+      examples={[
+        {
+          title: "Compact autoplay stack",
+          preview: (
+            <div className="flex min-h-[360px] w-full items-center justify-center px-6 py-10">
+              <ServicesShowcase density="compact" autoPlay />
+            </div>
+          ),
+          code: `import { ServicesShowcase } from "@/components/ui/services-showcase"
+
+<ServicesShowcase density="compact" autoPlay />`,
+        },
+        {
+          title: "Display-only stack",
+          preview: (
+            <div className="flex min-h-[360px] w-full items-center justify-center px-6 py-10">
+              <ServicesShowcase density="compact" interactive={false} />
+            </div>
+          ),
+          code: `import { ServicesShowcase } from "@/components/ui/services-showcase"
+
+<ServicesShowcase density="compact" interactive={false} />`,
+        },
+      ]}
       installPackageName="services-showcase"
       installDependencies=""
       installSourceCode={sourceCode}

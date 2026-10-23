@@ -1,3 +1,5 @@
+import { PixelWipeCarousel } from "@workspace/ui/components/pixel-wipe-carousel";
+
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import { PixelWipeCarouselPreview } from "@/components/docs/previews/pixel-wipe-carousel-preview";
 import { readComponentSource } from "@/lib/source-code";
@@ -17,6 +19,19 @@ const slides = [
   className="aspect-[4/5] w-full max-w-xl"
 />`;
 
+const pixelSlides = [
+  { src: "/images/spiral-3d-slider/dark-glitch.jpg", alt: "Dark glitch study" },
+  { src: "/images/spiral-3d-slider/visor-portrait.jpg", alt: "Visor portrait" },
+  {
+    src: "/images/spiral-3d-slider/white-motion.jpg",
+    alt: "White motion study",
+  },
+  {
+    src: "/images/spiral-3d-slider/camera-reflection.jpg",
+    alt: "Camera reflection",
+  },
+];
+
 export async function PixelWipeCarouselDocs() {
   const sourceCode =
     (await readComponentSource("pixel-wipe-carousel")) ||
@@ -34,6 +49,58 @@ export async function PixelWipeCarouselDocs() {
       installSourceFilename="components/ui/pixel-wipe-carousel.tsx"
       usageCode={defaultCode}
       fullWidthPreview
+      examples={[
+        {
+          title: "Coarse mosaic, longer hold",
+          preview: (
+            <div className="flex min-h-[440px] items-center justify-center px-6">
+              <PixelWipeCarousel
+                slides={pixelSlides}
+                label="STUDIO"
+                caption="Spring 2026"
+                pixelSize={90}
+                interval={2200}
+                className="aspect-[4/5] w-full max-w-sm"
+              />
+            </div>
+          ),
+          code: `import { PixelWipeCarousel } from "@/components/ui/pixel-wipe-carousel"
+
+<PixelWipeCarousel
+  slides={slides}
+  label="STUDIO"
+  caption="Spring 2026"
+  pixelSize={90}
+  interval={2200}
+  className="aspect-[4/5] w-full max-w-sm"
+/>`,
+        },
+        {
+          title: "Fine mosaic, slower wipe",
+          preview: (
+            <div className="flex min-h-[440px] items-center justify-center px-6">
+              <PixelWipeCarousel
+                slides={pixelSlides}
+                label="ARCHIVE"
+                caption="Contact sheet"
+                pixelSize={28}
+                transitionDuration={900}
+                className="aspect-[4/5] w-full max-w-sm"
+              />
+            </div>
+          ),
+          code: `import { PixelWipeCarousel } from "@/components/ui/pixel-wipe-carousel"
+
+<PixelWipeCarousel
+  slides={slides}
+  label="ARCHIVE"
+  caption="Contact sheet"
+  pixelSize={28}
+  transitionDuration={900}
+  className="aspect-[4/5] w-full max-w-sm"
+/>`,
+        },
+      ]}
       props={[
         {
           name: "slides",

@@ -1,5 +1,10 @@
+import { HoverCards } from "@workspace/ui/components/hover-cards";
+
 import { DocsPageLayout } from "@/components/docs-page-layout";
-import { HoverCardsPreview } from "@/components/docs/previews/hover-cards-preview";
+import {
+  hoverCardsDemoItems,
+  HoverCardsPreview,
+} from "@/components/docs/previews/hover-cards-preview";
 import { readComponentSource } from "@/lib/source-code";
 
 const usageCode = `import { HoverCards, type HoverCardsItem } from "@/components/ui/hover-cards"
@@ -39,6 +44,59 @@ export async function HoverCardsDocs() {
       preview={<HoverCardsPreview />}
       previewCode={usageCode}
       usageCode={usageCode}
+      examples={[
+        {
+          title: "Autoplay through the set",
+          preview: (
+            <div className="w-full">
+              <HoverCards
+                items={hoverCardsDemoItems}
+                autoPlay
+                autoPlayInterval={2200}
+                backdropBlur={64}
+                className="min-h-[42rem]"
+              />
+            </div>
+          ),
+          code: `import { HoverCards } from "@/components/ui/hover-cards"
+
+const portraits = [
+  { id: "soft-focus", src: "/images/portrait-01.jpg", alt: "…", label: "Soft Focus", description: "…", textTone: "light" },
+  { id: "silver-poise", src: "/images/portrait-02.jpg", alt: "…", label: "Silver Poise", description: "…", textTone: "dark" },
+]
+
+<HoverCards
+  items={portraits}
+  autoPlay
+  autoPlayInterval={2200}
+  backdropBlur={64}
+  className="min-h-[42rem]"
+/>`,
+        },
+        {
+          title: "Opens on a chosen card",
+          preview: (
+            <div className="w-full">
+              <HoverCards
+                items={hoverCardsDemoItems.slice(0, 3)}
+                initialActiveIndex={1}
+                title="Selected Works"
+                backdropBlur={20}
+                className="min-h-[38rem]"
+              />
+            </div>
+          ),
+          code: `import { HoverCards } from "@/components/ui/hover-cards"
+
+<HoverCards
+  items={portraits}
+  initialActiveIndex={1}
+  title="Selected Works"
+  backdropBlur={20}
+  className="min-h-[38rem]"
+/>`,
+        },
+      ]}
       installPackageName="hover-cards"
       installDependencies="clsx tailwind-merge"
       installSourceCode={sourceCode}
@@ -86,7 +144,8 @@ export async function HoverCardsDocs() {
           name: "backdropBlur",
           type: "number",
           default: "44",
-          description: "Blur radius, in pixels, for the expanded background image.",
+          description:
+            "Blur radius, in pixels, for the expanded background image.",
         },
         {
           name: "autoPlay",
@@ -107,6 +166,13 @@ export async function HoverCardsDocs() {
           default: "true",
           description:
             "Pause auto-play while the pointer hovers or focus is inside the composition.",
+        },
+        {
+          name: "showText",
+          type: "boolean",
+          default: "true",
+          description:
+            "Hide the title, index numbers, labels, and descriptions for compact previews.",
         },
         {
           name: "className",
