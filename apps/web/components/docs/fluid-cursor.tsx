@@ -20,6 +20,7 @@ export async function FluidCursorDocs() {
     "// Unable to load source code";
   return (
     <DocsPageLayout
+      hideExamples
       title="Fluid Cursor"
       description="A fullscreen GPU fluid simulation on near-black. Pointer movement injects velocity and spectral dye into a persistent velocity field with vorticity confinement and pressure solving, so colorful liquid keeps drifting, curling, and fading after the cursor leaves."
       preview={<FluidCursorPreview />}

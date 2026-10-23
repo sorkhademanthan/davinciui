@@ -52,6 +52,7 @@ export async function ScrollTimelineDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Scroll Timeline"
       description="Pinned fullscreen year timeline — vertical scroll collapses each panel horizontally via clip-path while the oversized year rotates around its bottom-left anchor, exposing the next era underneath. Fully reversible and driven directly by scroll progress."
       preview={

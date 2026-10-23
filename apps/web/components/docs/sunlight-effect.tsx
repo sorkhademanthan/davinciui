@@ -99,6 +99,7 @@ export async function SunlightEffectDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Sunlight Effect"
       description="Animated multi-color rays radiating from a bright central glow, with adjustable density, reach, bloom, and motion."
       preview={<SunlightEffectPreview />}

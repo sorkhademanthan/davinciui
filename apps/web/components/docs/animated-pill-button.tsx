@@ -17,6 +17,7 @@ export async function AnimatedPillButtonDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Animated Pill Button"
       description="A black pill CTA with a directional liquid wipe — cyan bursts from the right-side dot with a curved leading edge while the dot morphs into an arrow circle and the label flips contrast inside the same mask. One component scales from gallery card to fullscreen."
       preview={<AnimatedPillButtonPreview />}

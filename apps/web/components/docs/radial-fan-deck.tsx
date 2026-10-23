@@ -19,6 +19,7 @@ export async function RadialFanDeckDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Radial Fan Deck"
       description="A scroll-driven editorial card deck that unfolds from one shared hinge into a full radial fan. Scroll back to fold it into the centered stack."
       preview={<RadialFanDeckPreview />}

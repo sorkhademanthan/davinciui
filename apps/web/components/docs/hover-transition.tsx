@@ -65,6 +65,7 @@ export async function HoverTransitionDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Hover Transition"
       description="A flexible hover wrapper with eight polished transitions, per-card direction and color controls, custom default and hover content, adjustable timing, and a built-in fallback card."
       preview={<HoverTransitionPlayground />}

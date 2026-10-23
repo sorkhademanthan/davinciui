@@ -30,6 +30,7 @@ export async function TextVideoMaskDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Text Video Mask"
       description="Large typography where a playing video is visible only inside the glyphs. The type is a true mask cutout — counters and holes included — over one continuous footage surface that keeps playing while the letters stay still."
       preview={

@@ -20,6 +20,7 @@ export async function ElasticBlobCursorDocs() {
     "// Unable to load source code";
   return (
     <DocsPageLayout
+      hideExamples
       title="Elastic Blob Cursor"
       description="A soft white blob that chases the pointer with inertia, stretches along the direction of travel, and relaxes back into a circle when you slow down."
       preview={<ElasticBlobCursorPreview />}

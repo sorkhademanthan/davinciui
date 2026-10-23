@@ -82,6 +82,7 @@ export async function NeonMeshBGDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Neon Mesh BG"
       description="A dark cinematic WebGL background with an evolving purple neon mesh, fine pixel matrix, and soft atmospheric bloom."
       preview={<NeonMeshBGPreview />}

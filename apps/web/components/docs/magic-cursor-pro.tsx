@@ -19,6 +19,7 @@ export async function MagicCursorProDocs() {
     "// Unable to load source code";
   return (
     <DocsPageLayout
+      hideExamples
       title="Magic Cursor Pro"
       description="A compact outlined cursor with natural spring weight, subtle click compression, dynamic blend support, and automatic touch/portrait disablement."
       preview={<MagicCursorProPreview />}

@@ -32,6 +32,7 @@ export async function ServicesShowcaseDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Services Showcase"
       description="A layered image stack that unfolds into three portrait cards on hover, tap, or keyboard activation, with a subtle pointer perspective response."
       preview={<ServicesShowcasePreview />}

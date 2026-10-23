@@ -21,6 +21,7 @@ export async function LiquidRevealButtonDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Liquid Reveal Button"
       description="A substantial acid-yellow pill CTA with a pointer-driven black liquid reveal — the mask originates at the real cursor position, expands to full cover with spatially-masked two-tone text, then retracts toward the exit point. One container-aware component adapts to card, side-panel, and fullscreen sizes."
       preview={<LiquidRevealButtonPreview />}

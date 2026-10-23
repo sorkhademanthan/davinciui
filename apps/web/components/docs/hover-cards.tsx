@@ -39,6 +39,7 @@ export async function HoverCardsDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Hover Cards"
       description="An editorial portrait row that opens the hovered card into a tall focal image while a blurred, full-bleed version of the same artwork washes across the stage. Pointer, keyboard, and tap interactions share the same responsive composition."
       preview={<HoverCardsPreview />}

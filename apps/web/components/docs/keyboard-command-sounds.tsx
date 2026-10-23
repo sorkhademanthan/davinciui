@@ -14,6 +14,7 @@ export async function KeyboardCommandSoundsDocs() {
     "// Unable to load source code";
   return (
     <DocsPageLayout
+      hideExamples
       title="Keyboard & Command Sounds"
       description="Optional keyboard and command feedback for focused productivity interfaces."
       preview={<KeyboardCommandSoundsPreview />}

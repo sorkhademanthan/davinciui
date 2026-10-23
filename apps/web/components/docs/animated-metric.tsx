@@ -23,6 +23,7 @@ export async function AnimatedMetricDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Animated Metric"
       description="An editorial count-up statistic — the number eases from its start value to the exact final figure when it enters the viewport, with a subtle rise-and-fade entrance and a screen-reader-friendly final value. One container-aware component scales from gallery card to fullscreen."
       preview={<AnimatedMetricPreview />}

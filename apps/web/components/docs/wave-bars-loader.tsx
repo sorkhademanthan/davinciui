@@ -19,6 +19,7 @@ export async function WaveBarsLoaderDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Wave Bars Loader"
       description="A deterministic 4-bar traveling-wave loader with mint bars morphing through descending, flat, and ascending states."
       preview={<WaveBarsLoaderPreview />}

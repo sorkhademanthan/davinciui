@@ -21,6 +21,7 @@ export async function GeometricPreloaderDocs() {
     "// Unable to load source code";
   return (
     <DocsPageLayout
+      hideExamples
       title="Geometric Preloader"
       description="A fullscreen geometric loader with nested rotating squares and a diamond-scale reveal."
       preview={

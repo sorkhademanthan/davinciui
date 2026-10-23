@@ -112,6 +112,7 @@ export async function EditorialWipePreloaderDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Editorial Wipe Preloader"
       description="A fullscreen forest-to-cream horizontal wipe with a giant split-tone counter and a vertical slide-away reveal."
       preview={

@@ -75,6 +75,7 @@ export async function ProfileCarouselDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Profile Carousel"
       description="An editorial team carousel — full portrait cards with one traveling profile detail card, edge-clipped viewport, seamless looping, and drag plus arrow navigation on a single GPU-accelerated track."
       preview={<ProfileCarouselPreview />}

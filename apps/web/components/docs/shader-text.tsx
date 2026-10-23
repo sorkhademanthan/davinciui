@@ -35,6 +35,7 @@ export async function ShaderTextDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Shader Text"
       description="Animated WebGL fragment shaders clipped inside text glyphs via a dynamic SVG mask. Twelve GLSL presets — noise, plasma, aurora, cyber and more — flow continuously inside razor-sharp type with GPU-accelerated rendering."
       preview={<ShaderTextPlayground />}

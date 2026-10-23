@@ -20,6 +20,7 @@ export async function GeometricTrailCursorDocs() {
     "// Unable to load source code";
   return (
     <DocsPageLayout
+      hideExamples
       title="Geometric Trail Cursor"
       description="A fullscreen procedural wireframe cursor history on pure black. Pointer movement extrudes twisting chains of outlined polygons along the exact cursor path. New shapes cycle through vivid hues before settling into a long-lived near-black geometric skeleton."
       preview={<GeometricTrailCursorPreview />}

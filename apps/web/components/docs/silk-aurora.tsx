@@ -29,6 +29,7 @@ export async function SilkAuroraDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Silk Aurora"
       description="A premium WebGL hero background with satin-dark aurora ribbons, pearlescent highlights, subtle grain, and optional cursor depth."
       preview={

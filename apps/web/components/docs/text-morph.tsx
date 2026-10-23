@@ -22,6 +22,7 @@ export async function TextMorphDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Text Morph"
       description="A fluid text primitive that blends one value into the next while preserving its visual center and inheriting the surrounding typography."
       preview={<TextMorphPlayground />}

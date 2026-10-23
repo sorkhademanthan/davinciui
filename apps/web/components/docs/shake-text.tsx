@@ -22,6 +22,7 @@ export async function ShakeTextDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Shake Text"
       description="A premium 3D layered text effect with four colored depth copies that move continuously behind a stable foreground."
       preview={<ShakeTextPlayground />}

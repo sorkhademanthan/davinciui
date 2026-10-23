@@ -14,6 +14,7 @@ export async function VoiceRecorderDocs() {
     "// Unable to load source code";
   return (
     <DocsPageLayout
+      hideExamples
       title="Voice Recorder"
       description="Browser microphone capture with a recording timer, live waveform treatment, and playback."
       preview={<VoiceRecorderPreview />}

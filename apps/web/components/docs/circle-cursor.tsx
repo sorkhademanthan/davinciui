@@ -25,6 +25,7 @@ export async function CircleCursorDocs() {
     "// Unable to load source code";
   return (
     <DocsPageLayout
+      hideExamples
       title="Circle Cursor"
       description="A single solid orange follower circle with smooth requestAnimationFrame inertia, viewport-wide tracking, automatic touch-device disablement, and light/dark theme support."
       preview={<CircleCursorPreview />}

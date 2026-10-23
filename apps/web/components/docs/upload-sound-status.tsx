@@ -12,6 +12,7 @@ export async function UploadSoundStatusDocs() {
     "// Unable to load source code";
   return (
     <DocsPageLayout
+      hideExamples
       title="Upload Sound Status"
       description="Transfer progress with a subtle completion cue and a reusable upload-state surface."
       preview={<UploadSoundStatusPreview />}

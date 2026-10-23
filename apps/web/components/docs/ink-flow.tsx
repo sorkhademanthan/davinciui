@@ -82,6 +82,7 @@ export async function InkFlowDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Ink Flow"
       description="A native WebGL hero background where fountain-pen pigment slowly disperses through warm, textured watercolor paper."
       preview={<InkFlowPreview />}

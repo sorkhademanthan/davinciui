@@ -42,6 +42,7 @@ export async function ScrollSyncGalleryDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Scroll Sync Gallery"
       description="Full-width pinned image wall — four vertical columns travel at different speeds and alternating directions, all driven by one normalized scroll progress. Fully reversible, GPU-friendly, with responsive redistribution and reduced-motion fallback."
       preview={

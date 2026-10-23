@@ -65,6 +65,7 @@ export async function SoftFluidGradientDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Soft Fluid Gradient"
       description="A deep, hypnotic native WebGL background with an enormous looping ribbon of dark color and fluid illumination."
       preview={<SoftFluidGradientPreview />}

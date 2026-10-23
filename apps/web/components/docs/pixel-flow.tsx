@@ -26,6 +26,7 @@ export async function PixelFlowDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Pixel Flow"
       description="Flowing violet light rendered through a fine, animated dithered pixel field."
       preview={<PixelFlowPlayground />}

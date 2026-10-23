@@ -20,6 +20,7 @@ export async function TubesCursorDocs() {
     "// Unable to load source code";
   return (
     <DocsPageLayout
+      hideExamples
       title="Tubes Cursor"
       description="A bundle of glowing 3D neon tubes that chases the pointer with fluid inertia, smooth spline curvature, and soft bloom. Clicking randomizes the palette."
       preview={<TubesCursorPreview />}

@@ -17,6 +17,7 @@ export async function NudgeButtonDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Nudge Button"
       description="A white pill CTA with a directional nudge interaction — concentric blue, red, and yellow rings burst from the exact pointer entry point before a white reveal pushes them out through the clipped edges. One component scales from gallery card to fullscreen."
       preview={<NudgeButtonPreview />}

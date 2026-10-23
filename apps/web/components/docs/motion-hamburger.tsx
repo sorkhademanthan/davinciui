@@ -104,6 +104,7 @@ export async function MotionHamburgerDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Motion Hamburger"
       description="A premium animated hamburger toggle that morphs into a close icon with SVG path-drawing, elastic rotation, and an optional ring."
       preview={<MotionHamburgerPreview />}

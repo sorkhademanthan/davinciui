@@ -35,6 +35,7 @@ export async function ScrollRevealImageDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Scroll Reveal Image"
       description="A scroll scrubbed image sequence that lets the next frame arrive in a centered window before it takes over the backdrop. The result feels like a cinematic reveal without scroll hijacking."
       examples={[

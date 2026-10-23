@@ -69,6 +69,7 @@ export async function AmbientStripDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Ambient Strip"
       description="A horizontal strip of portrait frames that expands the hovered or focused card while a blurred, full-bleed version of the same artwork crossfades behind the row. Drag, wheel, or use the arrow keys to travel the strip; touch devices expand whichever card sits at the center."
       preview={<AmbientStripPreview />}

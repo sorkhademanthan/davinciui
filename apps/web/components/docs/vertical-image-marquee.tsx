@@ -47,6 +47,7 @@ export async function VerticalImageMarqueeDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Vertical Image Marquee"
       description="A seamless editorial portrait strip that rises through a clean light or dark canvas, with unrounded panels and quiet, generous gutters."
       preview={<VerticalImageMarqueePreview />}

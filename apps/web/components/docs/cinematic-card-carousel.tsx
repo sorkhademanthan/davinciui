@@ -67,6 +67,7 @@ export async function CinematicCardCarouselDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Cinematic Card Carousel"
       description="A cinematic depth-based card gallery — one sharp hero portrait stays dominant in the center while neighbors compress behind it with progressive scale, blur, and fade. Drag, swipe, or click any card to promote it with weighted spring physics."
       preview={<CinematicCardCarouselPreview />}

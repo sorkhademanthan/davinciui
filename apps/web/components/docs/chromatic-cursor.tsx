@@ -27,6 +27,7 @@ export async function ChromaticCursorDocs() {
     "// Unable to load source code";
   return (
     <DocsPageLayout
+      hideExamples
       title="Chromatic Cursor"
       description="A lightweight RGB cursor trail with independently styled color channels, a soft glowing head, and smooth canvas motion."
       preview={<ChromaticCursorPreview />}

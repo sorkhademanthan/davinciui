@@ -43,6 +43,7 @@ export async function HorizontalScrollGalleryDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Horizontal Scroll Gallery"
       description="A pinned variable-width film strip — vertical page scroll drives a continuous horizontal image track with no snapping, no controls, and no autoplay. Fully reversible, dimension-driven, with responsive redistribution and reduced-motion fallback."
       examples={[

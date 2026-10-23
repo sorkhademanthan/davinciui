@@ -27,6 +27,7 @@ export async function NoiserDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Noiser"
       description="Fine procedural grain for hero backgrounds, rendered with responsive SVG turbulence filters."
       preview={

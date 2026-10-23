@@ -39,6 +39,7 @@ export async function PixelWipeCarouselDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Pixel Wipe Carousel"
       description="An autoplaying editorial image carousel that sweeps each new frame in from the right through a deliberately coarse, resolving pixel mosaic."
       preview={<PixelWipeCarouselPreview />}

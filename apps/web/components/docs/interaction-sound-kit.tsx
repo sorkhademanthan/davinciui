@@ -17,6 +17,7 @@ export async function InteractionSoundKitDocs() {
     "// Unable to load source code";
   return (
     <DocsPageLayout
+      hideExamples
       title="Interaction Sound Kit"
       description="System-style sound feedback for trash, drop, confirmation, and warning actions."
       preview={<InteractionSoundKitPreview />}

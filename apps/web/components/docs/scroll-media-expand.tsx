@@ -23,6 +23,7 @@ export async function ScrollMediaExpandDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Scroll Media Expand"
       description="A cinematic scroll zoom reveal that begins as a compact media capsule, expands width-first into a rounded frame, and then fills the viewport while the surrounding text fades away. The motion is fully reversible, responsive, and driven directly by scroll progress."
       examples={[

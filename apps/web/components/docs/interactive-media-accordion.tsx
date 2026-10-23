@@ -54,6 +54,7 @@ export async function InteractiveMediaAccordionDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Interactive Media Accordion"
       description="A sticky media accordion that advances with scroll and reverses as you scroll back. Click or focus a card to select it directly; narrow layouts keep every card visible when space allows."
       preview={

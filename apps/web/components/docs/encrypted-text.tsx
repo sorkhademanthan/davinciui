@@ -22,6 +22,7 @@ export async function EncryptedTextDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Encrypted Text"
       description="A continuously scrambling cipher that decrypts from left to right into a readable message while keeping every character locked in place."
       preview={<EncryptedTextPlayground />}

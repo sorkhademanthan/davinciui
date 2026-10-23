@@ -96,6 +96,7 @@ export async function StaircasePreloaderDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Staircase Preloader"
       description="A fullscreen orange stepped-curtain loader that exits upward with a left-to-right staircase edge and a top-right finish."
       preview={

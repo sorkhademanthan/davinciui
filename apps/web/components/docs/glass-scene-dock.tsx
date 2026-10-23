@@ -33,6 +33,7 @@ export async function GlassSceneDockDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Glass Scene Dock"
       description="A floating glass navigation dock pinned over scroll-driven gradient scenes — no image files needed. A travelling glass highlight glides between icons while scrolling crossfades the backdrop. Pass image per scene to use photography instead. Fully light/dark aware."
       preview={<GlassSceneDockPreview />}

@@ -25,6 +25,7 @@ export async function LiquidChromeDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Liquid Chrome"
       description="A premium fluid liquid metal shader background effect with interactive mouse distortion."
       fullWidthPreview={true}

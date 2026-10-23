@@ -29,6 +29,7 @@ export async function RandomTextRevealDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Random Text Reveal"
       description="Per-character text reveal in shuffled order when the text enters the viewport. Unrevealed glyphs sit faint while random letters resolve into solid type — scattered across the whole paragraph, never left-to-right."
       preview={<RandomTextRevealPlayground />}

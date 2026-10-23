@@ -96,6 +96,7 @@ export async function AmbientAudioToggleDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Ambient Audio Toggle"
       description="A visitor-controlled background music toggle with an animated waveform, persistent playback, and accessible keyboard controls."
       preview={<AmbientAudioTogglePreview />}

@@ -112,6 +112,7 @@ export async function OrbitSpiralGalleryDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Orbit Spiral Gallery"
       description="A compact, autoplaying image gallery that responds to scroll while flowing along a smooth 3D spiral."
       preview={

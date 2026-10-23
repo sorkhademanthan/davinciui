@@ -29,6 +29,7 @@ export async function StackedScrollGalleryDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Stacked Scroll Gallery"
       description="Pinned layered media stack — the next panel rises from the bottom and physically covers the current one, driven directly by scroll. Fully reversible, with per-card rounding and a live next-card preview strip."
       preview={

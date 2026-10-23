@@ -53,6 +53,7 @@ export async function SegmentedImageCarouselDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Segmented Image Carousel"
       description="An autoplaying editorial image carousel that reconstructs each new frame through a staggered grid of monochrome slices."
       preview={<SegmentedImageCarouselPreview />}

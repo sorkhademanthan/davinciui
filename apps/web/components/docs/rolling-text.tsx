@@ -22,6 +22,7 @@ export async function RollingTextDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Rolling Text"
       description="Mechanical slot-machine typography — every character is an independent clipped column rolling a vertical stack of its own glyphs into place."
       preview={<RollingTextPlayground />}

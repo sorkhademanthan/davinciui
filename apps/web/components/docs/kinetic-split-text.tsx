@@ -151,6 +151,7 @@ export async function KineticSplitTextDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Kinetic Split Text"
       description="Staggered kinetic typography with character, word and line splitting, directional reveals, blur, 3D transforms and scroll-linked motion."
       preview={<KineticSplitTextPreview />}

@@ -25,6 +25,7 @@ export async function ElectricVijdiCursorDocs() {
     "// Unable to load source code";
   return (
     <DocsPageLayout
+      hideExamples
       title="Electric Vijdi Cursor"
       description="A white-hot violet bolt that snaps through recent pointer movement, flickers briefly at rest, and never intercepts page interactions."
       preview={<ElectricVijdiCursorPreview />}

@@ -109,6 +109,7 @@ export async function SpectraNoiseDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Spectra Noise"
       description="Luminous aurora folds, soft teal halos, and pale green edges drifting through deep shadow, finished with fine grain and moving scanlines."
       preview={<SpectraNoisePreview />}

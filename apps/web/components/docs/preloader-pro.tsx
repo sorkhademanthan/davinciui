@@ -122,6 +122,7 @@ export async function PreloaderProDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Preloader Pro"
       description="A cinematic two-stage loader: heavy percentage with a thin red line on white, then a sliding panel reveal into a dark DAVINCIUI hero."
       preview={

@@ -20,6 +20,7 @@ export async function LiquidChromeButtonDocs() {
     "// Unable to load source code";
   return (
     <DocsPageLayout
+      hideExamples
       title="Liquid Chrome Button"
       description="A circular WebGL liquid-metal button with a frosted glass lens, springy hover response, and anchor support."
       preview={<LiquidChromeButtonPreview />}

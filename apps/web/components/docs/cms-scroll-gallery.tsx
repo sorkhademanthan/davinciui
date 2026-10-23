@@ -32,6 +32,7 @@ export async function CMSScrollGalleryDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="CMS Scroll Gallery"
       description="Sticky fullscreen scroll gallery — a long scroll track pins one viewport while page scroll drives synchronized background media + centered title transitions, tracked by a draggable glass thumbnail dock."
       preview={

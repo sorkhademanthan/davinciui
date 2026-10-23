@@ -28,6 +28,7 @@ export async function TeamSlideRevealDocs() {
     "// Unable to load source code";
   return (
     <DocsPageLayout
+      hideExamples
       title="Team Slide Reveal"
       description="An editorial portrait card that reveals a personal story in a rising sheet. Open the full card, then use the back control to return to the profile."
       preview={<TeamSlideRevealPreview />}

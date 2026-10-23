@@ -22,6 +22,7 @@ export async function LensDriftGridDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Lens Drift Grid"
       description="A seamless two-axis image wall warped as one continuous fisheye surface, with dense editorial tiles, weighted drag navigation, and a gentle idle auto-drift that yields to touch."
       preview={<LensDriftGrid className="h-full w-full" autoDrift />}

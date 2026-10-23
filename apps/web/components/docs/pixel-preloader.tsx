@@ -109,6 +109,7 @@ export async function PixelPreloaderDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Pixel Preloader"
       description="A fullscreen pixel-grid loader that takes over the viewport bottom-up behind a jagged orange frontier, with a top-left percentage HUD and a clean fade reveal."
       preview={

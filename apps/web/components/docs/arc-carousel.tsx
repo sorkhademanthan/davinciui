@@ -84,6 +84,7 @@ export async function ArcCarouselDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Arc Carousel"
       description="A drag, wheel, and keyboard driven fan of media that rides a circular arc. Tiles stay tangent to the arc, wrap infinitely, and settle with inertia plus a soft critically damped spring."
       preview={<ArcCarouselPreview />}

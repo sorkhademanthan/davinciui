@@ -165,7 +165,7 @@ export async function DocsPageLayout({
     installSourceCode,
     installSourceFilename,
     usageCode: typeof usageCode === "string" ? usageCode : "",
-    examples,
+    examples: hideExamples ? [] : examples,
     props,
     ...(resolvedAccessibility
       ? { accessibilityNote: resolvedAccessibility }
@@ -322,7 +322,9 @@ export async function DocsPageLayout({
                 sourceCodeKey={
                   installSourceCode ? installPackageName : undefined
                 }
-                variants={examples as VariantItem[]}
+                variants={
+                  hideExamples ? [] : (examples as VariantItem[])
+                }
               >
                 {preview}
               </DocsPreviewWrapper>

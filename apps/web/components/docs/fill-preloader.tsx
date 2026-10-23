@@ -106,6 +106,7 @@ export async function FillPreloaderDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Fill Preloader"
       description="A fullscreen bottom-up blue fill loader with a giant bottom-right percentage counter and a vertical slide-away reveal."
       preview={

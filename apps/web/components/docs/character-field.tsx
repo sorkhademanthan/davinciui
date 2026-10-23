@@ -26,6 +26,7 @@ export async function CharacterFieldDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Character Field"
       description="A dense ambient surface of monospace glyphs that mutate independently. Canvas-rendered, stationary, and restrained — dark green-teal by default with occasional bright flickers."
       preview={<CharacterFieldPlayground />}

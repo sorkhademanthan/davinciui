@@ -61,6 +61,7 @@ export async function TextRevealDocs() {
 
   return (
     <DocsPageLayout
+      hideExamples
       title="Text Reveal"
       description="A scroll-scrubbed text reveal engine. Choose character or word units and five genuinely different reveal orders, including a position-measured diagonal sweep that recalculates as text wraps."
       preview={
