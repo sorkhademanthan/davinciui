@@ -191,12 +191,12 @@ export const components: Record<string, ComponentMetadata> = {
 
 ### Categories
 
-| Category             | Use For                                             |
-| -------------------- | --------------------------------------------------- |
-| `"Text Animations"`  | Text effects (HyperText, TextAnimate)               |
-| `"Components"`       | Interactive UI elements (Cards, Modals, Docks)      |
-| `"Hero Backgrounds"` | Full-page background effects                        |
-| `"Visual Effects"`   | Decorative effects (Blobs, Particles, Noise)        |
+| Category             | Use For                                              |
+| -------------------- | ---------------------------------------------------- |
+| `"Text Animations"`  | Text effects (HyperText, TextAnimate)                |
+| `"Components"`       | Interactive UI elements (Cards, Modals, Docks)       |
+| `"Hero Backgrounds"` | Full-page background effects                         |
+| `"Visual Effects"`   | Decorative effects (Blobs, Particles, Noise)         |
 | `"Preloaders"`       | Full-screen loading screens and page-load indicators |
 
 ---
@@ -348,6 +348,51 @@ usageCode = { defaultCode };
 
 ---
 
+### Content Sections (Shared Manifest)
+
+Accessibility, Motion, Composition, Customization, Known constraints, and Related links live in `apps/web/lib/docs-content/`, not in individual pages:
+
+| File                        | Scope                                                        |
+| --------------------------- | ------------------------------------------------------------ |
+| `sections/accessibility.ts` | Required for every page                                      |
+| `sections/motion.ts`        | Required for every page                                      |
+| `sections/composition.ts`   | Compound components only                                     |
+| `sections/customization.ts` | Real CSS variables, data attributes, and slots               |
+| `sections/constraints.ts`   | Real limitations consumers must plan around                  |
+| `sections/related.ts`       | Overrides for the automatic same-category related links      |
+| `categories.ts`             | Category map used for auto-related links and coverage checks |
+
+`DocsPageLayout` resolves the entry for `installPackageName` automatically. Add or edit the manifest entry instead of passing section props in the page.
+
+```ts
+// apps/web/lib/docs-content/sections/composition.ts
+export const composition = {
+  "my-component": {
+    composition: {
+      tree: `MyComponent
+├── MyComponentHeader
+└── MyComponentBody`,
+    },
+  },
+} satisfies DocsContentMap;
+```
+
+**Rules:**
+
+- Ground every sentence in the component source. Do not claim reduced-motion handling, keyboard support, or a CSS variable that the implementation does not have.
+- Composition trees must mirror the exported parts and the structure used in the docs examples.
+- Only list `data-slot` hooks that the source actually renders.
+- Prefer four same-category related links; use `sections/related.ts` only when a foundations page or a cross-category component is a better next step.
+- Keep entries alphabetical so conflicts are easy to resolve.
+
+Run the validator after any docs change:
+
+```bash
+pnpm validate:docs
+```
+
+It checks that all 132 pages have accessibility and motion notes, that every manifest key has a page, that composition parts are exported by the source, and that documented slots and related links resolve.
+
 ### Props for DocsPageLayout
 
 | Prop                    | Type            | Required | Description                                                             |
@@ -356,7 +401,7 @@ usageCode = { defaultCode };
 | `description`           | `string`        | ✅       | What the component does                                                 |
 | `preview`               | `ReactNode`     | ✅       | Live component preview                                                  |
 | `previewCode`           | `string`        | ✅       | Code for the preview (must include import)                              |
-| `installPackageName`    | `string`        | ✅       | Slug for CLI install                                                    |
+| `installPackageName`    | `string`        | ✅       | Slug for CLI install and docs manifest lookup                           |
 | `installDependencies`   | `string`        | ❌       | Space-separated npm packages                                            |
 | `installSourceCode`     | `string`        | ❌       | Source code for manual install                                          |
 | `installSourceFilename` | `string`        | ❌       | Target filename                                                         |
@@ -364,6 +409,11 @@ usageCode = { defaultCode };
 | `examples`              | `ExampleItem[]` | ❌       | Additional examples (each `code` must include import)                   |
 | `props`                 | `PropItem[]`    | ❌       | Props table data                                                        |
 | `fullWidthPreview`      | `boolean`       | ❌       | Remove padding from preview                                             |
+| `accessibilityNote`     | `ReactNode`     | ❌       | One-off override; prefer the manifest                                   |
+| `motionNote`            | `ReactNode`     | ❌       | One-off override; prefer the manifest                                   |
+| `customizationNote`     | `ReactNode`     | ❌       | One-off note merged into the manifest entry                             |
+| `constraintsNote`       | `ReactNode`     | ❌       | One-off override for Known constraints                                  |
+| `relatedLinks`          | `DocsLink[]`    | ❌       | One-off override for Related links                                      |
 
 ---
 
@@ -450,6 +500,21 @@ preview={
   />
 }
 fullWidthPreview  // Add this prop
+```
+
+For scroll-pinned galleries and fullscreen preloaders that cannot render inline, add a
+bounded iframe Example using the same demo route:
+
+```tsx
+import { DemoFrame } from "@/components/docs/previews/demo-frame"
+
+examples={[
+  {
+    title: "Full-page demo",
+    preview: <DemoFrame src="/demo/my-component" title="My Component demo" />,
+    code: `<MyComponent />`,
+  },
+]}
 ```
 
 ---
