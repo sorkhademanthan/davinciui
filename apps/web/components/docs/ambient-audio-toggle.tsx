@@ -1,3 +1,5 @@
+import { AmbientAudioToggle } from "@workspace/ui/components/ambient-audio-toggle";
+
 import { Section } from "@/components/component-layout";
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import {
@@ -105,6 +107,61 @@ export async function AmbientAudioToggleDocs() {
       installSourceFilename="components/ui/ambient-audio-toggle.tsx"
       fullWidthPreview
       unstyledPreview
+      examples={[
+        {
+          title: "Bars visualizer, label hidden",
+          preview: (
+            <div className="flex min-h-[220px] items-center justify-center">
+              <AmbientAudioToggle
+                src="/audio/ambient-toggle-demo.wav"
+                persistenceKey="ambient-example-bars"
+                visualizer="bars"
+                barCount={20}
+                hideLabel
+              />
+            </div>
+          ),
+          code: `import { AmbientAudioToggle } from "@/components/ui/ambient-audio-toggle"
+
+<AmbientAudioToggle
+  src="/audio/ambient-music.mp3"
+  persistenceKey="site-ambient-track"
+  visualizer="bars"
+  barCount={20}
+  hideLabel
+/>`,
+        },
+        {
+          title: "Compact custom colors",
+          preview: (
+            <div className="flex min-h-[220px] items-center justify-center">
+              <AmbientAudioToggle
+                src="/audio/ambient-toggle-demo.wav"
+                persistenceKey="ambient-example-compact"
+                visualizer="wave"
+                volume={40}
+                waveformWidth={96}
+                waveformHeight={28}
+                lineWeight={2}
+                activeColor="#f97316"
+                inactiveColor="#94a3b8"
+              />
+            </div>
+          ),
+          code: `import { AmbientAudioToggle } from "@/components/ui/ambient-audio-toggle"
+
+<AmbientAudioToggle
+  src="/audio/ambient-music.mp3"
+  persistenceKey="site-ambient-track"
+  volume={40}
+  waveformWidth={96}
+  waveformHeight={28}
+  lineWeight={2}
+  activeColor="#f97316"
+  inactiveColor="#94a3b8"
+/>`,
+        },
+      ]}
       props={[
         {
           name: "src",

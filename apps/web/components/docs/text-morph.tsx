@@ -1,3 +1,5 @@
+import { TextMorph } from "@workspace/ui/components/text-morph";
+
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import { LiveCodeBlock } from "@/components/live-code-block";
 import {
@@ -29,15 +31,53 @@ export async function TextMorphDocs() {
       installDependencies="clsx tailwind-merge"
       installSourceCode={sourceCode}
       installSourceFilename="components/ui/text-morph.tsx"
-      usageCode={<LiveCodeBlock slug="text-morph" defaultCode={basicUsageCode} />}
+      usageCode={
+        <LiveCodeBlock slug="text-morph" defaultCode={basicUsageCode} />
+      }
       fullWidthPreview
-      accessibilityNote="Text Morph cycles visible words on a timer and renders plain text with no live-region announcements. Treat the animation as enhancement: keep the surrounding heading meaningful on its own, and don't put the only instance of critical information inside the morph sequence."
-      motionNote="The fluid morph runs on a per-word timer controlled by the interval and morphDuration props. When the visitor prefers reduced motion, the component swaps words instantly with no blur or morph transition."
-      customizationNote="All visual text properties inherit from surrounding typography — set size, weight, and tracking with className (e.g. text-4xl font-bold tracking-tight) instead of editing the component. Colors follow the current theme tokens."
-      relatedLinks={[
-        { title: "Text Reveal", href: "/docs/components/text-reveal" },
-        { title: "Typography", href: "/docs/foundations/typography" },
-        { title: "Motion", href: "/docs/foundations/motion" },
+      examples={[
+        {
+          title: "Custom word sequence",
+          preview: (
+            <div className="flex min-h-[220px] items-center justify-center px-6">
+              <TextMorph
+                words={["BUILD", "SHIP", "SCALE"]}
+                interval={2000}
+                morphDuration={700}
+                className="text-5xl font-semibold tracking-tight"
+              />
+            </div>
+          ),
+          code: `import { TextMorph } from "@/components/ui/text-morph"
+
+<TextMorph
+  words={["BUILD", "SHIP", "SCALE"]}
+  interval={2000}
+  morphDuration={700}
+  className="text-5xl font-semibold tracking-tight"
+/>`,
+        },
+        {
+          title: "Slow editorial tracking",
+          preview: (
+            <div className="flex min-h-[220px] items-center justify-center px-6">
+              <TextMorph
+                words={["IDEAS", "SYSTEMS", "STORIES"]}
+                interval={2600}
+                morphDuration={900}
+                className="text-4xl font-light uppercase tracking-[0.2em]"
+              />
+            </div>
+          ),
+          code: `import { TextMorph } from "@/components/ui/text-morph"
+
+<TextMorph
+  words={["IDEAS", "SYSTEMS", "STORIES"]}
+  interval={2600}
+  morphDuration={900}
+  className="text-4xl font-light uppercase tracking-[0.2em]"
+/>`,
+        },
       ]}
       props={[
         {

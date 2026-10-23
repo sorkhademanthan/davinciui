@@ -1,3 +1,5 @@
+import { EncryptedText } from "@workspace/ui/components/encrypted-text";
+
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import { LiveCodeBlock } from "@/components/live-code-block";
 import {
@@ -28,8 +30,58 @@ export async function EncryptedTextDocs() {
       installPackageName="encrypted-text"
       installSourceCode={sourceCode}
       installSourceFilename="components/ui/encrypted-text.tsx"
-      usageCode={<LiveCodeBlock slug="encrypted-text" defaultCode={basicUsageCode} />}
+      usageCode={
+        <LiveCodeBlock slug="encrypted-text" defaultCode={basicUsageCode} />
+      }
       fullWidthPreview
+      examples={[
+        {
+          title: "Custom cipher and timing",
+          preview: (
+            <div className="flex min-h-[220px] items-center justify-center bg-zinc-950 px-6">
+              <EncryptedText
+                text="ACCESS GRANTED"
+                characters="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+                scrambleDuration={300}
+                revealDuration={1600}
+                holdDuration={900}
+                fontSize="clamp(1.5rem, 4vw, 2.75rem)"
+              />
+            </div>
+          ),
+          code: `import { EncryptedText } from "@/components/ui/encrypted-text"
+
+<EncryptedText
+  text="ACCESS GRANTED"
+  characters="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+  scrambleDuration={300}
+  revealDuration={1600}
+  holdDuration={900}
+  fontSize="clamp(1.5rem, 4vw, 2.75rem)"
+/>`,
+        },
+        {
+          title: "Reveal once and hold",
+          preview: (
+            <div className="flex min-h-[220px] items-center justify-center bg-zinc-950 px-6">
+              <EncryptedText
+                text="SYSTEM ONLINE"
+                loop={false}
+                holdDuration={4000}
+                fontSize="clamp(1.5rem, 4vw, 2.75rem)"
+              />
+            </div>
+          ),
+          code: `import { EncryptedText } from "@/components/ui/encrypted-text"
+
+<EncryptedText
+  text="SYSTEM ONLINE"
+  loop={false}
+  holdDuration={4000}
+  fontSize="clamp(1.5rem, 4vw, 2.75rem)"
+/>`,
+        },
+      ]}
       props={[
         {
           name: "text",

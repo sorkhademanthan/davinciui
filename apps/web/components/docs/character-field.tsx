@@ -1,3 +1,5 @@
+import { CharacterField } from "@workspace/ui/components/character-field";
+
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import { LiveCodeBlock } from "@/components/live-code-block";
 import {
@@ -32,8 +34,78 @@ export async function CharacterFieldDocs() {
       installPackageName="character-field"
       installSourceCode={sourceCode}
       installSourceFilename="components/ui/character-field.tsx"
-      usageCode={<LiveCodeBlock slug="character-field" defaultCode={basicUsageCode} />}
+      usageCode={
+        <LiveCodeBlock slug="character-field" defaultCode={basicUsageCode} />
+      }
       fullWidthPreview
+      examples={[
+        {
+          title: "Numbers with an amber highlight",
+          preview: (
+            <div className="relative h-[320px] w-full overflow-hidden rounded-xl">
+              <CharacterField
+                characterSet="numbers"
+                backgroundColor="#0b0f14"
+                characterColor="#334155"
+                highlightColor="#f97316"
+                fontSize={16}
+                density={1.3}
+                mutationSpeed={2.2}
+                className="h-full w-full"
+              />
+            </div>
+          ),
+          code: `import { CharacterField } from "@/components/ui/character-field"
+
+<div className="relative h-[420px] w-full overflow-hidden rounded-xl">
+  <CharacterField
+    characterSet="numbers"
+    backgroundColor="#0b0f14"
+    characterColor="#334155"
+    highlightColor="#f97316"
+    fontSize={16}
+    density={1.3}
+    mutationSpeed={2.2}
+    className="h-full w-full"
+  />
+</div>`,
+        },
+        {
+          title: "Custom glyph pool",
+          preview: (
+            <div className="relative h-[320px] w-full overflow-hidden rounded-xl">
+              <CharacterField
+                characterSet="custom"
+                customCharacters="<>/{}[]=+-"
+                backgroundColor="#050505"
+                characterColor="#27272a"
+                highlightColor="#22d3ee"
+                fontSize={18}
+                characterSpacing={4}
+                density={0.9}
+                mutationAmount={0.3}
+                className="h-full w-full"
+              />
+            </div>
+          ),
+          code: `import { CharacterField } from "@/components/ui/character-field"
+
+<div className="relative h-[420px] w-full overflow-hidden rounded-xl">
+  <CharacterField
+    characterSet="custom"
+    customCharacters="<>/{}[]=+-"
+    backgroundColor="#050505"
+    characterColor="#27272a"
+    highlightColor="#22d3ee"
+    fontSize={18}
+    characterSpacing={4}
+    density={0.9}
+    mutationAmount={0.3}
+    className="h-full w-full"
+  />
+</div>`,
+        },
+      ]}
       props={[
         {
           name: "characterSet",
@@ -45,8 +117,7 @@ export async function CharacterFieldDocs() {
           name: "customCharacters",
           type: "string",
           default: '""',
-          description:
-            'Custom glyph pool used when characterSet is "custom".',
+          description: 'Custom glyph pool used when characterSet is "custom".',
         },
         {
           name: "fontFamily",
@@ -113,7 +184,8 @@ export async function CharacterFieldDocs() {
           name: "density",
           type: "number",
           default: "1",
-          description: "Grid density multiplier. Higher values pack more glyphs.",
+          description:
+            "Grid density multiplier. Higher values pack more glyphs.",
         },
         {
           name: "mutationSpeed",

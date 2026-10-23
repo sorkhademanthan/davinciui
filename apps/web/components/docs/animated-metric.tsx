@@ -1,3 +1,5 @@
+import { AnimatedMetric } from "@workspace/ui/components/animated-metric";
+
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import { AnimatedMetricPreview } from "@/components/docs/previews/animated-metric-preview";
 import { readComponentSource } from "@/lib/source-code";
@@ -32,11 +34,79 @@ export async function AnimatedMetricDocs() {
       installSourceFilename="components/ui/animated-metric.tsx"
       fullWidthPreview
       unstyledPreview
+      examples={[
+        {
+          title: "Currency with decimals",
+          preview: (
+            <div
+              className="flex min-h-[240px] items-center justify-center px-6"
+              style={{ containerType: "inline-size" }}
+            >
+              <AnimatedMetric
+                value={2.4}
+                prefix="$"
+                suffix="m"
+                decimals={1}
+                label="Processed this quarter"
+                duration={1400}
+              />
+            </div>
+          ),
+          code: `import { AnimatedMetric } from "@/components/ui/animated-metric"
+
+<AnimatedMetric
+  value={2.4}
+  prefix="$"
+  suffix="m"
+  decimals={1}
+  label="Processed this quarter"
+  duration={1400}
+/>`,
+        },
+        {
+          title: "Staggered stat row",
+          preview: (
+            <div
+              className="grid min-h-[240px] w-full max-w-xl grid-cols-3 items-center gap-6 px-6"
+              style={{ containerType: "inline-size" }}
+            >
+              <AnimatedMetric
+                value={128}
+                suffix="+"
+                label="Components"
+                delay={0}
+              />
+              <AnimatedMetric
+                value={99.9}
+                suffix="%"
+                decimals={1}
+                label="Uptime"
+                delay={120}
+              />
+              <AnimatedMetric
+                value={4.9}
+                suffix="/5"
+                decimals={1}
+                label="Rating"
+                delay={240}
+              />
+            </div>
+          ),
+          code: `import { AnimatedMetric } from "@/components/ui/animated-metric"
+
+<div className="grid grid-cols-3 gap-6">
+  <AnimatedMetric value={128} suffix="+" label="Components" />
+  <AnimatedMetric value={99.9} suffix="%" decimals={1} label="Uptime" delay={120} />
+  <AnimatedMetric value={4.9} suffix="/5" decimals={1} label="Rating" delay={240} />
+</div>`,
+        },
+      ]}
       props={[
         {
           name: "value",
           type: "number",
-          description: "Final numeric value. Rendered exactly on completion — never 2.9999999.",
+          description:
+            "Final numeric value. Rendered exactly on completion — never 2.9999999.",
         },
         {
           name: "prefix",
@@ -46,12 +116,14 @@ export async function AnimatedMetricDocs() {
         {
           name: "suffix",
           type: "string",
-          description: 'Static suffix, e.g. "m+", "+", "%", "k+". Never animated.',
+          description:
+            'Static suffix, e.g. "m+", "+", "%", "k+". Never animated.',
         },
         {
           name: "label",
           type: "string",
-          description: "Smaller description under the metric, enters with a slight delay.",
+          description:
+            "Smaller description under the metric, enters with a slight delay.",
         },
         {
           name: "startValue",
@@ -63,7 +135,8 @@ export async function AnimatedMetricDocs() {
           name: "duration",
           type: "number",
           default: "1500",
-          description: "Count duration in milliseconds (1200–1800 feels like the reference).",
+          description:
+            "Count duration in milliseconds (1200–1800 feels like the reference).",
         },
         {
           name: "decimals",
@@ -75,7 +148,8 @@ export async function AnimatedMetricDocs() {
           name: "delay",
           type: "number",
           default: "0",
-          description: "Stagger offset in milliseconds before counting starts — 0/100/200/300 across a stat row.",
+          description:
+            "Stagger offset in milliseconds before counting starts — 0/100/200/300 across a stat row.",
         },
         {
           name: "once",
@@ -95,13 +169,15 @@ export async function AnimatedMetricDocs() {
           name: "loopDelay",
           type: "number",
           default: "1500",
-          description: "Pause in milliseconds on the final value between loops.",
+          description:
+            "Pause in milliseconds on the final value between loops.",
         },
         {
           name: "threshold",
           type: "number",
           default: "0.25",
-          description: "Fraction of the component visible before triggering (0–1).",
+          description:
+            "Fraction of the component visible before triggering (0–1).",
         },
         {
           name: "valueClassName",

@@ -1,3 +1,5 @@
+import { AnimatedPillButton } from "@workspace/ui/components/animated-pill-button";
+
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import { AnimatedPillButtonPreview } from "@/components/docs/previews/animated-pill-button-preview";
 import { readComponentSource } from "@/lib/source-code";
@@ -26,6 +28,42 @@ export async function AnimatedPillButtonDocs() {
       installSourceFilename="components/ui/animated-pill-button.tsx"
       fullWidthPreview
       unstyledPreview
+      examples={[
+        {
+          title: "Link with a custom accent",
+          preview: (
+            <div className="flex min-h-[220px] items-center justify-center px-6">
+              <AnimatedPillButton
+                href="/docs/components"
+                size="lg"
+                activeColor="#f97316"
+              >
+                Browse components
+              </AnimatedPillButton>
+            </div>
+          ),
+          code: `import { AnimatedPillButton } from "@/components/ui/animated-pill-button"
+
+<AnimatedPillButton
+  href="/docs/components"
+  size="lg"
+  activeColor="#f97316"
+>
+  Browse components
+</AnimatedPillButton>`,
+        },
+        {
+          title: "Disabled state",
+          preview: (
+            <div className="flex min-h-[220px] items-center justify-center px-6">
+              <AnimatedPillButton disabled label="Sold out" />
+            </div>
+          ),
+          code: `import { AnimatedPillButton } from "@/components/ui/animated-pill-button"
+
+<AnimatedPillButton disabled label="Sold out" />`,
+        },
+      ]}
       props={[
         {
           name: "label",
@@ -37,18 +75,21 @@ export async function AnimatedPillButtonDocs() {
         {
           name: "href",
           type: "string",
-          description: "Renders a semantic link instead of a button when supplied.",
+          description:
+            "Renders a semantic link instead of a button when supplied.",
         },
         {
           name: "onClick",
           type: "() => void",
-          description: "Click handler. Never interfered with by the wipe animation.",
+          description:
+            "Click handler. Never interfered with by the wipe animation.",
         },
         {
           name: "size",
           type: '"sm" | "md" | "lg"',
           default: '"md"',
-          description: "Density multiplier. Container queries still scale type in card and fullscreen.",
+          description:
+            "Density multiplier. Container queries still scale type in card and fullscreen.",
         },
         {
           name: "backgroundColor",
