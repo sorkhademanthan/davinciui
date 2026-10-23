@@ -3,7 +3,7 @@
 import * as React from "react"
 import * as ReactDOM from "react-dom"
 import { cn } from "@/lib/utils"
-import { RotateCcw, Search, SlidersHorizontal, Check, Maximize, Minimize, CodeXml, ChevronLeft, Copy } from "lucide-react"
+import { RotateCcw, Search, SlidersHorizontal, Check, Maximize, Minimize, CodeXml, Copy, X } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { motion, AnimatePresence, useDragControls, type PanInfo } from "framer-motion"
 import { useDocStore } from "@/hooks/use-doc-store"
@@ -43,6 +43,20 @@ interface FullscreenOrigin {
   width: number
   height: number
   borderRadius: string
+}
+
+function useIsDesktop() {
+  const [isDesktop, setIsDesktop] = React.useState(false)
+
+  React.useEffect(() => {
+    const query = window.matchMedia("(min-width: 1024px)")
+    const sync = () => setIsDesktop(query.matches)
+    sync()
+    query.addEventListener("change", sync)
+    return () => query.removeEventListener("change", sync)
+  }, [])
+
+  return isDesktop
 }
 
 function PreviewIconButton({
@@ -139,6 +153,7 @@ export function DocsPreviewWrapper({
   const [mounted, setMounted] = React.useState(false)
   const [copied, setCopied] = React.useState(false)
   const [isExpanded, setIsExpanded] = React.useState(false)
+  const isDesktop = useIsDesktop()
   const [sourceHtml, setSourceHtml] = React.useState<string | null>(null)
   const [sourceCode, setSourceCode] = React.useState("")
   const [isSourceLoading, setIsSourceLoading] = React.useState(false)
@@ -617,108 +632,147 @@ export function DocsPreviewWrapper({
       {mounted && ReactDOM.createPortal(
         <AnimatePresence>
           {showSource && (
-            <motion.div
-              ref={sourceDialogRef}
-              role="dialog"
-              aria-modal="true"
-              aria-label="Source code"
-              tabIndex={-1}
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              exit={{ y: "100%" }}
-              transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              drag="y"
-              dragControls={sourceDragControls}
-              dragListener={false}
-              dragConstraints={{ top: 0, bottom: 0 }}
-              dragElastic={{ top: 0, bottom: 0.4 }}
-              onDragEnd={(_: unknown, info: PanInfo) => {
-                if (info.offset.y > 100 || info.velocity.y > 500) {
-                  setShowSource(false)
+            <>
+              <motion.div
+                aria-hidden="true"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                onClick={closeSource}
+                className="fixed inset-0 z-40 bg-black/40 backdrop-blur-[2px] dark:bg-black/60"
+              />
+
+              <motion.div
+                ref={sourceDialogRef}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="source-code-title"
+                tabIndex={-1}
+                initial={
+                  isDesktop
+                    ? { x: 40, opacity: 0 }
+                    : { y: "100%", opacity: 1 }
                 }
-              }}
-              className="fixed bottom-0 left-0 z-50 flex flex-col outline-none h-[80vh] w-full rounded-t-lg border-t border-border/20 bg-transparent shadow-none pointer-events-none lg:top-0 lg:bottom-0 lg:h-screen lg:max-h-screen lg:w-1/2 lg:rounded-none lg:border-none lg:pt-3 lg:pb-3 lg:pl-3 lg:pr-1.5"
-            >
-              <div className="relative h-full overflow-hidden rounded-md border border-border bg-background shadow-lg pointer-events-auto">
-                {/* Header Overlay */}
-                <div className="absolute top-0 left-0 right-0 z-20 pointer-events-none">
-                  <div className="absolute inset-0 h-24 bg-gradient-to-b from-background to-transparent [mask-image:linear-gradient(to_bottom,black_20%,transparent)]" />
-                  <div className="relative z-10 flex flex-col pointer-events-auto">
-                    {/* Drag handle - top edge-to-edge */}
-                      <div className="flex items-center justify-center pt-2 pb-1 touch-none"
-                        onPointerDown={(event) => sourceDragControls.start(event)}
-                      >
-                        <div className="w-10 h-1 rounded-full bg-muted-foreground/20 transition-colors hover:bg-muted-foreground/30" />
-                      </div>
-
-                    {/* Header row */}
-                    <div className="flex items-center justify-between px-4 py-1">
-                      <button
-                        onClick={() => setShowSource(false)}
-                        aria-label="Close source code panel"
-                        className="inline-flex items-center gap-1.5 rounded-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                      >
-                        <ChevronLeft className="w-4 h-4" />
-                        <span className="text-xs font-mono tracking-wide">Source Code</span>
-                      </button>
-
-                      <div className="flex items-center gap-3">
-                        {sourceCodeFilename && (
-                          <div className="flex items-center gap-1.5">
-                            <svg className="h-3.5 w-3.5 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                              <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
-                              <polyline points="14 2 14 8 20 8" />
-                            </svg>
-                            <span className="text-xs font-mono text-muted-foreground">{sourceCodeFilename}</span>
-                          </div>
-                        )}
-                        {sourceCode && (
-                          <button
-                            onClick={async () => {
-                              await navigator.clipboard.writeText(sourceCode)
-                              setCopied(true)
-                              setTimeout(() => setCopied(false), 2000)
-                            }}
-                            className="inline-flex items-center justify-center w-7 h-7 rounded-md text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-                            aria-label={copied ? "Copied" : "Copy code"}
-                          >
-                            {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                          </button>
-                        )}
-                      </div>
-                    </div>
+                animate={isDesktop ? { x: 0, opacity: 1 } : { y: 0, opacity: 1 }}
+                exit={
+                  isDesktop
+                    ? { x: 40, opacity: 0 }
+                    : { y: "100%", opacity: 1 }
+                }
+                transition={
+                  isDesktop
+                    ? { type: "spring", damping: 32, stiffness: 320 }
+                    : { type: "spring", damping: 30, stiffness: 300 }
+                }
+                drag={isDesktop ? false : "y"}
+                dragControls={sourceDragControls}
+                dragListener={false}
+                dragConstraints={{ top: 0, bottom: 0 }}
+                dragElastic={{ top: 0, bottom: 0.4 }}
+                onDragEnd={(_: unknown, info: PanInfo) => {
+                  if (info.offset.y > 100 || info.velocity.y > 500) {
+                    closeSource()
+                  }
+                }}
+                className="fixed inset-x-0 bottom-0 z-50 flex h-[85svh] w-full flex-col overflow-hidden rounded-t-2xl border border-border bg-background shadow-2xl outline-none lg:inset-y-4 lg:bottom-4 lg:left-auto lg:right-4 lg:h-auto lg:w-[min(860px,calc(100vw-2rem))] lg:rounded-2xl"
+              >
+                <div className="flex shrink-0 flex-col border-b border-border/70 bg-muted/20">
+                  <div
+                    className="flex touch-none items-center justify-center py-2 lg:hidden"
+                    onPointerDown={(event) => sourceDragControls.start(event)}
+                  >
+                    <div className="h-1 w-10 rounded-full bg-muted-foreground/25 transition-colors hover:bg-muted-foreground/40" />
                   </div>
-                </div>
 
-                {/* Code content - full height, hidden scrollbar */}
-                <div className="relative h-full min-h-0">
-                  {/* Bottom gradient overlay */}
-                  <div className="absolute bottom-0 left-0 right-0 z-10 h-12 bg-gradient-to-t from-background to-transparent pointer-events-none [mask-image:linear-gradient(to_top,black_30%,transparent)]" />
-                  <div data-drawer-code className="h-full overflow-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] [&_pre]:min-h-full [&_pre]:!pt-24 [&_pre]:!px-4 [&_.relative.group_>_button]:hidden">
-                    <div className="h-full w-full">
-                      {isSourceLoading && (
-                        <div className="flex h-full items-center justify-center px-4 pt-24 pb-8">
-                          <span className="text-sm text-muted-foreground/60 font-mono tracking-wide">
-                            Loading source code...
+                  <div className="flex items-center justify-between gap-3 px-4 py-3 sm:px-5">
+                    <div className="flex min-w-0 items-center gap-3">
+                      <div className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-border/70 bg-background text-muted-foreground shadow-sm">
+                        <CodeXml className="size-4" />
+                      </div>
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2">
+                          <h2
+                            id="source-code-title"
+                            className="text-sm font-semibold tracking-tight text-foreground"
+                          >
+                            Source code
+                          </h2>
+                          <span className="hidden rounded-full border border-border/70 bg-muted/50 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-muted-foreground sm:inline-block">
+                            tsx
                           </span>
                         </div>
+                        {sourceCodeFilename && (
+                          <p className="mt-0.5 truncate font-mono text-xs text-muted-foreground">
+                            {sourceCodeFilename}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex shrink-0 items-center gap-1">
+                      {sourceCode && (
+                        <button
+                          type="button"
+                          onClick={async () => {
+                            await navigator.clipboard.writeText(sourceCode)
+                            setCopied(true)
+                            setTimeout(() => setCopied(false), 2000)
+                          }}
+                          className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border/70 bg-background px-2.5 text-xs font-medium text-muted-foreground shadow-xs transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                          aria-label={copied ? "Copied" : "Copy code"}
+                        >
+                          {copied ? (
+                            <Check className="size-3.5" />
+                          ) : (
+                            <Copy className="size-3.5" />
+                          )}
+                          <span className="hidden sm:inline">
+                            {copied ? "Copied" : "Copy"}
+                          </span>
+                        </button>
                       )}
-                      {!isSourceLoading && sourceLoadError && (
-                        <div className="px-4 pt-24 text-sm text-muted-foreground">{sourceLoadError}</div>
-                      )}
-                      {!isSourceLoading && !sourceLoadError && sourceHtml && (
-                        <div
-                          data-code-block
-                          data-line-numbers="false"
-                          className="relative text-sm w-full border-none bg-transparent [&_.relative.group_>_button]:hidden [&_.shiki]:border-none [&_.shiki]:rounded-none"
-                          dangerouslySetInnerHTML={{ __html: sourceHtml }}
-                        />
-                      )}
+                      <button
+                        type="button"
+                        onClick={closeSource}
+                        aria-label="Close source code panel"
+                        className="inline-flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                      >
+                        <X className="size-4" />
+                      </button>
                     </div>
                   </div>
                 </div>
-              </div>
-            </motion.div>
+
+                <div className="min-h-0 flex-1 overflow-auto overscroll-contain [scrollbar-color:var(--border)_transparent] [scrollbar-width:thin]">
+                  {isSourceLoading && (
+                    <div
+                      aria-live="polite"
+                      className="flex h-full flex-col items-center justify-center gap-3 p-6 text-sm text-muted-foreground"
+                    >
+                      <span className="size-5 animate-spin rounded-full border-2 border-muted border-t-foreground/60" />
+                      Loading source code…
+                    </div>
+                  )}
+                  {!isSourceLoading && sourceLoadError && (
+                    <div
+                      role="alert"
+                      className="flex h-full items-center justify-center p-6 text-sm text-muted-foreground"
+                    >
+                      {sourceLoadError}
+                    </div>
+                  )}
+                  {!isSourceLoading && !sourceLoadError && sourceHtml && (
+                    <div
+                      data-code-block
+                      data-line-numbers="true"
+                      className="relative w-full border-none bg-transparent text-[13px] leading-6 [&_.relative.group_>_button]:hidden [&_.shiki]:border-none [&_.shiki]:rounded-none [&_pre]:!px-0 [&_pre]:!py-4 [&_.shiki_[data-line]]:pl-4 [&_.shiki_[data-line]]:pr-6"
+                      dangerouslySetInnerHTML={{ __html: sourceHtml }}
+                    />
+                  )}
+                </div>
+              </motion.div>
+            </>
           )}
         </AnimatePresence>,
         document.body
