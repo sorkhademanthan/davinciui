@@ -1,4 +1,5 @@
 import { Section } from "@/components/component-layout";
+import { DemoFrame } from "@/components/docs/previews/demo-frame";
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import { StaircasePreloaderPreview } from "@/components/docs/previews/staircase-preloader-preview";
 import { readComponentSource } from "@/lib/source-code";
@@ -28,9 +29,9 @@ function StaircasePreloaderNotes() {
           </p>
           <p>
             The strips overlap by a pixel to render as one continuous orange
-            surface with zero seams. Your page content already exists
-            underneath and stays completely stationary; the preloader purely
-            uncovers it with GPU-friendly{" "}
+            surface with zero seams. Your page content already exists underneath
+            and stays completely stationary; the preloader purely uncovers it
+            with GPU-friendly{" "}
             <code className="mx-1 rounded bg-muted px-1.5 py-0.5 text-xs text-foreground">
               transform
             </code>{" "}
@@ -50,8 +51,8 @@ function StaircasePreloaderNotes() {
           </li>
           <li>
             <strong className="text-foreground">Staircase</strong> comes from
-            per-column delays — the left strip lifts first and each strip to
-            the right follows ~55ms later.
+            per-column delays — the left strip lifts first and each strip to the
+            right follows ~55ms later.
           </li>
           <li>
             <strong className="text-foreground">Replay</strong> by remounting
@@ -66,9 +67,9 @@ function StaircasePreloaderNotes() {
             the overlay is alive and restored on exit.
           </li>
           <li>
-            <strong className="text-foreground">Theme</strong> — the curtain
-            is an opaque brand color, so it is identical in light and dark
-            mode by design; the revealed page underneath adapts as usual.
+            <strong className="text-foreground">Theme</strong> — the curtain is
+            an opaque brand color, so it is identical in light and dark mode by
+            design; the revealed page underneath adapts as usual.
           </li>
           <li>
             <strong className="text-foreground">Reduced motion</strong> keeps
@@ -79,9 +80,9 @@ function StaircasePreloaderNotes() {
 
       <Section title="Best For" className="pt-8">
         <p className="max-w-2xl text-[15px] leading-7 text-muted-foreground">
-          Portfolio intros, campaign pages, and product launches where the
-          first paint should feel like a confident geometric curtain being
-          pulled upward.
+          Portfolio intros, campaign pages, and product launches where the first
+          paint should feel like a confident geometric curtain being pulled
+          upward.
         </p>
       </Section>
     </>
@@ -109,6 +110,20 @@ export async function StaircasePreloaderDocs() {
       installDependencies="framer-motion"
       installSourceCode={sourceCode}
       installSourceFilename="components/ui/staircase-preloader.tsx"
+      examples={[
+        {
+          title: "Full-page demo",
+          preview: (
+            <DemoFrame
+              src="/demo/staircase-preloader"
+              title="Staircase Preloader demo"
+            />
+          ),
+          code: `import { StaircasePreloader } from "@/components/ui/staircase-preloader"
+
+<StaircasePreloader />`,
+        },
+      ]}
       fullWidthPreview
       unstyledPreview
       props={[
@@ -136,8 +151,7 @@ export async function StaircasePreloaderDocs() {
           name: "exitDuration",
           type: "number",
           default: "850",
-          description:
-            "Milliseconds for each column's upward travel.",
+          description: "Milliseconds for each column's upward travel.",
         },
         {
           name: "stagger",

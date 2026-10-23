@@ -1,3 +1,4 @@
+import { DemoFrame } from "@/components/docs/previews/demo-frame";
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import { readComponentSource } from "@/lib/source-code";
 import { ScrollRevealImagePreview } from "@/components/docs/previews/scroll-reveal-image-preview";
@@ -36,6 +37,20 @@ export async function ScrollRevealImageDocs() {
     <DocsPageLayout
       title="Scroll Reveal Image"
       description="A scroll scrubbed image sequence that lets the next frame arrive in a centered window before it takes over the backdrop. The result feels like a cinematic reveal without scroll hijacking."
+      examples={[
+        {
+          title: "Full-page demo",
+          preview: (
+            <DemoFrame
+              src="/demo/scroll-reveal-image"
+              title="Scroll Reveal Image demo"
+            />
+          ),
+          code: `import { ScrollRevealImage } from "@/components/ui/scroll-reveal-image"
+
+<ScrollRevealImage images={images} />`,
+        },
+      ]}
       fullWidthPreview
       preview={
         <ScrollRevealImagePreview
@@ -50,15 +65,61 @@ export async function ScrollRevealImageDocs() {
       installSourceFilename="components/ui/scroll-reveal-image.tsx"
       usageCode={defaultCode}
       props={[
-        { name: "images", type: "readonly ScrollRevealImageItem[]", description: "Images shown in scroll order. Each item can provide a wide backdrop source, a portrait reveal source, and alt text." },
-        { name: "sectionHeight", type: "string", default: '"300vh"', description: "Height of the scroll runway that drives the sequence." },
-        { name: "imageWidth", type: "string", default: '"clamp(15rem, 30vw, 38rem)"', description: "CSS width of the centered reveal window." },
-        { name: "imageHeight", type: "string", default: '"clamp(22rem, 78vh, 52rem)"', description: "CSS height of the centered reveal window." },
-        { name: "borderRadius", type: "string", default: '"0rem"', description: "CSS radius applied to the reveal window." },
-        { name: "backgroundScale", type: "number", default: "1.08", description: "Scale applied to the full-bleed backdrop for a quiet parallax depth effect." },
-        { name: "imageScale", type: "number", default: "1.04", description: "Scale applied inside the centered reveal window." },
-        { name: "scrub", type: "number", default: "0.18", description: "Spring mass controlling how closely the motion follows the scroll position." },
-        { name: "className", type: "string", description: "Additional classes applied to the scroll section." },
+        {
+          name: "images",
+          type: "readonly ScrollRevealImageItem[]",
+          description:
+            "Images shown in scroll order. Each item can provide a wide backdrop source, a portrait reveal source, and alt text.",
+        },
+        {
+          name: "sectionHeight",
+          type: "string",
+          default: '"300vh"',
+          description: "Height of the scroll runway that drives the sequence.",
+        },
+        {
+          name: "imageWidth",
+          type: "string",
+          default: '"clamp(15rem, 30vw, 38rem)"',
+          description: "CSS width of the centered reveal window.",
+        },
+        {
+          name: "imageHeight",
+          type: "string",
+          default: '"clamp(22rem, 78vh, 52rem)"',
+          description: "CSS height of the centered reveal window.",
+        },
+        {
+          name: "borderRadius",
+          type: "string",
+          default: '"0rem"',
+          description: "CSS radius applied to the reveal window.",
+        },
+        {
+          name: "backgroundScale",
+          type: "number",
+          default: "1.08",
+          description:
+            "Scale applied to the full-bleed backdrop for a quiet parallax depth effect.",
+        },
+        {
+          name: "imageScale",
+          type: "number",
+          default: "1.04",
+          description: "Scale applied inside the centered reveal window.",
+        },
+        {
+          name: "scrub",
+          type: "number",
+          default: "0.18",
+          description:
+            "Spring mass controlling how closely the motion follows the scroll position.",
+        },
+        {
+          name: "className",
+          type: "string",
+          description: "Additional classes applied to the scroll section.",
+        },
       ]}
     />
   );

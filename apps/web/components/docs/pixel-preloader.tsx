@@ -1,4 +1,5 @@
 import { Section } from "@/components/component-layout";
+import { DemoFrame } from "@/components/docs/previews/demo-frame";
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import { PixelPreloaderPreview } from "@/components/docs/previews/pixel-preloader-preview";
 import { readComponentSource } from "@/lib/source-code";
@@ -28,14 +29,14 @@ function PixelPreloaderNotes() {
           </p>
           <p>
             At 100% the completed white frame holds briefly, then the overlay
-            fades to reveal the page already mounted underneath. The frontier
-            is a persistent per-column simulation — not television static —
-            so consecutive frames read as the same terrain evolving.
+            fades to reveal the page already mounted underneath. The frontier is
+            a persistent per-column simulation — not television static — so
+            consecutive frames read as the same terrain evolving.
           </p>
           <p>
             Canvas renders every cell directly and the percentage only touches
-            the DOM when the integer changes, so React never rerenders at
-            60fps. Noise is seeded, so the same{" "}
+            the DOM when the integer changes, so React never rerenders at 60fps.
+            Noise is seeded, so the same{" "}
             <code className="mx-1 rounded bg-muted px-1.5 py-0.5 text-xs text-foreground">
               seed
             </code>{" "}
@@ -59,8 +60,7 @@ function PixelPreloaderNotes() {
             near 100%.
           </li>
           <li>
-            <strong className="text-foreground">Manual mode</strong> follows
-            the{" "}
+            <strong className="text-foreground">Manual mode</strong> follows the{" "}
             <code className="rounded bg-muted px-1.5 py-0.5 text-xs text-foreground">
               progress
             </code>{" "}
@@ -69,9 +69,9 @@ function PixelPreloaderNotes() {
           </li>
           <li>
             <strong className="text-foreground">Theme</strong> — the field
-            colors default to the page color scheme (near-black → white in
-            dark mode, warm gray → white in light mode) and follow live
-            theme changes; the orange frontier stays constant.
+            colors default to the page color scheme (near-black → white in dark
+            mode, warm gray → white in light mode) and follow live theme
+            changes; the orange frontier stays constant.
           </li>
           <li>
             <strong className="text-foreground">Replay</strong> by remounting
@@ -122,6 +122,20 @@ export async function PixelPreloaderDocs() {
       installPackageName="pixel-preloader"
       installSourceCode={sourceCode}
       installSourceFilename="components/ui/pixel-preloader.tsx"
+      examples={[
+        {
+          title: "Full-page demo",
+          preview: (
+            <DemoFrame
+              src="/demo/pixel-preloader"
+              title="Pixel Preloader demo"
+            />
+          ),
+          code: `import { PixelPreloader } from "@/components/ui/pixel-preloader"
+
+<PixelPreloader />`,
+        },
+      ]}
       fullWidthPreview
       unstyledPreview
       props={[
@@ -185,8 +199,7 @@ export async function PixelPreloaderDocs() {
           name: "completionHold",
           type: "number",
           default: "450",
-          description:
-            "Milliseconds the completed 100% frame stays visible.",
+          description: "Milliseconds the completed 100% frame stays visible.",
         },
         {
           name: "exitDuration",

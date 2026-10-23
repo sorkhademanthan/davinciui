@@ -1,4 +1,6 @@
 import { Section } from "@/components/component-layout";
+import { PreloaderPro } from "@workspace/ui/components/preloader-pro";
+
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import { PreloaderProPreview } from "@/components/docs/previews/preloader-pro-preview";
 import { readComponentSource } from "@/lib/source-code";
@@ -34,15 +36,14 @@ function PreloaderProNotes() {
             centered word.
           </p>
           <p>
-            The percentage follows a loading curve — quick open, steady
-            middle, deliberate landing — and the red line grows in lockstep
-            via{" "}
+            The percentage follows a loading curve — quick open, steady middle,
+            deliberate landing — and the red line grows in lockstep via{" "}
             <code className="mx-1 rounded bg-muted px-1.5 py-0.5 text-xs text-foreground">
               scaleX
             </code>{" "}
-            with a left origin, so it never triggers layout. At 100% the
-            frame holds briefly, then the whole white surface slides away
-            upward, exposing the hero already mounted underneath.
+            with a left origin, so it never triggers layout. At 100% the frame
+            holds briefly, then the whole white surface slides away upward,
+            exposing the hero already mounted underneath.
           </p>
           <p>
             One{" "}
@@ -50,13 +51,13 @@ function PreloaderProNotes() {
               requestAnimationFrame
             </code>{" "}
             timeline derives every visual from elapsed time. The container is
-            the viewport — relative positioning plus container-query units
-            only, never{" "}
+            the viewport — relative positioning plus container-query units only,
+            never{" "}
             <code className="mx-1 rounded bg-muted px-1.5 py-0.5 text-xs text-foreground">
               position: fixed
             </code>{" "}
-            — so the identical component fills a card, the preview panel,
-            and fullscreen.
+            — so the identical component fills a card, the preview panel, and
+            fullscreen.
           </p>
         </div>
       </Section>
@@ -80,17 +81,16 @@ function PreloaderProNotes() {
           </li>
           <li>
             <strong className="text-foreground">Hero</strong> — one centered
-            DAVINCIUI wordmark on near-black with deep-red central
-            illumination and a barely-there ambient drift.
+            DAVINCIUI wordmark on near-black with deep-red central illumination
+            and a barely-there ambient drift.
           </li>
           <li>
             <strong className="text-foreground">Loop</strong> — set{" "}
             <code className="rounded bg-muted px-1.5 py-0.5 text-xs text-foreground">
               loop
             </code>{" "}
-            for a self-running cycle: hero fades, black holds, the panel
-            returns and the counter runs again. Or replay by remounting with
-            a changing{" "}
+            for a self-running cycle: hero fades, black holds, the panel returns
+            and the counter runs again. Or replay by remounting with a changing{" "}
             <code className="rounded bg-muted px-1.5 py-0.5 text-xs text-foreground">
               key
             </code>
@@ -98,17 +98,17 @@ function PreloaderProNotes() {
           </li>
           <li>
             <strong className="text-foreground">Reduced motion</strong> keeps
-            the functional percentage but shortens the count and swaps the
-            slide for a simple fade.
+            the functional percentage but shortens the count and swaps the slide
+            for a simple fade.
           </li>
         </ul>
       </Section>
 
       <Section title="Best For" className="pt-8">
         <p className="max-w-2xl text-[15px] leading-7 text-muted-foreground">
-          Product launches, campaign pages, and portfolio intros where the
-          first paint should feel like a confident editorial curtain-lift
-          into a dark cinematic hero.
+          Product launches, campaign pages, and portfolio intros where the first
+          paint should feel like a confident editorial curtain-lift into a dark
+          cinematic hero.
         </p>
       </Section>
     </>
@@ -135,6 +135,52 @@ export async function PreloaderProDocs() {
       installPackageName="preloader-pro"
       installSourceCode={sourceCode}
       installSourceFilename="components/ui/preloader-pro.tsx"
+      examples={[
+        {
+          title: "Panel preview",
+          preview: (
+            <div className="relative h-[320px] w-full overflow-hidden rounded-xl">
+              <PreloaderPro
+                mode="preview"
+                duration={2600}
+                completionHold={600}
+              />
+            </div>
+          ),
+          code: `import { PreloaderPro } from "@/components/ui/preloader-pro"
+
+<div className="relative h-[420px] w-full overflow-hidden rounded-xl">
+  <PreloaderPro mode="preview" />
+</div>`,
+        },
+        {
+          title: "Fast red run",
+          preview: (
+            <div className="relative h-[320px] w-full overflow-hidden rounded-xl">
+              <PreloaderPro
+                mode="preview"
+                duration={1400}
+                completionHold={300}
+                exitDuration={500}
+                progressColor="#ef4444"
+                loaderBackground="#f5f5f4"
+              />
+            </div>
+          ),
+          code: `import { PreloaderPro } from "@/components/ui/preloader-pro"
+
+<div className="relative h-[420px] w-full overflow-hidden rounded-xl">
+  <PreloaderPro
+    mode="preview"
+    duration={1400}
+    completionHold={300}
+    exitDuration={500}
+    progressColor="#ef4444"
+    loaderBackground="#f5f5f4"
+  />
+</div>`,
+        },
+      ]}
       fullWidthPreview
       unstyledPreview
       props={[
@@ -179,19 +225,22 @@ export async function PreloaderProDocs() {
           name: "text",
           type: "string",
           default: '"DAVINCIUI"',
-          description: "Hero word, rendered once, centered. Rendered exactly as provided.",
+          description:
+            "Hero word, rendered once, centered. Rendered exactly as provided.",
         },
         {
           name: "textColor",
           type: "string",
           default: 'theme-aware ("#F4ECEC" / "#191114")',
-          description: "Center hero ink. Defaults follow the website color scheme.",
+          description:
+            "Center hero ink. Defaults follow the website color scheme.",
         },
         {
           name: "backgroundColor",
           type: "string",
           default: 'theme-aware ("#070707" / "#F4F1EE")',
-          description: "Hero base background. Defaults follow the website color scheme.",
+          description:
+            "Hero base background. Defaults follow the website color scheme.",
         },
         {
           name: "glowColor",
@@ -216,24 +265,28 @@ export async function PreloaderProDocs() {
           name: "autoStart",
           type: "boolean",
           default: "true",
-          description: "Start playing on mount. When false, the hero rests revealed.",
+          description:
+            "Start playing on mount. When false, the hero rests revealed.",
         },
         {
           name: "loop",
           type: "boolean",
           default: "false",
-          description: "Loop forever: hero fades → black → panel returns → replay.",
+          description:
+            "Loop forever: hero fades → black → panel returns → replay.",
         },
         {
           name: "loopHold",
           type: "number",
           default: "2600",
-          description: "Milliseconds the revealed hero holds before a loop restart.",
+          description:
+            "Milliseconds the revealed hero holds before a loop restart.",
         },
         {
           name: "fontFamily",
           type: "string",
-          description: "Counter / hero font stack. Heavy geometric sans recommended.",
+          description:
+            "Counter / hero font stack. Heavy geometric sans recommended.",
         },
         {
           name: "onPhaseChange",
@@ -244,7 +297,8 @@ export async function PreloaderProDocs() {
         {
           name: "onComplete",
           type: "() => void",
-          description: "Fires once the reveal finishes (every loop when looping).",
+          description:
+            "Fires once the reveal finishes (every loop when looping).",
         },
         {
           name: "className",

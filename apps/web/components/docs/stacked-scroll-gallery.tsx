@@ -1,4 +1,5 @@
 import React from "react";
+import { DemoFrame } from "@/components/docs/previews/demo-frame";
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import { readComponentSource } from "@/lib/source-code";
 import { StackedScrollGalleryPreview } from "@/components/docs/previews/stacked-scroll-gallery-preview";
@@ -42,6 +43,20 @@ export async function StackedScrollGalleryDocs() {
       installSourceCode={sourceCode}
       installSourceFilename="components/ui/stacked-scroll-gallery.tsx"
       usageCode={defaultCode}
+      examples={[
+        {
+          title: "Full-page demo",
+          preview: (
+            <DemoFrame
+              src="/demo/stacked-scroll-gallery"
+              title="Stacked Scroll Gallery demo"
+            />
+          ),
+          code: `import { StackedScrollGallery } from "@/components/ui/stacked-scroll-gallery"
+
+<StackedScrollGallery items={items} />`,
+        },
+      ]}
       fullWidthPreview={true}
       props={[
         {
@@ -107,8 +122,7 @@ export async function StackedScrollGalleryDocs() {
           name: "easing",
           type: '"linear" | "easeInOut" | ((t: number) => number)',
           default: '"linear"',
-          description:
-            "Easing applied to each transition's local progress.",
+          description: "Easing applied to each transition's local progress.",
         },
         {
           name: "dimming",
@@ -135,7 +149,8 @@ export async function StackedScrollGalleryDocs() {
           name: "pauseOffscreenVideos",
           type: "boolean",
           default: "true",
-          description: "Pause videos that are not the active (or adjacent) panel.",
+          description:
+            "Pause videos that are not the active (or adjacent) panel.",
         },
         {
           name: "background",

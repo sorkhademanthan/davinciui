@@ -1,4 +1,6 @@
 import { Section } from "@/components/component-layout";
+import { EditorialWipePreloader } from "@workspace/ui/components/editorial-wipe-preloader";
+
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import { EditorialWipePreloaderPreview } from "@/components/docs/previews/editorial-wipe-preloader-preview";
 import { readComponentSource } from "@/lib/source-code";
@@ -23,17 +25,15 @@ function EditorialWipePreloaderNotes() {
           <p className="font-medium text-foreground">
             A fullscreen editorial loading wipe: one continuous cream reveal
             with a beige leading edge sweeps horizontally over a deep forest
-            field while an oversized tabular counter rides along the
-            lower-left.
+            field while an oversized tabular counter rides along the lower-left.
           </p>
           <p>
-            The counter renders twice — dark ink and muted taupe — and the
-            taupe render is clipped to the cream region, so a single glyph can
-            span the moving color boundary. At 100 the cream frame holds
-            briefly, then the entire overlay lifts vertically upward as one
-            surface, revealing the page already mounted beneath it. Your
-            content exists underneath; the preloader is purely an overlay
-            covering it.
+            The counter renders twice — dark ink and muted taupe — and the taupe
+            render is clipped to the cream region, so a single glyph can span
+            the moving color boundary. At 100 the cream frame holds briefly,
+            then the entire overlay lifts vertically upward as one surface,
+            revealing the page already mounted beneath it. Your content exists
+            underneath; the preloader is purely an overlay covering it.
           </p>
           <p>
             One motion value drives the counter, the reveal position, the
@@ -59,12 +59,11 @@ function EditorialWipePreloaderNotes() {
           </li>
           <li>
             <strong className="text-foreground">Auto mode</strong> simulates a
-            staged cinematic progression — quick open, steady middle,
-            deliberate crawl into 100.
+            staged cinematic progression — quick open, steady middle, deliberate
+            crawl into 100.
           </li>
           <li>
-            <strong className="text-foreground">Manual mode</strong> follows
-            the{" "}
+            <strong className="text-foreground">Manual mode</strong> follows the{" "}
             <code className="rounded bg-muted px-1.5 py-0.5 text-xs text-foreground">
               progress
             </code>{" "}
@@ -127,6 +126,84 @@ export async function EditorialWipePreloaderDocs() {
       installDependencies="framer-motion"
       installSourceCode={sourceCode}
       installSourceFilename="components/ui/editorial-wipe-preloader.tsx"
+      examples={[
+        {
+          title: "Contained wipe",
+          preview: (
+            <div className="relative h-[320px] w-full overflow-hidden rounded-xl bg-[#0f2a1d]">
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
+                <p className="text-4xl font-semibold tracking-[-0.04em] text-[#f6f1e7]">
+                  Welcome
+                </p>
+                <p className="text-xs uppercase tracking-[0.2em] text-[#f6f1e7]/60">
+                  Page content beneath
+                </p>
+              </div>
+              <EditorialWipePreloader
+                mode="container"
+                darkColor="#0f2a1d"
+                lightColor="#f6f1e7"
+                accentColor="#d9c7a7"
+                counterDarkColor="#f6f1e7"
+                counterLightColor="#0f2a1d"
+                duration={2600}
+                completionHold={700}
+                exitDuration={800}
+                className="rounded-xl"
+              />
+            </div>
+          ),
+          code: `import { EditorialWipePreloader } from "@/components/ui/editorial-wipe-preloader"
+
+<div className="relative h-[420px] w-full overflow-hidden rounded-xl bg-[#0f2a1d]">
+  <EditorialWipePreloader
+    mode="container"
+    darkColor="#0f2a1d"
+    lightColor="#f6f1e7"
+    accentColor="#d9c7a7"
+    counterDarkColor="#f6f1e7"
+    counterLightColor="#0f2a1d"
+  />
+</div>`,
+        },
+        {
+          title: "Quick dark reveal",
+          preview: (
+            <div className="relative h-[320px] w-full overflow-hidden rounded-xl bg-[#07070a]">
+              <div className="absolute inset-0 flex items-center justify-center">
+                <p className="text-4xl font-semibold tracking-[-0.04em] text-white">
+                  Underneath
+                </p>
+              </div>
+              <EditorialWipePreloader
+                mode="container"
+                darkColor="#07070a"
+                lightColor="#1c1c22"
+                accentColor="#52525b"
+                counterDarkColor="#f4f4f5"
+                counterLightColor="#a1a1aa"
+                duration={1400}
+                completionHold={350}
+                exitDuration={600}
+                className="rounded-xl"
+              />
+            </div>
+          ),
+          code: `import { EditorialWipePreloader } from "@/components/ui/editorial-wipe-preloader"
+
+<div className="relative h-[420px] w-full overflow-hidden rounded-xl bg-[#07070a]">
+  <EditorialWipePreloader
+    mode="container"
+    darkColor="#07070a"
+    lightColor="#1c1c22"
+    accentColor="#52525b"
+    duration={1400}
+    completionHold={350}
+    exitDuration={600}
+  />
+</div>`,
+        },
+      ]}
       fullWidthPreview
       unstyledPreview
       props={[
@@ -141,8 +218,7 @@ export async function EditorialWipePreloaderDocs() {
           name: "completionHold",
           type: "number",
           default: "450",
-          description:
-            "Milliseconds the completed 100 frame stays visible.",
+          description: "Milliseconds the completed 100 frame stays visible.",
         },
         {
           name: "exitDuration",
@@ -178,7 +254,7 @@ export async function EditorialWipePreloaderDocs() {
         {
           name: "showLoadingLabel / loadingLabel",
           type: "boolean / string",
-          default: "true / \"LOADING\"",
+          default: 'true / "LOADING"',
           description: "Tiny uppercase label above the counter.",
         },
         {

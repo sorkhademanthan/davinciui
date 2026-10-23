@@ -1,3 +1,4 @@
+import { DemoFrame } from "@/components/docs/previews/demo-frame";
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import { readComponentSource } from "@/lib/source-code";
 import { ScrollMediaExpandInteractivePreview } from "@/components/docs/previews/scroll-media-expand-interactive-preview";
@@ -24,6 +25,20 @@ export async function ScrollMediaExpandDocs() {
     <DocsPageLayout
       title="Scroll Media Expand"
       description="A cinematic scroll zoom reveal that begins as a compact media capsule, expands width-first into a rounded frame, and then fills the viewport while the surrounding text fades away. The motion is fully reversible, responsive, and driven directly by scroll progress."
+      examples={[
+        {
+          title: "Full-page demo",
+          preview: (
+            <DemoFrame
+              src="/demo/scroll-media-expand"
+              title="Scroll Media Expand demo"
+            />
+          ),
+          code: `import { ScrollMediaExpand } from "@/components/ui/scroll-media-expand"
+
+<ScrollMediaExpand src="/images/hero.jpg" overlayText="Play showreel" />`,
+        },
+      ]}
       fullWidthPreview
       preview={<ScrollMediaExpandInteractivePreview />}
       previewCode={defaultCode}

@@ -1,4 +1,5 @@
 import { Section } from "@/components/component-layout";
+import { DemoFrame } from "@/components/docs/previews/demo-frame";
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import { FillPreloaderPreview } from "@/components/docs/previews/fill-preloader-preview";
 import { readComponentSource } from "@/lib/source-code";
@@ -21,9 +22,9 @@ function FillPreloaderNotes() {
       <Section title="About Fill Preloader" className="pt-8">
         <div className="max-w-2xl space-y-4 text-[15px] leading-7 text-muted-foreground">
           <p className="font-medium text-foreground">
-            A fullscreen loading transition: a solid blue surface rises from
-            the bottom over a near-black screen while a large percentage
-            counter sits anchored at the bottom-right.
+            A fullscreen loading transition: a solid blue surface rises from the
+            bottom over a near-black screen while a large percentage counter
+            sits anchored at the bottom-right.
           </p>
           <p>
             At 100% the completed frame holds briefly, then the entire overlay
@@ -32,8 +33,8 @@ function FillPreloaderNotes() {
             overlay covering it.
           </p>
           <p>
-            One motion value drives both the blue fill and the counter, so
-            they can never drift apart. The fill uses GPU-friendly{" "}
+            One motion value drives both the blue fill and the counter, so they
+            can never drift apart. The fill uses GPU-friendly{" "}
             <code className="mx-1 rounded bg-muted px-1.5 py-0.5 text-xs text-foreground">
               scaleY
             </code>{" "}
@@ -54,21 +55,20 @@ function FillPreloaderNotes() {
           </li>
           <li>
             <strong className="text-foreground">Auto mode</strong> simulates a
-            natural staged progression — slow start, fast middle, eased
-            landing near 100%.
+            natural staged progression — slow start, fast middle, eased landing
+            near 100%.
           </li>
           <li>
-            <strong className="text-foreground">Manual mode</strong> follows
-            the{" "}
+            <strong className="text-foreground">Manual mode</strong> follows the{" "}
             <code className="rounded bg-muted px-1.5 py-0.5 text-xs text-foreground">
               progress
             </code>{" "}
             prop with smoothing, so hook it to real loading when available.
           </li>
           <li>
-            <strong className="text-foreground">Theme</strong> — background
-            and counter default to the page color scheme (light or dark) and
-            follow live theme changes; the blue fill stays constant.
+            <strong className="text-foreground">Theme</strong> — background and
+            counter default to the page color scheme (light or dark) and follow
+            live theme changes; the blue fill stays constant.
           </li>
           <li>
             <strong className="text-foreground">Replay</strong> by remounting
@@ -91,8 +91,8 @@ function FillPreloaderNotes() {
 
       <Section title="Best For" className="pt-8">
         <p className="max-w-2xl text-[15px] leading-7 text-muted-foreground">
-          Portfolio intros, campaign pages, and product launches where the
-          first paint should feel like a confident editorial curtain-lift.
+          Portfolio intros, campaign pages, and product launches where the first
+          paint should feel like a confident editorial curtain-lift.
         </p>
       </Section>
     </>
@@ -120,6 +120,17 @@ export async function FillPreloaderDocs() {
       installDependencies="framer-motion"
       installSourceCode={sourceCode}
       installSourceFilename="components/ui/fill-preloader.tsx"
+      examples={[
+        {
+          title: "Full-page demo",
+          preview: (
+            <DemoFrame src="/demo/fill-preloader" title="Fill Preloader demo" />
+          ),
+          code: `import { FillPreloader } from "@/components/ui/fill-preloader"
+
+<FillPreloader />`,
+        },
+      ]}
       fullWidthPreview
       unstyledPreview
       props={[
@@ -159,8 +170,7 @@ export async function FillPreloaderDocs() {
           name: "completionHold",
           type: "number",
           default: "300",
-          description:
-            "Milliseconds the completed 100% frame stays visible.",
+          description: "Milliseconds the completed 100% frame stays visible.",
         },
         {
           name: "exitDuration",

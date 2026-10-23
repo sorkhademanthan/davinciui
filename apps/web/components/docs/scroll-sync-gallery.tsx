@@ -1,4 +1,5 @@
 import React from "react";
+import { DemoFrame } from "@/components/docs/previews/demo-frame";
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import { readComponentSource } from "@/lib/source-code";
 import { ScrollSyncGalleryPreview } from "@/components/docs/previews/scroll-sync-gallery-preview";
@@ -55,6 +56,20 @@ export async function ScrollSyncGalleryDocs() {
       installSourceCode={sourceCode}
       installSourceFilename="components/ui/scroll-sync-gallery.tsx"
       usageCode={defaultCode}
+      examples={[
+        {
+          title: "Full-page demo",
+          preview: (
+            <DemoFrame
+              src="/demo/scroll-sync-gallery"
+              title="Scroll Sync Gallery demo"
+            />
+          ),
+          code: `import { ScrollSyncGallery } from "@/components/ui/scroll-sync-gallery"
+
+<ScrollSyncGallery columns={columns} />`,
+        },
+      ]}
       fullWidthPreview={true}
       props={[
         {

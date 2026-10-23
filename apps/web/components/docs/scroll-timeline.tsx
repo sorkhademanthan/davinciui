@@ -1,4 +1,5 @@
 import React from "react";
+import { DemoFrame } from "@/components/docs/previews/demo-frame";
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import { readComponentSource } from "@/lib/source-code";
 import { ScrollTimelinePreview } from "@/components/docs/previews/scroll-timeline-preview";
@@ -65,6 +66,20 @@ export async function ScrollTimelineDocs() {
       installSourceCode={sourceCode}
       installSourceFilename="components/ui/scroll-timeline.tsx"
       usageCode={defaultCode}
+      examples={[
+        {
+          title: "Full-page demo",
+          preview: (
+            <DemoFrame
+              src="/demo/scroll-timeline"
+              title="Scroll Timeline demo"
+            />
+          ),
+          code: `import { ScrollTimeline } from "@/components/ui/scroll-timeline"
+
+<ScrollTimeline items={milestones} />`,
+        },
+      ]}
       fullWidthPreview={true}
       props={[
         {
@@ -104,8 +119,7 @@ export async function ScrollTimelineDocs() {
           name: "easing",
           type: '"linear" | "smooth"',
           default: '"smooth"',
-          description:
-            "Easing applied to each transition's local progress.",
+          description: "Easing applied to each transition's local progress.",
         },
         {
           name: "viewportHeight",
