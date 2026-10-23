@@ -1,3 +1,5 @@
+import { NudgeButton } from "@workspace/ui/components/nudge-button";
+
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import { NudgeButtonPreview } from "@/components/docs/previews/nudge-button-preview";
 import { readComponentSource } from "@/lib/source-code";
@@ -26,12 +28,57 @@ export async function NudgeButtonDocs() {
       installSourceFilename="components/ui/nudge-button.tsx"
       fullWidthPreview
       unstyledPreview
+      examples={[
+        {
+          title: "Custom ring palette",
+          preview: (
+            <div className="flex min-h-[220px] items-center justify-center px-6">
+              <NudgeButton
+                duration={1000}
+                colors={{
+                  outer: "#0ea5e9",
+                  middle: "#6366f1",
+                  inner: "#f59e0b",
+                  reveal: "#ffffff",
+                }}
+              >
+                NUDGE ME
+              </NudgeButton>
+            </div>
+          ),
+          code: `import { NudgeButton } from "@/components/ui/nudge-button"
+
+<NudgeButton
+  duration={1000}
+  colors={{
+    outer: "#0ea5e9",
+    middle: "#6366f1",
+    inner: "#f59e0b",
+    reveal: "#ffffff",
+  }}
+>
+  NUDGE ME
+</NudgeButton>`,
+        },
+        {
+          title: "Disabled",
+          preview: (
+            <div className="flex min-h-[220px] items-center justify-center px-6">
+              <NudgeButton disabled>DISABLED</NudgeButton>
+            </div>
+          ),
+          code: `import { NudgeButton } from "@/components/ui/nudge-button"
+
+<NudgeButton disabled>DISABLED</NudgeButton>`,
+        },
+      ]}
       props={[
         {
           name: "children",
           type: "React.ReactNode",
           default: '"BUY NUDGE"',
-          description: "Centered label. Never moved, resized, or distorted by the rings.",
+          description:
+            "Centered label. Never moved, resized, or distorted by the rings.",
         },
         {
           name: "colors",
@@ -56,7 +103,8 @@ export async function NudgeButtonDocs() {
         {
           name: "onClick",
           type: "(event) => void",
-          description: "Click handler. Never interfered with by the ring animation.",
+          description:
+            "Click handler. Never interfered with by the ring animation.",
         },
       ]}
     />
