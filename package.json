@@ -7,6 +7,7 @@
     "dev": "turbo dev",
     "lint": "turbo lint",
     "registry:blocks": "node scripts/build-blocks-registry.js",
+    "validate:docs": "node scripts/validate-docs.mjs",
     "validate:registry": "node scripts/validate-registry.js",
     "generate:og": "node scripts/generate-og-image.mjs",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
