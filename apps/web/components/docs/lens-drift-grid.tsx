@@ -1,4 +1,5 @@
 import React from "react";
+import { LENS_DRIFT_ITEMS } from "@workspace/ui/components/lens-drift-grid";
 import { LensDriftGrid } from "@workspace/ui/components/lens-drift-grid";
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import { readComponentSource } from "@/lib/source-code";
@@ -30,6 +31,54 @@ export async function LensDriftGridDocs() {
       installSourceCode={sourceCode}
       installSourceFilename="components/ui/lens-drift-grid.tsx"
       usageCode={defaultCode}
+      examples={[
+        {
+          title: "Ambient dark field",
+          preview: (
+            <div className="relative h-[320px] w-full overflow-hidden rounded-xl">
+              <LensDriftGrid autoDrift className="h-full w-full" />
+            </div>
+          ),
+          code: `import { LensDriftGrid } from "@/components/ui/lens-drift-grid"
+
+<div className="relative h-[420px] w-full overflow-hidden rounded-xl">
+  <LensDriftGrid autoDrift className="h-full w-full" />
+</div>`,
+        },
+        {
+          title: "Light, shallow lens",
+          preview: (
+            <div className="relative h-[320px] w-full overflow-hidden rounded-xl">
+              <LensDriftGrid
+                items={LENS_DRIFT_ITEMS}
+                theme="light"
+                lensStrength={0.4}
+                tileWidth={150}
+                tileHeight={190}
+                gap={10}
+                autoDrift={{ x: 10, y: 5 }}
+                interactive={false}
+                className="h-full w-full"
+              />
+            </div>
+          ),
+          code: `import { LensDriftGrid } from "@/components/ui/lens-drift-grid"
+
+<div className="relative h-[420px] w-full overflow-hidden rounded-xl">
+  <LensDriftGrid
+    items={items}
+    theme="light"
+    lensStrength={0.4}
+    tileWidth={150}
+    tileHeight={190}
+    gap={10}
+    autoDrift={{ x: 10, y: 5 }}
+    interactive={false}
+    className="h-full w-full"
+  />
+</div>`,
+        },
+      ]}
       fullWidthPreview
       unstyledPreview
       props={[

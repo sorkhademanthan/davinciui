@@ -133,6 +133,56 @@ export async function OrbitSpiralGalleryDocs() {
           URLs. Every image should include meaningful alternative text.
         </p>
       }
+      examples={[
+        {
+          title: "Slow automatic orbit",
+          preview: (
+            <div className="relative h-[360px] w-full overflow-hidden rounded-xl bg-zinc-100 dark:bg-zinc-950">
+              <OrbitSpiralGallery
+                items={slides.slice(0, 10)}
+                autoRotate
+                autoSpeed={0.08}
+                radius={280}
+                className="h-full"
+              />
+            </div>
+          ),
+          code: `import { OrbitSpiralGallery } from "@/components/ui/orbit-spiral-gallery"
+
+<div className="relative h-[420px] w-full overflow-hidden rounded-xl">
+  <OrbitSpiralGallery items={items} autoRotate autoSpeed={0.08} radius={280} className="h-full" />
+</div>`,
+        },
+        {
+          title: "Tight, faster spiral",
+          preview: (
+            <div className="relative h-[360px] w-full overflow-hidden rounded-xl bg-zinc-100 dark:bg-zinc-950">
+              <OrbitSpiralGallery
+                items={slides.slice(4, 14)}
+                autoRotate
+                autoSpeed={0.22}
+                radius={180}
+                verticalGap={52}
+                cardWidth={120}
+                className="h-full"
+              />
+            </div>
+          ),
+          code: `import { OrbitSpiralGallery } from "@/components/ui/orbit-spiral-gallery"
+
+<div className="relative h-[420px] w-full overflow-hidden rounded-xl">
+  <OrbitSpiralGallery
+    items={items}
+    autoRotate
+    autoSpeed={0.22}
+    radius={180}
+    verticalGap={52}
+    cardWidth={120}
+    className="h-full"
+  />
+</div>`,
+        },
+      ]}
       fullWidthPreview
       props={[
         {

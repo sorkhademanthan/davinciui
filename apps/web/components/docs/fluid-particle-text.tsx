@@ -1,5 +1,7 @@
 import React from "react";
 import { Archivo_Narrow } from "next/font/google";
+import { FluidParticleText } from "@workspace/ui/components/fluid-particle-text";
+
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import { FluidParticleTextPreview } from "@/components/docs/previews/fluid-particle-text-preview";
 import { readComponentSource } from "@/lib/source-code";
@@ -39,6 +41,72 @@ export async function FluidParticleTextDocs() {
           />
         }
         previewCode={defaultCode}
+        examples={[
+          {
+            title: "Outline INK",
+            preview: (
+              <div className="relative h-[320px] w-full overflow-hidden rounded-xl">
+                <FluidParticleText
+                  preset="showcase"
+                  text="INK"
+                  fontFamily={archivoNarrow.style.fontFamily}
+                  padding={0.16}
+                  color="#f4f4f5"
+                  background="#09090b"
+                  outline
+                  strokeWidth={2.25}
+                  fillOpacity={1}
+                  className="h-full w-full"
+                />
+              </div>
+            ),
+            code: `import { FluidParticleText } from "@/components/ui/fluid-particle-text"
+
+<div className="relative h-[420px] w-full overflow-hidden rounded-xl">
+  <FluidParticleText
+    preset="showcase"
+    text="INK"
+    padding={0.16}
+    color="#f4f4f5"
+    background="#09090b"
+    outline
+    strokeWidth={2.25}
+    fillOpacity={1}
+    className="h-full w-full"
+  />
+</div>`,
+          },
+          {
+            title: "Solid orange FLUID",
+            preview: (
+              <div className="relative h-[320px] w-full overflow-hidden rounded-xl">
+                <FluidParticleText
+                  text="FLUID"
+                  fontFamily={archivoNarrow.style.fontFamily}
+                  fontWeight="700"
+                  padding={0.12}
+                  color="#f97316"
+                  background="#fafafa"
+                  particleSize={2.4}
+                  className="h-full w-full"
+                />
+              </div>
+            ),
+            code: `import { FluidParticleText } from "@/components/ui/fluid-particle-text"
+
+<div className="relative h-[420px] w-full overflow-hidden rounded-xl">
+  <FluidParticleText
+    text="FLUID"
+    fontWeight="700"
+    padding={0.12}
+    color="#f97316"
+    background="#fafafa"
+    particleSize={2.4}
+    className="h-full w-full"
+  />
+</div>`,
+          },
+        ]}
         fullWidthPreview
         unstyledPreview
         installPackageName="fluid-particle-text"
@@ -158,8 +226,7 @@ export async function FluidParticleTextDocs() {
             name: "pressureStrength",
             type: "number",
             default: "0.12",
-            description:
-              "Broad, soft separation normal to the pointer path.",
+            description: "Broad, soft separation normal to the pointer path.",
           },
           {
             name: "corePressureStrength",

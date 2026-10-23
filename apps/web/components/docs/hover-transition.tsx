@@ -1,4 +1,6 @@
 import React from "react";
+import { HoverTransition } from "@workspace/ui/components/hover-transition";
+
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import {
   HoverTransitionPersonalizePanel,
@@ -73,6 +75,100 @@ export async function HoverTransitionDocs() {
       installSourceCode={sourceCode}
       installSourceFilename="components/ui/hover-transition.tsx"
       usageCode={usageCode}
+      examples={[
+        {
+          title: "Wipe from the left",
+          preview: (
+            <div className="flex h-[320px] w-full items-center justify-center rounded-xl bg-zinc-100 p-6 dark:bg-zinc-900">
+              <HoverTransition
+                effect="wipe"
+                direction="left"
+                className="h-[240px] w-full max-w-[300px] overflow-hidden rounded-xl"
+                defaultComponent={
+                  <article className="flex h-full flex-col justify-between bg-[#ece9e1] p-6 text-[#151515]">
+                    <span className="text-xs font-medium uppercase tracking-[0.16em] text-black/50">
+                      Product Designer
+                    </span>
+                    <div>
+                      <h3 className="text-3xl font-medium tracking-[-0.05em]">
+                        Maya Chen
+                      </h3>
+                      <p className="mt-1 text-sm text-black/55">
+                        Designing thoughtful digital products.
+                      </p>
+                    </div>
+                  </article>
+                }
+                hoverComponent={
+                  <article className="flex h-full flex-col justify-between bg-[#dfff5f] p-6 text-[#111]">
+                    <p className="max-w-[24ch] text-xl font-medium leading-tight tracking-[-0.035em]">
+                      Turning complex product ideas into clear, expressive
+                      experiences.
+                    </p>
+                    <div>
+                      <p className="font-semibold">Maya Chen</p>
+                      <p className="mt-1 text-xs uppercase tracking-[0.12em] text-black/55">
+                        Product Designer
+                      </p>
+                    </div>
+                  </article>
+                }
+              />
+            </div>
+          ),
+          code: `import { HoverTransition } from "@/components/ui/hover-transition"
+
+<HoverTransition
+  effect="wipe"
+  direction="left"
+  className="h-[320px] w-[300px] overflow-hidden rounded-xl"
+  defaultComponent={<ProfileCard />}
+  hoverComponent={<ProfileDetails />}
+/>`,
+        },
+        {
+          title: "Ripple reveal",
+          preview: (
+            <div className="flex h-[320px] w-full items-center justify-center rounded-xl bg-zinc-100 p-6 dark:bg-zinc-900">
+              <HoverTransition
+                effect="ripple"
+                duration={0.7}
+                className="h-[240px] w-full max-w-[300px] overflow-hidden rounded-xl"
+                defaultComponent={
+                  <article className="flex h-full flex-col justify-between bg-[#111] p-6 text-white">
+                    <span className="text-xs uppercase tracking-[0.18em] text-white/50">
+                      Collection 04
+                    </span>
+                    <h3 className="text-3xl font-semibold tracking-[-0.04em]">
+                      Night Studies
+                    </h3>
+                  </article>
+                }
+                hoverComponent={
+                  <article className="flex h-full flex-col justify-between bg-[#a5b4fc] p-6 text-[#111]">
+                    <p className="text-lg font-medium leading-snug tracking-[-0.02em]">
+                      Eight long exposures recorded between midnight and first
+                      light.
+                    </p>
+                    <span className="text-xs uppercase tracking-[0.18em] text-black/60">
+                      View series
+                    </span>
+                  </article>
+                }
+              />
+            </div>
+          ),
+          code: `import { HoverTransition } from "@/components/ui/hover-transition"
+
+<HoverTransition
+  effect="ripple"
+  duration={0.7}
+  className="h-[320px] w-[300px] overflow-hidden rounded-xl"
+  defaultComponent={<CoverCard />}
+  hoverComponent={<CoverDetails />}
+/>`,
+        },
+      ]}
       fullWidthPreview
       unstyledPreview
       props={[
