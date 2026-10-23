@@ -165,7 +165,10 @@ export function DocsPreviewWrapper({
   const fullscreenOriginRef = React.useRef<FullscreenOrigin | null>(null)
   const fullscreenAnimationRef = React.useRef<Animation | null>(null)
 
-  const resolvedActiveVariant = hideDefaultVariant && activeVariant === -1 ? 0 : activeVariant
+  const resolvedActiveVariant =
+    hideDefaultVariant && variants.length > 0 && activeVariant === -1
+      ? 0
+      : activeVariant
 
   const { setActiveVariantIndex, personalizeOpen, setPersonalizeOpen } = useDocStore()
 
@@ -465,7 +468,7 @@ export function DocsPreviewWrapper({
               active={resolvedActiveVariant === -1}
               onClick={() => selectVariant(-1)}
             >
-              Preview
+              Default
             </PreviewVariantTab>
           )}
 
