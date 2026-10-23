@@ -1,3 +1,5 @@
+import { LiquidRevealButton } from "@workspace/ui/components/liquid-reveal-button";
+
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import { LiquidRevealButtonPreview } from "@/components/docs/previews/liquid-reveal-button-preview";
 import { readComponentSource } from "@/lib/source-code";
@@ -24,6 +26,50 @@ export async function LiquidRevealButtonDocs() {
       preview={<LiquidRevealButtonPreview />}
       previewCode={usageCode}
       usageCode={usageCode}
+      examples={[
+        {
+          title: "Link with a cool palette",
+          preview: (
+            <div className="flex min-h-[220px] items-center justify-center px-6">
+              <LiquidRevealButton
+                href="/docs/components"
+                backgroundColor="#38bdf8"
+                hoverColor="#0f172a"
+                textColor="#0f172a"
+                hoverTextColor="#f8fafc"
+                borderColor="#0f172a"
+              >
+                See all components
+              </LiquidRevealButton>
+            </div>
+          ),
+          code: `import { LiquidRevealButton } from "@/components/ui/liquid-reveal-button"
+
+<LiquidRevealButton
+  href="/docs/components"
+  backgroundColor="#38bdf8"
+  hoverColor="#0f172a"
+  textColor="#0f172a"
+  hoverTextColor="#f8fafc"
+  borderColor="#0f172a"
+>
+  See all components
+</LiquidRevealButton>`,
+        },
+        {
+          title: "Disabled",
+          preview: (
+            <div className="flex min-h-[220px] items-center justify-center px-6">
+              <LiquidRevealButton disabled>
+                Currently unavailable
+              </LiquidRevealButton>
+            </div>
+          ),
+          code: `import { LiquidRevealButton } from "@/components/ui/liquid-reveal-button"
+
+<LiquidRevealButton disabled>Currently unavailable</LiquidRevealButton>`,
+        },
+      ]}
       installPackageName="liquid-reveal-button"
       installDependencies=""
       installSourceCode={sourceCode}
@@ -35,7 +81,8 @@ export async function LiquidRevealButtonDocs() {
           name: "children",
           type: "React.ReactNode",
           default: '"View all projects"',
-          description: "Button label. Kept on a single line and never moved by the reveal.",
+          description:
+            "Button label. Kept on a single line and never moved by the reveal.",
         },
         {
           name: "href",
@@ -46,7 +93,8 @@ export async function LiquidRevealButtonDocs() {
         {
           name: "onClick",
           type: "(event) => void",
-          description: "Click handler. Never interfered with by the reveal animation.",
+          description:
+            "Click handler. Never interfered with by the reveal animation.",
         },
         {
           name: "mode",
@@ -77,13 +125,15 @@ export async function LiquidRevealButtonDocs() {
           name: "hoverTextColor",
           type: "string",
           default: '"#FFFFFF"',
-          description: "Duplicate-label colour, visible only inside the reveal mask.",
+          description:
+            "Duplicate-label colour, visible only inside the reveal mask.",
         },
         {
           name: "borderColor",
           type: "string",
           default: '"#141414"',
-          description: "Thin pill outline, stable through the whole interaction.",
+          description:
+            "Thin pill outline, stable through the whole interaction.",
         },
         {
           name: "showDemoCursor",

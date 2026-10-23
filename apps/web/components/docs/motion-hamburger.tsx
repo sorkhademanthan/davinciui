@@ -1,3 +1,5 @@
+import { MotionHamburger } from "@workspace/ui/components/motion/motion-hamburger";
+
 import { Section } from "@/components/component-layout";
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import {
@@ -40,8 +42,8 @@ function MotionHamburgerNotes() {
               stroke-dasharray
             </code>
             while the whole icon rotates 45 degrees with an elastic overshoot
-            and the middle line collapses. All four motions run together for
-            the signature fluid feel.
+            and the middle line collapses. All four motions run together for the
+            signature fluid feel.
           </p>
           <p>
             Wire{" "}
@@ -113,6 +115,60 @@ export async function MotionHamburgerDocs() {
       installSourceFilename="components/ui/motion-hamburger.tsx"
       fullWidthPreview
       unstyledPreview
+      examples={[
+        {
+          title: "Ringed toggle",
+          preview: (
+            <div className="flex min-h-[220px] items-center justify-center px-6">
+              <MotionHamburger
+                size={56}
+                thickness={2.5}
+                showRing
+                ringColor="currentColor"
+                ringThickness={1.5}
+                ringPadding={6}
+                hoverGrowth={1.08}
+              />
+            </div>
+          ),
+          code: `import { MotionHamburger } from "@/components/ui/motion-hamburger"
+
+<MotionHamburger
+  size={56}
+  thickness={2.5}
+  showRing
+  ringColor="currentColor"
+  ringThickness={1.5}
+  ringPadding={6}
+  hoverGrowth={1.08}
+/>`,
+        },
+        {
+          title: "Starts open, custom color",
+          preview: (
+            <div className="flex min-h-[220px] items-center justify-center px-6">
+              <MotionHamburger
+                initialState="open"
+                size={48}
+                color="#f97316"
+                thickness={3}
+                showRing
+                ringColor="#f97316"
+              />
+            </div>
+          ),
+          code: `import { MotionHamburger } from "@/components/ui/motion-hamburger"
+
+<MotionHamburger
+  initialState="open"
+  size={48}
+  color="#f97316"
+  thickness={3}
+  showRing
+  ringColor="#f97316"
+/>`,
+        },
+      ]}
       props={[
         {
           name: "initialState",
