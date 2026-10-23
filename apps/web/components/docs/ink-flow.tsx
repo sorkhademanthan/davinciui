@@ -1,3 +1,5 @@
+import { InkFlow } from "@workspace/ui/components/ink-flow";
+
 import { Section } from "@/components/component-layout";
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import {
@@ -31,10 +33,10 @@ function InkFlowNotes() {
             interfaces.
           </p>
           <p>
-            Ink Flow recreates the slow, organic movement of
-            fountain-pen ink dispersing through textured watercolor paper.
-            Large pigment fields gently stretch, bleed, and fold into one
-            another to create a constantly evolving generative backdrop.
+            Ink Flow recreates the slow, organic movement of fountain-pen ink
+            dispersing through textured watercolor paper. Large pigment fields
+            gently stretch, bleed, and fold into one another to create a
+            constantly evolving generative backdrop.
           </p>
           <p>
             Built with native WebGL, the effect remains GPU accelerated without
@@ -45,10 +47,22 @@ function InkFlowNotes() {
 
       <Section title="Controls" className="pt-8">
         <ul className="max-w-2xl list-disc space-y-2 pl-5 text-[15px] leading-7 text-muted-foreground">
-          <li><strong className="text-foreground">Flow Speed</strong> controls how quickly the ink evolves.</li>
-          <li><strong className="text-foreground">Ink Scale</strong> controls the size and density of the fluid forms.</li>
-          <li><strong className="text-foreground">Ink Saturation</strong> controls the strength of the pigment.</li>
-          <li><strong className="text-foreground">Contrast</strong> controls separation between paper and ink tones.</li>
+          <li>
+            <strong className="text-foreground">Flow Speed</strong> controls how
+            quickly the ink evolves.
+          </li>
+          <li>
+            <strong className="text-foreground">Ink Scale</strong> controls the
+            size and density of the fluid forms.
+          </li>
+          <li>
+            <strong className="text-foreground">Ink Saturation</strong> controls
+            the strength of the pigment.
+          </li>
+          <li>
+            <strong className="text-foreground">Contrast</strong> controls
+            separation between paper and ink tones.
+          </li>
         </ul>
       </Section>
 
@@ -64,8 +78,7 @@ function InkFlowNotes() {
 
 export async function InkFlowDocs() {
   const sourceCode =
-    (await readComponentSource("ink-flow")) ||
-    "// Unable to load source code";
+    (await readComponentSource("ink-flow")) || "// Unable to load source code";
 
   return (
     <DocsPageLayout
@@ -78,6 +91,60 @@ export async function InkFlowDocs() {
       installPackageName="ink-flow"
       installSourceCode={sourceCode}
       installSourceFilename="components/ui/ink-flow.tsx"
+      examples={[
+        {
+          title: "Warm paper and umber ink",
+          preview: (
+            <div className="relative h-[320px] w-full overflow-hidden rounded-xl">
+              <InkFlow
+                paperColor="#f4efe6"
+                softInkColor="#b8a99a"
+                deepInkColor="#3f3a36"
+                accentColor="#b45309"
+                speed={0.3}
+                scale={1.2}
+                className="h-full w-full"
+              />
+            </div>
+          ),
+          code: `import { InkFlow } from "@/components/ui/ink-flow"
+
+<div className="relative h-[420px] w-full overflow-hidden rounded-xl">
+  <InkFlow
+    paperColor="#f4efe6"
+    softInkColor="#b8a99a"
+    deepInkColor="#3f3a36"
+    accentColor="#b45309"
+    speed={0.3}
+    scale={1.2}
+    className="h-full w-full"
+  />
+</div>`,
+        },
+        {
+          title: "Monochrome, high contrast",
+          preview: (
+            <div className="relative h-[320px] w-full overflow-hidden rounded-xl">
+              <InkFlow
+                saturation={0}
+                contrast={1.6}
+                speed={0.18}
+                className="h-full w-full"
+              />
+            </div>
+          ),
+          code: `import { InkFlow } from "@/components/ui/ink-flow"
+
+<div className="relative h-[420px] w-full overflow-hidden rounded-xl">
+  <InkFlow
+    saturation={0}
+    contrast={1.6}
+    speed={0.18}
+    className="h-full w-full"
+  />
+</div>`,
+        },
+      ]}
       fullWidthPreview
       unstyledPreview
       props={[
@@ -85,13 +152,15 @@ export async function InkFlowDocs() {
           name: "speed",
           type: "number",
           default: "0.22",
-          description: "Rate at which the ink evolves. Set to 0 to freeze the current frame.",
+          description:
+            "Rate at which the ink evolves. Set to 0 to freeze the current frame.",
         },
         {
           name: "scale",
           type: "number",
           default: "1",
-          description: "Spatial scale of the ink structures. Lower values produce broader forms.",
+          description:
+            "Spatial scale of the ink structures. Lower values produce broader forms.",
         },
         {
           name: "saturation",
@@ -133,12 +202,14 @@ export async function InkFlowDocs() {
           name: "maxDpr",
           type: "number",
           default: "2",
-          description: "Maximum device pixel ratio used by the canvas backing buffer.",
+          description:
+            "Maximum device pixel ratio used by the canvas backing buffer.",
         },
         {
           name: "className",
           type: "string",
-          description: "Additional classes applied to the full-size background layer.",
+          description:
+            "Additional classes applied to the full-size background layer.",
         },
       ]}
       afterContent={<InkFlowNotes />}

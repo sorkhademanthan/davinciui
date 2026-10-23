@@ -1,3 +1,5 @@
+import { SoftFluidGradient } from "@workspace/ui/components/soft-fluid-gradient";
+
 import { Section } from "@/components/component-layout";
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import {
@@ -72,6 +74,42 @@ export async function SoftFluidGradientDocs() {
       installPackageName="soft-fluid-gradient"
       installSourceCode={sourceCode}
       installSourceFilename="components/ui/soft-fluid-gradient.tsx"
+      examples={[
+        {
+          title: "Faster, tighter waves",
+          preview: (
+            <div className="relative h-[320px] w-full overflow-hidden rounded-xl">
+              <SoftFluidGradient
+                speed={0.6}
+                density={1.4}
+                className="h-full w-full"
+              />
+            </div>
+          ),
+          code: `import { SoftFluidGradient } from "@/components/ui/soft-fluid-gradient"
+
+<div className="relative h-[420px] w-full overflow-hidden rounded-xl">
+  <SoftFluidGradient speed={0.6} density={1.4} className="h-full w-full" />
+</div>`,
+        },
+        {
+          title: "Frozen frame",
+          preview: (
+            <div className="relative h-[320px] w-full overflow-hidden rounded-xl">
+              <SoftFluidGradient
+                speed={0}
+                density={0.8}
+                className="h-full w-full"
+              />
+            </div>
+          ),
+          code: `import { SoftFluidGradient } from "@/components/ui/soft-fluid-gradient"
+
+<div className="relative h-[420px] w-full overflow-hidden rounded-xl">
+  <SoftFluidGradient speed={0} density={0.8} className="h-full w-full" />
+</div>`,
+        },
+      ]}
       fullWidthPreview
       unstyledPreview
       props={[

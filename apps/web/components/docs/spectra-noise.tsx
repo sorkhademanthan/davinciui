@@ -1,3 +1,5 @@
+import { SpectraNoise } from "@workspace/ui/components/spectra-noise";
+
 import { Section } from "@/components/component-layout";
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import {
@@ -118,6 +120,70 @@ export async function SpectraNoiseDocs() {
       installSourceFilename="components/ui/spectra-noise.tsx"
       fullWidthPreview
       unstyledPreview
+      examples={[
+        {
+          title: "Teal and lime scan",
+          preview: (
+            <div className="relative h-[320px] w-full overflow-hidden rounded-xl">
+              <SpectraNoise
+                backgroundColor="#03090b"
+                glowColor="#127c74"
+                highlightColor="#c5f58a"
+                noiseIntensity={0.35}
+                scanlineIntensity={0.25}
+                warpAmount={1}
+                animationSpeed={0.4}
+                className="h-full w-full"
+              />
+            </div>
+          ),
+          code: `import { SpectraNoise } from "@/components/ui/spectra-noise"
+
+<div className="relative h-[420px] w-full overflow-hidden rounded-xl">
+  <SpectraNoise
+    backgroundColor="#03090b"
+    glowColor="#127c74"
+    highlightColor="#c5f58a"
+    noiseIntensity={0.35}
+    scanlineIntensity={0.25}
+    warpAmount={1}
+    animationSpeed={0.4}
+    className="h-full w-full"
+  />
+</div>`,
+        },
+        {
+          title: "Warm, heavier warp",
+          preview: (
+            <div className="relative h-[320px] w-full overflow-hidden rounded-xl">
+              <SpectraNoise
+                backgroundColor="#0b0503"
+                glowColor="#7c2d12"
+                highlightColor="#fde68a"
+                hueShift={20}
+                warpAmount={1.6}
+                scanlineIntensity={0.4}
+                animationSpeed={0.2}
+                className="h-full w-full"
+              />
+            </div>
+          ),
+          code: `import { SpectraNoise } from "@/components/ui/spectra-noise"
+
+<div className="relative h-[420px] w-full overflow-hidden rounded-xl">
+  <SpectraNoise
+    backgroundColor="#0b0503"
+    glowColor="#7c2d12"
+    highlightColor="#fde68a"
+    hueShift={20}
+    warpAmount={1.6}
+    scanlineIntensity={0.4}
+    animationSpeed={0.2}
+    className="h-full w-full"
+  />
+</div>`,
+        },
+      ]}
       props={[
         {
           name: "hueShift",

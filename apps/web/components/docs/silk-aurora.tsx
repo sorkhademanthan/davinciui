@@ -53,6 +53,70 @@ export async function SilkAuroraDocs() {
       installPackageName="silk-aurora"
       installSourceCode={sourceCode}
       usageCode={basicUsageCode}
+      examples={[
+        {
+          title: "Cool violet aurora",
+          preview: (
+            <div className="relative h-[320px] w-full overflow-hidden rounded-xl">
+              <SilkAurora
+                baseColor="#04060d"
+                midColor="#0b1224"
+                sheenColor="#a5b4fc"
+                accentColor="#38bdf8"
+                intensity={1.1}
+                speed={0.6}
+                className="h-full w-full"
+              />
+            </div>
+          ),
+          code: `import { SilkAurora } from "@/components/ui/silk-aurora"
+
+<div className="relative h-[420px] w-full overflow-hidden rounded-xl">
+  <SilkAurora
+    baseColor="#04060d"
+    midColor="#0b1224"
+    sheenColor="#a5b4fc"
+    accentColor="#38bdf8"
+    intensity={1.1}
+    speed={0.6}
+    className="h-full w-full"
+  />
+</div>`,
+        },
+        {
+          title: "With editorial content",
+          preview: (
+            <div className="relative h-[320px] w-full overflow-hidden rounded-xl">
+              <SilkAurora
+                title="Aurora"
+                subtitle="Signal in the dark"
+                baseColor="#060505"
+                midColor="#19130f"
+                sheenColor="#ffe2a9"
+                accentColor="#c58d5d"
+                intensity={0.9}
+                speed={0.5}
+                className="h-full w-full"
+              />
+            </div>
+          ),
+          code: `import { SilkAurora } from "@/components/ui/silk-aurora"
+
+<div className="relative h-[420px] w-full overflow-hidden rounded-xl">
+  <SilkAurora
+    title="Aurora"
+    subtitle="Signal in the dark"
+    baseColor="#060505"
+    midColor="#19130f"
+    sheenColor="#ffe2a9"
+    accentColor="#c58d5d"
+    intensity={0.9}
+    speed={0.5}
+    className="h-full w-full"
+  />
+</div>`,
+        },
+      ]}
       fullWidthPreview
       unstyledPreview
       props={[

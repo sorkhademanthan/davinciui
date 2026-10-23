@@ -1,3 +1,5 @@
+import { PixelFlow } from "@workspace/ui/components/pixel-flow";
+
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import { LiveCodeBlock } from "@/components/live-code-block";
 import {
@@ -32,7 +34,61 @@ export async function PixelFlowDocs() {
       installPackageName="pixel-flow"
       installSourceCode={sourceCode}
       installSourceFilename="components/ui/pixel-flow.tsx"
-      usageCode={<LiveCodeBlock slug="pixel-flow" defaultCode={basicUsageCode} />}
+      usageCode={
+        <LiveCodeBlock slug="pixel-flow" defaultCode={basicUsageCode} />
+      }
+      examples={[
+        {
+          title: "Coarse electric blue",
+          preview: (
+            <div className="relative h-[320px] w-full overflow-hidden rounded-xl">
+              <PixelFlow
+                preset="electric-blue"
+                pixelSize={8}
+                pixelDensity={0.9}
+                speed={0.8}
+                className="h-full w-full"
+              />
+            </div>
+          ),
+          code: `import { PixelFlow } from "@/components/ui/pixel-flow"
+
+<div className="relative h-[420px] w-full overflow-hidden rounded-xl">
+  <PixelFlow
+    preset="electric-blue"
+    pixelSize={8}
+    pixelDensity={0.9}
+    speed={0.8}
+    className="h-full w-full"
+  />
+</div>`,
+        },
+        {
+          title: "Fine warm field",
+          preview: (
+            <div className="relative h-[320px] w-full overflow-hidden rounded-xl">
+              <PixelFlow
+                preset="warm"
+                pixelSize={4}
+                pixelDensity={1.3}
+                ditherStrength={0.8}
+                className="h-full w-full"
+              />
+            </div>
+          ),
+          code: `import { PixelFlow } from "@/components/ui/pixel-flow"
+
+<div className="relative h-[420px] w-full overflow-hidden rounded-xl">
+  <PixelFlow
+    preset="warm"
+    pixelSize={4}
+    pixelDensity={1.3}
+    ditherStrength={0.8}
+    className="h-full w-full"
+  />
+</div>`,
+        },
+      ]}
       fullWidthPreview
       props={[
         {
@@ -53,7 +109,8 @@ export async function PixelFlowDocs() {
           name: "pixelDensity",
           type: "number",
           default: "1",
-          description: "Grid density multiplier. Higher values pack more cells.",
+          description:
+            "Grid density multiplier. Higher values pack more cells.",
         },
         {
           name: "dotSize",
@@ -71,7 +128,8 @@ export async function PixelFlowDocs() {
           name: "ditherStrength",
           type: "number",
           default: "1",
-          description: "Ordered pixel coverage. Set to 0 for a continuous color field.",
+          description:
+            "Ordered pixel coverage. Set to 0 for a continuous color field.",
         },
         {
           name: "speed",
@@ -83,7 +141,7 @@ export async function PixelFlowDocs() {
           name: "flowStrength",
           type: "number",
           default: "1",
-          description:             "Advection strength of the time flow.",
+          description: "Advection strength of the time flow.",
         },
         {
           name: "warpStrength",

@@ -64,6 +64,78 @@ export async function NoiserDocs() {
       installSourceFilename="components/ui/noiser.tsx"
       fullWidthPreview
       unstyledPreview
+      examples={[
+        {
+          title: "Three-color animated grain",
+          preview: (
+            <div className="relative h-[320px] w-full overflow-hidden rounded-xl bg-zinc-950">
+              <Noiser
+                noiseType="gaussian"
+                colorMode="multi"
+                colorA="#f97316"
+                colorB="#ec4899"
+                colorC="#22d3ee"
+                noiseOpacity={0.5}
+                colorOpacity={0.6}
+                frequency={0.32}
+                octaves={3}
+                animated
+                fps={18}
+                className="h-full w-full"
+              />
+            </div>
+          ),
+          code: `import Noiser from "@/components/ui/noiser"
+
+<div className="relative h-[420px] w-full overflow-hidden rounded-xl">
+  <Noiser
+    noiseType="gaussian"
+    colorMode="multi"
+    colorA="#f97316"
+    colorB="#ec4899"
+    colorC="#22d3ee"
+    noiseOpacity={0.5}
+    colorOpacity={0.6}
+    frequency={0.32}
+    octaves={3}
+    animated
+    fps={18}
+    className="h-full w-full"
+  />
+</div>`,
+        },
+        {
+          title: "Static monochrome",
+          preview: (
+            <div className="relative h-[320px] w-full overflow-hidden rounded-xl bg-zinc-950">
+              <Noiser
+                noiseType="uniform"
+                colorMode="mono"
+                monoColor="#ffffff"
+                frequency={0.4}
+                octaves={4}
+                noiseOpacity={0.22}
+                animated={false}
+                className="h-full w-full"
+              />
+            </div>
+          ),
+          code: `import Noiser from "@/components/ui/noiser"
+
+<div className="relative h-[420px] w-full overflow-hidden rounded-xl">
+  <Noiser
+    noiseType="uniform"
+    colorMode="mono"
+    monoColor="#ffffff"
+    frequency={0.4}
+    octaves={4}
+    noiseOpacity={0.22}
+    animated={false}
+    className="h-full w-full"
+  />
+</div>`,
+        },
+      ]}
       props={[
         {
           name: "noiseType",

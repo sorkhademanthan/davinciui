@@ -1,3 +1,5 @@
+import { NeonMeshBG } from "@workspace/ui/components/neon-mesh-bg";
+
 import { Section } from "@/components/component-layout";
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import {
@@ -30,8 +32,8 @@ function NeonMeshBGNotes() {
       <Section title="About Neon Mesh BG" className="pt-8">
         <div className="max-w-2xl space-y-4 text-[15px] leading-7 text-muted-foreground">
           <p className="font-medium text-foreground">
-            A dark, cinematic WebGL background with an evolving purple neon
-            mesh viewed through a fine LED pixel matrix.
+            A dark, cinematic WebGL background with an evolving purple neon mesh
+            viewed through a fine LED pixel matrix.
           </p>
           <p>
             A softly bending wave carries shifting pools of violet and lavender
@@ -91,6 +93,72 @@ export async function NeonMeshBGDocs() {
       installSourceFilename="components/ui/neon-mesh-bg.tsx"
       fullWidthPreview
       unstyledPreview
+      examples={[
+        {
+          title: "Emerald mesh",
+          preview: (
+            <div className="relative h-[320px] w-full overflow-hidden rounded-xl">
+              <NeonMeshBG
+                backgroundColor="#01110f"
+                primaryColor="#064e3b"
+                secondaryColor="#10b981"
+                highlightColor="#d1fae5"
+                scale={1.2}
+                gridSize={5}
+                glowStrength={1.4}
+                className="h-full w-full"
+              />
+            </div>
+          ),
+          code: `import { NeonMeshBG } from "@/components/ui/neon-mesh-bg"
+
+<div className="relative h-[420px] w-full overflow-hidden rounded-xl">
+  <NeonMeshBG
+    backgroundColor="#01110f"
+    primaryColor="#064e3b"
+    secondaryColor="#10b981"
+    highlightColor="#d1fae5"
+    scale={1.2}
+    gridSize={5}
+    glowStrength={1.4}
+    className="h-full w-full"
+  />
+</div>`,
+        },
+        {
+          title: "Warm high-contrast field",
+          preview: (
+            <div className="relative h-[320px] w-full overflow-hidden rounded-xl">
+              <NeonMeshBG
+                backgroundColor="#120603"
+                primaryColor="#7c2d12"
+                secondaryColor="#f97316"
+                highlightColor="#ffedd5"
+                scale={2}
+                contrast={2}
+                gridStrength={0.4}
+                speed={0.2}
+                className="h-full w-full"
+              />
+            </div>
+          ),
+          code: `import { NeonMeshBG } from "@/components/ui/neon-mesh-bg"
+
+<div className="relative h-[420px] w-full overflow-hidden rounded-xl">
+  <NeonMeshBG
+    backgroundColor="#120603"
+    primaryColor="#7c2d12"
+    secondaryColor="#f97316"
+    highlightColor="#ffedd5"
+    scale={2}
+    contrast={2}
+    gridStrength={0.4}
+    speed={0.2}
+    className="h-full w-full"
+  />
+</div>`,
+        },
+      ]}
       props={[
         {
           name: "backgroundColor",
