@@ -163,7 +163,7 @@ export default function RootLayout({
           // Mirrors the NextThemesProvider config in providers.tsx:
           // storageKey "theme", defaultTheme "dark", enableSystem.
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var d=document.documentElement;var s=null;try{s=localStorage.getItem("theme")}catch(e){}var r=s||"dark";if(r==="system"){try{r=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}catch(e){r="dark"}}var t=r==="light"?"light":"dark";d.classList.remove("light","dark");d.classList.add(t);d.style.colorScheme=t;}catch(e){}}})();`,
+            __html: `(function(){try{var d=document.documentElement;var s=null;try{s=localStorage.getItem("theme")}catch(e){}var r=s||"dark";if(r==="system"){try{r=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}catch(e){r="dark"}}var t=r==="light"?"light":"dark";d.classList.remove("light","dark");d.classList.add(t);d.style.colorScheme=t;}catch(e){}})();`,
           }}
         />
         <JsonLd />
