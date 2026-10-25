@@ -10,6 +10,7 @@ import { useDocStore } from "@/hooks/use-doc-store"
 import { usePlaygroundStore } from "@/hooks/use-playground-store"
 import { useInViewport } from "@/hooks/use-in-viewport"
 import { useModalDialog } from "@/hooks/use-modal-dialog"
+import { useIsDesktop } from "@/hooks/use-is-desktop"
 import { getPreviewDefinition } from "@/lib/preview-contract"
 
 const CommandMenu = React.lazy(() =>
@@ -43,20 +44,6 @@ interface FullscreenOrigin {
   width: number
   height: number
   borderRadius: string
-}
-
-function useIsDesktop() {
-  const [isDesktop, setIsDesktop] = React.useState(false)
-
-  React.useEffect(() => {
-    const query = window.matchMedia("(min-width: 1024px)")
-    const sync = () => setIsDesktop(query.matches)
-    sync()
-    query.addEventListener("change", sync)
-    return () => query.removeEventListener("change", sync)
-  }, [])
-
-  return isDesktop
 }
 
 function PreviewIconButton({
