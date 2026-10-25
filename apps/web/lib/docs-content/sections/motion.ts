@@ -16,6 +16,8 @@ export const motion: Record<string, string> = {
     "Hover or focus expands a circular cyan fill over 620ms, masks a duplicate label, and morphs the dot into an arrow; a scroll entrance also plays. No timing props are exposed. CSS and JS both honor prefers-reduced-motion by removing the wipe.",
   "arc-carousel":
     "Drag release decays by friction, then snap settles on a critically damped spring; autoPlay adds a slow drift and arrow or wheel input eases over 240ms. A matchMedia listener disables drift and shortens jumps under reduced motion.",
+  "tilt-flip-polaroid":
+    "Pointer tilt retargets rotateX and rotateY motion values through a stiffness 100 / damping 18 spring, and the flip retargets a stiffness 400 / damping 40 spring so rapid clicks reverse without a jump. Reduced motion disables tilt and replaces the 180deg flip with a 150ms opacity crossfade.",
   "aspect-ratio":
     "Static wrapper primitive with no animation or transitions. It does not read prefers-reduced-motion because there is no motion.",
   attachment:

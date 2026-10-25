@@ -16,6 +16,8 @@ export const accessibility: Record<string, string> = {
     "Renders a native button, or an anchor when href is supplied, so activation works normally. A focus-visible outline appears, and keyboard focus opens the wipe only after Tab; aria-label can override the visible text. Disabled removes link behavior.",
   "arc-carousel":
     "The section is a focusable region labelled by the heading with aria-roledescription='carousel'; Left and Right arrows move tiles and a polite live region announces position. Tiles sit in an aria-hidden container, so image alt text is not exposed to screen readers.",
+  "tilt-flip-polaroid":
+    "The static hit area is a role='button' with tabIndex 0, aria-pressed reflecting the flipped state, and a label built from the photo alt text. Space and Enter flip, a focus-visible ring is shown, and the face that is not visible is aria-hidden. Tilt is pointer-only and disabled for coarse pointers; touch and keyboard still flip.",
   "aspect-ratio":
     "A presentational div using padding-bottom to reserve space; it adds no roles, labels, or keyboard behavior. Children keep their own semantics, and images still need meaningful alt text.",
   attachment:
