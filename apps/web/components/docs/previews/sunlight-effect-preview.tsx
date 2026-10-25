@@ -123,12 +123,9 @@ export function SunlightEffectPersonalizePanel() {
   const reset = useSunlightEffectStore((state) => state.reset);
 
   return (
-    <div className="h-full overflow-auto bg-background [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-      <div className="space-y-7 px-4 pb-12 pt-20">
+    <div className="h-full overflow-auto bg-background [scrollbar-width:thin]">
+      <div className="space-y-7 px-4 pb-12 pt-5">
         <header className="space-y-2">
-          <h2 className="text-2xl font-bold tracking-tighter text-foreground">
-            Personalize
-          </h2>
           <p className="text-sm leading-relaxed text-muted-foreground/90">
             Shape the rays, luminous core, palette, and inward light flow.
           </p>
