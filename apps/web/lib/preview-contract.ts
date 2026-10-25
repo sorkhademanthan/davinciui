@@ -172,6 +172,7 @@ const REDUCE_MOTION_SAFE_SLUGS: ReadonlySet<string> = new Set([
   "soft-fluid-gradient",
   "spectra-noise",
   "sunlight-effect",
+  "tilt-flip-polaroid",
   "vertical-image-marquee",
   "wave-bars-loader",
 ]);
@@ -183,6 +184,7 @@ const NON_DECORATIVE_SLUGS: ReadonlySet<string> = new Set([
   "voice-recorder",
   "keyboard-command-sounds",
   "upload-sound-status",
+  "tilt-flip-polaroid",
 ]);
 
 /**
@@ -195,6 +197,7 @@ const KEEP_MOUNTED_SLUGS: ReadonlySet<string> = NON_DECORATIVE_SLUGS;
 /** Card surfaces with a bespoke background. */
 const CARD_BACKGROUNDS: Readonly<Record<string, string>> = {
   "ambient-audio-toggle": "bg-[#eef4f0] dark:bg-[#101815]",
+  "tilt-flip-polaroid": "bg-[#FDF2F2]",
 };
 
 const DEFAULT_CARD_BACKGROUND = "bg-background";

@@ -155,6 +155,7 @@ export const CARD_LIVE_SLUGS = [
   "cinematic-card-carousel",
   "ambient-strip",
   "arc-carousel",
+  "tilt-flip-polaroid",
   "radial-fan-deck",
   "neon-mesh-bg",
   "spectra-noise",
