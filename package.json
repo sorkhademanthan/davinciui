@@ -13,7 +13,8 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "screenshot": "node scripts/screenshot.js",
     "optimize:previews": "./scripts/optimize-preview-videos.sh",
-    "recompress:previews": "scripts/venv/bin/python scripts/recompress-and-reupload-previews.py"
+    "recompress:previews": "scripts/venv/bin/python scripts/recompress-and-reupload-previews.py",
+    "test:tilt-flip-polaroid": "node --test scripts/test-tilt-flip-polaroid.mjs"
   },
   "devDependencies": {
     "@workspace/eslint-config": "workspace:*",
