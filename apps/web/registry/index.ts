@@ -683,6 +683,14 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "arc-carousel",
     addedAt: "2026-10-21",
   },
+  "tilt-flip-polaroid": {
+    title: "Tilt Flip Polaroid",
+    description:
+      "A Polaroid print that tilts away from the pointer with a damped 3D spring and flips to a handwritten note on click, tap, or keyboard.",
+    category: "Premium Components",
+    slug: "tilt-flip-polaroid",
+    addedAt: "2026-10-23",
+  },
   "orbit-spiral-gallery": {
     title: "Orbit Spiral Gallery",
     description:
@@ -1103,6 +1111,7 @@ export function getComponent(slug: string) {
 export const FEATURED_SLUGS = [
   "cinematic-card-carousel",
   "arc-carousel",
+  "tilt-flip-polaroid",
   "lens-drift-grid",
   "tubes-cursor",
   "text-video-mask",
