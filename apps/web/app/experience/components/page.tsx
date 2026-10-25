@@ -96,6 +96,7 @@ function hasLiveCardPreview(
   | "cinematic-card-carousel"
   | "ambient-strip"
   | "arc-carousel"
+  | "tilt-flip-polaroid"
   | "radial-fan-deck"
   | "neon-mesh-bg"
   | "spectra-noise"
@@ -170,6 +171,7 @@ function hasLiveCardPreview(
     slug === "cinematic-card-carousel" ||
     slug === "ambient-strip" ||
     slug === "arc-carousel" ||
+    slug === "tilt-flip-polaroid" ||
     slug === "radial-fan-deck" ||
     slug === "neon-mesh-bg" ||
     slug === "spectra-noise" ||

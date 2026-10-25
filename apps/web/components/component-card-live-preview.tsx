@@ -201,6 +201,14 @@ const ArcCarouselCardPreview = dynamic(
   { ssr: false },
 );
 
+const TiltFlipPolaroidCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/tilt-flip-polaroid-card-preview").then(
+      (module) => module.TiltFlipPolaroidCardPreview,
+    ),
+  { ssr: false },
+);
+
 const NeonMeshBGCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/neon-mesh-bg-card-preview").then(
@@ -622,6 +630,7 @@ type ComponentCardLivePreviewProps = {
     | "cinematic-card-carousel"
     | "ambient-strip"
     | "arc-carousel"
+    | "tilt-flip-polaroid"
     | "radial-fan-deck"
     | "neon-mesh-bg"
     | "spectra-noise"
@@ -817,6 +826,8 @@ export function ComponentCardLivePreview({
         <AmbientStripCardPreview />
       ) : slug === "arc-carousel" ? (
         <ArcCarouselCardPreview />
+      ) : slug === "tilt-flip-polaroid" ? (
+        <TiltFlipPolaroidCardPreview />
       ) : slug === "radial-fan-deck" ? (
         <RadialFanDeckCardPreview />
       ) : slug === "neon-mesh-bg" ? (
