@@ -2,7 +2,11 @@
   "$schema": "https://ui.shadcn.com/schema/registry.json",
   "name": "davinciui",
   "homepage": "https://davinciui.com",
-  "aliases": ["davinciui", "ui", "cmp"],
+  "aliases": [
+    "davinciui",
+    "ui",
+    "cmp"
+  ],
   "items": [
     {
       "name": "accordion",
@@ -566,6 +570,10 @@
     },
     {
       "name": "textarea",
+      "type": "registry:ui"
+    },
+    {
+      "name": "tilt-flip-polaroid",
       "type": "registry:ui"
     },
     {
