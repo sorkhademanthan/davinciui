@@ -93,12 +93,9 @@ export function ShaderTextPersonalizePanel() {
   const resetConfig = useShaderTextPlayground((state) => state.resetConfig);
 
   return (
-    <div className="h-full overflow-auto bg-background [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-      <div className="space-y-7 px-4 pb-10 pt-20">
+    <div className="h-full overflow-auto bg-background [scrollbar-width:thin]">
+      <div className="space-y-7 px-4 pb-10 pt-5">
         <header className="space-y-2">
-          <h2 className="text-2xl font-bold tracking-tighter text-foreground">
-            Personalize
-          </h2>
           <p className="text-sm leading-relaxed text-muted-foreground/90">
             Pick a fragment-shader preset, then tune the flow. Every preset is a
             different GLSL program clipped inside the glyphs.

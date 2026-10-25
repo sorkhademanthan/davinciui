@@ -119,10 +119,9 @@ export function MediaTextHoverPersonalizePanel() {
   const maxSplit = Math.max(1, Array.from(config.text).length - 1);
 
   return (
-    <div className="h-full overflow-auto bg-background [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-      <div className="space-y-7 px-4 pb-10 pt-20">
+    <div className="h-full overflow-auto bg-background [scrollbar-width:thin]">
+      <div className="space-y-7 px-4 pb-10 pt-5">
         <header className="space-y-2">
-          <h2 className="text-2xl font-bold tracking-tighter">Personalize</h2>
           <p className="text-sm leading-relaxed text-muted-foreground/90">
             Shape the headline split, media window, and spring response.
           </p>
