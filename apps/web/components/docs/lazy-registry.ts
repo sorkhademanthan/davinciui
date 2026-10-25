@@ -282,6 +282,10 @@ const docsImportMap: Record<
     import("@/components/docs/arc-carousel").then((m) => ({
       default: m.ArcCarouselDocs,
     })),
+  "tilt-flip-polaroid": () =>
+    import("@/components/docs/tilt-flip-polaroid").then((m) => ({
+      default: m.TiltFlipPolaroidDocs,
+    })),
   "cms-scroll-gallery": () =>
     import("@/components/docs/cms-scroll-gallery").then((m) => ({
       default: m.CMSScrollGalleryDocs,
