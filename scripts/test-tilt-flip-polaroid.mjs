@@ -19,6 +19,7 @@ after(async () => {
 async function openStory(story, contextOptions = {}) {
   const context = await browser.newContext({
     viewport: { width: 1455, height: 749 },
+    colorScheme: "light",
     ...contextOptions,
   });
   const page = await context.newPage();
@@ -60,10 +61,17 @@ async function dispatchPointer(page, type, x, y) {
 test("layout matches the reference at 1455 x 749", async () => {
   const { context, page, errors } = await openStory("default");
   try {
+    await page.evaluate(() => {
+      document.documentElement.classList.remove("dark");
+      document.documentElement.classList.add("light");
+      document.documentElement.style.colorScheme = "light";
+    });
+    await page.waitForTimeout(400);
+
     const stageBackground = await page
       .locator("main")
       .evaluate((node) => getComputedStyle(node).backgroundColor);
-    assert.equal(stageBackground, "rgb(253, 242, 242)");
+    assert.equal(stageBackground, "rgb(250, 250, 250)");
 
     const card = page.locator(cardSelector);
     const cardBox = await card.boundingBox();
@@ -81,7 +89,7 @@ test("layout matches the reference at 1455 x 749", async () => {
     assert.equal(Math.round(photoBox.y - cardBox.y), 12);
 
     const date = page.locator("[data-tfp-date]");
-    assert.equal((await date.textContent())?.trim(), "12/07/24");
+    assert.equal((await date.textContent())?.trim(), "11/07/24");
     const dateStyle = await date.evaluate((node) => {
       const style = getComputedStyle(node);
       return {
@@ -101,6 +109,33 @@ test("layout matches the reference at 1455 x 749", async () => {
 
     assert.equal(await page.getByText("Made in Framer").count(), 0);
     assert.equal(await page.locator("main button").count(), 0);
+    assert.equal(errors.length, 0);
+  } finally {
+    await context.close();
+  }
+});
+
+test("dark theme adapts the stage, card, and ink", async () => {
+  const { context, page, errors } = await openStory("default", {
+    colorScheme: "dark",
+  });
+  try {
+    const stageBackground = await page
+      .locator("main")
+      .evaluate((node) => getComputedStyle(node).backgroundColor);
+    assert.equal(stageBackground, "rgb(10, 10, 11)");
+
+    const front = page.locator('[data-face="front"]');
+    assert.equal(
+      await front.evaluate((node) => getComputedStyle(node).backgroundColor),
+      "rgb(31, 29, 30)",
+    );
+    assert.equal(
+      await page
+        .locator("[data-tfp-date]")
+        .evaluate((node) => getComputedStyle(node).color),
+      "rgb(242, 233, 228)",
+    );
     assert.equal(errors.length, 0);
   } finally {
     await context.close();
@@ -129,7 +164,7 @@ test("click toggles uncontrolled state and hidden faces", async () => {
     assert.equal(await back.getAttribute("aria-hidden"), "false");
     assert.match(
       (await back.locator("[data-tfp-back-text]").textContent()) ?? "",
-      /brought myself flowers for once/,
+      /the quiet all the way home/,
     );
 
     await card.click();
@@ -378,6 +413,72 @@ test("coarse pointers disable tilt and tap still flips", async () => {
     assert.equal(await card.getAttribute("data-tilt-active"), "false");
     await card.tap();
     assert.equal(await card.getAttribute("aria-pressed"), "true");
+    assert.equal(errors.length, 0);
+  } finally {
+    await context.close();
+  }
+});
+
+test("gallery card autoplays, tilts, and flips without navigating", async () => {
+  const context = await browser.newContext({
+    viewport: { width: 1455, height: 900 },
+    colorScheme: "light",
+  });
+  const page = await context.newPage();
+  const errors = [];
+  page.on("pageerror", (error) => errors.push(error));
+
+  try {
+    await page.goto(`${new URL(BASE_URL).origin}/experience/components`, {
+      waitUntil: "domcontentloaded",
+    });
+
+    const link = page.locator(
+      'a.group[href="/experience/components/tilt-flip-polaroid"]',
+    );
+    await link.scrollIntoViewIfNeeded();
+    const card = link.locator(cardSelector);
+    await card.waitFor();
+    await page.waitForTimeout(600);
+
+    const initialFlip = await card.getAttribute("aria-pressed");
+    await page.waitForTimeout(4300);
+    assert.notEqual(
+      await card.getAttribute("aria-pressed"),
+      initialFlip,
+      "card should flip on its own",
+    );
+
+    const box = await card.boundingBox();
+    assert.ok(box);
+    await page.mouse.move(box.x + box.width * 0.75, box.y + box.height * 0.25, {
+      steps: 6,
+    });
+    await page.waitForTimeout(300);
+
+    const tilt = await card.locator("[data-tfp-tilt]").evaluate((node) => ({
+      x: Number(node.dataset.tiltX),
+      y: Number(node.dataset.tiltY),
+    }));
+    assert.ok(tilt.x > 0, `hover tilt.x ${tilt.x}`);
+    assert.ok(tilt.y > 0, `hover tilt.y ${tilt.y}`);
+
+    const beforeClick = await card.getAttribute("aria-pressed");
+    await card.click({
+      position: { x: box.width / 2, y: box.height / 2 },
+    });
+    await page.waitForTimeout(400);
+    const afterClick = await card.getAttribute("aria-pressed");
+    assert.notEqual(afterClick, beforeClick, "card should flip when clicked");
+    assert.equal(new URL(page.url()).pathname, "/experience/components");
+
+    await page.mouse.move(20, 20);
+    await page.waitForTimeout(6000);
+    assert.notEqual(
+      await card.getAttribute("aria-pressed"),
+      afterClick,
+      "autoplay should resume after the pointer leaves",
+    );
     assert.equal(errors.length, 0);
   } finally {
     await context.close();
