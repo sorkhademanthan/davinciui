@@ -197,7 +197,7 @@ const KEEP_MOUNTED_SLUGS: ReadonlySet<string> = NON_DECORATIVE_SLUGS;
 /** Card surfaces with a bespoke background. */
 const CARD_BACKGROUNDS: Readonly<Record<string, string>> = {
   "ambient-audio-toggle": "bg-[#eef4f0] dark:bg-[#101815]",
-  "tilt-flip-polaroid": "bg-[#FDF2F2]",
+  "tilt-flip-polaroid": "bg-[#FAFAFA] dark:bg-[#0A0A0B]",
 };
 
 const DEFAULT_CARD_BACKGROUND = "bg-background";
