@@ -11,7 +11,7 @@ export interface TiltFlipPolaroidImage {
 
 export interface TiltFlipPolaroidProps {
   image: TiltFlipPolaroidImage;
-  /** Caption printed below the photo. @default "12/07/24" */
+  /** Caption printed below the photo. @default "11/07/24" */
   date?: string;
   /** Handwritten note on the back face. New lines are preserved. */
   backText?: string;
@@ -38,12 +38,12 @@ export interface TiltFlipPolaroidProps {
   style?: React.CSSProperties;
 }
 
-export const TILT_FLIP_POLAROID_DEFAULT_BACK_TEXT = `jeju, april.
-i wandered into this field alone and
-just stood there for way too long.
-closed my eyes, felt the wind,
-thought about nothing.
-brought myself flowers for once. ⚘`;
+export const TILT_FLIP_POLAROID_DEFAULT_BACK_TEXT = `november, late afternoon.
+the wind pushed everything
+sideways and somehow i stayed.
+stood there until my ears
+went numb, then carried
+the quiet all the way home. ⚘`;
 
 const TILT_SPRING = { stiffness: 100, damping: 18, mass: 1 } as const;
 const FLIP_SPRING = { stiffness: 400, damping: 40, mass: 1 } as const;
@@ -82,7 +82,7 @@ function useCoarsePointer() {
 
 export function TiltFlipPolaroid({
   image,
-  date = "12/07/24",
+  date = "11/07/24",
   backText = TILT_FLIP_POLAROID_DEFAULT_BACK_TEXT,
   flipped,
   defaultFlipped = false,
@@ -204,16 +204,10 @@ export function TiltFlipPolaroid({
   const stagePerspective = Math.max(1, perspective);
 
   const cssVars = {
-    "--tfp-bg": "#FDF2F2",
-    "--tfp-card": "#FFFFFF",
-    "--tfp-ink": "#333333",
-    "--tfp-placeholder": "#EEEEEE",
     "--tfp-inset": "12px",
     "--tfp-caption": "64px",
     "--tfp-radius": "3px",
     "--tfp-photo-radius": "1.5px",
-    "--tfp-shadow":
-      "0 8px 24px rgba(80, 40, 50, 0.22), 0 1px 3px rgba(0, 0, 0, 0.12)",
     "--tfp-font":
       'var(--font-caveat, "Caveat"), "Segoe Script", cursive',
     "--tfp-date-size": "20px",
@@ -247,7 +241,12 @@ export function TiltFlipPolaroid({
       data-tilt-active={tiltActive ? "true" : "false"}
       className={cn(
         "relative select-none rounded-[var(--tfp-radius)] outline-none",
-        "focus-visible:ring-2 focus-visible:ring-[#333]/35 focus-visible:ring-offset-4 focus-visible:ring-offset-[#FDF2F2]",
+        "[--tfp-bg:#FAFAFA] [--tfp-card:#FFFFFF] [--tfp-ink:#333333] [--tfp-placeholder:#EEEEEE]",
+        "[--tfp-shadow:0_8px_24px_rgba(80,40,50,0.22),0_1px_3px_rgba(0,0,0,0.12)]",
+        "dark:[--tfp-bg:#0A0A0B] dark:[--tfp-card:#1F1D1E] dark:[--tfp-ink:#F2E9E4] dark:[--tfp-placeholder:#2A2728]",
+        "dark:[--tfp-shadow:0_10px_30px_rgba(0,0,0,0.55),0_1px_3px_rgba(0,0,0,0.4)]",
+        "focus-visible:ring-2 focus-visible:ring-[#333]/35 focus-visible:ring-offset-4 focus-visible:ring-offset-[#FAFAFA]",
+        "dark:focus-visible:ring-white/35 dark:focus-visible:ring-offset-[#0A0A0B]",
         className,
       )}
       style={{
