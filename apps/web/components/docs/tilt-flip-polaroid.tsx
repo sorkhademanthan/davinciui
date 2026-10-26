@@ -6,14 +6,14 @@ import { caveatFont } from "@/lib/caveat-font";
 import { TiltFlipPolaroid } from "@workspace/ui/components/tilt-flip-polaroid";
 
 const demoImage = {
-  src: "/images/segmented-image-carousel/coastal-tree.jpg",
-  alt: "Windswept tree on a foggy coastal dune",
+  src: "https://images.unsplash.com/photo-1610846202780-b4d9837371ea?w=900&q=85&auto=format&fit=crop",
+  alt: "Lone figure passing through a muted green field",
 };
 
 function ExampleStage({ children }: { children: ReactNode }) {
   return (
     <div
-      className={`${caveatFont.variable} flex w-full items-center justify-center bg-[#FDF2F2] p-6`}
+      className={`${caveatFont.variable} flex w-full items-center justify-center bg-[#FAFAFA] p-6 transition-colors duration-300 dark:bg-[#0A0A0B]`}
     >
       {children}
     </div>
@@ -24,13 +24,13 @@ const defaultCode = `import { TiltFlipPolaroid } from "@/components/ui/tilt-flip
 
 <TiltFlipPolaroid
   image={{
-    src: "/images/jeju-field.jpg",
-    alt: "A quiet field in Jeju",
+    src: "https://images.unsplash.com/photo-1610846202780-b4d9837371ea?w=900&q=85&auto=format&fit=crop",
+    alt: "Lone figure passing through a muted green field",
   }}
-  date="12/07/24"
-  backText={\`jeju, april.
-i wandered into this field alone and
-just stood there for way too long.\`}
+  date="11/07/24"
+  backText={\`november, late afternoon.
+the wind pushed everything sideways
+and somehow i stayed.\`}
 />`;
 
 const usageCode = `import { TiltFlipPolaroid } from "@/components/ui/tilt-flip-polaroid"
@@ -38,14 +38,17 @@ const usageCode = `import { TiltFlipPolaroid } from "@/components/ui/tilt-flip-p
 export function FieldPolaroid() {
   return (
     <TiltFlipPolaroid
-      image={{ src: "/images/jeju-field.jpg", alt: "A quiet field in Jeju" }}
-      date="12/07/24"
-      backText={\`jeju, april.
-i wandered into this field alone and
-just stood there for way too long.
-closed my eyes, felt the wind,
-thought about nothing.
-brought myself flowers for once. ⚘\`}
+      image={{
+        src: "https://images.unsplash.com/photo-1610846202780-b4d9837371ea?w=900&q=85&auto=format&fit=crop",
+        alt: "Lone figure passing through a muted green field",
+      }}
+      date="11/07/24"
+      backText={\`november, late afternoon.
+the wind pushed everything
+sideways and somehow i stayed.
+stood there until my ears
+went numb, then carried
+the quiet all the way home. ⚘\`}
       onFlippedChange={(flipped) => console.log("flipped:", flipped)}
     />
   )
@@ -81,10 +84,10 @@ export async function TiltFlipPolaroidDocs() {
 
 <TiltFlipPolaroid
   image={{
-    src: "/images/segmented-image-carousel/coastal-tree.jpg",
-    alt: "Windswept tree on a foggy coastal dune",
+    src: "https://images.unsplash.com/photo-1610846202780-b4d9837371ea?w=900&q=85&auto=format&fit=crop",
+    alt: "Lone figure passing through a muted green field",
   }}
-  date="12/07/24"
+  date="11/07/24"
   defaultFlipped
 />`,
         },
@@ -99,10 +102,10 @@ export async function TiltFlipPolaroidDocs() {
 
 <TiltFlipPolaroid
   image={{
-    src: "/images/segmented-image-carousel/coastal-tree.jpg",
-    alt: "Windswept tree on a foggy coastal dune",
+    src: "https://images.unsplash.com/photo-1610846202780-b4d9837371ea?w=900&q=85&auto=format&fit=crop",
+    alt: "Lone figure passing through a muted green field",
   }}
-  date="12/07/24"
+  date="11/07/24"
   tiltEnabled={false}
 />`,
         },
@@ -129,8 +132,8 @@ export async function TiltFlipPolaroidDocs() {
 
 <TiltFlipPolaroid
   image={{
-    src: "/images/segmented-image-carousel/coastal-tree.jpg",
-    alt: "Windswept tree on a foggy coastal dune",
+    src: "https://images.unsplash.com/photo-1610846202780-b4d9837371ea?w=900&q=85&auto=format&fit=crop",
+    alt: "Lone figure passing through a muted green field",
   }}
   date="09/11/24"
   width={340}
@@ -155,14 +158,14 @@ export async function TiltFlipPolaroidDocs() {
         {
           name: "date",
           type: "string",
-          default: '"12/07/24"',
+          default: '"11/07/24"',
           description:
             "Caption centred in the 64px strip below the photo, rendered in Caveat.",
         },
         {
           name: "backText",
           type: "string",
-          default: "jeju, april. …",
+          default: "november, late afternoon. …",
           description:
             "Handwritten note on the back face. Each newline is preserved; the block is centred with 45px horizontal padding.",
         },

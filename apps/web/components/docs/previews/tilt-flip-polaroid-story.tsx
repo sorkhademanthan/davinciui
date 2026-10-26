@@ -17,16 +17,16 @@ export type TiltFlipPolaroidStory =
   | "reduced"
   | "controlled";
 
-const LONG_BACK_TEXT = `jeju, april.
-i wandered into this field alone and
-just stood there for way too long.
-closed my eyes, felt the wind,
-thought about nothing.
-brought myself flowers for once. ⚘
+const LONG_BACK_TEXT = `november, late afternoon.
+the wind pushed everything
+sideways and somehow i stayed.
+stood there until my ears
+went numb, then carried
+the quiet all the way home. ⚘
 
-the light stayed soft until dinner,
-and nobody called my name.
-i kept the ticket stub in my pocket
+by dinnertime the fog had moved in
+and the whole shore went silver.
+i kept a scrap of driftwood in my pocket
 so i could find this day again.`;
 
 export function TiltFlipPolaroidStory({
@@ -43,7 +43,7 @@ export function TiltFlipPolaroidStory({
   return (
     <StoryStage className={className}>
       {story === "reduced" ? (
-        <p className="absolute left-4 top-4 max-w-56 text-xs leading-5 text-[#333]/65">
+        <p className="absolute left-4 top-4 max-w-56 text-xs leading-5 text-[#333]/65 dark:text-[#F2E9E4]/65">
           Reduced-motion story. The card crossfades instead of rotating when the
           OS prefers reduced motion.
         </p>
@@ -84,7 +84,7 @@ function ControlledStory({ className }: { className?: string }) {
             Set flipped
           </Button>
           <span
-            className="text-xs text-[#333]/65"
+            className="text-xs text-[#333]/65 dark:text-[#F2E9E4]/65"
             data-tfp-last-request={lastRequest}
           >
             request: {lastRequest}
@@ -105,7 +105,7 @@ function StoryStage({
   return (
     <main
       className={cn(
-        "relative flex min-h-svh w-full items-center justify-center overflow-hidden bg-[#FDF2F2] p-6",
+        "relative flex min-h-svh w-full items-center justify-center overflow-hidden bg-[#FAFAFA] p-6 transition-colors duration-300 dark:bg-[#0A0A0B]",
         className,
       )}
     >
