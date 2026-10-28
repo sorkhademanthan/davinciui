@@ -94,6 +94,7 @@ function hasLiveCardPreview(
   | "pixel-wipe-carousel"
   | "segmented-image-carousel"
   | "cinematic-card-carousel"
+  | "focus-carousel"
   | "ambient-strip"
   | "arc-carousel"
   | "tilt-flip-polaroid"
@@ -169,6 +170,7 @@ function hasLiveCardPreview(
     slug === "pixel-wipe-carousel" ||
     slug === "segmented-image-carousel" ||
     slug === "cinematic-card-carousel" ||
+    slug === "focus-carousel" ||
     slug === "ambient-strip" ||
     slug === "arc-carousel" ||
     slug === "tilt-flip-polaroid" ||

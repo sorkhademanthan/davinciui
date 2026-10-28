@@ -150,6 +150,7 @@ const REDUCE_MOTION_SAFE_SLUGS: ReadonlySet<string> = new Set([
   "burn-plus",
   "character-field",
   "cinematic-card-carousel",
+  "focus-carousel",
   "glass-scene-dock",
   "hover-cards",
   "interactive-media-accordion",

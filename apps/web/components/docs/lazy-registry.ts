@@ -278,6 +278,10 @@ const docsImportMap: Record<
     import("@/components/docs/cinematic-card-carousel").then((m) => ({
       default: m.CinematicCardCarouselDocs,
     })),
+  "focus-carousel": () =>
+    import("@/components/docs/focus-carousel").then((m) => ({
+      default: m.FocusCarouselDocs,
+    })),
   "arc-carousel": () =>
     import("@/components/docs/arc-carousel").then((m) => ({
       default: m.ArcCarouselDocs,
