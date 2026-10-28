@@ -83,19 +83,19 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "fluid-cursor",
     addedAt: "2026-09-21",
   },
-  "tubes-cursor": {
+"tubes-cursor": {
     title: "Tubes Cursor",
     description:
       "A bundle of glowing 3D neon tubes that chases the pointer with fluid inertia and soft bloom. Click to randomize the palette.",
-    category: "Cursor Effects",
+    category: "Premium Components",
     slug: "tubes-cursor",
-    addedAt: "2026-09-20",
+    addedAt: "2026-09-15",
   },
   "geometric-trail-cursor": {
     title: "Geometric Trail Cursor",
     description:
       "A procedural wireframe cursor history on pure black — pointer movement extrudes twisting chains of outlined polygons, bright at the head and preserved as a long-lived dark geometric skeleton.",
-    category: "Cursor Effects",
+    category: "Premium Components",
     slug: "geometric-trail-cursor",
     addedAt: "2026-09-21",
   },
@@ -403,7 +403,7 @@ export const components: Record<string, ComponentMetadata> = {
     title: "Alert Dialog",
     description:
       "A modal interruption that demands acknowledgement — destructive confirmations with focus lock and escape handling.",
-    category: "Overlays",
+    category: "Premium Components",
     slug: "alert-dialog",
     addedAt: "2026-09-04",
   },
@@ -607,7 +607,7 @@ export const components: Record<string, ComponentMetadata> = {
     title: "Lens Drift Grid",
     description:
       "A dense draggable image wall warped as one continuous fisheye surface with weighted momentum and a gentle idle auto-drift.",
-    category: "Premium Components",
+    category: "Visual Effects",
     slug: "lens-drift-grid",
     addedAt: "2026-08-08",
   },
@@ -655,7 +655,7 @@ export const components: Record<string, ComponentMetadata> = {
     title: "Horizontal Scroll Gallery",
     description:
       "Pinned variable-width film strip — vertical page scroll drives a continuous horizontal image track with no snapping or controls.",
-    category: "Premium Components",
+    category: "Scroll",
     slug: "horizontal-scroll-gallery",
     addedAt: "2026-09-16",
   },
@@ -703,7 +703,7 @@ export const components: Record<string, ComponentMetadata> = {
     title: "Ambient Strip",
     description:
       "A horizontal portrait strip that expands the active frame while a blurred, full-bleed copy of the same artwork crossfades behind it — drag, wheel, keyboard, and center-snap on touch.",
-    category: "Premium Components",
+    category: "Visual Effects",
     slug: "ambient-strip",
     addedAt: "2026-10-21",
   },
@@ -736,7 +736,7 @@ export const components: Record<string, ComponentMetadata> = {
     title: "Neon Mesh BG",
     description:
       "A dark cinematic WebGL background with an evolving purple neon mesh, fine pixel matrix, and soft atmospheric bloom.",
-    category: "Hero Backgrounds",
+    category: "Premium Components",
     slug: "neon-mesh-bg",
     addedAt: "2026-09-15",
   },
@@ -760,49 +760,9 @@ export const components: Record<string, ComponentMetadata> = {
     title: "Sunlight Effect",
     description:
       "Animated multi-color rays radiating from a bright central glow, with adjustable density, reach, bloom, and motion.",
-    category: "Hero Backgrounds",
+    category: "Premium Components",
     slug: "sunlight-effect",
     addedAt: "2026-09-15",
-  },
-  "ambient-audio-toggle": {
-    title: "Ambient Audio Toggle",
-    description:
-      "A visitor-controlled background music toggle with an animated waveform, persistent playback, and accessible keyboard controls.",
-    category: "Sound",
-    slug: "ambient-audio-toggle",
-    addedAt: "2026-09-15",
-  },
-  "interaction-sound-kit": {
-    title: "Interaction Sound Kit",
-    description:
-      "System-style sound feedback for trash, drop, confirmation, and warning actions.",
-    category: "Sound",
-    slug: "interaction-sound-kit",
-    addedAt: "2026-09-25",
-  },
-  "voice-recorder": {
-    title: "Voice Recorder",
-    description:
-      "Browser microphone capture with a recording timer, live waveform treatment, and playback.",
-    category: "Sound",
-    slug: "voice-recorder",
-    addedAt: "2026-09-25",
-  },
-  "keyboard-command-sounds": {
-    title: "Keyboard & Command Sounds",
-    description:
-      "Optional keyboard and command feedback for focused productivity interfaces.",
-    category: "Sound",
-    slug: "keyboard-command-sounds",
-    addedAt: "2026-09-25",
-  },
-  "upload-sound-status": {
-    title: "Upload Sound Status",
-    description:
-      "Transfer progress with a subtle completion cue and a reusable upload-state surface.",
-    category: "Sound",
-    slug: "upload-sound-status",
-    addedAt: "2026-09-25",
   },
   "liquid-chrome": {
     title: "Liquid Chrome",
@@ -822,21 +782,21 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "fill-preloader",
     addedAt: "2026-09-18",
   },
-  "staircase-preloader": {
+"staircase-preloader": {
     title: "Staircase Preloader",
     description:
       "A fullscreen orange stepped-curtain loader that exits upward with a left-to-right staircase edge and a top-right finish.",
-    category: "Preloaders",
+    category: "Premium Components",
     slug: "staircase-preloader",
-    addedAt: "2026-09-18",
+    addedAt: "2026-09-15",
   },
-  "pixel-preloader": {
+"pixel-preloader": {
     title: "Pixel Preloader",
     description:
-      "A fullscreen pixel-grid loader that takes over the viewport bottom-up behind a jagged orange frontier, with a top-left percentage HUD and a clean fade reveal.",
-    category: "Preloaders",
+      "A fullscreen pixel-grid loader that takes over the viewport bottom-up behind a jagged orange frontier, with a top-left finish.",
+    category: "Premium Components",
     slug: "pixel-preloader",
-    addedAt: "2026-09-18",
+    addedAt: "2026-09-15",
   },
   "editorial-wipe-preloader": {
     title: "Editorial Wipe Preloader",
@@ -846,13 +806,13 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "editorial-wipe-preloader",
     addedAt: "2026-09-18",
   },
-  "geometric-preloader": {
+"geometric-preloader": {
     title: "Geometric Preloader",
     description:
       "A fullscreen geometric loader with nested rotating squares and a diamond-scale reveal.",
-    category: "Preloaders",
+    category: "Premium Components",
     slug: "geometric-preloader",
-    addedAt: "2026-09-18",
+    addedAt: "2026-09-15",
   },
   "preloader-pro": {
     title: "Preloader Pro",
@@ -1003,7 +963,7 @@ export const components: Record<string, ComponentMetadata> = {
     title: "Pixel Flow",
     description:
       "Flowing violet light rendered through a fine, animated dithered pixel field.",
-    category: "Hero Backgrounds",
+    category: "Premium Components",
     slug: "pixel-flow",
     addedAt: "2026-09-14",
   },
@@ -1117,6 +1077,7 @@ export function getComponent(slug: string) {
 // to alphabetical after the featured set.
 // ─────────────────────────────────────────────────────────────
 export const FEATURED_SLUGS = [
+  "focus-carousel",
   "cinematic-card-carousel",
   "arc-carousel",
   "tilt-flip-polaroid",
@@ -1157,7 +1118,6 @@ export const FEATURED_SLUGS = [
   "text-morph",
   "preloader-pro",
   "liquid-reveal-button",
-  "interaction-sound-kit",
   "interactive-media-accordion",
   "services-showcase",
   "radial-fan-deck",
@@ -1166,7 +1126,6 @@ export const FEATURED_SLUGS = [
   "shader-text",
   "staircase-preloader",
   "glass-scene-dock",
-  "voice-recorder",
   "cms-scroll-gallery",
   "segmented-image-carousel",
   "motion-hamburger",
@@ -1175,7 +1134,6 @@ export const FEATURED_SLUGS = [
   "fluid-particle-text",
   "geometric-preloader",
   "nudge-button",
-  "ambient-audio-toggle",
   "hover-transition",
   "vertical-image-marquee",
   "liquid-chrome-button",
@@ -1184,13 +1142,11 @@ export const FEATURED_SLUGS = [
   "encrypted-text",
   "editorial-wipe-preloader",
   "team-slide-reveal",
-  "upload-sound-status",
   "animated-metric",
   "animated-pill-button",
   "glitch-liquid-text",
   "text-reveal",
   "noiser",
-  "keyboard-command-sounds",
   "wave-bars-loader",
 ] as const;
 

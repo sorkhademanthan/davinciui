@@ -35,7 +35,6 @@ const TOP_FILTERS = [
   "Text Animations",
   "Premium Components",
   "Hero Backgrounds",
-  "Sound",
   "Visual Effects",
   "Preloaders",
   "Interactions",
