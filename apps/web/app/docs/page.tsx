@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { components } from "@/registry";
+import { components, type ComponentCategory } from "@/registry";
 import { DocsSnippet } from "@/components/docs-snippet";
 import { Section, InfoBox } from "@/components/component-layout";
 
@@ -51,7 +51,7 @@ const PATHS = [
 ] as const;
 
 function getCount(category: string) {
-  return Object.values(components).filter((c) => c.category === category)
+  return Object.values(components).filter((c) => c.category === category || c.extraCategories?.includes(category as ComponentCategory))
     .length;
 }
 

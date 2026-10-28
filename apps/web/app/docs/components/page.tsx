@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { components, sortByFeatured } from "@/registry"
+import { components, sortByFeatured, type ComponentCategory } from "@/registry"
 import { docsComponentCategories } from "@/config/docs"
 import { DocsSnippet } from "@/components/docs-snippet"
 import { Section } from "@/components/component-layout"
@@ -84,7 +84,7 @@ export default function ComponentsIndexPage() {
       <div className="mt-10 space-y-12">
         {categoryOrder.map((category) => {
           const items = sortByFeatured(
-            Object.values(components).filter((c) => c.category === category),
+            Object.values(components).filter((c) => c.category === category || c.extraCategories?.includes(category as ComponentCategory)),
           )
           if (items.length === 0) return null
           return (
