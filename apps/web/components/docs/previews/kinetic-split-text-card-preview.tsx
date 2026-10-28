@@ -29,7 +29,7 @@ const easeInOutCubic = (t: number) =>
 /**
  * Gallery card — cycles all five motion styles with a distinct line per
  * style: play → hold → eased masked exit → next variant. Theme-aware
- * background, ink, glow, and pill. Pauses offscreen / hidden tab.
+ * background, ink, glow. Pauses offscreen / hidden tab.
  */
 export function KineticSplitTextCardPreview() {
   const ref = React.useRef<KineticSplitTextHandle>(null);
@@ -123,7 +123,7 @@ export function KineticSplitTextCardPreview() {
       aria-hidden="true"
       className={cn(
         "absolute inset-0 flex items-center justify-center overflow-hidden px-6 transition-colors duration-500",
-        isDark ? "bg-[#09090b]" : "bg-[#fafafa]",
+        isDark ? "bg-[#0a0a0a]" : "bg-[#ffffff]",
       )}
       style={{ containerType: "inline-size" }}
     >
@@ -131,14 +131,14 @@ export function KineticSplitTextCardPreview() {
         className={cn(
           "pointer-events-none absolute inset-0 transition-opacity duration-500",
           isDark
-            ? "bg-[radial-gradient(ellipse_at_50%_42%,rgba(255,255,255,0.09),transparent_64%)]"
-            : "bg-[radial-gradient(ellipse_at_50%_42%,rgba(24,24,27,0.09),transparent_64%)]",
+            ? "bg-[radial-gradient(ellipse_at_50%_42%,rgba(255,255,255,0.06),transparent_64%)]"
+            : "bg-[radial-gradient(ellipse_at_50%_42%,rgba(15,15,17,0.06),transparent_64%)]",
         )}
       />
       <div
         className={cn(
-          "transition-all duration-500 ease-out",
-          exiting ? "translate-y-2 opacity-0 blur-[6px]" : "translate-y-0 opacity-100 blur-0",
+          "relative z-10 transition-all duration-500 ease-out",
+          exiting ? "translate-y-2 opacity-0 blur-[8px] scale-[0.96]" : "translate-y-0 opacity-100 blur-0 scale-100",
         )}
       >
         <KineticSplitText
@@ -150,26 +150,13 @@ export function KineticSplitTextCardPreview() {
           direction="up"
           trigger="manual"
           fontFamily="inherit"
-          fontSize="clamp(1.6rem, 8cqi, 2.6rem)"
-          fontWeight={800}
-          lineHeight={0.98}
-          letterSpacing="-0.02em"
+          fontSize="clamp(1.8rem, 9cqi, 3rem)"
+          fontWeight={900}
+          lineHeight={0.9}
+          letterSpacing="-0.04em"
           textAlign="center"
-          color={isDark ? "#fafafa" : "#18181b"}
+          color={isDark ? "#ffffff" : "#000000"}
         />
-      </div>
-
-      {/* Current motion-style pill — fades with the exit. */}
-      <div
-        className={cn(
-          "pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full border px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.2em] backdrop-blur transition-all duration-500",
-          exiting && "translate-y-1 opacity-0",
-          isDark
-            ? "border-white/15 bg-white/5 text-white/60"
-            : "border-black/10 bg-black/5 text-black/55",
-        )}
-      >
-        {KINETIC_VARIANT_META[variant].title}
       </div>
     </div>
   );

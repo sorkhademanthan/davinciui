@@ -1,4 +1,4 @@
-import { components, sortByFeatured } from "@/registry";
+import { components, sortByFeatured, type ComponentCategory } from "@/registry";
 
 type NavItem = {
   title: string;
@@ -47,7 +47,9 @@ const PREFERRED_CATEGORY_ORDER = [
 
 /** Every registry category, preferred order first, extras alphabetically. */
 export function docsComponentCategories(): string[] {
-  const present = new Set(Object.values(components).map((c) => c.category));
+  const present = new Set(
+    Object.values(components).flatMap((c) => [c.category, ...(c.extraCategories ?? [])]),
+  );
   return [
     ...PREFERRED_CATEGORY_ORDER.filter((c) => present.has(c)),
     ...[...present]
@@ -59,7 +61,7 @@ export function docsComponentCategories(): string[] {
 function componentCategoryGroups(): NavGroup[] {
   const items = docsComponentCategories().flatMap((category) => {
     const links = sortByFeatured(
-      Object.values(components).filter((c) => c.category === category),
+      Object.values(components).filter((c) => c.category === category || c.extraCategories?.includes(category as ComponentCategory)),
     ).map((c) => ({ title: c.title, href: `/docs/components/${c.slug}` }));
     const anchor = `/docs/components#${category.toLowerCase().replace(/\s+/g, "-")}`;
     return links.length > 0 ? [{ title: category, href: anchor, items: links } satisfies NavItem] : [];
@@ -121,7 +123,7 @@ Open code you own. Composable APIs. Beautiful defaults. Animations handled.
   docsComponentCategories().forEach((category) => {
     text += `\n\n### ${category}\n\n`;
     const categoryComponents = sortByFeatured(
-      Object.values(components).filter((c) => c.category === category),
+      Object.values(components).filter((c) => c.category === category || c.extraCategories?.includes(category as ComponentCategory)),
     );
 
     categoryComponents.forEach((component) => {

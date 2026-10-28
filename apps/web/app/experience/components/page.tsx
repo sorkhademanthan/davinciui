@@ -298,19 +298,18 @@ function ComponentsGallery() {
         return (BASIC_SLUGS[activeSub] || []).includes(c.slug);
       }
       if (activeTop === "Text Animations")
-        return c.category === "Text Animations";
+        return c.category === "Text Animations" || c.extraCategories?.includes("Text Animations");
       if (activeTop === "Premium Components")
-        return c.category === "Premium Components";
+        return c.category === "Premium Components" || c.extraCategories?.includes("Premium Components");
       if (activeTop === "Hero Backgrounds")
-        return c.category === "Hero Backgrounds";
-      if (activeTop === "Sound") return c.category === "Sound";
+        return c.category === "Hero Backgrounds" || c.extraCategories?.includes("Hero Backgrounds");
       if (activeTop === "Visual Effects")
-        return c.category === "Visual Effects";
-      if (activeTop === "Preloaders") return c.category === "Preloaders";
-      if (activeTop === "Interactions") return c.category === "Interactions";
+        return c.category === "Visual Effects" || c.extraCategories?.includes("Visual Effects");
+      if (activeTop === "Preloaders") return c.category === "Preloaders" || c.extraCategories?.includes("Preloaders");
+      if (activeTop === "Interactions") return c.category === "Interactions" || c.extraCategories?.includes("Interactions");
       if (activeTop === "Cursor Effects")
-        return c.category === "Cursor Effects";
-      if (activeTop === "Motion") return c.category === "Motion";
+        return c.category === "Cursor Effects" || c.extraCategories?.includes("Cursor Effects");
+      if (activeTop === "Motion") return c.category === "Motion" || c.extraCategories?.includes("Motion");
       if (activeTop === "Scroll") return SCROLL_SLUGS.has(c.slug);
       return false;
     });
@@ -452,20 +451,8 @@ function ComponentsGallery() {
               </div>
               <div className="px-4 pb-4 pt-1">
                 <h3 className="text-sm font-medium flex items-center gap-1.5">
-                  {c.category === "Sound" ? (
-                    <Link
-                      href={`/experience/components/${c.slug}`}
-                      className="inline-flex items-center gap-1.5"
-                    >
-                      {c.title}{" "}
-                      <ArrowUpRight className="size-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                    </Link>
-                  ) : (
-                    <>
-                      {c.title}{" "}
-                      <ArrowUpRight className="size-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                    </>
-                  )}
+                  {c.title}{" "}
+                  <ArrowUpRight className="size-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </h3>
                 <p className="text-xs text-muted-foreground line-clamp-2 mt-1">
                   {c.description}
@@ -473,11 +460,7 @@ function ComponentsGallery() {
               </div>
             </>
           );
-          return c.category === "Sound" ? (
-            <div key={c.slug} className={cardClassName}>
-              {cardContent}
-            </div>
-          ) : (
+          return (
             <Link
               key={c.slug}
               href={`/experience/components/${c.slug}`}
