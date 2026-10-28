@@ -14,12 +14,14 @@ export type ComponentCategory =
   | "Overlays"
   | "Data Display"
   | "Layout"
-  | "Motion";
+  | "Motion"
+  | "Scroll";
 
 export interface ComponentMetadata {
   title: string;
   description: string;
   category: ComponentCategory;
+  extraCategories?: ComponentCategory[];
   slug: string;
   addedAt?: string;
   previewVideo?: string;
@@ -48,6 +50,7 @@ export const components: Record<string, ComponentMetadata> = {
     description:
       "A smooth RGB canvas cursor with glowing, independently customizable color trails.",
     category: "Cursor Effects",
+    extraCategories: ["Premium Components"],
     slug: "chromatic-cursor",
     addedAt: "2026-09-19",
   },
@@ -64,6 +67,7 @@ export const components: Record<string, ComponentMetadata> = {
     description:
       "A white-hot violet lightning cursor that crackles through recent pointer movement and decays without blocking interaction.",
     category: "Cursor Effects",
+    extraCategories: ["Premium Components"],
     slug: "electric-vijdi-cursor",
     addedAt: "2026-09-19",
   },
@@ -88,6 +92,7 @@ export const components: Record<string, ComponentMetadata> = {
     description:
       "A bundle of glowing 3D neon tubes that chases the pointer with fluid inertia and soft bloom. Click to randomize the palette.",
     category: "Premium Components",
+    extraCategories: ["Cursor Effects"],
     slug: "tubes-cursor",
     addedAt: "2026-09-15",
   },
@@ -96,6 +101,7 @@ export const components: Record<string, ComponentMetadata> = {
     description:
       "A procedural wireframe cursor history on pure black — pointer movement extrudes twisting chains of outlined polygons, bright at the head and preserved as a long-lived dark geometric skeleton.",
     category: "Premium Components",
+    extraCategories: ["Cursor Effects"],
     slug: "geometric-trail-cursor",
     addedAt: "2026-09-21",
   },
@@ -103,7 +109,7 @@ export const components: Record<string, ComponentMetadata> = {
     title: "Hover Transition",
     description:
       "Eight polished hover transitions with per-card animation, direction, color, and content controls.",
-    category: "Premium Components",
+    category: "Interactions",
     slug: "hover-transition",
     addedAt: "2026-08-08",
   },
@@ -403,7 +409,7 @@ export const components: Record<string, ComponentMetadata> = {
     title: "Alert Dialog",
     description:
       "A modal interruption that demands acknowledgement — destructive confirmations with focus lock and escape handling.",
-    category: "Premium Components",
+    category: "Overlays",
     slug: "alert-dialog",
     addedAt: "2026-09-04",
   },
@@ -608,6 +614,7 @@ export const components: Record<string, ComponentMetadata> = {
     description:
       "A dense draggable image wall warped as one continuous fisheye surface with weighted momentum and a gentle idle auto-drift.",
     category: "Visual Effects",
+    extraCategories: ["Premium Components"],
     slug: "lens-drift-grid",
     addedAt: "2026-08-08",
   },
@@ -615,7 +622,7 @@ export const components: Record<string, ComponentMetadata> = {
     title: "CMS Scroll Gallery",
     description:
       "Sticky fullscreen scroll gallery — long page scroll drives synchronized media + title transitions with a draggable glass thumbnail dock.",
-    category: "Premium Components",
+    category: "Visual Effects",
     slug: "cms-scroll-gallery",
     addedAt: "2026-09-15",
   },
@@ -623,7 +630,7 @@ export const components: Record<string, ComponentMetadata> = {
     title: "Interactive Media Accordion",
     description:
       "Sticky scroll-driven media accordion — each scroll band expands the next card while the rest collapse into pills.",
-    category: "Premium Components",
+    category: "Interactions",
     slug: "interactive-media-accordion",
     addedAt: "2026-09-15",
   },
@@ -639,7 +646,7 @@ export const components: Record<string, ComponentMetadata> = {
     title: "Stacked Scroll Gallery",
     description:
       "Pinned layered media stack — the next panel rises from below and physically covers the current one, driven directly by scroll.",
-    category: "Premium Components",
+    category: "Visual Effects",
     slug: "stacked-scroll-gallery",
     addedAt: "2026-09-15",
   },
@@ -647,7 +654,7 @@ export const components: Record<string, ComponentMetadata> = {
     title: "Scroll Sync Gallery",
     description:
       "Full-width pinned image wall — vertical columns travel at different speeds and alternating directions, all driven by one scroll progress.",
-    category: "Premium Components",
+    category: "Visual Effects",
     slug: "scroll-sync-gallery",
     addedAt: "2026-09-16",
   },
@@ -663,7 +670,7 @@ export const components: Record<string, ComponentMetadata> = {
     title: "Scroll Media Expand",
     description:
       "A cinematic scroll zoom reveal that expands a compact media capsule into a fullscreen scene while surrounding text fades away.",
-    category: "Premium Components",
+    category: "Visual Effects",
     slug: "scroll-media-expand",
     addedAt: "2026-09-16",
   },
@@ -688,6 +695,7 @@ export const components: Record<string, ComponentMetadata> = {
     description:
       "A Polaroid print that tilts away from the pointer with a damped 3D spring and flips to a handwritten note on click, tap, or keyboard.",
     category: "Premium Components",
+    extraCategories: ["Interactions"],
     slug: "tilt-flip-polaroid",
     addedAt: "2026-10-23",
   },
@@ -713,6 +721,7 @@ export const components: Record<string, ComponentMetadata> = {
     description:
       "Premium WebGL hero background with satin-dark aurora ribbons, pearlescent highlights, fine grain, and cursor depth.",
     category: "Hero Backgrounds",
+    extraCategories: ["Premium Components"],
     slug: "silk-aurora",
     addedAt: "2026-06-09",
   },
@@ -721,6 +730,7 @@ export const components: Record<string, ComponentMetadata> = {
     description:
       "Slow native WebGL pigment flow inspired by fountain-pen ink dispersing through warm watercolor paper.",
     category: "Hero Backgrounds",
+    extraCategories: ["Premium Components"],
     slug: "ink-flow",
     addedAt: "2026-09-13",
   },
@@ -729,6 +739,7 @@ export const components: Record<string, ComponentMetadata> = {
     description:
       "A deep, hypnotic native WebGL background with an enormous looping ribbon of dark color and fluid illumination.",
     category: "Hero Backgrounds",
+    extraCategories: ["Premium Components"],
     slug: "soft-fluid-gradient",
     addedAt: "2026-09-14",
   },
@@ -737,6 +748,7 @@ export const components: Record<string, ComponentMetadata> = {
     description:
       "A dark cinematic WebGL background with an evolving purple neon mesh, fine pixel matrix, and soft atmospheric bloom.",
     category: "Premium Components",
+    extraCategories: ["Hero Backgrounds"],
     slug: "neon-mesh-bg",
     addedAt: "2026-09-15",
   },
@@ -745,6 +757,7 @@ export const components: Record<string, ComponentMetadata> = {
     description:
       "Luminous aurora folds with soft teal halos, pale green edges, fine grain, and moving scanlines.",
     category: "Hero Backgrounds",
+    extraCategories: ["Premium Components"],
     slug: "spectra-noise",
     addedAt: "2026-09-14",
   },
@@ -761,6 +774,7 @@ export const components: Record<string, ComponentMetadata> = {
     description:
       "Animated multi-color rays radiating from a bright central glow, with adjustable density, reach, bloom, and motion.",
     category: "Premium Components",
+    extraCategories: ["Hero Backgrounds"],
     slug: "sunlight-effect",
     addedAt: "2026-09-15",
   },
@@ -768,6 +782,7 @@ export const components: Record<string, ComponentMetadata> = {
     title: "Liquid Chrome",
     description: "Premium fluid liquid metal shader background effect.",
     category: "Hero Backgrounds",
+    extraCategories: ["Premium Components"],
     slug: "liquid-chrome",
     addedAt: "2026-06-24",
     previewVideo:
@@ -779,6 +794,7 @@ export const components: Record<string, ComponentMetadata> = {
     description:
       "A fullscreen bottom-up blue fill loader with a giant bottom-right percentage counter and a vertical slide-away reveal.",
     category: "Preloaders",
+    extraCategories: ["Premium Components"],
     slug: "fill-preloader",
     addedAt: "2026-09-18",
   },
@@ -786,7 +802,7 @@ export const components: Record<string, ComponentMetadata> = {
     title: "Staircase Preloader",
     description:
       "A fullscreen orange stepped-curtain loader that exits upward with a left-to-right staircase edge and a top-right finish.",
-    category: "Premium Components",
+    category: "Preloaders",
     slug: "staircase-preloader",
     addedAt: "2026-09-15",
   },
@@ -795,6 +811,7 @@ export const components: Record<string, ComponentMetadata> = {
     description:
       "A fullscreen pixel-grid loader that takes over the viewport bottom-up behind a jagged orange frontier, with a top-left finish.",
     category: "Premium Components",
+    extraCategories: ["Preloaders"],
     slug: "pixel-preloader",
     addedAt: "2026-09-15",
   },
@@ -811,6 +828,7 @@ export const components: Record<string, ComponentMetadata> = {
     description:
       "A fullscreen geometric loader with nested rotating squares and a diamond-scale reveal.",
     category: "Premium Components",
+    extraCategories: ["Preloaders"],
     slug: "geometric-preloader",
     addedAt: "2026-09-15",
   },
@@ -819,6 +837,7 @@ export const components: Record<string, ComponentMetadata> = {
     description:
       "A cinematic two-stage loader: heavy percentage with a thin red line on white, then a sliding panel reveal into a dark PRELOADER PRO hero.",
     category: "Preloaders",
+    extraCategories: ["Premium Components"],
     slug: "preloader-pro",
     addedAt: "2026-09-19",
   },
@@ -828,6 +847,7 @@ export const components: Record<string, ComponentMetadata> = {
     description:
       "An editorial image carousel with fast right-to-left mosaic wipes that resolve into crisp stills.",
     category: "Visual Effects",
+    extraCategories: ["Premium Components"],
     slug: "pixel-wipe-carousel",
     addedAt: "2026-09-22",
   },
@@ -844,6 +864,7 @@ export const components: Record<string, ComponentMetadata> = {
     description:
       "A WebGL organic burn/dissolve mask — warped multi-octave noise eats through a dark surface to reveal your media, driven by hover, scroll, tap, load, or direct control.",
     category: "Visual Effects",
+    extraCategories: ["Premium Components"],
     slug: "burn-plus",
     addedAt: "2026-09-24",
   },
@@ -852,6 +873,7 @@ export const components: Record<string, ComponentMetadata> = {
     description:
       "A cinematic depth-based card gallery — one sharp hero portrait with progressively blurred, compressed neighbors and pointer-driven spring promotion.",
     category: "Visual Effects",
+    extraCategories: ["Premium Components"],
     slug: "cinematic-card-carousel",
     addedAt: "2026-09-22",
   },
@@ -860,6 +882,7 @@ export const components: Record<string, ComponentMetadata> = {
     description:
       "An infinite, horizontally centred media gallery where one sharp card holds focus while neighbours shrink, desaturate, and blur as a continuous function of distance.",
     category: "Visual Effects",
+    extraCategories: ["Premium Components"],
     slug: "focus-carousel",
     addedAt: "2026-10-22",
   },
@@ -876,6 +899,7 @@ export const components: Record<string, ComponentMetadata> = {
     description:
       "An editorial portrait row that expands the active card over a blurred, full-bleed image backdrop.",
     category: "Visual Effects",
+    extraCategories: ["Premium Components"],
     slug: "hover-cards",
     addedAt: "2026-09-23",
   },
@@ -884,6 +908,7 @@ export const components: Record<string, ComponentMetadata> = {
     description:
       "An editorial team carousel with full portrait cards, one traveling profile detail card, edge clipping, and seamless looping.",
     category: "Visual Effects",
+    extraCategories: ["Premium Components"],
     slug: "profile-carousel",
     addedAt: "2026-09-23",
   },
@@ -963,7 +988,8 @@ export const components: Record<string, ComponentMetadata> = {
     title: "Pixel Flow",
     description:
       "Flowing violet light rendered through a fine, animated dithered pixel field.",
-    category: "Premium Components",
+    category: "Hero Backgrounds",
+    extraCategories: ["Premium Components"],
     slug: "pixel-flow",
     addedAt: "2026-09-14",
   },

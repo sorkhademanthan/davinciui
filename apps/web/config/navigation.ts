@@ -1,4 +1,4 @@
-import { components, sortByFeatured } from "@/registry"
+import { components, sortByFeatured, type ComponentCategory } from "@/registry"
 
 // ─────────────────────────────────────────────────────────────
 // Phase 1: Data-driven IA — DESIGN SYSTEM vs EXPERIENCE
@@ -233,7 +233,7 @@ const categoryOrder = ["Text Animations", "Premium Components", "Hero Background
 function buildPremiumSections(): NavSection[] {
   return categoryOrder.map((category) => {
     const items = sortByFeatured(
-      Object.values(components).filter((c) => c.category === category),
+      Object.values(components).filter((c) => c.category === category || c.extraCategories?.includes(category as ComponentCategory)),
     ).map((c) => ({ title: c.title, href: `/experience/components/${c.slug}` }))
     return { title: category, items }
   })
