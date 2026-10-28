@@ -12,6 +12,7 @@ import {
   DoubleSide,
   LinearFilter,
   Mesh,
+  MeshBasicMaterial,
   ShaderMaterial,
   SRGBColorSpace,
   Texture,
@@ -21,9 +22,11 @@ import {
   Suspense,
   type MutableRefObject,
   type WheelEvent,
+  useCallback,
   useEffect,
   useMemo,
   useRef,
+  useState,
 } from "react";
 
 export interface OrbitSpiralSlide {
@@ -176,14 +179,35 @@ function OrbitScene({
       ),
     [items],
   );
-  const textures = useLoader(
-    TextureLoader,
-    sceneItems.map((item) => item.src),
-  );
+  const [textures, setTextures] = useState<Texture[]>([]);
+  const fallbackTexture = useMemo(() => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 64;
+    canvas.height = 64;
+    const ctx = canvas.getContext("2d")!;
+    ctx.fillStyle = "#222";
+    ctx.fillRect(0, 0, 64, 64);
+    ctx.fillStyle = "#444";
+    ctx.fillRect(16, 16, 32, 32);
+    const tex = new Texture(canvas);
+    tex.needsUpdate = true;
+    return tex;
+  }, []);
   const { gl, viewport } = useThree();
   const progress = useRef(0);
   const meshes = useRef<(Mesh | null)[]>([]);
   const materials = useRef<(ShaderMaterial | null)[]>([]);
+
+  useEffect(() => {
+    const loader = new TextureLoader();
+    loader.setCrossOrigin("anonymous");
+    const loadPromises = sceneItems.map((item) =>
+      loader.loadAsync(item.src).catch(() => fallbackTexture.clone()),
+    );
+    Promise.all(loadPromises).then((loaded) => {
+      setTextures(loaded);
+    });
+  }, [sceneItems, fallbackTexture]);
 
   const uniforms = useMemo(
     () =>
@@ -378,7 +402,7 @@ export function OrbitSpiralGallery({
               powerPreference: "high-performance",
             }}
           >
-            <Suspense fallback={null}>
+            <Suspense fallback={<mesh frustumCulled={false}><planeGeometry args={[1, 1]} /><meshBasicMaterial color="#111111" /></mesh>}>
               <OrbitScene
                 items={items}
                 targetProgress={targetProgress}
