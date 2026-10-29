@@ -24,7 +24,6 @@ const SCROLL_SLUGS = new Set([
   "interactive-media-accordion",
   "stacked-scroll-gallery",
   "scroll-sync-gallery",
-  "horizontal-scroll-gallery",
   "scroll-reveal-image",
   "scroll-timeline",
 ]);
@@ -128,7 +127,6 @@ function hasLiveCardPreview(
   | "interactive-media-accordion"
   | "stacked-scroll-gallery"
   | "scroll-sync-gallery"
-  | "horizontal-scroll-gallery"
   | "scroll-media-expand"
   | "scroll-timeline"
   | "fill-preloader"
@@ -204,7 +202,6 @@ function hasLiveCardPreview(
     slug === "interactive-media-accordion" ||
     slug === "stacked-scroll-gallery" ||
     slug === "scroll-sync-gallery" ||
-    slug === "horizontal-scroll-gallery" ||
     slug === "scroll-media-expand" ||
     slug === "scroll-timeline" ||
     slug === "fill-preloader" ||
