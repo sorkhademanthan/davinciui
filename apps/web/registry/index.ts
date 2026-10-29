@@ -190,7 +190,7 @@ export const components: Record<string, ComponentMetadata> = {
     title: "Text Reveal",
     description:
       "Scroll-scrubbed text reveals with spatial ordering, soft transitions, and character or word splitting.",
-    category: "Motion",
+    category: "Text Animations",
     slug: "text-reveal",
     addedAt: "2026-09-12",
   },
