@@ -15,8 +15,6 @@ interface MiniColumn {
   heights: number[];
 }
 
-const Q = "?q=80&w=300&auto=format&fit=crop";
-
 const LOCAL = (file: string) => `/images/spiral-3d-slider/${file}`;
 
 // Three columns with deliberately mismatched image heights — the editorial
@@ -30,19 +28,19 @@ const COLUMNS: MiniColumn[] = [
 
 const COLUMN_IMAGES: string[][] = [
   [
-    `https://images.unsplash.com/photo-1506905925346-21bda4d32df4${Q}`,
+    LOCAL("green-portrait.jpg"),
     LOCAL("blue-double.jpg"),
-    `https://images.unsplash.com/photo-1529139574466-a303027c1d8b${Q}`,
+    LOCAL("prism-portrait.jpg"),
   ],
   [
     LOCAL("dark-glitch.jpg"),
-    `https://images.unsplash.com/photo-1490481651871-ab68de25d43d${Q}`,
     LOCAL("red-echo.jpg"),
+    LOCAL("crimson-profile.jpg"),
   ],
   [
-    `https://images.unsplash.com/photo-1469334031218-e382a71b716b${Q}`,
-    LOCAL("crimson-profile.jpg"),
-    `https://images.unsplash.com/photo-1501281668745-f7f57925c3b4${Q}`,
+    LOCAL("white-motion.jpg"),
+    LOCAL("visor-portrait.jpg"),
+    LOCAL("catalog-preview.jpg"),
   ],
 ];
 

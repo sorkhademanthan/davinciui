@@ -117,7 +117,7 @@ const DEFAULT_COLUMNS: ScrollSyncGalleryColumn[] = [
       local("white-motion.jpg", 0.72, "Portrait dissolving into white light"),
       local("visor-portrait.jpg", 0.72, "Portrait wearing a reflective visor"),
       local("catalog-preview.jpg", 1.35, "Catalog preview image"),
-      local("hover-transition-team.jpg", 0.7, "Team portrait for hover transition"),
+      { src: "/images/hover-transition-team.jpg", aspectRatio: 0.7, alt: "Team portrait for hover transition" },
     ],
   },
   {
