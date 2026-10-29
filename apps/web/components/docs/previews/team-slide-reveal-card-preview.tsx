@@ -4,9 +4,10 @@ import * as React from "react";
 import { TeamSlideReveal } from "@workspace/ui/components/team-slide-reveal";
 
 /**
- * Display-only catalog preview. Auto-plays the profile ↔ story swap on a
- * timer while staying inert + pointer-events-none, so the wrapping
- * route-linked gallery card stays fully navigable.
+ * Display-only catalog preview. Cycles the profile and story states while
+ * staying inert so the wrapping route-linked gallery card stays navigable.
+ * The compact sheet keeps its copy short and centered so the small frame
+ * never fills with clipped or overlapping text.
  */
 export function TeamSlideRevealCardPreview() {
   const hostRef = React.useRef<HTMLDivElement>(null);
@@ -19,7 +20,7 @@ export function TeamSlideRevealCardPreview() {
 
     let timer = 0;
     let visible = false;
-    const DWELL_MS = 2600;
+    const DWELL_MS = 3400;
 
     const stop = () => {
       window.clearInterval(timer);
@@ -64,7 +65,7 @@ export function TeamSlideRevealCardPreview() {
           duration={420}
           compact
           open={open}
-          testimonial="I’m driven, curious, and committed to turning ideas into something bigger."
+          testimonial="Details are the product."
         />
       </div>
     </div>

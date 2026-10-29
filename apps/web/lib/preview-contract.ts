@@ -74,7 +74,7 @@ export interface PreviewDefinition {
   };
 }
 
-/** Tall (600px) detail stages — matches the measured preloader stages. */
+/** Tall (600px) detail stages — preloaders and portrait cards. */
 const TALL_STAGE_SLUGS: ReadonlySet<string> = new Set([
   "fill-preloader",
   "staircase-preloader",
@@ -82,6 +82,7 @@ const TALL_STAGE_SLUGS: ReadonlySet<string> = new Set([
   "editorial-wipe-preloader",
   "geometric-preloader",
   "preloader-pro",
+  "team-slide-reveal",
 ]);
 
 /**
@@ -94,7 +95,6 @@ const TALL_STAGE_SLUGS: ReadonlySet<string> = new Set([
  */
 const COMPACT_STAGE_SLUGS: ReadonlySet<string> = new Set([
   "liquid-reveal-button",
-  "team-slide-reveal",
   "nudge-button",
   "animated-pill-button",
   "animated-metric",
@@ -154,7 +154,6 @@ const REDUCE_MOTION_SAFE_SLUGS: ReadonlySet<string> = new Set([
   "glass-scene-dock",
   "hover-cards",
   "interactive-media-accordion",
-  "kinetic-split-text",
   "lens-drift-grid",
   "liquid-chrome-button",
   "liquid-reveal-button",
