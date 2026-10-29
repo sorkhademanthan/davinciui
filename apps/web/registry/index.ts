@@ -941,7 +941,7 @@ export const components: Record<string, ComponentMetadata> = {
     title: "Kinetic Split Text",
     description:
       "Staggered kinetic typography with character, word and line splitting, directional reveals, blur, 3D transforms and scroll-linked motion.",
-    category: "Motion",
+    category: "Text Animations",
     slug: "kinetic-split-text",
     addedAt: "2026-09-25",
   },

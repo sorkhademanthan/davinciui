@@ -61,7 +61,7 @@ export const docsCategoryBySlug: Record<string, string> = {
   "interactive-media-accordion": "Premium Components",
   item: "Data Display",
   "keyboard-command-sounds": "Sound",
-  "kinetic-split-text": "Motion",
+  "kinetic-split-text": "Text Animations",
   label: "Forms",
   "lens-drift-grid": "Premium Components",
   link: "Actions",
