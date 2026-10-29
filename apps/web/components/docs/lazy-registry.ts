@@ -214,10 +214,6 @@ const docsImportMap: Record<
     import("@/components/docs/animated-metric").then((m) => ({
       default: m.AnimatedMetricDocs,
     })),
-  "kinetic-split-text": () =>
-    import("@/components/docs/kinetic-split-text").then((m) => ({
-      default: m.KineticSplitTextDocs,
-    })),
   "nudge-button": () =>
     import("@/components/docs/nudge-button").then((m) => ({
       default: m.NudgeButtonDocs,

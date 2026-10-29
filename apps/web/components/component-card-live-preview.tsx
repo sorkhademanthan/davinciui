@@ -542,14 +542,6 @@ const WaveBarsLoaderCardPreview = dynamic(
   { ssr: false },
 );
 
-const KineticSplitTextCardPreview = dynamic(
-  () =>
-    import("@/components/docs/previews/kinetic-split-text-card-preview").then(
-      (module) => module.KineticSplitTextCardPreview,
-    ),
-  { ssr: false },
-);
-
 const MediaTextHover = dynamic(
   () =>
     import("@/components/docs/previews/media-text-hover-card-preview").then(
@@ -672,7 +664,6 @@ type ComponentCardLivePreviewProps = {
     | "geometric-preloader"
     | "preloader-pro"
     | "wave-bars-loader"
-    | "kinetic-split-text"
     | BasicPreviewSlug;
 };
 
@@ -910,8 +901,6 @@ export function ComponentCardLivePreview({
         <PreloaderProCardPreview />
       ) : slug === "wave-bars-loader" ? (
         <WaveBarsLoaderCardPreview />
-      ) : slug === "kinetic-split-text" ? (
-        <KineticSplitTextCardPreview />
       ) : isBasicPreviewSlug(slug) ? (
         <BasicComponentCardPreview slug={slug} />
       ) : slug === "text-video-mask" ? (

@@ -119,8 +119,6 @@ export const motion: Record<string, string> = {
   item: "There is no meaningful motion. Only a CSS transition-colors hover treatment on links and variants changes; no timing or easing props or reduced-motion checks are present because nothing moves.",
   "keyboard-command-sounds":
     "The card is static apart from CSS color transitions and button active scale; no animation loop or timing props exist. prefers-reduced-motion is not detected, so the small press scale still occurs.",
-  "kinetic-split-text":
-    "Units animate with the Web Animations API using transform, opacity, and filter, governed by stagger, duration, delay, variant, and scroll settings. prefers-reduced-motion is detected and writes the final state without animating; reset also jumps to final.",
   label:
     "Static wrapper primitive with no animation, timing props, or motion logic. No prefers-reduced-motion handling is needed because nothing animates at all.",
   "lens-drift-grid":

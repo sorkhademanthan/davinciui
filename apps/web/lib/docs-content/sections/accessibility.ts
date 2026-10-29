@@ -119,8 +119,6 @@ export const accessibility: Record<string, string> = {
   item: "Item is a presentational flex container of divs with no roles; the optional render prop can turn it into an anchor or custom element with native semantics. Interactive controls in ItemActions keep their own keyboard behavior; title and description are not associated semantically.",
   "keyboard-command-sounds":
     "Controls are native buttons: the On/Off toggle exposes aria-pressed, the sample input has a label, and the Run button has an aria-label. Status text uses aria-live polite outside compact mode; the global key listener only runs after the user enables sound.",
-  "kinetic-split-text":
-    "The full string is rendered once for screen readers, while animated fragments and shutter slices are aria-hidden, so text is not announced per unit. The click trigger is a div click handler with no keyboard equivalent, which is the main caveat.",
   label:
     "A native label element, so association works through htmlFor or nesting and screen readers announce it with the control. It adds no ARIA and is not focusable; disabled styling depends on the peer-disabled class.",
   "lens-drift-grid":

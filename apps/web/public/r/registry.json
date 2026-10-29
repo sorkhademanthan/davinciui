@@ -273,10 +273,6 @@
       "type": "registry:ui"
     },
     {
-      "name": "kinetic-split-text",
-      "type": "registry:ui"
-    },
-    {
       "name": "label",
       "type": "registry:ui"
     },

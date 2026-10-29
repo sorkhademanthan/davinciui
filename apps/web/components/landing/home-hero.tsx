@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import Link from "next/link";
 import { ArrowUpRight, Check, Copy, RotateCcw, Terminal } from "lucide-react";
 import { ServicesShowcase } from "@workspace/ui/components/services-showcase";
-import { KineticSplitText } from "@workspace/ui/components/kinetic-split-text";
+import { TextMorph } from "@workspace/ui/components/text-morph";
 import { AnimatedPillButton } from "@workspace/ui/components/animated-pill-button";
 import { LandingContent, LandingGutter } from "./landing-frame";
 import posthog from "posthog-js";
@@ -12,7 +12,7 @@ import styles from "./home-hero.module.css";
 
 const demos = [
   { tab: "Cards", title: "Services showcase", slug: "services-showcase", description: "A little perspective changes everything." },
-  { tab: "Typography", title: "Kinetic split text", slug: "kinetic-split-text", description: "Give your words a proper entrance." },
+  { tab: "Typography", title: "Text morph", slug: "text-morph", description: "Give your words a proper entrance." },
   { tab: "Buttons", title: "Animated pill button", slug: "animated-pill-button", description: "A small interaction. A satisfying response." },
 ] as const;
 
@@ -115,7 +115,12 @@ export function HomeHero() {
                   )}
                   {active === 1 && (
                     <div className={styles.typeDemo}>
-                      <KineticSplitText text={"Ideas.\nIn motion."} split="lines" trigger="load" variant="editorial-rise" fontSize="clamp(3.3rem, 6vw, 5.5rem)" fontWeight={550} letterSpacing="-0.065em" lineHeight={1.02} textAlign="center" />
+                      <TextMorph
+                        words={["Ideas.", "In motion."]}
+                        interval={2200}
+                        morphDuration={620}
+                        className="text-[clamp(3.3rem,6vw,5.5rem)] font-[550] leading-[1.02] tracking-[-0.065em]"
+                      />
                     </div>
                   )}
                   {active === 2 && (

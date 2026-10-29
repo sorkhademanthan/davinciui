@@ -937,14 +937,6 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "animated-metric",
     addedAt: "2026-09-24",
   },
-  "kinetic-split-text": {
-    title: "Kinetic Split Text",
-    description:
-      "Staggered kinetic typography with character, word and line splitting, directional reveals, blur, 3D transforms and scroll-linked motion.",
-    category: "Text Animations",
-    slug: "kinetic-split-text",
-    addedAt: "2026-09-25",
-  },
   "nudge-button": {
     title: "Nudge Button",
     description:
@@ -1131,7 +1123,6 @@ export const FEATURED_SLUGS = [
   // order so categories stay interleaved after the top 27.
   "scroll-media-expand",
   "burn-plus",
-  "kinetic-split-text",
   "pixel-flow",
   "chromatic-cursor",
   "text-morph",

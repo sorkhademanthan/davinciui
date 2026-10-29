@@ -195,7 +195,6 @@ export const CARD_LIVE_SLUGS = [
   "geometric-preloader",
   "preloader-pro",
   "wave-bars-loader",
-  "kinetic-split-text",
 ] as const;
 
 /** True when a real lazy card preview exists for the slug (never a placeholder). */
@@ -257,7 +256,6 @@ const FAMILY_OVERRIDES: Record<string, ComponentFamily> = {
   "stacked-scroll-gallery": "scroll",
   "orbit-spiral-gallery": "media",
   "animated-metric": "data-display",
-  "kinetic-split-text": "text",
   "liquid-chrome-button": "actions",
   "motion-hamburger": "navigation",
   "radial-fan-deck": "media",

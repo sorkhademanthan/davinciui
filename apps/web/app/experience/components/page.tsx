@@ -136,7 +136,6 @@ function hasLiveCardPreview(
   | "geometric-preloader"
   | "preloader-pro"
   | "wave-bars-loader"
-  | "kinetic-split-text"
   | "electric-vijdi-cursor"
   | "circle-cursor"
   | "tubes-cursor"
@@ -211,7 +210,6 @@ function hasLiveCardPreview(
     slug === "geometric-preloader" ||
     slug === "preloader-pro" ||
     slug === "wave-bars-loader" ||
-    slug === "kinetic-split-text" ||
     slug === "electric-vijdi-cursor" ||
     slug === "circle-cursor" ||
     slug === "tubes-cursor" ||
