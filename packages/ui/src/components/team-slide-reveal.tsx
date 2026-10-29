@@ -141,13 +141,19 @@ export function TeamSlideReveal({
         id={storyId}
         aria-hidden={!open}
         className={cn(
-          "absolute inset-x-0 bottom-0 flex h-[84%] flex-col rounded-t-[clamp(1rem,5cqi,1.6rem)] border-x border-t border-black/[0.08] bg-[#faf9f6] text-zinc-900 shadow-[0_-16px_48px_rgba(0,0,0,0.18)] transition-transform duration-[var(--team-slide-duration)] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none dark:border-white/10 dark:bg-gradient-to-b dark:from-[#26272c] dark:to-[#141416] dark:text-zinc-100 dark:shadow-[0_-16px_48px_rgba(0,0,0,0.55)]",
-          compact ? "h-[89%] p-3" : "p-[clamp(1.25rem,5cqi,2rem)]",
+          "absolute inset-x-0 bottom-0 flex flex-col rounded-t-[clamp(1rem,5cqi,1.6rem)] border-x border-t border-black/[0.08] bg-[#faf9f6] text-zinc-900 shadow-[0_-16px_48px_rgba(0,0,0,0.18)] transition-transform duration-[var(--team-slide-duration)] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none dark:border-white/10 dark:bg-gradient-to-b dark:from-[#26272c] dark:to-[#141416] dark:text-zinc-100 dark:shadow-[0_-16px_48px_rgba(0,0,0,0.55)]",
+          compact ? "h-[94%] p-2.5" : "h-[84%] p-[clamp(1.25rem,5cqi,2rem)]",
           open ? "translate-y-0" : "pointer-events-none translate-y-[101%]",
         )}
       >
-        <span aria-hidden="true" className="mx-auto mb-2 h-1 w-10 shrink-0 rounded-full bg-zinc-900/15 dark:bg-white/20" />
-        <div className="flex shrink-0 items-center justify-between">
+        <span
+          aria-hidden="true"
+          className={cn(
+            "mx-auto shrink-0 rounded-full bg-zinc-900/15 dark:bg-white/20",
+            compact ? "mb-1.5 h-0.5 w-8" : "mb-2 h-1 w-10",
+          )}
+        />
+        <div className={cn("flex shrink-0 items-center justify-between", compact && "justify-end")}>
           <button
             ref={backRef}
             type="button"
@@ -156,25 +162,36 @@ export function TeamSlideReveal({
             onClick={(event) => { event.preventDefault(); event.stopPropagation(); setOpen(false); }}
             className={cn(
               "grid place-items-center rounded-full border border-zinc-300 bg-white text-zinc-800 transition-colors hover:bg-zinc-900 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950 dark:border-white/20 dark:bg-white/10 dark:text-white dark:hover:bg-white dark:hover:text-zinc-950 dark:focus-visible:ring-white",
-              compact ? "size-8" : "size-[clamp(2.4rem,11cqi,2.9rem)]",
+              compact ? "size-6" : "size-[clamp(2.4rem,11cqi,2.9rem)]",
             )}
           >
-            <ArrowLeft aria-hidden="true" className="size-[clamp(1rem,4.5cqi,1.25rem)]" />
+            <ArrowLeft aria-hidden="true" className={cn(compact ? "size-3.5" : "size-[clamp(1rem,4.5cqi,1.25rem)]")} />
           </button>
-          <span className={cn("font-medium uppercase tracking-[0.14em] text-zinc-500 dark:text-zinc-400", compact ? "text-[9px]" : "text-[clamp(0.68rem,2.6cqi,0.8rem)]")}>In their words</span>
+          {!compact && (
+            <span className="font-medium uppercase tracking-[0.14em] text-zinc-500 dark:text-zinc-400 text-[clamp(0.68rem,2.6cqi,0.8rem)]">In their words</span>
+          )}
         </div>
 
-        <div className="flex min-h-0 flex-1 flex-col justify-center overflow-y-auto py-[clamp(0.5rem,3cqi,1.5rem)]">
-          <Quote aria-hidden="true" className={cn("mb-[clamp(0.4rem,2cqi,1rem)] fill-zinc-900/[0.06] text-zinc-400 dark:fill-white/[0.06] dark:text-zinc-500", compact ? "size-4" : "size-[clamp(1.5rem,7cqi,2.3rem)]")} />
-          <p className={cn(
-            "max-w-[31ch] font-serif leading-[1.28] tracking-[-0.025em] text-balance",
-            compact ? "line-clamp-4 text-[clamp(0.8rem,4cqi,1rem)]" : "text-[clamp(1.15rem,5cqi,1.8rem)]",
-          )}>{testimonial}</p>
+        <div className={cn(
+          "flex min-h-0 flex-1 flex-col overflow-y-auto",
+          compact ? "py-1.5" : "py-[clamp(0.5rem,3cqi,1.5rem)]",
+        )}>
+          <div className="my-auto flex w-full flex-col">
+            {!compact && (
+              <Quote aria-hidden="true" className="mb-[clamp(0.4rem,2cqi,1rem)] size-[clamp(1.5rem,7cqi,2.3rem)] shrink-0 fill-zinc-900/[0.06] text-zinc-400 dark:fill-white/[0.06] dark:text-zinc-500" />
+            )}
+            <p className={cn(
+              "font-serif tracking-[-0.025em]",
+              compact
+                ? "line-clamp-3 text-[clamp(0.72rem,4.5cqi,0.95rem)] leading-[1.3]"
+                : "max-w-[31ch] text-[clamp(1.15rem,5cqi,1.8rem)] leading-[1.28] text-balance",
+            )}>{testimonial}</p>
+          </div>
         </div>
 
-        <div className="shrink-0 border-t border-zinc-900/10 pt-[clamp(0.6rem,3cqi,1.15rem)] dark:border-white/15">
-          <p className={cn("font-semibold tracking-[-0.02em]", compact ? "text-[10px]" : "text-[clamp(0.86rem,3.5cqi,1.1rem)]")}>{name}</p>
-          <p className={cn("mt-0.5 text-zinc-500 dark:text-zinc-400", compact ? "text-[9px]" : "text-[clamp(0.7rem,2.6cqi,0.82rem)]")}>{role}</p>
+        <div className={cn("shrink-0 border-t border-zinc-900/10 dark:border-white/15", compact ? "pt-1.5" : "pt-[clamp(0.6rem,3cqi,1.15rem)]")}>
+          <p className={cn("font-semibold tracking-[-0.02em]", compact ? "text-[9px]" : "text-[clamp(0.86rem,3.5cqi,1.1rem)]")}>{name}</p>
+          <p className={cn("text-zinc-500 dark:text-zinc-400", compact ? "mt-0 text-[8px]" : "mt-0.5 text-[clamp(0.7rem,2.6cqi,0.82rem)]")}>{role}</p>
         </div>
       </article>
     </div>
