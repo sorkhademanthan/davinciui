@@ -22,11 +22,11 @@ component surface.
 - [x] **2. Personalization is a complete product pipeline (component pages).**
   DONE Oct 9, verified end-to-end in a live browser on `wave-bars-loader`:
   personalize → store → generated Usage → copy all agree, with no cross-page
-  leakage. How: every one of the 23 personalized preview modules now publishes
+  leakage. How: every one of the 22 personalized preview modules now publishes
   generated usage code under its registry slug (14 already had bespoke
   `generateCode`; added for ambient-audio-toggle, burn-plus, ink-flow,
-  kinetic-split-text, motion-hamburger, neon-mesh-bg, soft-fluid-gradient,
-  spectra-noise, sunlight-effect, wave-bars-loader). The playground store keys
+  motion-hamburger, neon-mesh-bg, soft-fluid-gradient, spectra-noise,
+  sunlight-effect, wave-bars-loader). The playground store keys
   generated code by slug (`setPersonalizedCode`), so one page's settings can
   never leak into another page's Usage block. Both Usage surfaces consume it:
   `DynamicCodeBlock` swaps the Default tab to live-highlighted code with a

@@ -40,7 +40,7 @@ Verify these; fix before adding components, not after:
 
 ## Component map
 
-83 components. Match the user's request to a category, then confirm the exact slug via `search`/`view` (slugs evolve — never invent one):
+82 components. Match the user's request to a category, then confirm the exact slug via `search`/`view` (slugs evolve — never invent one):
 
 - **Text Animations:** fluid-particle-text, text-morph, encrypted-text, gsap-text, glitch-liquid-text, media-text-hover, shader-text, text-video-mask, random-text-reveal, text-reveal, shake-text, rolling-text
 - **Hero Backgrounds:** silk-aurora, ink-flow, soft-fluid-gradient, neon-mesh-bg, spectra-noise, sunlight-effect, liquid-chrome, character-field, pixel-flow
@@ -49,7 +49,7 @@ Verify these; fix before adding components, not after:
 - **Cursor Effects:** circle-cursor, chromatic-cursor, magic-cursor-pro, electric-vijdi-cursor, elastic-blob-cursor, fluid-cursor, tubes-cursor, geometric-trail-cursor
 - **Preloaders:** fill-preloader, staircase-preloader, pixel-preloader, editorial-wipe-preloader, geometric-preloader, preloader-pro
 - **Interactions:** glass-scene-dock, liquid-reveal-button, nudge-button, animated-pill-button, team-slide-reveal
-- **Motion:** wave-bars-loader, motion-hamburger, liquid-chrome-button, radial-fan-deck, animated-metric, kinetic-split-text
+- **Motion:** wave-bars-loader, motion-hamburger, liquid-chrome-button, radial-fan-deck, animated-metric
 - **Sound:** ambient-audio-toggle, interaction-sound-kit, voice-recorder, keyboard-command-sounds, upload-sound-status
 - **Primitives (shadcn-compatible):** Actions (button-group, toggle-group), Forms (date-picker, input-group, input-otp, native-select), Navigation (navigation-menu), Overlays (alert-dialog, dropdown-menu, context-menu, hover-card), Layout (aspect-ratio, scroll-area), Data Display (message-scroller)
 - **Styles:** typeset — prose styling for rendered markdown. Install with `add @davinciui/typeset`, `@import` the CSS after Tailwind, wrap content in `typeset` + a preset (`typeset-docs`, `typeset-chat`, `typeset-compact`). Docs: `https://davinciui.com/docs/typeset`.
