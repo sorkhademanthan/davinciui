@@ -446,14 +446,6 @@ const ScrollSyncGalleryCardPreview = dynamic(
   { ssr: false },
 );
 
-const HorizontalScrollGalleryCardPreview = dynamic(
-  () =>
-    import("@/components/docs/previews/horizontal-scroll-gallery-card-preview").then(
-      (module) => module.HorizontalScrollGalleryCardPreview,
-    ),
-  { ssr: false },
-);
-
 const ScrollMediaExpandCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/scroll-media-expand-card-preview").then(
@@ -671,7 +663,6 @@ type ComponentCardLivePreviewProps = {
     | "interactive-media-accordion"
     | "stacked-scroll-gallery"
     | "scroll-sync-gallery"
-    | "horizontal-scroll-gallery"
     | "scroll-media-expand"
     | "scroll-timeline"
     | "fill-preloader"
@@ -901,8 +892,6 @@ export function ComponentCardLivePreview({
         <StackedScrollGalleryCardPreview />
       ) : slug === "scroll-sync-gallery" ? (
         <ScrollSyncGalleryCardPreview />
-      ) : slug === "horizontal-scroll-gallery" ? (
-        <HorizontalScrollGalleryCardPreview />
       ) : slug === "scroll-media-expand" ? (
         <ScrollMediaExpandCardPreview />
       ) : slug === "scroll-timeline" ? (
