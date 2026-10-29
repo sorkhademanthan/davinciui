@@ -16,7 +16,7 @@ const ARCHIVE = [
   { date: "October 2026", title: "Typeset guide", desc: "The DavinciUI type scale documented as a specimen page: headings, body, code, and usage rules." },
   { date: "October 2026", title: "Site foundations", desc: "Analytics instrumentation, cookie consent, legal pages, command menu, and branded 404." },
   { date: "September 2026", title: "Forms and overlays", desc: "date-picker, input-group, input-otp, native-select, alert-dialog, dropdown-menu, context-menu, and hover-card." },
-  { date: "September 2026", title: "Premium scroll galleries", desc: "cms-scroll-gallery, interactive-media-accordion, scroll-reveal-image, stacked-scroll-gallery, scroll-sync-gallery, horizontal-scroll-gallery, scroll-media-expand, and scroll-timeline." },
+  { date: "September 2026", title: "Premium scroll galleries", desc: "cms-scroll-gallery, interactive-media-accordion, scroll-reveal-image, stacked-scroll-gallery, scroll-sync-gallery, scroll-media-expand, and scroll-timeline." },
   { date: "September 2026", title: "Visual effects wave", desc: "pixel-wipe-carousel, segmented-image-carousel, burn-plus, cinematic-card-carousel, vertical-image-marquee, hover-cards, profile-carousel, and services-showcase." },
 ] as const
 
