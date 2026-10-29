@@ -354,7 +354,9 @@ export function OrbitSpiralGallery({
       const delta = scrollY - previousScroll.current;
       previousScroll.current = scrollY;
       if (visible.current && performance.now() - lastWheelTime.current > 80) {
-        lastInteraction.current = performance.now();
+        // Page scroll moves the spiral but must not pause auto-rotation;
+        // otherwise the preview stalls ("tails") for up to ~450ms every time
+        // the user scrolls the page and the card re-enters the viewport.
         const boundedDelta = Math.sign(delta) * Math.min(Math.abs(delta), 160);
         targetProgress.current += boundedDelta * scrollSensitivity;
       }
