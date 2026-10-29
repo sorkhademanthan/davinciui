@@ -171,10 +171,22 @@ export function DesignSystemWorkbench() {
   const reduceMotion = useReducedMotion();
   const [tab, setTab] = React.useState<Tab>("Color");
   const [accent, setAccent] = React.useState<string>(accents[3].value);
-  const [dark, setDark] = React.useState(false);
+  const [dark, setDark] = React.useState(() =>
+    typeof window !== "undefined" ? window.matchMedia("(prefers-color-scheme: dark)").matches : false
+  );
+  const [userOverridden, setUserOverridden] = React.useState(false);
   const [replayKey, setReplayKey] = React.useState(0);
   const [gutter, setGutter] = React.useState(16);
   const [radiusDemo, setRadiusDemo] = React.useState(14);
+
+  // Follow the system theme by default until the user manually toggles.
+  React.useEffect(() => {
+    if (userOverridden || typeof window === "undefined") return;
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    const onChange = (e: MediaQueryListEvent) => setDark(e.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, [userOverridden]);
 
   const accentName = accents.find((a) => a.value === accent)?.name ?? "Custom";
   const fg = dark ? "#f4f4f3" : "#171717";
@@ -323,6 +335,7 @@ export function DesignSystemWorkbench() {
             <button
               type="button"
               onClick={() => {
+                setUserOverridden(true);
                 setDark((v) => !v);
                 posthog.capture("design_system_specimen_interaction", { control: "theme" });
               }}
