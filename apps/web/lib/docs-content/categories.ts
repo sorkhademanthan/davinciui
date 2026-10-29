@@ -50,7 +50,6 @@ export const docsCategoryBySlug: Record<string, string> = {
   "glass-scene-dock": "Interactions",
   "glitch-liquid-text": "Text Animations",
   "gsap-text": "Text Animations",
-  "horizontal-scroll-gallery": "Premium Components",
   "hover-card": "Overlays",
   "hover-cards": "Visual Effects",
   "hover-transition": "Premium Components",

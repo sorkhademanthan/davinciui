@@ -98,8 +98,6 @@ export const motion: Record<string, string> = {
     "The shader distorts glyphs around the pointer, with velocity smear, noise, chromatic separation and glitch slices tuned by distortionStrength, distortionDecay, noiseSpeed and autoAnimate. prefers-reduced-motion disables autoAnimate and glitch, scales down chromatic and light intensity, and slows the shader clock, though direct hover distortion stays active.",
   "gsap-text":
     "Each layer runs an infinite GSAP timeline that translates cloned text vertically with power3.out easing, offset by layerCount and duration. distance sets travel and direction sets flow. The source does not check prefers-reduced-motion and provides no way to disable the looping animation.",
-  "horizontal-scroll-gallery":
-    "Vertical scroll maps to a translate3d horizontal track behind a critically damped spring; smoothing controls follow stiffness and scrollDistance controls runway length. prefers-reduced-motion is detected with matchMedia and renders the static accessible row with native horizontal scrolling instead of the pinned transform.",
   "hover-card":
     "The panel animates opacity, scale and translate over 150ms with cubic-bezier(0.23,1,0.32,1) using starting and ending styles. openDelay and closeDelay control hover intent rather than animation; motion-reduce removes the transition, translation and scale.",
   "hover-cards":

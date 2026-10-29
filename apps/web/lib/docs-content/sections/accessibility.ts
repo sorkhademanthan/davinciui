@@ -98,8 +98,6 @@ export const accessibility: Record<string, string> = {
     "A visually hidden semantic element carries aria-label and the text content, while the canvas and custom cursor are aria-hidden. Interaction is pointer-only with no focus or keyboard path; the container is not focusable, so keyboard users see the static render.",
   "gsap-text":
     "The main text renders in the semantic tag chosen by htmlTag, and every animated clone is aria-hidden. There are no keyboard controls or pause mechanism; motion runs continuously, which is a caveat for users who need to stop movement.",
-  "horizontal-scroll-gallery":
-    "The pinned section is focusable and supports ArrowLeft, ArrowRight, Home and End to scrub the track, with a visible focus ring. Images carry alt text and figcaption labels; when motion is reduced or disabled, it becomes a focusable native horizontal scroll region.",
   "hover-card":
     "Built on Base UI Preview Card: the trigger is focusable and opens the panel on focus, Escape dismisses it, and the popup uses role=dialog with a fixed aria-label of Preview. The trigger has a focus-visible ring, and a safe polygon lets pointer travel reach the panel.",
   "hover-cards":
