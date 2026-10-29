@@ -1,8 +1,8 @@
 import { HoverCards } from "@workspace/ui/components/hover-cards";
 
 import { DocsPageLayout } from "@/components/docs-page-layout";
+import { hoverCardsDemoItems } from "@/components/docs/previews/hover-cards-items";
 import {
-  hoverCardsDemoItems,
   HoverCardsPreview,
 } from "@/components/docs/previews/hover-cards-preview";
 import { readComponentSource } from "@/lib/source-code";

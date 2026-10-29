@@ -1,7 +1,7 @@
 "use client";
 
 import { HoverCards } from "@workspace/ui/components/hover-cards";
-import { hoverCardsDemoItems } from "./hover-cards-preview";
+import { hoverCardsDemoItems } from "./hover-cards-items";
 
 export function HoverCardsCardPreview() {
   return (
