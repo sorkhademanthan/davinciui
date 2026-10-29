@@ -142,6 +142,7 @@ export const components: Record<string, ComponentMetadata> = {
     description:
       "A cinematic kinetic typography component that creates a layered 3D depth effect using continuous vertical text motion.",
     category: "Text Animations",
+    extraCategories: ["Premium Components"],
     slug: "gsap-text",
     addedAt: "2026-09-03",
   },
