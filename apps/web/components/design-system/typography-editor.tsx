@@ -274,6 +274,8 @@ function FontAssignmentRow({
   const applyCustomFamily = () => {
     const nextFamily = parseFamilyName(customFamily)
     if (!nextFamily) return
+    setCustomOpen(false)
+    setCustomFamily("")
     onChoose(nextFamily, fallbacksFor(nextFamily))
   }
 
