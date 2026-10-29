@@ -1104,10 +1104,11 @@ export function getComponent(slug: string) {
 // ─────────────────────────────────────────────────────────────
 export const FEATURED_SLUGS = [
   "focus-carousel",
-  "cinematic-card-carousel",
-  "arc-carousel",
-  "tilt-flip-polaroid",
   "lens-drift-grid",
+  "ambient-strip",
+  "arc-carousel",
+  "cinematic-card-carousel",
+  "tilt-flip-polaroid",
   "tubes-cursor",
   "text-video-mask",
   "neon-mesh-bg",
@@ -1116,7 +1117,6 @@ export const FEATURED_SLUGS = [
   "pixel-preloader",
   "scroll-sync-gallery",
   "hover-cards",
-  "ambient-strip",
   "silk-aurora",
   "rolling-text",
   "orbit-spiral-gallery",
