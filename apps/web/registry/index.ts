@@ -658,14 +658,6 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "scroll-sync-gallery",
     addedAt: "2026-09-16",
   },
-  "horizontal-scroll-gallery": {
-    title: "Horizontal Scroll Gallery",
-    description:
-      "Pinned variable-width film strip — vertical page scroll drives a continuous horizontal image track with no snapping or controls.",
-    category: "Scroll",
-    slug: "horizontal-scroll-gallery",
-    addedAt: "2026-09-16",
-  },
   "scroll-media-expand": {
     title: "Scroll Media Expand",
     description:
@@ -1112,7 +1104,7 @@ export const FEATURED_SLUGS = [
   "tubes-cursor",
   "text-video-mask",
   "neon-mesh-bg",
-  "horizontal-scroll-gallery",
+  "gsap-text",
   "shake-text",
   "pixel-preloader",
   "scroll-sync-gallery",
