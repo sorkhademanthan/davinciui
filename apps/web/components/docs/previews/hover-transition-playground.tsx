@@ -80,9 +80,9 @@ type Person = (typeof PEOPLE)[number];
 type PersonId = Person["id"];
 
 const EASINGS = {
-  smooth: "cubic-bezier(0.16, 1, 0.3, 1)",
+  smooth: "cubic-bezier(0.22, 1, 0.36, 1)",
   soft: "cubic-bezier(0.4, 0, 0.2, 1)",
-  snappy: "cubic-bezier(0.22, 1, 0.36, 1)",
+  snappy: "cubic-bezier(0.33, 1, 0.68, 1)",
 } as const;
 
 type EasingName = keyof typeof EASINGS;
@@ -124,7 +124,7 @@ const DEFAULT_CONFIG: HoverTransitionConfig = {
       color: "#62d6e8",
     },
   },
-  duration: 1.15,
+  duration: 1.5,
   easing: "smooth",
 };
 
@@ -274,14 +274,14 @@ function PersonDetails({
         }}
       />
       <div className="relative">
-        <div className="flex translate-y-2 justify-end blur-[2px] opacity-0 transition-[transform,filter,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-data-[active=true]/hover-card:translate-y-0 group-data-[active=true]/hover-card:blur-none group-data-[active=true]/hover-card:opacity-100 group-data-[active=true]/hover-card:delay-75 motion-reduce:translate-y-0 motion-reduce:blur-none motion-reduce:opacity-100 motion-reduce:transition-none font-mono text-[clamp(8px,3cqw,10px)] uppercase tracking-[0.1em] text-black/55">
+        <div className="flex translate-y-2 justify-end blur-[2px] opacity-0 transition-[transform,filter,opacity] duration-[500ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-data-[active=true]/hover-card:translate-y-0 group-data-[active=true]/hover-card:blur-none group-data-[active=true]/hover-card:opacity-100 group-data-[active=true]/hover-card:delay-150 motion-reduce:translate-y-0 motion-reduce:blur-none motion-reduce:opacity-100 motion-reduce:transition-none font-mono text-[clamp(8px,3cqw,10px)] uppercase tracking-[0.1em] text-black/55">
           <span>{effect}</span>
         </div>
-        <p className="mt-[clamp(16px,6cqw,30px)] max-w-[25ch] translate-y-3 blur-[3px] opacity-0 transition-[transform,filter,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-data-[active=true]/hover-card:translate-y-0 group-data-[active=true]/hover-card:blur-none group-data-[active=true]/hover-card:opacity-100 group-data-[active=true]/hover-card:delay-100 motion-reduce:translate-y-0 motion-reduce:blur-none motion-reduce:opacity-100 motion-reduce:transition-none text-[clamp(16px,6cqw,22px)] font-medium leading-[1.16] tracking-[-0.04em]">
+        <p className="mt-[clamp(16px,6cqw,30px)] max-w-[25ch] translate-y-3 blur-[3px] opacity-0 transition-[transform,filter,opacity] duration-[700ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-data-[active=true]/hover-card:translate-y-0 group-data-[active=true]/hover-card:blur-none group-data-[active=true]/hover-card:opacity-100 group-data-[active=true]/hover-card:delay-200 motion-reduce:translate-y-0 motion-reduce:blur-none motion-reduce:opacity-100 motion-reduce:transition-none text-[clamp(16px,6cqw,22px)] font-medium leading-[1.16] tracking-[-0.04em]">
           {person.bio}
         </p>
       </div>
-      <div className="relative translate-y-3 border-t border-black/25 pt-[clamp(12px,4cqw,18px)] blur-[2px] opacity-0 transition-[transform,filter,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-data-[active=true]/hover-card:translate-y-0 group-data-[active=true]/hover-card:blur-none group-data-[active=true]/hover-card:opacity-100 group-data-[active=true]/hover-card:delay-150 motion-reduce:translate-y-0 motion-reduce:blur-none motion-reduce:opacity-100 motion-reduce:transition-none">
+      <div className="relative translate-y-3 border-t border-black/25 pt-[clamp(12px,4cqw,18px)] blur-[2px] opacity-0 transition-[transform,filter,opacity] duration-[700ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-data-[active=true]/hover-card:translate-y-0 group-data-[active=true]/hover-card:blur-none group-data-[active=true]/hover-card:opacity-100 group-data-[active=true]/hover-card:delay-250 motion-reduce:translate-y-0 motion-reduce:blur-none motion-reduce:opacity-100 motion-reduce:transition-none">
         <p className="text-[clamp(14px,5cqw,18px)] font-semibold leading-none tracking-[-0.035em]">
           {person.name}
         </p>

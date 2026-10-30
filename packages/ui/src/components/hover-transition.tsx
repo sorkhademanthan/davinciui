@@ -170,8 +170,8 @@ export function HoverTransition({
   hoverComponent,
   effect = "wipe",
   direction = "right",
-  duration = 1.15,
-  easing = "cubic-bezier(0.16, 1, 0.3, 1)",
+  duration = 1.8,
+  easing = "cubic-bezier(0.22, 1, 0.36, 1)",
   label = "Interactive hover transition",
   active: controlledActive,
   onActiveChange,
@@ -205,11 +205,7 @@ export function HoverTransition({
   );
   const reducedMotion = usePrefersReducedMotion();
   const vector = directionVectors[direction];
-  const perceivedDurationScale =
-    effect === "diagonal" || effect === "ripple" ? 1.25 : 1;
-  const seconds = reducedMotion
-    ? 0
-    : Math.max(0, duration) * perceivedDurationScale;
+  const seconds = reducedMotion ? 0 : Math.max(0, duration);
   const before = defaultComponent ?? <FallbackCard />;
   const after = hoverComponent ?? <FallbackCard hover />;
   const distanceX = vector.x * 100;
@@ -228,7 +224,6 @@ export function HoverTransition({
     "transform",
     "opacity",
     "filter",
-    "border-radius",
   ]);
 
   const activate = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -296,7 +291,7 @@ export function HoverTransition({
           ? `circle(150% at ${rippleOrigins[direction]})`
           : `circle(0% at ${rippleOrigins[direction]})`,
         filter: active ? "blur(0px)" : "blur(2px)",
-        transform: active ? "scale(1)" : "scale(1.035)",
+        transform: active ? "scale(1)" : "scale(1)",
         transformOrigin: rippleOrigins[direction],
       });
       break;
@@ -430,7 +425,6 @@ export function HoverTransition({
     }
     case "morph":
       animatedLayers = hoverLayer({
-        borderRadius: active ? "0%" : "42%",
         clipPath: active ? "inset(0% round 0%)" : "inset(43% round 42%)",
         filter: active ? "blur(0px)" : "blur(3px)",
         opacity: active ? 1 : 0,
@@ -514,7 +508,7 @@ export function HoverTransition({
       animatedLayers = hoverLayer({
         clipPath: active ? "inset(0)" : hiddenInset(direction),
         filter: active ? "blur(0px)" : "blur(1.5px)",
-        transform: active ? "scale(1)" : "scale(1.025)",
+        transform: active ? "scale(1)" : "scale(1)",
         transformOrigin: rippleOrigins[direction],
       });
       break;
@@ -569,7 +563,7 @@ export function HoverTransition({
           transition:
             reducedMotion || !interactive
               ? "none"
-              : `transform ${active ? 0.35 : 0.8}s ${easing}`,
+              : `transform ${seconds}s ${easing}`,
         }}
       >
         <div
@@ -593,7 +587,7 @@ export function HoverTransition({
             transition:
               reducedMotion || !interactive
                 ? "none"
-                : `opacity 0.45s ${easing}`,
+                : `opacity ${seconds}s ${easing}`,
           }}
         />
       </div>

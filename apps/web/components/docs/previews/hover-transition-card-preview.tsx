@@ -136,8 +136,6 @@ export function HoverTransitionCardPreview() {
                 <HoverTransition
                   effect={card.effect}
                   direction={card.direction}
-                  duration={1.15}
-                  easing="cubic-bezier(0.16, 1, 0.3, 1)"
                   tabIndex={-1}
                   label={`${card.name}, ${card.role}`}
                   active={active}
