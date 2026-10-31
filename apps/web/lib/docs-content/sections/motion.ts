@@ -144,6 +144,8 @@ export const motion: Record<string, string> = {
     "Programmatic scrolling uses native smooth behavior by default, tunable per command or button via behavior. prefers-reduced-motion forces auto scrolling, and the button's 200ms fade and translate are removed with motion-reduce.",
   "motion-hamburger":
     "Top and bottom SVG paths redraw with 620ms stroke-dash transitions, the icon rotates with an overshoot easing, and the middle line collapses. prefers-reduced-motion reduces transition durations to near zero; no timing props are exposed beyond hoverGrowth.",
+  "bookshelf":
+    "Books rotate around their vertical axis between spine-facing and cover-facing orientations while the shelf translates horizontally to center the active book. Neighboring books scale and recede in depth based on distance from the active position. GSAP timelines with power2.inOut easing coordinate translation and rotation. Reduced motion snaps transitions and disables autoplay.",
   "native-select":
     "Only CSS state transitions animate: border, shadow, and background colours over 150ms ease-out, plus the chevron colour. motion-reduce disables them. There is no JavaScript motion or timing prop.",
   "navigation-menu":

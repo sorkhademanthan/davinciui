@@ -16,6 +16,7 @@ export const docsCategoryBySlug: Record<string, string> = {
   breadcrumb: "Navigation",
   bubble: "Data Display",
   "burn-plus": "Visual Effects",
+  "bookshelf": "Motion",
   button: "Actions",
   "button-group": "Actions",
   calendar: "Forms",
