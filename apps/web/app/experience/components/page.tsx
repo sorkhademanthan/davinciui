@@ -55,13 +55,12 @@ const TEXT_ANIMATION_ORDER = [
   "gsap-text",
   "random-text-reveal",
   "text-morph",
+  "text-reveal",
   "shader-text",
   "fluid-particle-text",
   "encrypted-text",
   "glitch-liquid-text",
-  "text-reveal",
 ] as const;
-
 const TEXT_ANIMATION_RANK = new Map<string, number>(
   TEXT_ANIMATION_ORDER.map((slug, index) => [slug, index]),
 );
@@ -113,6 +112,7 @@ function hasLiveCardPreview(
   | "nudge-button"
   | "animated-pill-button"
   | "burn-plus"
+  | "bookshelf"
   | "team-slide-reveal"
   | "hover-transition"
   | "ambient-audio-toggle"
@@ -187,6 +187,7 @@ function hasLiveCardPreview(
     slug === "nudge-button" ||
     slug === "animated-pill-button" ||
     slug === "burn-plus" ||
+    slug === "bookshelf" ||
     slug === "team-slide-reveal" ||
     slug === "hover-transition" ||
     slug === "ambient-audio-toggle" ||

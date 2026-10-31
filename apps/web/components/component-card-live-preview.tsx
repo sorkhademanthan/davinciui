@@ -345,6 +345,14 @@ const BurnPlusCardPreview = dynamic(
   { ssr: false },
 );
 
+const BookshelfCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/bookshelf-card-preview").then(
+      (module) => module.BookshelfCardPreview,
+    ),
+  { ssr: false },
+);
+
 const TeamSlideRevealCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/team-slide-reveal-card-preview").then(
@@ -641,6 +649,7 @@ type ComponentCardLivePreviewProps = {
     | "nudge-button"
     | "animated-pill-button"
     | "burn-plus"
+    | "bookshelf"
     | "team-slide-reveal"
     | "hover-transition"
     | "ambient-audio-toggle"
@@ -855,6 +864,8 @@ export function ComponentCardLivePreview({
         <AnimatedPillButtonCardPreview />
       ) : slug === "burn-plus" ? (
         <BurnPlusCardPreview />
+      ) : slug === "bookshelf" ? (
+        <BookshelfCardPreview />
       ) : slug === "team-slide-reveal" ? (
         <TeamSlideRevealCardPreview />
       ) : slug === "hover-transition" ? (
