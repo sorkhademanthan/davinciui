@@ -374,6 +374,14 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "navigation-menu",
     addedAt: "2026-09-04",
   },
+  "bookshelf": {
+    title: "Bookshelf",
+    description:
+      "A 3D bookshelf carousel with real book geometry — spines, covers, and thickness — that rotate into view with coordinated horizontal movement and perspective depth.",
+    category: "Motion",
+    slug: "bookshelf",
+    addedAt: "2026-10-29",
+  },
   "motion-hamburger": {
     title: "Motion Hamburger",
     description:
