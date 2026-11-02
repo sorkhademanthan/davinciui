@@ -81,6 +81,7 @@ const TALL_STAGE_SLUGS: ReadonlySet<string> = new Set([
   "pixel-preloader",
   "editorial-wipe-preloader",
   "geometric-preloader",
+  "infinite-image-gallery",
   "preloader-pro",
   "team-slide-reveal",
 ]);
@@ -153,6 +154,7 @@ const REDUCE_MOTION_SAFE_SLUGS: ReadonlySet<string> = new Set([
   "focus-carousel",
   "glass-scene-dock",
   "hover-cards",
+  "infinite-image-gallery",
   "interactive-media-accordion",
   "lens-drift-grid",
   "liquid-chrome-button",
@@ -197,6 +199,7 @@ const KEEP_MOUNTED_SLUGS: ReadonlySet<string> = NON_DECORATIVE_SLUGS;
 /** Card surfaces with a bespoke background. */
 const CARD_BACKGROUNDS: Readonly<Record<string, string>> = {
   "ambient-audio-toggle": "bg-[#eef4f0] dark:bg-[#101815]",
+  "infinite-image-gallery": "bg-[#f3f1ec] dark:bg-[#11100e]",
   "tilt-flip-polaroid": "bg-[#FAFAFA] dark:bg-[#0A0A0B]",
 };
 
