@@ -45,6 +45,15 @@ export const constraints = {
       "The trail is decorative; it should not be the only feedback for a pointer action.",
     ],
   },
+  "infinite-image-gallery": {
+    constraints: [
+      "The root fills its parent and falls back to a 480px minimum height, so the stage needs an explicit height context when embedding it in a compact card.",
+      "Tile size, radius, and column count are recomputed from the container size; the reference composition is 1440×900.",
+      "Columns are derived from radius and tile width by default, so a very small radius widens the gaps instead of shrinking the tiles.",
+      "Tiles use object-fit cover by default, so non-portrait sources crop rather than letterbox.",
+      "The default density renders roughly 60–90 image nodes, and tall portrait stages add rows automatically. Pass rows or columns to control the count when mounting several galleries on one page.",
+    ],
+  },
   "ink-flow": {
     constraints: [
       "Requires WebGL; the component shows a fallback surface when the context cannot be created.",
