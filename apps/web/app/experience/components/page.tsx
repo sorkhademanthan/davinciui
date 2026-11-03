@@ -96,6 +96,7 @@ function hasLiveCardPreview(
   | "ambient-strip"
   | "arc-carousel"
   | "arcwave-carousel"
+  | "streamline-carousel"
   | "tilt-flip-polaroid"
   | "crumpled-paper-reveal"
   | "radial-fan-deck"
@@ -174,6 +175,7 @@ function hasLiveCardPreview(
     slug === "ambient-strip" ||
     slug === "arc-carousel" ||
     slug === "arcwave-carousel" ||
+    slug === "streamline-carousel" ||
     slug === "tilt-flip-polaroid" ||
     slug === "crumpled-paper-reveal" ||
     slug === "radial-fan-deck" ||
