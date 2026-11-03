@@ -217,6 +217,14 @@ const ArcwaveCarouselCardPreview = dynamic(
   { ssr: false },
 );
 
+const StreamlineCarouselCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/streamline-carousel-card-preview").then(
+      (module) => module.StreamlineCarouselCardPreview,
+    ),
+  { ssr: false },
+);
+
 const TiltFlipPolaroidCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/tilt-flip-polaroid-card-preview").then(
@@ -656,6 +664,7 @@ type ComponentCardLivePreviewProps = {
     | "ambient-strip"
     | "arc-carousel"
     | "arcwave-carousel"
+    | "streamline-carousel"
     | "tilt-flip-polaroid"
     | "crumpled-paper-reveal"
     | "radial-fan-deck"
@@ -857,6 +866,8 @@ export function ComponentCardLivePreview({
         <ArcCarouselCardPreview />
       ) : slug === "arcwave-carousel" ? (
         <ArcwaveCarouselCardPreview />
+      ) : slug === "streamline-carousel" ? (
+        <StreamlineCarouselCardPreview />
       ) : slug === "tilt-flip-polaroid" ? (
         <TiltFlipPolaroidCardPreview />
       ) : slug === "crumpled-paper-reveal" ? (

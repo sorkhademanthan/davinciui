@@ -149,6 +149,7 @@ const REDUCE_MOTION_SAFE_SLUGS: ReadonlySet<string> = new Set([
   "animated-metric",
   "arc-carousel",
   "arcwave-carousel",
+  "streamline-carousel",
   "animated-pill-button",
   "burn-plus",
   "character-field",
