@@ -545,6 +545,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "streamline-carousel",
+      "type": "registry:ui"
+    },
+    {
       "name": "sunlight-effect",
       "type": "registry:ui"
     },
