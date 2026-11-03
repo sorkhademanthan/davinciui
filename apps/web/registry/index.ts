@@ -692,6 +692,15 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "tilt-flip-polaroid",
     addedAt: "2026-10-23",
   },
+  "crumpled-paper-reveal": {
+    title: "Crumpled Paper Reveal",
+    description:
+      "A faceted paper wad that unfolds into a flat print with creases intact, driven by a procedural WebGL2 spring with hover, click, scroll, and in-view triggers.",
+    category: "Visual Effects",
+    extraCategories: ["Interactions"],
+    slug: "crumpled-paper-reveal",
+    addedAt: "2026-11-03",
+  },
   "orbit-spiral-gallery": {
     title: "Orbit Spiral Gallery",
     description:
@@ -1112,6 +1121,7 @@ export const FEATURED_SLUGS = [
   "arc-carousel",
   "cinematic-card-carousel",
   "tilt-flip-polaroid",
+  "crumpled-paper-reveal",
   "tubes-cursor",
   "text-video-mask",
   "neon-mesh-bg",
