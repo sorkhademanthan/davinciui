@@ -282,6 +282,10 @@ const docsImportMap: Record<
     import("@/components/docs/arc-carousel").then((m) => ({
       default: m.ArcCarouselDocs,
     })),
+  "arcwave-carousel": () =>
+    import("@/components/docs/arcwave-carousel").then((m) => ({
+      default: m.ArcwaveCarouselDocs,
+    })),
   "tilt-flip-polaroid": () =>
     import("@/components/docs/tilt-flip-polaroid").then((m) => ({
       default: m.TiltFlipPolaroidDocs,
