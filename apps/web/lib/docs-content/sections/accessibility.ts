@@ -51,6 +51,8 @@ export const accessibility: Record<string, string> = {
     "It is a decorative canvas marked aria-hidden and pointer-events-none, so it adds nothing for assistive technology. The effect is mouse-only, and the optional custom cursor hides the native one only while active.",
   "cinematic-card-carousel":
     "The deck is a focusable carousel region with left and right arrows. Only the active card is tabbable and can be promoted with Enter or Space, and a polite live region announces card and title.",
+  "crumpled-paper-reveal":
+    "The interactive sheet is a labelled role img with tabIndex 0, and Enter or Space toggles the reveal; the canvas and flat fallback are aria-hidden. When a link is supplied the overlay is a real anchor whose label is the alt text. previewMode removes the overlay from the tab order and pointer events, and reduced motion renders the finished print instead of animating.",
   "circle-cursor":
     "It is a decorative aria-hidden, pointer-events-none div that never receives focus. The effect runs only on fine pointers and disables itself for coarse pointers or reduced motion, restoring the native cursor.",
   "cms-scroll-gallery":
