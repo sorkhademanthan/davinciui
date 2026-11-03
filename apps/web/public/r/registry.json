@@ -141,6 +141,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "crumpled-paper-reveal",
+      "type": "registry:ui"
+    },
+    {
       "name": "date-picker",
       "type": "registry:ui"
     },
