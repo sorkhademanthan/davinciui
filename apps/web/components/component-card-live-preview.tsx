@@ -217,6 +217,14 @@ const TiltFlipPolaroidCardPreview = dynamic(
   { ssr: false },
 );
 
+const CrumpledPaperRevealCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/crumpled-paper-reveal-card-preview").then(
+      (module) => module.CrumpledPaperRevealCardPreview,
+    ),
+  { ssr: false },
+);
+
 const NeonMeshBGCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/neon-mesh-bg-card-preview").then(
@@ -640,6 +648,7 @@ type ComponentCardLivePreviewProps = {
     | "ambient-strip"
     | "arc-carousel"
     | "tilt-flip-polaroid"
+    | "crumpled-paper-reveal"
     | "radial-fan-deck"
     | "neon-mesh-bg"
     | "spectra-noise"
@@ -839,6 +848,8 @@ export function ComponentCardLivePreview({
         <ArcCarouselCardPreview />
       ) : slug === "tilt-flip-polaroid" ? (
         <TiltFlipPolaroidCardPreview />
+      ) : slug === "crumpled-paper-reveal" ? (
+        <CrumpledPaperRevealCardPreview />
       ) : slug === "radial-fan-deck" ? (
         <RadialFanDeckCardPreview />
       ) : slug === "neon-mesh-bg" ? (
