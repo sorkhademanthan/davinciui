@@ -700,6 +700,15 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "orbit-spiral-gallery",
     addedAt: "2026-08-08",
   },
+  "circular-gallery": {
+    title: "Circular Gallery",
+    description:
+      "A cinematic 3D carousel of curved media panels orbiting on a themed stage, with drag, momentum, wheel, and click-through.",
+    category: "Premium Components",
+    extraCategories: ["Interactions"],
+    slug: "circular-gallery",
+    addedAt: "2026-11-04",
+  },
   "ambient-strip": {
     title: "Ambient Strip",
     description:
@@ -1105,6 +1114,7 @@ export const FEATURED_SLUGS = [
   "silk-aurora",
   "rolling-text",
   "orbit-spiral-gallery",
+  "circular-gallery",
   "fluid-cursor",
   "media-text-hover",
   "sunlight-effect",
