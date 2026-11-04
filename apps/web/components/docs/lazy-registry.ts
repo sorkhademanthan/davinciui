@@ -294,6 +294,10 @@ const docsImportMap: Record<
     import("@/components/docs/depth-carousel-3d").then((m) => ({
       default: m.DepthCarousel3DDocs,
     })),
+  "fanned-deck": () =>
+    import("@/components/docs/fanned-deck").then((m) => ({
+      default: m.FannedDeckDocs,
+    })),
   "tilt-flip-polaroid": () =>
     import("@/components/docs/tilt-flip-polaroid").then((m) => ({
       default: m.TiltFlipPolaroidDocs,
