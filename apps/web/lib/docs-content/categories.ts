@@ -10,6 +10,7 @@ export const docsCategoryBySlug: Record<string, string> = {
   "arc-carousel": "Premium Components",
   "arcwave-carousel": "Premium Components",
   "streamline-carousel": "Premium Components",
+  "depth-carousel-3d": "Premium Components",
   "tilt-flip-polaroid": "Premium Components",
   "crumpled-paper-reveal": "Visual Effects",
   "aspect-ratio": "Layout",
