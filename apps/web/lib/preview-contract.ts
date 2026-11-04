@@ -76,6 +76,7 @@ export interface PreviewDefinition {
 
 /** Tall (600px) detail stages — preloaders and portrait cards. */
 const TALL_STAGE_SLUGS: ReadonlySet<string> = new Set([
+  "fanned-deck",
   "fill-preloader",
   "staircase-preloader",
   "pixel-preloader",
@@ -151,6 +152,7 @@ const REDUCE_MOTION_SAFE_SLUGS: ReadonlySet<string> = new Set([
   "arcwave-carousel",
   "streamline-carousel",
   "depth-carousel-3d",
+  "fanned-deck",
   "animated-pill-button",
   "burn-plus",
   "character-field",

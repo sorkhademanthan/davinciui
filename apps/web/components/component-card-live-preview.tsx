@@ -233,6 +233,14 @@ const DepthCarousel3DCardPreview = dynamic(
   { ssr: false },
 );
 
+const FannedDeckCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/fanned-deck-card-preview").then(
+      (module) => module.FannedDeckCardPreview,
+    ),
+  { ssr: false },
+);
+
 const TiltFlipPolaroidCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/tilt-flip-polaroid-card-preview").then(
@@ -674,6 +682,7 @@ type ComponentCardLivePreviewProps = {
     | "arcwave-carousel"
     | "streamline-carousel"
     | "depth-carousel-3d"
+    | "fanned-deck"
     | "tilt-flip-polaroid"
     | "crumpled-paper-reveal"
     | "radial-fan-deck"
@@ -879,6 +888,8 @@ export function ComponentCardLivePreview({
         <StreamlineCarouselCardPreview />
       ) : slug === "depth-carousel-3d" ? (
         <DepthCarousel3DCardPreview />
+      ) : slug === "fanned-deck" ? (
+        <FannedDeckCardPreview />
       ) : slug === "tilt-flip-polaroid" ? (
         <TiltFlipPolaroidCardPreview />
       ) : slug === "crumpled-paper-reveal" ? (
