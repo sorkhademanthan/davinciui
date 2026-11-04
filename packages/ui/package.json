@@ -26,7 +26,7 @@
     "react-dom": "^19.2.1",
     "recharts": "^3",
     "tailwind-merge": "^3.3.1",
-    "three": "^0.182.0",
+    "three": "^0.187.0",
     "threejs-components": "0.0.19",
     "tw-animate-css": "^1.3.6",
     "vaul": "^1.1.2"
@@ -38,7 +38,7 @@
     "@types/opentype.js": "^1.3.9",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
-    "@types/three": "0.182.0",
+    "@types/three": "0.187.0",
     "@workspace/eslint-config": "workspace:*",
     "@workspace/typescript-config": "workspace:*",
     "eslint": "^9.32.0",
