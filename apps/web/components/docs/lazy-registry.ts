@@ -290,6 +290,10 @@ const docsImportMap: Record<
     import("@/components/docs/streamline-carousel").then((m) => ({
       default: m.StreamlineCarouselDocs,
     })),
+  "depth-carousel-3d": () =>
+    import("@/components/docs/depth-carousel-3d").then((m) => ({
+      default: m.DepthCarousel3DDocs,
+    })),
   "tilt-flip-polaroid": () =>
     import("@/components/docs/tilt-flip-polaroid").then((m) => ({
       default: m.TiltFlipPolaroidDocs,
