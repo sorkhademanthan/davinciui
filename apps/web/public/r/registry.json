@@ -153,6 +153,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "depth-carousel-3d",
+      "type": "registry:ui"
+    },
+    {
       "name": "dialog",
       "type": "registry:ui"
     },
