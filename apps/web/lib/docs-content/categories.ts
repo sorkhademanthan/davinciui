@@ -26,6 +26,7 @@ export const docsCategoryBySlug: Record<string, string> = {
   checkbox: "Forms",
   "chromatic-cursor": "Cursor Effects",
   "cinematic-card-carousel": "Visual Effects",
+  "circular-gallery": "Premium Components",
   "circle-cursor": "Cursor Effects",
   "cms-scroll-gallery": "Premium Components",
   collapsible: "Layout",

@@ -51,6 +51,8 @@ export const accessibility: Record<string, string> = {
     "It is a decorative canvas marked aria-hidden and pointer-events-none, so it adds nothing for assistive technology. The effect is mouse-only, and the optional custom cursor hides the native one only while active.",
   "cinematic-card-carousel":
     "The deck is a focusable carousel region with left and right arrows. Only the active card is tabbable and can be promoted with Enter or Space, and a polite live region announces card and title.",
+  "circular-gallery":
+    "A labeled region contains an aria-hidden WebGL canvas and a visually hidden list of links that repeats every alt text. Each link is keyboard focusable, focuses its panel to the front, and ArrowLeft or ArrowRight rotates the ring. Panels without an href remain focusable text-only links.",
   "circle-cursor":
     "It is a decorative aria-hidden, pointer-events-none div that never receives focus. The effect runs only on fine pointers and disables itself for coarse pointers or reduced motion, restoring the native cursor.",
   "cms-scroll-gallery":
