@@ -701,6 +701,15 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "streamline-carousel",
     addedAt: "2026-11-03",
   },
+  "depth-carousel-3d": {
+    title: "Depth Carousel 3D",
+    description:
+      "An infinite 3D carousel in plain DOM and CSS 3D transforms; the active card sits centred and flat while neighbours fan out smaller, rotated, and pushed back in Z, swinging edge-on and disappearing. Frosted-glass edge blur, drag, swipe, wheel, keyboard, and click-to-focus built in.",
+    category: "Premium Components",
+    extraCategories: ["Interactions"],
+    slug: "depth-carousel-3d",
+    addedAt: "2026-11-03",
+  },
   "tilt-flip-polaroid": {
     title: "Tilt Flip Polaroid",
     description:
@@ -1139,6 +1148,7 @@ export const FEATURED_SLUGS = [
   "arc-carousel",
   "arcwave-carousel",
   "streamline-carousel",
+  "depth-carousel-3d",
   "cinematic-card-carousel",
   "tilt-flip-polaroid",
   "crumpled-paper-reveal",
