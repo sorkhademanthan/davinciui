@@ -193,6 +193,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "fanned-deck",
+      "type": "registry:ui"
+    },
+    {
       "name": "field",
       "type": "registry:ui"
     },

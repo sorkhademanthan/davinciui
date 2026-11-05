@@ -710,6 +710,15 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "depth-carousel-3d",
     addedAt: "2026-11-03",
   },
+  "fanned-deck": {
+    title: "Fanned Deck",
+    description:
+      "A 3D fan of up to 14 portrait cards on a curved arc; each card is bent from 14 slices, overlapping 40%, with hover straighten, uncurl, lift, neighbour spread, username bubbles, and deal/flip/rise/sweep entrances.",
+    category: "Premium Components",
+    extraCategories: ["Interactions"],
+    slug: "fanned-deck",
+    addedAt: "2026-11-03",
+  },
   "tilt-flip-polaroid": {
     title: "Tilt Flip Polaroid",
     description:
@@ -1149,6 +1158,7 @@ export const FEATURED_SLUGS = [
   "arcwave-carousel",
   "streamline-carousel",
   "depth-carousel-3d",
+  "fanned-deck",
   "cinematic-card-carousel",
   "tilt-flip-polaroid",
   "crumpled-paper-reveal",
