@@ -114,6 +114,7 @@ function hasLiveCardPreview(
   | "orbit-spiral-gallery"
   | "infinite-image-gallery"
   | "editorial-image-stack"
+  | "circular-gallery"
   | "liquid-reveal-button"
   | "animated-metric"
   | "nudge-button"
@@ -196,6 +197,7 @@ function hasLiveCardPreview(
     slug === "orbit-spiral-gallery" ||
     slug === "infinite-image-gallery" ||
     slug === "editorial-image-stack" ||
+    slug === "circular-gallery" ||
     slug === "liquid-reveal-button" ||
     slug === "animated-metric" ||
     slug === "nudge-button" ||

@@ -361,6 +361,14 @@ const EditorialImageStackCardPreview = dynamic(
   { ssr: false },
 );
 
+const CircularGalleryCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/circular-gallery-card-preview").then(
+      (module) => module.CircularGalleryCardPreview,
+    ),
+  { ssr: false },
+);
+
 const LiquidRevealButtonCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/liquid-reveal-button-card-preview").then(
@@ -707,6 +715,7 @@ type ComponentCardLivePreviewProps = {
     | "orbit-spiral-gallery"
     | "infinite-image-gallery"
     | "editorial-image-stack"
+    | "circular-gallery"
     | "liquid-reveal-button"
     | "animated-metric"
     | "nudge-button"
@@ -931,6 +940,8 @@ export function ComponentCardLivePreview({
         <InfiniteImageGalleryCardPreview />
       ) : slug === "editorial-image-stack" ? (
         <EditorialImageStackCardPreview />
+      ) : slug === "circular-gallery" ? (
+        <CircularGalleryCardPreview />
       ) : slug === "liquid-reveal-button" ? (
         <LiquidRevealButtonCardPreview />
       ) : slug === "animated-metric" ? (

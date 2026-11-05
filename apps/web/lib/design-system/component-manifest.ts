@@ -173,6 +173,7 @@ export const CARD_LIVE_SLUGS = [
   "lens-drift-grid",
   "orbit-spiral-gallery",
   "editorial-image-stack",
+  "circular-gallery",
   "liquid-reveal-button",
   "animated-metric",
   "nudge-button",
