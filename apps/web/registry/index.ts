@@ -780,6 +780,15 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "circular-gallery",
     addedAt: "2026-11-04",
   },
+  "curve-wall": {
+    title: "Curve Wall",
+    description:
+      "A full-bleed wall of portrait media bowed into a soft lens, with drag momentum, a shared-wall hover lift, a spotlight vignette, and an in-place media viewer.",
+    category: "Premium Components",
+    extraCategories: ["Interactions"],
+    slug: "curve-wall",
+    addedAt: "2026-11-04",
+  },
   "ambient-strip": {
     title: "Ambient Strip",
     description:
@@ -1191,6 +1200,7 @@ export const FEATURED_SLUGS = [
   "rolling-text",
   "orbit-spiral-gallery",
   "circular-gallery",
+  "curve-wall",
   "fluid-cursor",
   "media-text-hover",
   "sunlight-effect",

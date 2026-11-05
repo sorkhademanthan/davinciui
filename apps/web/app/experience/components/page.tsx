@@ -115,6 +115,7 @@ function hasLiveCardPreview(
   | "infinite-image-gallery"
   | "editorial-image-stack"
   | "circular-gallery"
+  | "curve-wall"
   | "liquid-reveal-button"
   | "animated-metric"
   | "nudge-button"
@@ -198,6 +199,7 @@ function hasLiveCardPreview(
     slug === "infinite-image-gallery" ||
     slug === "editorial-image-stack" ||
     slug === "circular-gallery" ||
+    slug === "curve-wall" ||
     slug === "liquid-reveal-button" ||
     slug === "animated-metric" ||
     slug === "nudge-button" ||

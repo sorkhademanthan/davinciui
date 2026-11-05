@@ -157,6 +157,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "curve-wall",
+      "type": "registry:ui"
+    },
+    {
       "name": "date-picker",
       "type": "registry:ui"
     },

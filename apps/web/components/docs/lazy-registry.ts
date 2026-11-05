@@ -458,6 +458,10 @@ const docsImportMap: Record<
     import("@/components/docs/circular-gallery").then((m) => ({
       default: m.CircularGalleryDocs,
     })),
+  "curve-wall": () =>
+    import("@/components/docs/curve-wall").then((m) => ({
+      default: m.CurveWallDocs,
+    })),
   "ambient-strip": () =>
     import("@/components/docs/ambient-strip").then((m) => ({
       default: m.AmbientStripDocs,
