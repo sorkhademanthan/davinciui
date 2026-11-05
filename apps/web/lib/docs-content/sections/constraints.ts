@@ -31,6 +31,15 @@ export const constraints = {
       "The canvas is decorative and should sit behind the content it accompanies.",
     ],
   },
+  "editorial-image-stack": {
+    constraints: [
+      "The background renders up to eight photographs; bgCardCount defaults to seven and extra backgroundImages are ignored.",
+      "The foreground cycles through every provided foregroundImages item using a preloaded two-image blur-crossfade, so more items extend the sequence rather than the stack.",
+      "The center card defaults to 462px inside a 760×700 stage, about 61% of the composition width. The deck scales from the smaller container dimension up to 1×, so a very wide parent centers it with side whitespace.",
+      "autoRotate={false} leaves the background drift and shuffle static while center image changes continue on the shared tick.",
+      "switchIntervalMs controls both the center image change and the background shuffle so the two motions stay in sync.",
+    ],
+  },
   "fluid-cursor": {
     constraints: [
       "WebGL is required for the simulation; when the context is unavailable the effect cannot render.",

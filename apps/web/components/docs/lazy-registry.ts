@@ -426,6 +426,10 @@ const docsImportMap: Record<
     import("@/components/docs/infinite-image-gallery").then((m) => ({
       default: m.InfiniteImageGalleryDocs,
     })),
+  "editorial-image-stack": () =>
+    import("@/components/docs/editorial-image-stack").then((m) => ({
+      default: m.EditorialImageStackDocs,
+    })),
   "ambient-strip": () =>
     import("@/components/docs/ambient-strip").then((m) => ({
       default: m.AmbientStripDocs,

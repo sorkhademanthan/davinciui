@@ -157,6 +157,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "editorial-image-stack",
+      "type": "registry:ui"
+    },
+    {
       "name": "editorial-wipe-preloader",
       "type": "registry:ui"
     },
@@ -215,6 +219,10 @@
     {
       "name": "glitch-liquid-text",
       "type": "registry:ui"
+    },
+    {
+      "name": "gradient-hero-01",
+      "type": "registry:block"
     },
     {
       "name": "gsap-text",
@@ -387,6 +395,14 @@
     {
       "name": "preloader-pro",
       "type": "registry:ui"
+    },
+    {
+      "name": "pricing-01",
+      "type": "registry:block"
+    },
+    {
+      "name": "pricing-02",
+      "type": "registry:block"
     },
     {
       "name": "profile-carousel",
@@ -603,18 +619,6 @@
     {
       "name": "wave-bars-loader",
       "type": "registry:ui"
-    },
-    {
-      "name": "gradient-hero-01",
-      "type": "registry:block"
-    },
-    {
-      "name": "pricing-01",
-      "type": "registry:block"
-    },
-    {
-      "name": "pricing-02",
-      "type": "registry:block"
     }
   ]
 }

@@ -69,6 +69,8 @@ export const motion: Record<string, string> = {
     "Vaul's internal spring physics drive slide-in, drag, snap, and background scaling; the overlay uses a 200ms opacity fade disabled by motion-reduce. No duration or easing props are forwarded, and vaul does not detect prefers-reduced-motion, so sheet movement continues for reduced-motion users.",
   "dropdown-menu":
     "The popup fades, translates 4px, and scales 0.96 over 150ms with cubic-bezier(0.23,1,0.32,1). Check and radio indicators scale in over 150ms, and items press to 0.99. motion-reduce:transition-none disables these transitions and the starting transform.",
+  "editorial-image-stack":
+    "A single requestAnimationFrame tick drives both layers. Every switchIntervalMs (1100ms default) the fixed center card changes through a 300ms GSAP blur-crossfade with a brief color tint while the seven background cards shuffle to new positions over 360ms ease-out. The stack also drifts slowly through a +/-4.5-degree rotation over nine seconds. Background photographs sit at 0.7 opacity with dark, desaturated filters. The tick stops offscreen and in hidden tabs, and prefers-reduced-motion disables the drift, shuffle, and blur while slowing the image cadence.",
   "editorial-wipe-preloader":
     "A framer-motion progress value drives the wipe, counter, and mask; duration, completionHold, and exitDuration control a 3.8s simulated load and cubic-bezier(0.76,0,0.24,1) vertical exit. useReducedMotion caps loading at 450ms and exit at 250ms when respectReducedMotion is true.",
   "elastic-blob-cursor":

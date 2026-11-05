@@ -69,6 +69,8 @@ export const accessibility: Record<string, string> = {
     "Vaul supplies focus trapping, Escape dismissal, aria-modal dialog semantics, and focus return, with DrawerTitle and DrawerDescription wired for labelling. The grabber is aria-hidden and pointer-only, so swipe dismissal has no keyboard equivalent beyond Escape. Add your own labelled close control.",
   "dropdown-menu":
     "Base UI provides role='menu', arrow-key roving focus, type-ahead, Escape dismissal, submenu handling, and focus return. Checkbox and radio items expose checked state through the primitive. DropdownMenuLabel and DropdownMenuShortcut are aria-hidden, so section headings and shortcut hints are not announced.",
+  "editorial-image-stack":
+    "The root is a labelled region with aria-roledescription 'image stack'. The shuffling background cards are decorative and aria-hidden; the fixed foreground image exposes alt text for the current photograph. The shared animation tick stops offscreen and when the tab is hidden. Under prefers-reduced-motion the background drift, shuffle, and blur are removed, and foreground switches slow to a simple low-motion cadence.",
   "editorial-wipe-preloader":
     "The overlay is role='status' with an aria-label like 'Page loading, LOADING'; all visual counters and the wipe are aria-hidden. A polite live region announces only 0, 25, 50, 75, and 100 percent milestones. Page scroll is locked while the overlay is mounted.",
   "elastic-blob-cursor":

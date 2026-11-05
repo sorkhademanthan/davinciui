@@ -52,6 +52,7 @@ export const docsCategoryBySlug: Record<string, string> = {
   "gsap-text": "Text Animations",
   "hover-card": "Overlays",
   "hover-cards": "Visual Effects",
+  "editorial-image-stack": "Premium Components",
   "hover-transition": "Premium Components",
   "infinite-image-gallery": "Premium Components",
   "ink-flow": "Hero Backgrounds",

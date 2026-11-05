@@ -709,6 +709,15 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "infinite-image-gallery",
     addedAt: "2026-11-02",
   },
+  "editorial-image-stack": {
+    title: "Editorial Image Stack",
+    description:
+      "A large fixed center photograph with a fast blur-crossfade, framed by a tight, subdued stack that shuffles in sync.",
+    category: "Premium Components",
+    extraCategories: ["Visual Effects"],
+    slug: "editorial-image-stack",
+    addedAt: "2026-11-02",
+  },
   "ambient-strip": {
     title: "Ambient Strip",
     description:
