@@ -266,6 +266,10 @@ const docsImportMap: Record<
     import("@/components/docs/segmented-image-carousel").then((m) => ({
       default: m.SegmentedImageCarouselDocs,
     })),
+  "bookshelf": () =>
+    import("@/components/docs/bookshelf").then((m) => ({
+      default: m.BookshelfDocs,
+    })),
   "burn-plus": () =>
     import("@/components/docs/burn-plus").then((m) => ({
       default: m.BurnPlusDocs,

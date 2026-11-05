@@ -38,6 +38,8 @@ export const accessibility: Record<string, string> = {
     "The nav is labelled 'breadcrumb', items are list entries, separators are presentation-only, and the current page uses aria-current='page'. The collapse expander is a button with a count label, though its aria-expanded stays false after expanding.",
   bubble:
     "Bubble is presentational markup with no implicit role; BubbleContent can render as a button or link and then gains a focus-visible ring. Reactions remain unlabeled unless you add role='img' and aria-label, as the docs example does.",
+  "bookshelf":
+    "Each book is a native button in the tab order with an aria-label built from its title and aria-pressed reflecting the active state. Arrow keys move focus between books, Enter and Space select, and focus-visible rings remain visible. Prev/Next controls are labelled buttons. Decorative cover, spine, and side faces are aria-hidden so titles are announced once per book.",
   "burn-plus":
     "Exposes the effect as a role img host with a configurable aria label while the canvas is aria-hidden. Tap mode listens only to pointerup, so its reveal has no keyboard equivalent.",
   button:

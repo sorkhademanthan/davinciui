@@ -178,6 +178,7 @@ export const CARD_LIVE_SLUGS = [
   "nudge-button",
   "animated-pill-button",
   "burn-plus",
+  "bookshelf",
   "team-slide-reveal",
   "ambient-audio-toggle",
   "interaction-sound-kit",

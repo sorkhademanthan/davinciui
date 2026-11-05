@@ -65,6 +65,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "bookshelf",
+      "type": "registry:ui"
+    },
+    {
       "name": "border-beam",
       "type": "registry:ui"
     },

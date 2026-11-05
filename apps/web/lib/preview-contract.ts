@@ -155,6 +155,7 @@ const REDUCE_MOTION_SAFE_SLUGS: ReadonlySet<string> = new Set([
   "fanned-deck",
   "animated-pill-button",
   "burn-plus",
+  "bookshelf",
   "character-field",
   "cinematic-card-carousel",
   "crumpled-paper-reveal",
