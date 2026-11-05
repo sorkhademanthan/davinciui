@@ -87,7 +87,7 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "fluid-cursor",
     addedAt: "2026-09-21",
   },
-"tubes-cursor": {
+  "tubes-cursor": {
     title: "Tubes Cursor",
     description:
       "A bundle of glowing 3D neon tubes that chases the pointer with fluid inertia and soft bloom. Click to randomize the palette.",
@@ -700,6 +700,15 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "orbit-spiral-gallery",
     addedAt: "2026-08-08",
   },
+  "infinite-image-gallery": {
+    title: "Infinite Image Gallery",
+    description:
+      "A continuously rotating cylinder of image tiles built with CSS 3D transforms, filling the stage with a seamless editorial loop.",
+    category: "Premium Components",
+    extraCategories: ["Visual Effects"],
+    slug: "infinite-image-gallery",
+    addedAt: "2026-11-02",
+  },
   "ambient-strip": {
     title: "Ambient Strip",
     description:
@@ -791,7 +800,7 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "fill-preloader",
     addedAt: "2026-09-18",
   },
-"staircase-preloader": {
+  "staircase-preloader": {
     title: "Staircase Preloader",
     description:
       "A fullscreen orange stepped-curtain loader that exits upward with a left-to-right staircase edge and a top-right finish.",
@@ -799,7 +808,7 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "staircase-preloader",
     addedAt: "2026-09-15",
   },
-"pixel-preloader": {
+  "pixel-preloader": {
     title: "Pixel Preloader",
     description:
       "A fullscreen pixel-grid loader that takes over the viewport bottom-up behind a jagged orange frontier, with a top-left finish.",
@@ -816,7 +825,7 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "editorial-wipe-preloader",
     addedAt: "2026-09-18",
   },
-"geometric-preloader": {
+  "geometric-preloader": {
     title: "Geometric Preloader",
     description:
       "A fullscreen geometric loader with nested rotating squares and a diamond-scale reveal.",

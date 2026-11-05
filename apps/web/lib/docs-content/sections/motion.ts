@@ -104,6 +104,8 @@ export const motion: Record<string, string> = {
     "The active card grows via flex-grow and the blurred backdrop crossfades opacity and scale over 680ms with cubic-bezier(0.22,1,0.36,1). useReducedMotion sets all transition durations to 0ms and disables auto-play; the image scale also has motion-reduce:transition-none.",
   "hover-transition":
     "Eight effects transition clip-path, transform, opacity and filter using CSS timing from duration and easing. usePrefersReducedMotion sets the duration to zero and disables tilt, glare and pointer tracking; the controlled active prop can drive changes without hover.",
+  "infinite-image-gallery":
+    "One requestAnimationFrame loop advances a single rotor rotation by speed degrees per second; React never re-renders per frame. Only the rotor transform changes, with backface-hidden tiles on a preserve-3d cylinder. The loop stops offscreen, while paused, and whenever prefers-reduced-motion matches, leaving the static arrangement intact.",
   "ink-flow":
     "Ink animates continuously through a WebGL fragment shader driven by requestAnimationFrame; the speed prop sets evolution rate, and speed 0 freezes the frame. It detects prefers-reduced-motion, stops the loop, and draws a static frame.",
   input:

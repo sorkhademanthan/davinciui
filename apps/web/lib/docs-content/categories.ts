@@ -53,6 +53,7 @@ export const docsCategoryBySlug: Record<string, string> = {
   "hover-card": "Overlays",
   "hover-cards": "Visual Effects",
   "hover-transition": "Premium Components",
+  "infinite-image-gallery": "Premium Components",
   "ink-flow": "Hero Backgrounds",
   input: "Forms",
   "input-group": "Forms",

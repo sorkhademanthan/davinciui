@@ -422,6 +422,10 @@ const docsImportMap: Record<
     import("@/components/docs/orbit-spiral-gallery").then((m) => ({
       default: m.OrbitSpiralGalleryDocs,
     })),
+  "infinite-image-gallery": () =>
+    import("@/components/docs/infinite-image-gallery").then((m) => ({
+      default: m.InfiniteImageGalleryDocs,
+    })),
   "ambient-strip": () =>
     import("@/components/docs/ambient-strip").then((m) => ({
       default: m.AmbientStripDocs,

@@ -104,6 +104,8 @@ export const accessibility: Record<string, string> = {
     "Cards are buttons inside a labelled list, with aria-pressed and an aria-label combining label and description. Focus activates a card, focus-visible rings are shown, and auto-play pauses on hover, focus, background tabs and offscreen; background art is aria-hidden.",
   "hover-transition":
     "The wrapper is a focusable role=group with an aria-label prop, and focus reveals the hover content with a focus-visible ring. Animated layers are aria-hidden, so assistive technology reads only the default content; there is no Escape or Enter handling.",
+  "infinite-image-gallery":
+    "The root is a labelled region with a visually hidden description of the loop. The rotating cylinder is aria-hidden because the same images repeat around the surface, so image alt text is not announced dozens of times. A Pause/Play button becomes visible on keyboard focus, and motion stops automatically when reduced motion is requested.",
   "ink-flow":
     "The component is purely decorative: the wrapper is aria-hidden and pointer-events-none, with no focus targets. Screen readers skip the ink field, so supply any needed text in surrounding content.",
   input:

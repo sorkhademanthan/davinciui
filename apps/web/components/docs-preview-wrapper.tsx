@@ -174,8 +174,6 @@ export function DocsPreviewWrapper({
     : hideDefaultVariant && activeVariant === -1
       ? 0
       : activeVariant
-      ? 0
-      : activeVariant
 
   const { setActiveVariantIndex, personalizeOpen, setPersonalizeOpen } = useDocStore()
 
