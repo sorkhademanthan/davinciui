@@ -286,6 +286,10 @@ const docsImportMap: Record<
     import("@/components/docs/tilt-flip-polaroid").then((m) => ({
       default: m.TiltFlipPolaroidDocs,
     })),
+  "crumpled-paper-reveal": () =>
+    import("@/components/docs/crumpled-paper-reveal").then((m) => ({
+      default: m.CrumpledPaperRevealDocs,
+    })),
   "cms-scroll-gallery": () =>
     import("@/components/docs/cms-scroll-gallery").then((m) => ({
       default: m.CMSScrollGalleryDocs,

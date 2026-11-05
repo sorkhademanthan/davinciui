@@ -51,6 +51,8 @@ export const motion: Record<string, string> = {
     "A pointer-driven canvas trail eases toward the target using tension, with trailLength, fadeSpeed and splitDistance shaping persistence and channel separation. prefers-reduced-motion is checked on pointermove and clears the trail, effectively stopping the effect.",
   "cinematic-card-carousel":
     "Cards move with a Framer Motion spring at stiffness 170 and damping 26, driven by drag, wheel, arrows or autoplay. useReducedMotion swaps the spring for a 200ms tween, removes blur and brightness depth, and disables autoplay.",
+  "crumpled-paper-reveal":
+    "A hand-integrated spring with a time warp and settle blend drives the unfold, while eased out-of-plane billow and corner curl add paper memory; duration, easing, shape, creaseDepth, ballSize, shadow, and curl tune it. Pointer light eases toward the cursor. prefers-reduced-motion skips the RAF work and renders the finished sheet; autoPlayInterval also disables.",
   "circle-cursor":
     "A requestAnimationFrame loop interpolates position using followSpeed, while opacity and color transition over 120ms and 200ms. prefers-reduced-motion is watched live and disables the follower, restoring the native cursor.",
   "cms-scroll-gallery":

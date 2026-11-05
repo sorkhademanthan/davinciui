@@ -9,6 +9,7 @@ export const docsCategoryBySlug: Record<string, string> = {
   "animated-pill-button": "Interactions",
   "arc-carousel": "Premium Components",
   "tilt-flip-polaroid": "Premium Components",
+  "crumpled-paper-reveal": "Visual Effects",
   "aspect-ratio": "Layout",
   attachment: "Data Display",
   avatar: "Data Display",

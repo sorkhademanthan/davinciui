@@ -152,6 +152,7 @@ const REDUCE_MOTION_SAFE_SLUGS: ReadonlySet<string> = new Set([
   "burn-plus",
   "character-field",
   "cinematic-card-carousel",
+  "crumpled-paper-reveal",
   "editorial-image-stack",
   "focus-carousel",
   "glass-scene-dock",
@@ -201,6 +202,7 @@ const KEEP_MOUNTED_SLUGS: ReadonlySet<string> = NON_DECORATIVE_SLUGS;
 /** Card surfaces with a bespoke background. */
 const CARD_BACKGROUNDS: Readonly<Record<string, string>> = {
   "ambient-audio-toggle": "bg-[#eef4f0] dark:bg-[#101815]",
+  "crumpled-paper-reveal": "bg-[#ece6da] dark:bg-[#12110f]",
   "editorial-image-stack": "bg-[#e5e5e5] dark:bg-[#151515]",
   "infinite-image-gallery": "bg-[#f3f1ec] dark:bg-[#11100e]",
   "tilt-flip-polaroid": "bg-[#FAFAFA] dark:bg-[#0A0A0B]",
