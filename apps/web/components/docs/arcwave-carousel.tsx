@@ -92,9 +92,10 @@ export async function ArcwaveCarouselDocs() {
         {
           title: "Step autoplay with always-on captions",
           preview: (
-            <div className="relative h-[420px] w-full overflow-hidden rounded-xl bg-black">
+            <div className="relative h-[420px] w-full overflow-hidden rounded-xl bg-[#0a0a0a] dark:bg-black [--aw-stage:#0a0a0a] dark:[--aw-stage:#000]">
               <ArcwaveCarousel
                 slides={arcwaveCarouselDemoItems}
+                background="var(--aw-stage, #0a0a0a)"
                 cardSizeMode="fillHeight"
                 heightPercent={78}
                 captionMode="always"
@@ -108,9 +109,10 @@ export async function ArcwaveCarouselDocs() {
           ),
           code: `import { ArcwaveCarousel } from "@/components/ui/arcwave-carousel"
 
-<div className="h-[420px] w-full bg-black">
+<div className="h-[420px] w-full bg-[#0a0a0a] dark:bg-black">
   <ArcwaveCarousel
     slides={slides}
+    background="#0a0a0a"
     cardSizeMode="fillHeight"
     heightPercent={78}
     captionMode="always"
@@ -125,9 +127,10 @@ export async function ArcwaveCarouselDocs() {
         {
           title: "Snapped interaction, no autoplay",
           preview: (
-            <div className="relative h-[420px] w-full overflow-hidden rounded-xl bg-black">
+            <div className="relative h-[420px] w-full overflow-hidden rounded-xl bg-[#0a0a0a] dark:bg-black [--aw-stage:#0a0a0a] dark:[--aw-stage:#000]">
               <ArcwaveCarousel
                 slides={arcwaveCarouselDemoItems.slice(0, 8)}
+                background="var(--aw-stage, #0a0a0a)"
                 cardSizeMode="fillHeight"
                 heightPercent={70}
                 snap
@@ -142,9 +145,10 @@ export async function ArcwaveCarouselDocs() {
           ),
           code: `import { ArcwaveCarousel } from "@/components/ui/arcwave-carousel"
 
-<div className="h-[420px] w-full bg-black">
+<div className="h-[420px] w-full bg-[#0a0a0a] dark:bg-black">
   <ArcwaveCarousel
     slides={slides}
+    background="#0a0a0a"
     cardSizeMode="fillHeight"
     heightPercent={70}
     snap
