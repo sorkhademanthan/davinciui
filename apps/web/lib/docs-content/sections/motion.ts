@@ -53,6 +53,8 @@ export const motion: Record<string, string> = {
     "Cards move with a Framer Motion spring at stiffness 170 and damping 26, driven by drag, wheel, arrows or autoplay. useReducedMotion swaps the spring for a 200ms tween, removes blur and brightness depth, and disables autoplay.",
   "circular-gallery":
     "Idle rotation runs at spinSpeed with exponential smoothing, pausing off-screen, in hidden tabs, and on hover when pauseOnHover is set. Drag and wheel update the target angle, release momentum decays at 0.95 per 60fps frame, and prefers-reduced-motion stops idle spin while leaving drag and wheel available.",
+  "curve-wall":
+    "Each tile is projected from a shared bowed vertex grid through a homography every frame. Drag and wheel feed an inertial glide that settles at 0.92 per 60fps frame, while hover lifts a small surface bump through the same projection so neighbours stay attached. Clicking a tile animates its four corners into a flat viewer over 550ms; reduced motion removes the lift and makes the viewer transition instant.",
   "circle-cursor":
     "A requestAnimationFrame loop interpolates position using followSpeed, while opacity and color transition over 120ms and 200ms. prefers-reduced-motion is watched live and disables the follower, restoring the native cursor.",
   "cms-scroll-gallery":
