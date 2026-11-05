@@ -97,6 +97,7 @@ function hasLiveCardPreview(
   | "arc-carousel"
   | "arcwave-carousel"
   | "streamline-carousel"
+  | "depth-carousel-3d"
   | "tilt-flip-polaroid"
   | "crumpled-paper-reveal"
   | "radial-fan-deck"
@@ -176,6 +177,7 @@ function hasLiveCardPreview(
     slug === "arc-carousel" ||
     slug === "arcwave-carousel" ||
     slug === "streamline-carousel" ||
+    slug === "depth-carousel-3d" ||
     slug === "tilt-flip-polaroid" ||
     slug === "crumpled-paper-reveal" ||
     slug === "radial-fan-deck" ||
