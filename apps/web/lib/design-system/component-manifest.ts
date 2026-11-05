@@ -169,6 +169,7 @@ export const CARD_LIVE_SLUGS = [
   "lens-drift-grid",
   "orbit-spiral-gallery",
   "circular-gallery",
+  "curve-wall",
   "liquid-reveal-button",
   "animated-metric",
   "nudge-button",

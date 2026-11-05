@@ -109,6 +109,7 @@ function hasLiveCardPreview(
   | "lens-drift-grid"
   | "orbit-spiral-gallery"
   | "circular-gallery"
+  | "curve-wall"
   | "liquid-reveal-button"
   | "animated-metric"
   | "nudge-button"
@@ -184,6 +185,7 @@ function hasLiveCardPreview(
     slug === "lens-drift-grid" ||
     slug === "orbit-spiral-gallery" ||
     slug === "circular-gallery" ||
+    slug === "curve-wall" ||
     slug === "liquid-reveal-button" ||
     slug === "animated-metric" ||
     slug === "nudge-button" ||
