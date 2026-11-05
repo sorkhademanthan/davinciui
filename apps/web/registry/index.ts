@@ -683,6 +683,24 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "arc-carousel",
     addedAt: "2026-10-21",
   },
+  "arcwave-carousel": {
+    title: "Arcwave Carousel",
+    description:
+      "An infinite CSS-3D carousel with cards wrapped around the inside of a cylinder, featuring depth blur, drag, snap, autoplay, captions, and video.",
+    category: "Premium Components",
+    extraCategories: ["Interactions"],
+    slug: "arcwave-carousel",
+    addedAt: "2026-11-03",
+  },
+  "streamline-carousel": {
+    title: "Streamline Carousel",
+    description:
+      "An infinite WebGL carousel on a single canvas; the flat centre stays level while cards grow taller at the edges and the strip bows outward, with an edge chromatic fringe that strengthens with speed. Drag, wheel, keyboard, click-to-focus, autoplay, and video built in.",
+    category: "Premium Components",
+    extraCategories: ["Interactions"],
+    slug: "streamline-carousel",
+    addedAt: "2026-11-03",
+  },
   "tilt-flip-polaroid": {
     title: "Tilt Flip Polaroid",
     description:
@@ -1119,6 +1137,8 @@ export const FEATURED_SLUGS = [
   "lens-drift-grid",
   "ambient-strip",
   "arc-carousel",
+  "arcwave-carousel",
+  "streamline-carousel",
   "cinematic-card-carousel",
   "tilt-flip-polaroid",
   "crumpled-paper-reveal",

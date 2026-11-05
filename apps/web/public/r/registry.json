@@ -41,6 +41,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "arcwave-carousel",
+      "type": "registry:ui"
+    },
+    {
       "name": "aspect-ratio",
       "type": "registry:ui"
     },
@@ -538,6 +542,10 @@
     },
     {
       "name": "staircase-preloader",
+      "type": "registry:ui"
+    },
+    {
+      "name": "streamline-carousel",
       "type": "registry:ui"
     },
     {
