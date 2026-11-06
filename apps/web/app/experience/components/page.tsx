@@ -26,6 +26,7 @@ const SCROLL_SLUGS = new Set([
   "scroll-sync-gallery",
   "scroll-reveal-image",
   "scroll-timeline",
+  "wavy-flow-carousel",
 ]);
 
 const TOP_FILTERS = [
@@ -89,6 +90,7 @@ function hasLiveCardPreview(
   | "rolling-text"
   | "character-field"
   | "curved-inline-type"
+  | "wavy-flow-carousel"
   | "pixel-flow"
   | "pixel-wipe-carousel"
   | "segmented-image-carousel"
@@ -164,6 +166,7 @@ function hasLiveCardPreview(
     slug === "rolling-text" ||
     slug === "character-field" ||
     slug === "curved-inline-type" ||
+    slug === "wavy-flow-carousel" ||
     slug === "pixel-flow" ||
     slug === "pixel-wipe-carousel" ||
     slug === "segmented-image-carousel" ||
