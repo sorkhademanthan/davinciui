@@ -26,7 +26,11 @@ const fontFaces = `
     font-style: normal;
     font-display: swap;
   }
-  html, body { margin: 0; background: #0b0b0e; }
+  html, body {
+    margin: 0;
+    background: var(--background, #0b0b0e);
+    color: var(--foreground, #f4f2ed);
+  }
 `;
 
 export default function CurvedInlineTypeDemoPage() {

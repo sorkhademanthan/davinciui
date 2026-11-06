@@ -80,7 +80,7 @@ export function CurvedInlineTypeCardPreview() {
   return (
     <div
       aria-hidden="true"
-      className="absolute inset-0 overflow-hidden bg-[#0b0b0e]"
+      className="absolute inset-0 overflow-hidden bg-background"
       style={{ perspective: "700px", perspectiveOrigin: "50% 50%" }}
     >
       <div className="absolute inset-0" style={{ transformStyle: "preserve-3d" }}>
@@ -90,7 +90,7 @@ export function CurvedInlineTypeCardPreview() {
             ref={(node) => {
               lineRefs.current[index] = node;
             }}
-            className="absolute left-1/2 top-1/2 text-[18px] leading-none tracking-[-0.04em] text-[#f4f2ed]"
+            className="absolute left-1/2 top-1/2 text-[18px] leading-none tracking-[-0.04em] text-foreground"
             style={{
               fontFamily:
                 '"Funnel Display", "Funnel Display Placeholder", sans-serif',
@@ -103,7 +103,7 @@ export function CurvedInlineTypeCardPreview() {
           </div>
         ))}
       </div>
-      <div className="pointer-events-none absolute inset-x-0 top-[14px] text-center text-[7px] uppercase tracking-[0.28em] text-[#8b8b96]">
+      <div className="pointer-events-none absolute inset-x-0 top-[14px] text-center text-[7px] uppercase tracking-[0.28em] text-muted-foreground">
         Scroll scroll scroll...
       </div>
     </div>
