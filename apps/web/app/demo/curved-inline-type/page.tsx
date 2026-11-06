@@ -74,7 +74,7 @@ export default function CurvedInlineTypeDemoPage() {
   return (
     <>
       <style>{fontFaces}</style>
-      <CurvedInlineType />
+      <CurvedInlineType showCaption={false} />
     </>
   );
 }
