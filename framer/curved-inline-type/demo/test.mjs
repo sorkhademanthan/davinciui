@@ -252,7 +252,7 @@ const liveTables = {
   ok(
     "content order",
     texts.join("|") ===
-      "Wander|Design On|Horizon|Pulse Mode|Grain|Every Day|Drift|Echo Man|Bloom|Made Simple|Quiet|Bold Ideas|Vivid|Origin",
+      "Form|Build Slow|Cadence|Hold Steady|Contrast|Let Breathe|Motion|Find Balance|Texture|Set Rhythm|Structure|Stay Curious|Silence|Make Space",
     texts.join("|"),
   );
   ok("no console errors while scrolling", errors.length === 0, errors.join(" | "));
@@ -289,12 +289,12 @@ console.log("spring, direction, mapping and reduced motion");
   await wait(2600);
   const bottomStates = await page.evaluate(() => window.__curved.getStates());
   ok(
-    "reverse puts Wander at the front at p=0",
+    "reverse puts Form at the front at p=0",
     near(topStates[0].y, -0.3303, 0.002) && near(topStates[13].y, 0.9869, 0.002),
     `${topStates[0].y.toFixed(3)}/${topStates[13].y.toFixed(3)}`,
   );
   ok(
-    "reverse puts Origin at the front at p=1",
+    "reverse puts Make Space at the front at p=1",
     near(bottomStates[0].y, -0.9869, 0.002) && near(bottomStates[13].y, 0.3303, 0.002),
     `${bottomStates[0].y.toFixed(3)}/${bottomStates[13].y.toFixed(3)}`,
   );
@@ -337,14 +337,8 @@ console.log("media, caption, responsiveness and input");
     const videos = Array.from(track.querySelectorAll("video"));
     return {
       images: images.map((image) => image.getAttribute("src")),
-      videos: videos.map((video) => ({
-        src: video.getAttribute("src"),
-        muted: video.muted,
-        loop: video.loop,
-        playsInline: video.playsInline,
-        autoplay: video.autoplay,
-        paused: video.paused,
-      })),
+      alts: images.map((image) => image.getAttribute("alt")),
+      videos: videos.map((video) => video.getAttribute("src")),
       imageStyle: images.map((image) => ({
         height: getComputedStyle(image).height,
         width: getComputedStyle(image).width,
@@ -353,17 +347,18 @@ console.log("media, caption, responsiveness and input");
       })),
     };
   });
-  ok("4 inline images", media.images.length === 4, media.images.join(","));
-  ok("3 inline videos", media.videos.length === 3, media.videos.length);
+  ok("7 inline images", media.images.length === 7, media.images.join(","));
+  ok("no inline videos", media.videos.length === 0, media.videos.length);
   ok(
     "media sources are local",
-    [...media.images, ...media.videos.map((video) => video.src)].every(
+    media.images.every(
       (src) => src.startsWith("./assets/") || src.startsWith("/assets/"),
     ),
   );
   ok(
-    "videos are muted, looping and inline",
-    media.videos.every((video) => video.muted && video.loop && video.playsInline),
+    "images have descriptive alt text",
+    media.alts.every((alt) => typeof alt === "string" && alt.length > 0),
+    media.alts.join(" | "),
   );
   const style = media.imageStyle[0];
   ok(
@@ -374,12 +369,6 @@ console.log("media, caption, responsiveness and input");
       style.fit === "cover",
     JSON.stringify(style),
   );
-  ok(
-    "front video plays",
-    media.videos[2] && media.videos[2].paused === false,
-    JSON.stringify(media.videos[2]),
-  );
-
   const caption = await page.evaluate(() => {
     const track = document.querySelector("[data-curved-track]");
     const node = Array.from(track.querySelectorAll("div")).find(
