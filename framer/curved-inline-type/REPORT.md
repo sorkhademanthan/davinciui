@@ -113,3 +113,35 @@ defaults to `true`, `captionColor` `#f4f2ed`) and exposes both as props.
   section above).
 - **Test tables are measured live values**, so they encode the live mapping,
   not the brief's mapping. `mapping: "spec"` is covered by a separate check.
+
+## Web app integration
+
+The component is also shipped in the design system, not just the Framer harness:
+
+- `packages/ui/src/components/curved-inline-type.tsx` — web port; Framer
+  property controls stripped, named and default exports, isomorphic layout
+  effect, public media paths.
+- `apps/web/app/demo/curved-inline-type/page.tsx` — fullscreen demo with
+  Funnel Display / Inter `@font-face` and a reduced-motion-aware auto-scroll.
+- `apps/web/components/docs/curved-inline-type.tsx` — docs page, install
+  source, usage, and prop reference.
+- `apps/web/components/docs/previews/curved-inline-type-preview.tsx` — docs
+  stage iframe.
+- `apps/web/components/docs/previews/curved-inline-type-card-preview.tsx` —
+  live gallery card that auto-rotates a miniature ring.
+- `apps/web/registry/index.ts`, `apps/web/public/r/curved-inline-type.json`,
+  `apps/web/public/r/registry.json` — registry metadata and copy-paste item.
+- Lazy docs registry, docs category/motion/accessibility maps, preview
+  contract, design-system manifest, and the experience gallery are wired.
+
+Verification:
+
+- `pnpm --filter web typecheck` — clean.
+- `eslint --max-warnings 0` on every touched web/UI file — clean.
+- Dev-server Playwright checks: `/demo/curved-inline-type` mounts 14 lines,
+  7 media elements and auto-scrolls; `/docs/components/curved-inline-type`
+  renders the title and iframe with no console errors; the Text Animations
+  gallery card mounts the live mini ring (4 images, 15 3D nodes).
+- `validate:registry` / `validate:docs` still report pre-existing main-branch
+  gaps (`ambient-audio-toggle`, `focus-carousel`, preloader/sound slugs); no
+  error references `curved-inline-type`.

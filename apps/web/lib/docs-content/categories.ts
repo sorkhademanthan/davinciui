@@ -31,6 +31,7 @@ export const docsCategoryBySlug: Record<string, string> = {
   collapsible: "Layout",
   combobox: "Forms",
   "context-menu": "Overlays",
+  "curved-inline-type": "Text Animations",
   "date-picker": "Forms",
   dialog: "Overlays",
   drawer: "Overlays",
