@@ -627,6 +627,15 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "cms-scroll-gallery",
     addedAt: "2026-09-15",
   },
+  "curved-inline-type": {
+    title: "Curved Inline Type",
+    description:
+      "A sticky scroll stage where headline lines ride an invisible vertical drum, rising, flattening, and fading over the top with images and looping videos inline between words.",
+    category: "Text Animations",
+    extraCategories: ["Scroll"],
+    slug: "curved-inline-type",
+    addedAt: "2026-11-06",
+  },
   "interactive-media-accordion": {
     title: "Interactive Media Accordion",
     description:
@@ -1096,6 +1105,7 @@ export const FEATURED_SLUGS = [
   "tilt-flip-polaroid",
   "tubes-cursor",
   "text-video-mask",
+  "curved-inline-type",
   "neon-mesh-bg",
   "gsap-text",
   "shake-text",
