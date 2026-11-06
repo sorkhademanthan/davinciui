@@ -105,46 +105,75 @@ export interface CurvedLineState {
 }
 
 export const DEFAULT_LINES: CurvedInlineLine[] = [
-  { before: "Wander" },
+  { before: "Form" },
   {
-    before: "Design",
-    after: "On",
-    media: { type: "image", src: "./assets/red-popsicle.jpg", alt: "" },
+    before: "Build",
+    after: "Slow",
+    media: {
+      type: "image",
+      src: "./assets/prism-portrait.jpg",
+      alt: "Prism portrait",
+    },
   },
-  { before: "Horizon" },
+  { before: "Cadence" },
   {
-    before: "Pulse",
-    after: "Mode",
-    media: { type: "video", src: "./assets/pulse-red-head.mp4" },
+    before: "Hold",
+    after: "Steady",
+    media: {
+      type: "image",
+      src: "./assets/concrete-oculus.jpg",
+      alt: "Concrete oculus",
+    },
   },
-  { before: "Grain" },
+  { before: "Contrast" },
   {
-    before: "Every",
-    after: "Day",
-    media: { type: "image", src: "./assets/heart-sunglasses.jpg", alt: "" },
+    before: "Let",
+    after: "Breathe",
+    media: {
+      type: "image",
+      src: "./assets/blue-double.jpg",
+      alt: "Blue double exposure",
+    },
   },
-  { before: "Drift" },
+  { before: "Motion" },
   {
-    before: "Echo",
-    after: "Man",
-    media: { type: "video", src: "./assets/amber-alley.mp4" },
+    before: "Find",
+    after: "Balance",
+    media: {
+      type: "image",
+      src: "./assets/chrome-chair.jpg",
+      alt: "Chrome chair",
+    },
   },
-  { before: "Bloom" },
+  { before: "Texture" },
   {
-    before: "Made",
-    after: "Simple",
-    media: { type: "image", src: "./assets/grass-flock.jpg", alt: "" },
+    before: "Set",
+    after: "Rhythm",
+    media: {
+      type: "image",
+      src: "./assets/red-echo.jpg",
+      alt: "Red echo portrait",
+    },
   },
-  { before: "Quiet" },
+  { before: "Structure" },
   {
-    before: "Bold",
-    after: "Ideas",
-    media: { type: "image", src: "./assets/glossy-red.png", alt: "" },
+    before: "Stay",
+    after: "Curious",
+    media: {
+      type: "image",
+      src: "./assets/coastal-tree.jpg",
+      alt: "Coastal tree",
+    },
   },
-  { before: "Vivid" },
+  { before: "Silence" },
   {
-    before: "Origin",
-    media: { type: "video", src: "./assets/purple-lotus.mp4" },
+    before: "Make",
+    after: "Space",
+    media: {
+      type: "image",
+      src: "./assets/orange-haze.jpg",
+      alt: "Orange haze portrait",
+    },
   },
 ];
 
