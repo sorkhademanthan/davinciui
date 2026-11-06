@@ -132,4 +132,5 @@ export const docsCategoryBySlug: Record<string, string> = {
   "vertical-image-marquee": "Visual Effects",
   "voice-recorder": "Sound",
   "wave-bars-loader": "Motion",
+  "wavy-flow-carousel": "Premium Components",
 };

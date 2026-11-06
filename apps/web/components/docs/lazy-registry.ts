@@ -294,6 +294,10 @@ const docsImportMap: Record<
     import("@/components/docs/curved-inline-type").then((m) => ({
       default: m.CurvedInlineTypeDocs,
     })),
+  "wavy-flow-carousel": () =>
+    import("@/components/docs/wavy-flow-carousel").then((m) => ({
+      default: m.WavyFlowCarouselDocs,
+    })),
   "interactive-media-accordion": () =>
     import("@/components/docs/interactive-media-accordion").then((m) => ({
       default: m.InteractiveMediaAccordionDocs,

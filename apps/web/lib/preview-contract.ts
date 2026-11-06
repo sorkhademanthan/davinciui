@@ -151,6 +151,7 @@ const REDUCE_MOTION_SAFE_SLUGS: ReadonlySet<string> = new Set([
   "character-field",
   "cinematic-card-carousel",
   "curved-inline-type",
+  "wavy-flow-carousel",
   "focus-carousel",
   "glass-scene-dock",
   "hover-cards",
