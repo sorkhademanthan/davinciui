@@ -16,19 +16,28 @@ import {
 } from "@/components/ui/curved-inline-type"
 
 const lines: CurvedInlineLine[] = [
-  { before: "Wander" },
+  { before: "Form" },
   {
-    before: "Design",
-    after: "On",
-    media: { type: "image", src: "/work/popsicle.jpg", alt: "" },
+    before: "Build",
+    after: "Slow",
+    media: {
+      type: "image",
+      src: "/images/spiral-3d-slider/prism-portrait.jpg",
+      alt: "Prism portrait",
+    },
   },
-  { before: "Horizon" },
+  { before: "Cadence" },
   {
-    before: "Pulse",
-    after: "Mode",
-    media: { type: "video", src: "/videos/pulse-loop.mp4" },
+    before: "Hold",
+    after: "Steady",
+    media: {
+      type: "image",
+      src: "/images/segmented-image-carousel/concrete-oculus.jpg",
+      alt: "Concrete oculus",
+    },
   },
-  { before: "Origin" },
+  { before: "Silence" },
+  { before: "Make", after: "Space" },
 ]
 
 export function Hero() {
@@ -64,7 +73,7 @@ export async function CurvedInlineTypeDocs() {
           name: "lines",
           type: "CurvedInlineLine[]",
           description:
-            "Headline rows. Each row takes before/after text plus an optional inline image or video, href and newTab. Defaults to the reference 14-line composition.",
+            "Headline rows. Each row takes before/after text plus an optional inline image or video, href and newTab. Defaults to the built-in 14-line composition.",
         },
         {
           name: "scrollLength",
@@ -161,6 +170,27 @@ export async function CurvedInlineTypeDocs() {
           type: "number",
           default: "10",
           description: "Inline media corner radius in px.",
+        },
+        {
+          name: "textColor",
+          type: "string",
+          default: '"var(--foreground, #f4f2ed)"',
+          description:
+            "Headline color. Defaults to your theme's foreground token, so it follows light and dark mode.",
+        },
+        {
+          name: "background",
+          type: "string",
+          default: '"var(--background, #0b0b0e)"',
+          description:
+            "Stage background. Defaults to your theme's background token.",
+        },
+        {
+          name: "captionColor",
+          type: "string",
+          default: '"var(--muted-foreground, #8b8b96)"',
+          description:
+            "Caption color. Defaults to your theme's muted-foreground token.",
         },
         {
           name: "spring",
