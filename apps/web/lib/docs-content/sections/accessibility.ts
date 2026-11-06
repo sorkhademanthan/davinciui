@@ -61,6 +61,8 @@ export const accessibility: Record<string, string> = {
     "The text input uses role='combobox' with aria-expanded, aria-controls, aria-activedescendant, and aria-autocomplete='list'; the popup is a listbox of options. Arrow keys, Home, End, Enter, Escape, and Backspace work. The input has no label prop, so the placeholder is the only accessible name.",
   "context-menu":
     "Base UI supplies role='menu', roving focus, type-ahead, Escape dismissal, and focus return. Right-click, Ctrl+click, long-press, and Shift+F10 open it while focus is inside. The trigger wrapper is a plain non-tabbable div, so add tabIndex for keyboard-only access; section labels and shortcuts are aria-hidden.",
+  "curved-inline-type":
+    "The stage is decorative: all lines rotate on an aria-hidden track, inline images use empty alt text, and the fixed caption is aria-hidden. The page itself remains keyboard-scrollable, so PageUp, PageDown, Space, and arrow keys still drive the ring through native scroll. Videos are muted, looping, and never focusable.",
   "date-picker":
     "The trigger exposes an aria-label describing the current date and opens a popup with role='dialog' and aria-label 'Choose date'. Calendar days are buttons with full-date labels, aria-pressed, and roving tabindex; arrow keys and live month and selection announcements work. Escape closes and focus returns.",
   dialog:

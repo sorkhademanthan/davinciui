@@ -290,6 +290,10 @@ const docsImportMap: Record<
     import("@/components/docs/cms-scroll-gallery").then((m) => ({
       default: m.CMSScrollGalleryDocs,
     })),
+  "curved-inline-type": () =>
+    import("@/components/docs/curved-inline-type").then((m) => ({
+      default: m.CurvedInlineTypeDocs,
+    })),
   "interactive-media-accordion": () =>
     import("@/components/docs/interactive-media-accordion").then((m) => ({
       default: m.InteractiveMediaAccordionDocs,

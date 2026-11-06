@@ -61,6 +61,8 @@ export const motion: Record<string, string> = {
     "The popup opens and closes instantly with no animation; only the control border, chips, and icons use short CSS color transitions. prefers-reduced-motion is not queried because no motion is present.",
   "context-menu":
     "The popup enters and exits over 150ms with opacity, 4px translate, and 0.96 scale using cubic-bezier(0.23,1,0.32,1). Items press to 0.99 scale in 75ms. motion-reduce:transition-none removes the popup transition and starting transform; no easing props are exposed.",
+  "curved-inline-type":
+    "A single requestAnimationFrame loop reads page scroll, smooths the base angle with a stiffness 90 / damping 26 / mass 1 spring, and writes transforms straight to the DOM. The spring overshoots softly at both ends. prefers-reduced-motion jumps the ring directly to the scroll target and stops the caption pulse.",
   "date-picker":
     "The popup animates 150ms opacity, translate, and 0.96 to 0.97 scale with cubic-bezier(0.23,1,0.32,1); calendar month changes use motion-safe keyframe animations, and day buttons use short scale transitions. Reduced motion disables the popup transition and transform via motion-reduce utilities.",
   dialog:

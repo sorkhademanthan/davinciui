@@ -88,6 +88,7 @@ function hasLiveCardPreview(
   | "text-reveal"
   | "rolling-text"
   | "character-field"
+  | "curved-inline-type"
   | "pixel-flow"
   | "pixel-wipe-carousel"
   | "segmented-image-carousel"
@@ -162,6 +163,7 @@ function hasLiveCardPreview(
     slug === "text-reveal" ||
     slug === "rolling-text" ||
     slug === "character-field" ||
+    slug === "curved-inline-type" ||
     slug === "pixel-flow" ||
     slug === "pixel-wipe-carousel" ||
     slug === "segmented-image-carousel" ||

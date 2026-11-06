@@ -145,6 +145,14 @@ const CharacterFieldCardPreview = dynamic(
   { ssr: false },
 );
 
+const CurvedInlineTypeCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/curved-inline-type-card-preview").then(
+      (module) => module.CurvedInlineTypeCardPreview,
+    ),
+  { ssr: false },
+);
+
 const PixelFlowCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/pixel-flow-card-preview").then(
@@ -616,6 +624,7 @@ type ComponentCardLivePreviewProps = {
     | "text-reveal"
     | "rolling-text"
     | "character-field"
+    | "curved-inline-type"
     | "pixel-flow"
     | "pixel-wipe-carousel"
     | "segmented-image-carousel"
@@ -805,6 +814,8 @@ export function ComponentCardLivePreview({
         <SilkAuroraCardPreview />
       ) : slug === "character-field" ? (
         <CharacterFieldCardPreview />
+      ) : slug === "curved-inline-type" ? (
+        <CurvedInlineTypeCardPreview />
       ) : slug === "pixel-flow" ? (
         <PixelFlowCardPreview />
       ) : slug === "pixel-wipe-carousel" ? (
