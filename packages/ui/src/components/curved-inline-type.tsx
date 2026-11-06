@@ -100,46 +100,75 @@ export interface CurvedLineState {
 }
 
 export const DEFAULT_LINES: CurvedInlineLine[] = [
-  { before: "Wander" },
+  { before: "Form" },
   {
-    before: "Design",
-    after: "On",
-    media: { type: "image", src: "/media/curved-inline-type/red-popsicle.jpg", alt: "" },
+    before: "Build",
+    after: "Slow",
+    media: {
+      type: "image",
+      src: "/images/spiral-3d-slider/prism-portrait.jpg",
+      alt: "Prism portrait",
+    },
   },
-  { before: "Horizon" },
+  { before: "Cadence" },
   {
-    before: "Pulse",
-    after: "Mode",
-    media: { type: "video", src: "/media/curved-inline-type/pulse-red-head.mp4" },
+    before: "Hold",
+    after: "Steady",
+    media: {
+      type: "image",
+      src: "/images/segmented-image-carousel/concrete-oculus.jpg",
+      alt: "Concrete oculus",
+    },
   },
-  { before: "Grain" },
+  { before: "Contrast" },
   {
-    before: "Every",
-    after: "Day",
-    media: { type: "image", src: "/media/curved-inline-type/heart-sunglasses.jpg", alt: "" },
+    before: "Let",
+    after: "Breathe",
+    media: {
+      type: "image",
+      src: "/images/spiral-3d-slider/blue-double.jpg",
+      alt: "Blue double exposure",
+    },
   },
-  { before: "Drift" },
+  { before: "Motion" },
   {
-    before: "Echo",
-    after: "Man",
-    media: { type: "video", src: "/media/curved-inline-type/amber-alley.mp4" },
+    before: "Find",
+    after: "Balance",
+    media: {
+      type: "image",
+      src: "/images/segmented-image-carousel/chrome-chair.jpg",
+      alt: "Chrome chair",
+    },
   },
-  { before: "Bloom" },
+  { before: "Texture" },
   {
-    before: "Made",
-    after: "Simple",
-    media: { type: "image", src: "/media/curved-inline-type/grass-flock.jpg", alt: "" },
+    before: "Set",
+    after: "Rhythm",
+    media: {
+      type: "image",
+      src: "/images/spiral-3d-slider/red-echo.jpg",
+      alt: "Red echo portrait",
+    },
   },
-  { before: "Quiet" },
+  { before: "Structure" },
   {
-    before: "Bold",
-    after: "Ideas",
-    media: { type: "image", src: "/media/curved-inline-type/glossy-red.png", alt: "" },
+    before: "Stay",
+    after: "Curious",
+    media: {
+      type: "image",
+      src: "/images/segmented-image-carousel/coastal-tree.jpg",
+      alt: "Coastal tree",
+    },
   },
-  { before: "Vivid" },
+  { before: "Silence" },
   {
-    before: "Origin",
-    media: { type: "video", src: "/media/curved-inline-type/purple-lotus.mp4" },
+    before: "Make",
+    after: "Space",
+    media: {
+      type: "image",
+      src: "/images/spiral-3d-slider/orange-haze.jpg",
+      alt: "Orange haze portrait",
+    },
   },
 ];
 
@@ -155,8 +184,8 @@ export const DEFAULT_PROPS = {
   fontFamily: '"Funnel Display", "Funnel Display Placeholder", sans-serif',
   fontSize: "clamp(24px, 8.55vw, 94px)",
   letterSpacing: "-0.04em",
-  textColor: "#f4f2ed",
-  background: "#0b0b0e",
+  textColor: "var(--foreground, #f4f2ed)",
+  background: "var(--background, #0b0b0e)",
   mediaHeight: 0.9,
   mediaWidth: 1.035,
   mediaRadius: 10,
@@ -170,7 +199,7 @@ export const DEFAULT_PROPS = {
   spring: { stiffness: 90, damping: 26, mass: 1 },
   showCaption: true,
   captionText: "SCROLL SCROLL SCROLL...",
-  captionColor: "#f4f2ed",
+  captionColor: "var(--muted-foreground, #8b8b96)",
   captionPulse: true,
 };
 
