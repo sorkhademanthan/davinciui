@@ -709,6 +709,14 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "orbit-spiral-gallery",
     addedAt: "2026-08-08",
   },
+  "spiral-media-gallery": {
+    title: "Spiral Media Gallery",
+    description:
+      "A 3D vertical helix of images that spins infinitely by drag, wheel, or arrow keys, with depth-based scale, opacity, and z-index written straight from one requestAnimationFrame loop.",
+    category: "Premium Components",
+    slug: "spiral-media-gallery",
+    addedAt: "2026-11-07",
+  },
   "ambient-strip": {
     title: "Ambient Strip",
     description:
