@@ -113,6 +113,7 @@ export const docsCategoryBySlug: Record<string, string> = {
   "soft-fluid-gradient": "Hero Backgrounds",
   "spectra-noise": "Hero Backgrounds",
   spinner: "Feedback",
+  "spiral-media-gallery": "Premium Components",
   "stacked-scroll-gallery": "Premium Components",
   "staircase-preloader": "Preloaders",
   "sunlight-effect": "Hero Backgrounds",

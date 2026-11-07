@@ -426,6 +426,10 @@ const docsImportMap: Record<
     import("@/components/docs/orbit-spiral-gallery").then((m) => ({
       default: m.OrbitSpiralGalleryDocs,
     })),
+  "spiral-media-gallery": () =>
+    import("@/components/docs/spiral-media-gallery").then((m) => ({
+      default: m.SpiralMediaGalleryDocs,
+    })),
   "ambient-strip": () =>
     import("@/components/docs/ambient-strip").then((m) => ({
       default: m.AmbientStripDocs,
