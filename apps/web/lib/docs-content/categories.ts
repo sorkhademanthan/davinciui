@@ -1,5 +1,6 @@
 // Category used for related links and docs coverage checks.
 export const docsCategoryBySlug: Record<string, string> = {
+  "3d-flow-gallery": "Premium Components",
   accordion: "Layout",
   alert: "Feedback",
   "alert-dialog": "Overlays",

@@ -1,5 +1,7 @@
 // Source-grounded notes for every component page. Keep entries alphabetical.
 export const accessibility: Record<string, string> = {
+  "3d-flow-gallery":
+    "The host is exposed as a labelled role='img' and the generated canvas is not focusable, so the tunnel adds no keyboard surface. Wheel and drag are pointer-only and have no keyboard equivalent; the image panels are decorative and are not announced individually.",
   accordion:
     "Triggers are native buttons in headings with aria-expanded; arrow keys move focus between them and panels are labelled. Focus-visible rings are provided, and disabled items are skipped. Content remains mounted only when keepMounted is set.",
   alert:

@@ -1,5 +1,7 @@
 // Source-grounded notes for every component page. Keep entries alphabetical.
 export const motion: Record<string, string> = {
+  "3d-flow-gallery":
+    "A single flow scalar advances at autoSpeed world units per second, wheel adds deltaY × wheelSensitivity, and vertical drag subtracts dy × dragSensitivity. Release carries velocity that decays by 0.92 per 60fps frame, and a 0.1-per-frame lerp smooths the rendered position. The loop pauses offscreen and on hidden tabs; prefers-reduced-motion disables auto-flow but leaves wheel and drag active.",
   accordion:
     "Panel height animates via grid-template-rows: 300ms ease-out opening and 200ms closing, while inner content fades and shifts with a 75ms open delay. The chevron rotates 300ms. The motion-reduce variant disables these transitions.",
   alert:
