@@ -430,6 +430,10 @@ const docsImportMap: Record<
     import("@/components/docs/spiral-media-gallery").then((m) => ({
       default: m.SpiralMediaGalleryDocs,
     })),
+  "3d-flow-gallery": () =>
+    import("@/components/docs/3d-flow-gallery").then((m) => ({
+      default: m.FlowGalleryDocs,
+    })),
   "ambient-strip": () =>
     import("@/components/docs/ambient-strip").then((m) => ({
       default: m.AmbientStripDocs,
