@@ -717,6 +717,14 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "spiral-media-gallery",
     addedAt: "2026-11-07",
   },
+  "3d-flow-gallery": {
+    title: "3D Flow Gallery",
+    description:
+      "An infinite tunnel of image panels and a hairline grid, streamed toward the camera by wheel, drag, or auto-flow. Light and dark themes.",
+    category: "Premium Components",
+    slug: "3d-flow-gallery",
+    addedAt: "2026-11-07",
+  },
   "ambient-strip": {
     title: "Ambient Strip",
     description:
