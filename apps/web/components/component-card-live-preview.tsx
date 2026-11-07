@@ -313,6 +313,14 @@ const OrbitSpiralGalleryCardPreview = dynamic(
   { ssr: false },
 );
 
+const SpiralMediaGalleryCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/spiral-media-gallery-card-preview").then(
+      (module) => module.SpiralMediaGalleryCardPreview,
+    ),
+  { ssr: false },
+);
+
 const LiquidRevealButtonCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/liquid-reveal-button-card-preview").then(
@@ -645,6 +653,7 @@ type ComponentCardLivePreviewProps = {
     | "glass-scene-dock"
     | "lens-drift-grid"
     | "orbit-spiral-gallery"
+    | "spiral-media-gallery"
     | "liquid-reveal-button"
     | "animated-metric"
     | "nudge-button"
@@ -856,6 +865,8 @@ export function ComponentCardLivePreview({
         <LensDriftGridCardPreview />
       ) : slug === "orbit-spiral-gallery" ? (
         <OrbitSpiralGalleryCardPreview />
+      ) : slug === "spiral-media-gallery" ? (
+        <SpiralMediaGalleryCardPreview />
       ) : slug === "liquid-reveal-button" ? (
         <LiquidRevealButtonCardPreview />
       ) : slug === "animated-metric" ? (

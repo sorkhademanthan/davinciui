@@ -172,6 +172,7 @@ const REDUCE_MOTION_SAFE_SLUGS: ReadonlySet<string> = new Set([
   "silk-aurora",
   "soft-fluid-gradient",
   "spectra-noise",
+  "spiral-media-gallery",
   "sunlight-effect",
   "tilt-flip-polaroid",
   "vertical-image-marquee",
