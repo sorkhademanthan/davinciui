@@ -222,6 +222,8 @@ export const accessibility: Record<string, string> = {
     "The effect container and fallback gradient are aria-hidden with pointer-events-none, so screen readers skip the canvas entirely. It is decorative only and exposes no labels, focus targets, or content.",
   spinner:
     "The wrapper exposes role status with aria-label Loading and also renders hidden Loading text. The Lucide icon is decorative. The duplicated label may be announced twice, and callers can override aria-label but not the hidden text.",
+  "spiral-media-gallery":
+    "The root is a labelled region with aria-roledescription gallery. The 3D card stage is aria-hidden, and passing imageAlts adds a screen-reader-only list describing the source images. The region is focusable: ArrowUp and ArrowDown step one card, PageUp and PageDown step four, and Home resets. Drag and wheel are pointer-only, so the arrow keys provide an equivalent rotation path.",
   "stacked-scroll-gallery":
     "The section has an aria-label, inactive cards are aria-hidden, each image or video has alt or aria-label, and a polite live region announces the active item. There is no keyboard control beyond normal scrolling.",
   "staircase-preloader":

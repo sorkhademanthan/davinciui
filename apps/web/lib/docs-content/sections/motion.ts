@@ -222,6 +222,8 @@ export const motion: Record<string, string> = {
     "Shader time advances by animationSpeed; paused or zero speed freezes the field, and rendering also stops offscreen or on hidden tabs. prefers-reduced-motion is detected initially and on change, halting the loop at a static frame.",
   spinner:
     "Both the wrapper and Loader2 icon use the Tailwind animate-spin rotation, with no duration, easing, or reduced-motion handling. Size does not change animation timing.",
+  "spiral-media-gallery":
+    "One requestAnimationFrame loop writes transform, opacity, and z-index to the cards and nothing else. Drag and wheel feed a degrees-per-frame velocity that decays by dragFriction, while autoRotate adds autoRotateSpeed once the helix is idle. The loop pauses offscreen and on hidden tabs. prefers-reduced-motion is watched live and disables auto-rotation, though user-initiated drag, wheel, and arrow steps still rotate the helix.",
   "stacked-scroll-gallery":
     "Card transforms and dimming follow scroll progress, with smoothing, easing, dimming, and dimStrength props; videos pause when offscreen. prefers-reduced-motion disables smoothing and autoplay but not the stacked movement itself.",
   "staircase-preloader":
