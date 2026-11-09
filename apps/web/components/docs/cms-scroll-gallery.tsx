@@ -1,8 +1,9 @@
 import React from "react";
-import { DemoFrame } from "@/components/docs/previews/demo-frame";
-import { DocsPageLayout } from "@/components/docs-page-layout";
-import { readComponentSource } from "@/lib/source-code";
-import { CMSScrollGalleryPreview } from "@/components/docs/previews/cms-scroll-gallery-preview";
+import {DemoFrame} from "@/components/docs/previews/demo-frame";
+import {DocsPageLayout} from "@/components/docs-page-layout";
+import {readComponentSource} from "@/lib/source-code";
+import {CmsScrollGalleryPlayground, CmsScrollGalleryPersonalizePanel} from "@/components/docs/previews/iframe-playgrounds";
+
 
 const defaultCode = `import { CMSScrollGallery } from "@/components/ui/cms-scroll-gallery"
 
@@ -35,12 +36,8 @@ export async function CMSScrollGalleryDocs() {
       hideExamples
       title="CMS Scroll Gallery"
       description="Sticky fullscreen scroll gallery — a long scroll track pins one viewport while page scroll drives synchronized background media + centered title transitions, tracked by a draggable glass thumbnail dock."
-      preview={
-        <CMSScrollGalleryPreview
-          src="/demo/cms-scroll-gallery"
-          title="CMS Scroll Gallery Demo"
-        />
-      }
+      preview={<CmsScrollGalleryPlayground />}
+      personalizeContent={<CmsScrollGalleryPersonalizePanel />}
       previewCode={defaultCode}
       installPackageName="cms-scroll-gallery"
       installDependencies="framer-motion"

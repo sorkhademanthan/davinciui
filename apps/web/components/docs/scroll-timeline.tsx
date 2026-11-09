@@ -1,8 +1,9 @@
 import React from "react";
-import { DemoFrame } from "@/components/docs/previews/demo-frame";
-import { DocsPageLayout } from "@/components/docs-page-layout";
-import { readComponentSource } from "@/lib/source-code";
-import { ScrollTimelinePreview } from "@/components/docs/previews/scroll-timeline-preview";
+import {DemoFrame} from "@/components/docs/previews/demo-frame";
+import {DocsPageLayout} from "@/components/docs-page-layout";
+import {readComponentSource} from "@/lib/source-code";
+import {ScrollTimelinePlayground, ScrollTimelinePersonalizePanel} from "@/components/docs/previews/iframe-playgrounds";
+
 
 const defaultCode = `import { ScrollTimeline } from "@/components/ui/scroll-timeline"
 
@@ -55,12 +56,8 @@ export async function ScrollTimelineDocs() {
       hideExamples
       title="Scroll Timeline"
       description="Pinned fullscreen year timeline — vertical scroll collapses each panel horizontally via clip-path while the oversized year rotates around its bottom-left anchor, exposing the next era underneath. Fully reversible and driven directly by scroll progress."
-      preview={
-        <ScrollTimelinePreview
-          src="/demo/scroll-timeline"
-          title="Scroll Timeline Demo"
-        />
-      }
+      preview={<ScrollTimelinePlayground />}
+      personalizeContent={<ScrollTimelinePersonalizePanel />}
       previewCode={defaultCode}
       installPackageName="scroll-timeline"
       installDependencies=""

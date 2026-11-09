@@ -1,6 +1,7 @@
-import { DocsPageLayout } from "@/components/docs-page-layout";
-import { CurvedInlineTypePreview } from "@/components/docs/previews/curved-inline-type-preview";
-import { readComponentSource } from "@/lib/source-code";
+import {DocsPageLayout} from "@/components/docs-page-layout";
+
+import {readComponentSource} from "@/lib/source-code";
+import {CurvedInlineTypePlayground, CurvedInlineTypePersonalizePanel} from "@/components/docs/previews/iframe-playgrounds";
 
 const defaultCode = `import { CurvedInlineType } from "@/components/ui/curved-inline-type"
 
@@ -61,7 +62,8 @@ export async function CurvedInlineTypeDocs() {
       fullWidthPreview
       title="Curved Inline Type"
       description="A sticky scroll stage where headline lines ride an invisible vertical drum. Each line rises from below, flattens and brightens at the front, then rolls up and fades over the top, with images and looping videos sitting inline between words."
-      preview={<CurvedInlineTypePreview />}
+      preview={<CurvedInlineTypePlayground />}
+      personalizeContent={<CurvedInlineTypePersonalizePanel />}
       previewCode={defaultCode}
       installPackageName="curved-inline-type"
       installDependencies=""
