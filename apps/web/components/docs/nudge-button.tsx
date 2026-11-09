@@ -1,8 +1,9 @@
-import { NudgeButton } from "@workspace/ui/components/nudge-button";
+import {NudgeButton} from "@workspace/ui/components/nudge-button";
 
-import { DocsPageLayout } from "@/components/docs-page-layout";
-import { NudgeButtonPreview } from "@/components/docs/previews/nudge-button-preview";
-import { readComponentSource } from "@/lib/source-code";
+import {DocsPageLayout} from "@/components/docs-page-layout";
+
+import {readComponentSource} from "@/lib/source-code";
+import {NudgeButtonPlayground, NudgeButtonPersonalizePanel} from "@/components/docs/previews/interaction-playgrounds";
 
 const usageCode = `import { NudgeButton } from "@/components/ui/nudge-button"
 
@@ -20,7 +21,8 @@ export async function NudgeButtonDocs() {
       hideExamples
       title="Nudge Button"
       description="A white pill CTA with a directional nudge interaction — concentric blue, red, and yellow rings burst from the exact pointer entry point before a white reveal pushes them out through the clipped edges. One component scales from gallery card to fullscreen."
-      preview={<NudgeButtonPreview />}
+      preview={<NudgeButtonPlayground />}
+      personalizeContent={<NudgeButtonPersonalizePanel />}
       previewCode={usageCode}
       usageCode={usageCode}
       installPackageName="nudge-button"

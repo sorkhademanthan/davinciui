@@ -1,7 +1,8 @@
-import { RadialFanDeck } from "@workspace/ui/components/radial-fan-deck";
-import { DocsPageLayout } from "@/components/docs-page-layout";
-import { RadialFanDeckPreview } from "@/components/docs/previews/radial-fan-deck-preview";
-import { readComponentSource } from "@/lib/source-code";
+import {RadialFanDeck} from "@workspace/ui/components/radial-fan-deck";
+import {DocsPageLayout} from "@/components/docs-page-layout";
+
+import {readComponentSource} from "@/lib/source-code";
+import {RadialFanDeckPlayground, RadialFanDeckPersonalizePanel} from "@/components/docs/previews/interaction-playgrounds";
 
 const defaultCode = `import { useState } from "react"
 import { RadialFanDeck } from "@/components/ui/radial-fan-deck"
@@ -22,7 +23,8 @@ export async function RadialFanDeckDocs() {
       hideExamples
       title="Radial Fan Deck"
       description="A scroll-driven editorial card deck that unfolds from one shared hinge into a full radial fan. Scroll back to fold it into the centered stack."
-      preview={<RadialFanDeckPreview />}
+      preview={<RadialFanDeckPlayground />}
+      personalizeContent={<RadialFanDeckPersonalizePanel />}
       previewCode={defaultCode}
       installPackageName="radial-fan-deck"
       installDependencies="clsx tailwind-merge"

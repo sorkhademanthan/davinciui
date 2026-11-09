@@ -1,8 +1,9 @@
-import { LiquidChromeButton } from "@workspace/ui/components/liquid-chrome-button";
+import {LiquidChromeButton} from "@workspace/ui/components/liquid-chrome-button";
 
-import { DocsPageLayout } from "@/components/docs-page-layout";
-import { LiquidChromeButtonPreview } from "@/components/docs/previews/liquid-chrome-button-preview";
-import { readComponentSource } from "@/lib/source-code";
+import {DocsPageLayout} from "@/components/docs-page-layout";
+
+import {readComponentSource} from "@/lib/source-code";
+import {LiquidChromeButtonPlayground, LiquidChromeButtonPersonalizePanel} from "@/components/docs/previews/interaction-playgrounds";
 
 const usageCode = `import { LiquidChromeButton } from "@/components/ui/liquid-chrome-button"
 
@@ -23,7 +24,8 @@ export async function LiquidChromeButtonDocs() {
       hideExamples
       title="Liquid Chrome Button"
       description="A circular WebGL liquid-metal button with a frosted glass lens, springy hover response, and anchor support."
-      preview={<LiquidChromeButtonPreview />}
+      preview={<LiquidChromeButtonPlayground />}
+      personalizeContent={<LiquidChromeButtonPersonalizePanel />}
       previewCode={usageCode}
       usageCode={usageCode}
       examples={[

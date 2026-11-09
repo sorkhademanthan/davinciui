@@ -1,8 +1,9 @@
-import { AnimatedPillButton } from "@workspace/ui/components/animated-pill-button";
+import {AnimatedPillButton} from "@workspace/ui/components/animated-pill-button";
 
-import { DocsPageLayout } from "@/components/docs-page-layout";
-import { AnimatedPillButtonPreview } from "@/components/docs/previews/animated-pill-button-preview";
-import { readComponentSource } from "@/lib/source-code";
+import {DocsPageLayout} from "@/components/docs-page-layout";
+
+import {readComponentSource} from "@/lib/source-code";
+import {AnimatedPillButtonPlayground, AnimatedPillButtonPersonalizePanel} from "@/components/docs/previews/interaction-playgrounds";
 
 const usageCode = `import { AnimatedPillButton } from "@/components/ui/animated-pill-button"
 
@@ -20,7 +21,8 @@ export async function AnimatedPillButtonDocs() {
       hideExamples
       title="Animated Pill Button"
       description="A black pill CTA with a directional liquid wipe — cyan bursts from the right-side dot with a curved leading edge while the dot morphs into an arrow circle and the label flips contrast inside the same mask. One component scales from gallery card to fullscreen."
-      preview={<AnimatedPillButtonPreview />}
+      preview={<AnimatedPillButtonPlayground />}
+      personalizeContent={<AnimatedPillButtonPersonalizePanel />}
       previewCode={usageCode}
       usageCode={usageCode}
       installPackageName="animated-pill-button"

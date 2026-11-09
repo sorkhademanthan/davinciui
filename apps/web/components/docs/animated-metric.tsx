@@ -1,8 +1,9 @@
-import { AnimatedMetric } from "@workspace/ui/components/animated-metric";
+import {AnimatedMetric} from "@workspace/ui/components/animated-metric";
 
-import { DocsPageLayout } from "@/components/docs-page-layout";
-import { AnimatedMetricPreview } from "@/components/docs/previews/animated-metric-preview";
-import { readComponentSource } from "@/lib/source-code";
+import {DocsPageLayout} from "@/components/docs-page-layout";
+
+import {readComponentSource} from "@/lib/source-code";
+import {AnimatedMetricPlayground, AnimatedMetricPersonalizePanel} from "@/components/docs/previews/interaction-playgrounds";
 
 const usageCode = `import { AnimatedMetric } from "@/components/ui/animated-metric"
 
@@ -26,7 +27,8 @@ export async function AnimatedMetricDocs() {
       hideExamples
       title="Animated Metric"
       description="An editorial count-up statistic — the number eases from its start value to the exact final figure when it enters the viewport, with a subtle rise-and-fade entrance and a screen-reader-friendly final value. One container-aware component scales from gallery card to fullscreen."
-      preview={<AnimatedMetricPreview />}
+      preview={<AnimatedMetricPlayground />}
+      personalizeContent={<AnimatedMetricPersonalizePanel />}
       previewCode={usageCode}
       usageCode={usageCode}
       installPackageName="animated-metric"

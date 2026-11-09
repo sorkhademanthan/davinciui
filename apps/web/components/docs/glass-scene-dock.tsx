@@ -1,7 +1,8 @@
-import { GlassSceneDock } from "@workspace/ui/components/glass-scene-dock";
-import { DocsPageLayout } from "@/components/docs-page-layout";
-import { GlassSceneDockPreview } from "@/components/docs/previews/glass-scene-dock-preview";
-import { readComponentSource } from "@/lib/source-code";
+import {GlassSceneDock} from "@workspace/ui/components/glass-scene-dock";
+import {DocsPageLayout} from "@/components/docs-page-layout";
+
+import {readComponentSource} from "@/lib/source-code";
+import {GlassSceneDockPlayground, GlassSceneDockPersonalizePanel} from "@/components/docs/previews/interaction-playgrounds";
 
 const usageCode = `import { GlassSceneDock } from "@/components/ui/glass-scene-dock"
 
@@ -36,7 +37,8 @@ export async function GlassSceneDockDocs() {
       hideExamples
       title="Glass Scene Dock"
       description="A floating glass navigation dock pinned over scroll-driven gradient scenes — no image files needed. A travelling glass highlight glides between icons while scrolling crossfades the backdrop. Pass image per scene to use photography instead. Fully light/dark aware."
-      preview={<GlassSceneDockPreview />}
+      preview={<GlassSceneDockPlayground />}
+      personalizeContent={<GlassSceneDockPersonalizePanel />}
       previewCode={usageCode}
       usageCode={usageCode}
       installPackageName="glass-scene-dock"

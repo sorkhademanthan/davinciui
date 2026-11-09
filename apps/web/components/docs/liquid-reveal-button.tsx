@@ -1,8 +1,9 @@
-import { LiquidRevealButton } from "@workspace/ui/components/liquid-reveal-button";
+import {LiquidRevealButton} from "@workspace/ui/components/liquid-reveal-button";
 
-import { DocsPageLayout } from "@/components/docs-page-layout";
-import { LiquidRevealButtonPreview } from "@/components/docs/previews/liquid-reveal-button-preview";
-import { readComponentSource } from "@/lib/source-code";
+import {DocsPageLayout} from "@/components/docs-page-layout";
+
+import {readComponentSource} from "@/lib/source-code";
+import {LiquidRevealButtonPlayground, LiquidRevealButtonPersonalizePanel} from "@/components/docs/previews/interaction-playgrounds";
 
 const usageCode = `import { LiquidRevealButton } from "@/components/ui/liquid-reveal-button"
 
@@ -24,7 +25,8 @@ export async function LiquidRevealButtonDocs() {
       hideExamples
       title="Liquid Reveal Button"
       description="A substantial acid-yellow pill CTA with a pointer-driven black liquid reveal — the mask originates at the real cursor position, expands to full cover with spatially-masked two-tone text, then retracts toward the exit point. One container-aware component adapts to card, side-panel, and fullscreen sizes."
-      preview={<LiquidRevealButtonPreview />}
+      preview={<LiquidRevealButtonPlayground />}
+      personalizeContent={<LiquidRevealButtonPersonalizePanel />}
       previewCode={usageCode}
       usageCode={usageCode}
       examples={[
