@@ -2,6 +2,13 @@
 
 import { useEffect } from "react";
 import { CurvedInlineType } from "@workspace/ui/components/curved-inline-type";
+import {
+  demoBoolean,
+  demoEnum,
+  demoNumber,
+  demoString,
+  useDemoSearchParams,
+} from "@/lib/demo-search-params";
 
 const fontFaces = `
   @font-face {
@@ -34,6 +41,8 @@ const fontFaces = `
 `;
 
 export default function CurvedInlineTypeDemoPage() {
+  const params = useDemoSearchParams();
+
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
@@ -71,10 +80,32 @@ export default function CurvedInlineTypeDemoPage() {
     };
   }, []);
 
+  if (!params) return null;
+
   return (
     <>
       <style>{fontFaces}</style>
-      <CurvedInlineType showCaption={false} />
+      <CurvedInlineType
+        sweepDeg={demoNumber(params, "sweepDeg", 260)}
+        ringHeight={demoNumber(params, "ringHeight", 0.8)}
+        ringDepth={demoNumber(params, "ringDepth", 1.25)}
+        perspective={demoNumber(params, "perspective", 1200)}
+        textRotation={demoNumber(params, "textRotation", 1.15)}
+        fadeExponent={demoNumber(params, "fadeExponent", 1.5)}
+        minOpacity={demoNumber(params, "minOpacity", 0.06)}
+        blurAmount={demoNumber(params, "blurAmount", 3)}
+        mediaHeight={demoNumber(params, "mediaHeight", 0.9)}
+        mediaWidth={demoNumber(params, "mediaWidth", 1.035)}
+        mediaRadius={demoNumber(params, "mediaRadius", 10)}
+        mediaFit={demoEnum(params, "mediaFit", ["cover", "contain"], "cover")}
+        gap={demoNumber(params, "gap", 0.05)}
+        scrollLength={demoString(params, "scrollLength", "400vh")}
+        direction={demoEnum(params, "direction", ["forward", "reverse"], "forward")}
+        mapping={demoEnum(params, "mapping", ["live", "spec"], "live")}
+        sweepFrom={demoNumber(params, "sweepFrom", -140)}
+        sweepTo={demoNumber(params, "sweepTo", 140)}
+        showCaption={demoBoolean(params, "showCaption", false)}
+      />
     </>
   );
 }
