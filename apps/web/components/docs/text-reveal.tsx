@@ -7,6 +7,10 @@ import {
   TEXT_REVEAL_PREVIEW_TRIGGER,
 } from "@/components/docs/previews/text-reveal-scroll-stage";
 import { readComponentSource } from "@/lib/source-code";
+import {
+  TextRevealPlayground,
+  TextRevealPersonalizePanel,
+} from "@/components/docs/previews/text-reveal-playground";
 
 const sampleText =
   "DavinciUI brings a growing library of thoughtfully crafted components and flexible patterns together, helping teams build polished, consistent interfaces faster. Explore, customize every detail, and bring motion-rich experiences to life—from the first prototype through the final product.";
@@ -64,22 +68,8 @@ export async function TextRevealDocs() {
       hideExamples
       title="Text Reveal"
       description="A scroll-scrubbed text reveal engine. Choose character or word units and five genuinely different reveal orders, including a position-measured diagonal sweep that recalculates as text wraps."
-      preview={
-        <TextRevealScrollStage>
-          <TextReveal
-            text={sampleText}
-            startPosition="top top"
-            endPosition="bottom bottom"
-            scroller={PREVIEW_SCROLL_REGION}
-            trigger={TEXT_REVEAL_PREVIEW_TRIGGER}
-            revealedColor="var(--foreground)"
-            unrevealedColor="var(--foreground)"
-            fontSize={28}
-            lineHeight={1.45}
-            className="mx-auto max-w-3xl"
-          />
-        </TextRevealScrollStage>
-      }
+      preview={<TextRevealPlayground />}
+      personalizeContent={<TextRevealPersonalizePanel />}
       previewCode={defaultCode}
       installPackageName="text-reveal"
       installDependencies="gsap"
