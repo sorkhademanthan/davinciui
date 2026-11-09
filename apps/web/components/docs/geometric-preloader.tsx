@@ -1,8 +1,9 @@
-import { Section } from "@/components/component-layout";
-import { DemoFrame } from "@/components/docs/previews/demo-frame";
-import { DocsPageLayout } from "@/components/docs-page-layout";
-import { GeometricPreloaderPreview } from "@/components/docs/previews/geometric-preloader-preview";
-import { readComponentSource } from "@/lib/source-code";
+import {Section} from "@/components/component-layout";
+import {DemoFrame} from "@/components/docs/previews/demo-frame";
+import {DocsPageLayout} from "@/components/docs-page-layout";
+
+import {readComponentSource} from "@/lib/source-code";
+import {GeometricPreloaderPlayground, GeometricPreloaderPersonalizePanel} from "@/components/docs/previews/preloader-playgrounds";
 
 const defaultCode = `import { GeometricPreloader } from "@/components/ui/geometric-preloader"
 
@@ -24,12 +25,8 @@ export async function GeometricPreloaderDocs() {
       hideExamples
       title="Geometric Preloader"
       description="A fullscreen geometric loader with nested rotating squares and a diamond-scale reveal."
-      preview={
-        <GeometricPreloaderPreview
-          src="/demo/geometric-preloader"
-          title="Geometric Preloader Demo"
-        />
-      }
+      preview={<GeometricPreloaderPlayground />}
+      personalizeContent={<GeometricPreloaderPersonalizePanel />}
       previewCode={defaultCode}
       usageCode={defaultCode}
       installPackageName="geometric-preloader"

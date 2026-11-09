@@ -1,8 +1,9 @@
-import { Section } from "@/components/component-layout";
-import { DemoFrame } from "@/components/docs/previews/demo-frame";
-import { DocsPageLayout } from "@/components/docs-page-layout";
-import { FillPreloaderPreview } from "@/components/docs/previews/fill-preloader-preview";
-import { readComponentSource } from "@/lib/source-code";
+import {Section} from "@/components/component-layout";
+import {DemoFrame} from "@/components/docs/previews/demo-frame";
+import {DocsPageLayout} from "@/components/docs-page-layout";
+
+import {readComponentSource} from "@/lib/source-code";
+import {FillPreloaderPlayground, FillPreloaderPersonalizePanel} from "@/components/docs/previews/preloader-playgrounds";
 
 const defaultCode = `import { FillPreloader } from "@/components/ui/fill-preloader"
 
@@ -109,12 +110,8 @@ export async function FillPreloaderDocs() {
       hideExamples
       title="Fill Preloader"
       description="A fullscreen bottom-up blue fill loader with a giant bottom-right percentage counter and a vertical slide-away reveal."
-      preview={
-        <FillPreloaderPreview
-          src="/demo/fill-preloader"
-          title="Fill Preloader Demo"
-        />
-      }
+      preview={<FillPreloaderPlayground />}
+      personalizeContent={<FillPreloaderPersonalizePanel />}
       previewCode={defaultCode}
       usageCode={defaultCode}
       installPackageName="fill-preloader"
