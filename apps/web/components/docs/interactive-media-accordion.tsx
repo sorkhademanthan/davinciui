@@ -2,7 +2,10 @@ import { InteractiveMediaAccordion } from "@workspace/ui/components/interactive-
 
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import { readComponentSource } from "@/lib/source-code";
-import { InteractiveMediaAccordionDemoPreview } from "@/components/docs/previews/interactive-media-accordion-demo-preview";
+import {
+  InteractiveMediaAccordionPlayground,
+  InteractiveMediaAccordionPersonalizePanel,
+} from "@/components/docs/previews/interactive-media-accordion-preview";
 
 const defaultCode = `import { InteractiveMediaAccordion } from "@/components/ui/interactive-media-accordion"
 
@@ -57,12 +60,8 @@ export async function InteractiveMediaAccordionDocs() {
       hideExamples
       title="Interactive Media Accordion"
       description="A sticky media accordion that advances with scroll and reverses as you scroll back. Click or focus a card to select it directly; narrow layouts keep every card visible when space allows."
-      preview={
-        <InteractiveMediaAccordionDemoPreview
-          src="/demo/interactive-media-accordion"
-          title="Interactive Media Accordion Demo"
-        />
-      }
+      preview={<InteractiveMediaAccordionPlayground />}
+      personalizeContent={<InteractiveMediaAccordionPersonalizePanel />}
       previewCode={defaultCode}
       installPackageName="interactive-media-accordion"
       installSourceCode={sourceCode}
