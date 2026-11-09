@@ -1,9 +1,9 @@
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import { readComponentSource } from "@/lib/source-code";
 import {
-  FlowGallery,
-  FLOW_GALLERY_DEFAULT_IMAGES,
-} from "@workspace/ui/components/3d-flow-gallery";
+  FlowGalleryPersonalizePanel,
+  FlowGalleryPlayground,
+} from "@/components/docs/previews/3d-flow-gallery-playground";
 
 const defaultCode = `import { FlowGallery } from "@/components/ui/3d-flow-gallery"
 
@@ -53,14 +53,9 @@ export async function FlowGalleryDocs() {
       fullWidthPreview
       title="3D Flow Gallery"
       description="An infinite tunnel built from image panels and a hairline grid. Wheel, drag, or auto-flow streams the rings toward the camera with no roll or horizon line. Light and dark themes are supported."
-      preview={
-        <FlowGallery
-          images={FLOW_GALLERY_DEFAULT_IMAGES}
-          className="h-full w-full"
-          ariaLabel="3D flow gallery preview"
-        />
-      }
+      preview={<FlowGalleryPlayground />}
       previewCode={defaultCode}
+      personalizeContent={<FlowGalleryPersonalizePanel />}
       installPackageName="3d-flow-gallery"
       installDependencies="three clsx tailwind-merge"
       installSourceCode={sourceCode}
