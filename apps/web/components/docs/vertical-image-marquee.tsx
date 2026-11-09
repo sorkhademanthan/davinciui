@@ -1,8 +1,9 @@
-import { VerticalImageMarquee } from "@workspace/ui/components/vertical-image-marquee";
+import {VerticalImageMarquee} from "@workspace/ui/components/vertical-image-marquee";
 
-import { DocsPageLayout } from "@/components/docs-page-layout";
-import { VerticalImageMarqueePreview } from "@/components/docs/previews/vertical-image-marquee-preview";
-import { readComponentSource } from "@/lib/source-code";
+import {DocsPageLayout} from "@/components/docs-page-layout";
+
+import {readComponentSource} from "@/lib/source-code";
+import {VerticalImageMarqueePlayground, VerticalImageMarqueePersonalizePanel} from "@/components/docs/previews/visual-effects-playgrounds";
 
 const usageCode = `import { VerticalImageMarquee } from "@/components/ui/vertical-image-marquee"
 
@@ -50,7 +51,8 @@ export async function VerticalImageMarqueeDocs() {
       hideExamples
       title="Vertical Image Marquee"
       description="A seamless editorial portrait strip that rises through a clean light or dark canvas, with unrounded panels and quiet, generous gutters."
-      preview={<VerticalImageMarqueePreview />}
+      preview={<VerticalImageMarqueePlayground />}
+      personalizeContent={<VerticalImageMarqueePersonalizePanel />}
       previewCode={usageCode}
       usageCode={usageCode}
       installPackageName="vertical-image-marquee"

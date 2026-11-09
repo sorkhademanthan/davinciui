@@ -1,8 +1,9 @@
-import { AmbientStrip } from "@workspace/ui/components/ambient-strip";
-import { ambientStripDemoItems } from "@/components/docs/previews/ambient-strip-items";
-import { DocsPageLayout } from "@/components/docs-page-layout";
-import { AmbientStripPreview } from "@/components/docs/previews/ambient-strip-preview";
-import { readComponentSource } from "@/lib/source-code";
+import {AmbientStrip} from "@workspace/ui/components/ambient-strip";
+import {ambientStripDemoItems} from "@/components/docs/previews/ambient-strip-items";
+import {DocsPageLayout} from "@/components/docs-page-layout";
+
+import {readComponentSource} from "@/lib/source-code";
+import {AmbientStripPlayground, AmbientStripPersonalizePanel} from "@/components/docs/previews/visual-effects-playgrounds";
 
 const defaultCode = `import { AmbientStrip } from "@/components/ui/ambient-strip"
 
@@ -72,7 +73,8 @@ export async function AmbientStripDocs() {
       hideExamples
       title="Ambient Strip"
       description="A horizontal strip of portrait frames that expands the hovered or focused card while a blurred, full-bleed version of the same artwork crossfades behind the row. Drag, wheel, or use the arrow keys to travel the strip; touch devices expand whichever card sits at the center."
-      preview={<AmbientStripPreview />}
+      preview={<AmbientStripPlayground />}
+      personalizeContent={<AmbientStripPersonalizePanel />}
       previewCode={defaultCode}
       usageCode={usageCode}
       installPackageName="ambient-strip"

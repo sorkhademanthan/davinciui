@@ -1,8 +1,9 @@
-import { PixelWipeCarousel } from "@workspace/ui/components/pixel-wipe-carousel";
+import {PixelWipeCarousel} from "@workspace/ui/components/pixel-wipe-carousel";
 
-import { DocsPageLayout } from "@/components/docs-page-layout";
-import { PixelWipeCarouselPreview } from "@/components/docs/previews/pixel-wipe-carousel-preview";
-import { readComponentSource } from "@/lib/source-code";
+import {DocsPageLayout} from "@/components/docs-page-layout";
+
+import {readComponentSource} from "@/lib/source-code";
+import {PixelWipeCarouselPlayground, PixelWipeCarouselPersonalizePanel} from "@/components/docs/previews/visual-effects-playgrounds";
 
 const defaultCode = `import { PixelWipeCarousel } from "@/components/ui/pixel-wipe-carousel"
 
@@ -42,7 +43,8 @@ export async function PixelWipeCarouselDocs() {
       hideExamples
       title="Pixel Wipe Carousel"
       description="An autoplaying editorial image carousel that sweeps each new frame in from the right through a deliberately coarse, resolving pixel mosaic."
-      preview={<PixelWipeCarouselPreview />}
+      preview={<PixelWipeCarouselPlayground />}
+      personalizeContent={<PixelWipeCarouselPersonalizePanel />}
       previewCode={defaultCode}
       installPackageName="pixel-wipe-carousel"
       installDependencies="clsx tailwind-merge"
