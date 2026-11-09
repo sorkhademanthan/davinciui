@@ -1,17 +1,7 @@
-import { DocsPageLayout } from "@/components/docs-page-layout";
-import { readComponentSource } from "@/lib/source-code";
-import {
-  SpiralMediaGallery,
-  SPIRAL_MEDIA_GALLERY_DEFAULT_IMAGES,
-} from "@workspace/ui/components/spiral-media-gallery";
+import {DocsPageLayout} from "@/components/docs-page-layout";
+import {readComponentSource} from "@/lib/source-code";
+import {SpiralMediaGalleryPlayground, SpiralMediaGalleryPersonalizePanel} from "@/components/docs/previews/premium-playgrounds";
 
-const IMAGE_ALTS = [
-  "Portrait with translucent glasses and a hand resting near the chin",
-  "Portrait with dark hair, red lips, and a dark red background",
-  "Portrait in a pale knit top washed with electric blue light",
-  "Portrait in red light against a deep black background",
-  "Curly-haired portrait lit by magenta and green light",
-];
 
 const defaultCode = `import { SpiralMediaGallery } from "@/components/ui/spiral-media-gallery"
 
@@ -66,14 +56,8 @@ export async function SpiralMediaGalleryDocs() {
       fullWidthPreview
       title="Spiral Media Gallery"
       description="A 3D vertical helix of media cards. The helix spins forever by drag, wheel, or arrow keys, with depth-based scale, opacity, and z-index written straight to the DOM from one requestAnimationFrame loop."
-      preview={
-        <SpiralMediaGallery
-          images={SPIRAL_MEDIA_GALLERY_DEFAULT_IMAGES}
-          imageAlts={IMAGE_ALTS}
-          className="h-full min-h-0"
-          ariaLabel="Spiral media gallery preview"
-        />
-      }
+      preview={<SpiralMediaGalleryPlayground />}
+      personalizeContent={<SpiralMediaGalleryPersonalizePanel />}
       previewCode={defaultCode}
       installPackageName="spiral-media-gallery"
       installDependencies="clsx tailwind-merge"

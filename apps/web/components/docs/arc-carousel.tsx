@@ -1,8 +1,8 @@
 import { ArcCarousel } from "@workspace/ui/components/arc-carousel";
 
 import { DocsPageLayout } from "@/components/docs-page-layout";
-import { ArcCarouselPreview } from "@/components/docs/previews/arc-carousel-preview";
 import { readComponentSource } from "@/lib/source-code";
+import { ArcCarouselPlayground, ArcCarouselPersonalizePanel } from "@/components/docs/previews/premium-playgrounds";
 
 const defaultCode = `import { ArcCarousel, type ArcCarouselItem } from "@/components/ui/arc-carousel"
 
@@ -87,7 +87,8 @@ export async function ArcCarouselDocs() {
       hideExamples
       title="Arc Carousel"
       description="A drag, wheel, and keyboard driven fan of media that rides a circular arc. Tiles stay tangent to the arc, wrap infinitely, and settle with inertia plus a soft critically damped spring."
-      preview={<ArcCarouselPreview />}
+      preview={<ArcCarouselPlayground />}
+      personalizeContent={<ArcCarouselPersonalizePanel />}
       previewCode={defaultCode}
       installPackageName="arc-carousel"
       installDependencies="clsx tailwind-merge"

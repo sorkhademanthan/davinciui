@@ -1,6 +1,7 @@
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import { readComponentSource } from "@/lib/source-code";
 import { OrbitSpiralGallery } from "@workspace/ui/components/orbit-spiral-gallery";
+import { OrbitSpiralGalleryPlayground, OrbitSpiralGalleryPersonalizePanel } from "@/components/docs/previews/premium-playgrounds";
 
 const slides = [
   {
@@ -115,13 +116,8 @@ export async function OrbitSpiralGalleryDocs() {
       hideExamples
       title="Orbit Spiral Gallery"
       description="A compact, autoplaying image gallery that responds to scroll while flowing along a smooth 3D spiral."
-      preview={
-        <OrbitSpiralGallery
-          items={slides}
-          className="h-full min-h-0"
-          ariaLabel="Cinematic editorial gallery"
-        />
-      }
+      preview={<OrbitSpiralGalleryPlayground />}
+      personalizeContent={<OrbitSpiralGalleryPersonalizePanel />}
       previewCode={defaultCode}
       installPackageName="orbit-spiral-gallery"
       installDependencies="@react-three/fiber three clsx tailwind-merge"
