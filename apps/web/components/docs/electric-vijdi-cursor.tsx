@@ -1,7 +1,8 @@
-import { DocsPageLayout } from "@/components/docs-page-layout";
-import { ElectricVijdiCursorPreview } from "@/components/docs/previews/electric-vijdi-cursor-preview";
-import { ElectricVijdiCursorExampleStage } from "@/components/docs/previews/electric-vijdi-cursor-preview";
-import { readComponentSource } from "@/lib/source-code";
+import {DocsPageLayout} from "@/components/docs-page-layout";
+
+import {ElectricVijdiCursorPlayground, ElectricVijdiCursorPersonalizePanel} from "@/components/docs/previews/cursor-playgrounds";
+import {ElectricVijdiCursorExampleStage} from "@/components/docs/previews/electric-vijdi-cursor-preview";
+import {readComponentSource} from "@/lib/source-code";
 
 const usageCode = `import { ElectricVijdiCursor } from "@/components/ui/electric-vijdi-cursor"
 
@@ -28,7 +29,8 @@ export async function ElectricVijdiCursorDocs() {
       hideExamples
       title="Electric Vijdi Cursor"
       description="A white-hot violet bolt that snaps through recent pointer movement, flickers briefly at rest, and never intercepts page interactions."
-      preview={<ElectricVijdiCursorPreview />}
+      preview={<ElectricVijdiCursorPlayground />}
+      personalizeContent={<ElectricVijdiCursorPersonalizePanel />}
       previewCode={usageCode}
       usageCode={usageCode}
       installPackageName="electric-vijdi-cursor"

@@ -1,7 +1,8 @@
-import { DocsPageLayout } from "@/components/docs-page-layout";
-import { ChromaticCursorPreview } from "@/components/docs/previews/chromatic-cursor-preview";
-import { ChromaticCursorExampleStage } from "@/components/docs/previews/chromatic-cursor-preview";
-import { readComponentSource } from "@/lib/source-code";
+import {DocsPageLayout} from "@/components/docs-page-layout";
+
+import {ChromaticCursorPlayground, ChromaticCursorPersonalizePanel} from "@/components/docs/previews/cursor-playgrounds";
+import {ChromaticCursorExampleStage} from "@/components/docs/previews/chromatic-cursor-preview";
+import {readComponentSource} from "@/lib/source-code";
 
 const usageCode = `import { ChromaticCursor } from "@/components/ui/chromatic-cursor"
 
@@ -30,7 +31,8 @@ export async function ChromaticCursorDocs() {
       hideExamples
       title="Chromatic Cursor"
       description="A lightweight RGB cursor trail with independently styled color channels, a soft glowing head, and smooth canvas motion."
-      preview={<ChromaticCursorPreview />}
+      preview={<ChromaticCursorPlayground />}
+      personalizeContent={<ChromaticCursorPersonalizePanel />}
       previewCode={usageCode}
       usageCode={usageCode}
       installPackageName="chromatic-cursor"

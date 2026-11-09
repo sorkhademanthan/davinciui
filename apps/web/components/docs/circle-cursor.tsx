@@ -1,7 +1,8 @@
-import { DocsPageLayout } from "@/components/docs-page-layout";
-import { CircleCursorPreview } from "@/components/docs/previews/circle-cursor-preview";
-import { CircleCursorExampleStage } from "@/components/docs/previews/circle-cursor-preview";
-import { readComponentSource } from "@/lib/source-code";
+import {DocsPageLayout} from "@/components/docs-page-layout";
+
+import {CircleCursorPlayground, CircleCursorPersonalizePanel} from "@/components/docs/previews/cursor-playgrounds";
+import {CircleCursorExampleStage} from "@/components/docs/previews/circle-cursor-preview";
+import {readComponentSource} from "@/lib/source-code";
 
 const usageCode = `import { CircleCursor } from "@/components/ui/circle-cursor"
 
@@ -28,7 +29,8 @@ export async function CircleCursorDocs() {
       hideExamples
       title="Circle Cursor"
       description="A single solid orange follower circle with smooth requestAnimationFrame inertia, viewport-wide tracking, automatic touch-device disablement, and light/dark theme support."
-      preview={<CircleCursorPreview />}
+      preview={<CircleCursorPlayground />}
+      personalizeContent={<CircleCursorPersonalizePanel />}
       previewCode={usageCode}
       usageCode={usageCode}
       installPackageName="circle-cursor"

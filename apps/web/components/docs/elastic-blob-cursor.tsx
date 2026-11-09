@@ -1,7 +1,8 @@
-import { DocsPageLayout } from "@/components/docs-page-layout";
-import { ElasticBlobCursorPreview } from "@/components/docs/previews/elastic-blob-cursor-preview";
-import { ElasticBlobCursorExampleStage } from "@/components/docs/previews/elastic-blob-cursor-preview";
-import { readComponentSource } from "@/lib/source-code";
+import {DocsPageLayout} from "@/components/docs-page-layout";
+
+import {ElasticBlobCursorPlayground, ElasticBlobCursorPersonalizePanel} from "@/components/docs/previews/cursor-playgrounds";
+import {ElasticBlobCursorExampleStage} from "@/components/docs/previews/elastic-blob-cursor-preview";
+import {readComponentSource} from "@/lib/source-code";
 
 const usageCode = `import { ElasticBlobCursor } from "@/components/ui/elastic-blob-cursor"
 
@@ -23,7 +24,8 @@ export async function ElasticBlobCursorDocs() {
       hideExamples
       title="Elastic Blob Cursor"
       description="A soft white blob that chases the pointer with inertia, stretches along the direction of travel, and relaxes back into a circle when you slow down."
-      preview={<ElasticBlobCursorPreview />}
+      preview={<ElasticBlobCursorPlayground />}
+      personalizeContent={<ElasticBlobCursorPersonalizePanel />}
       previewCode={usageCode}
       usageCode={usageCode}
       installPackageName="elastic-blob-cursor"
