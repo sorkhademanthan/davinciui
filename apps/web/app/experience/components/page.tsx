@@ -240,6 +240,7 @@ function hasLiveCardPreview(
     slug === "editorial-wipe-preloader" ||
     slug === "geometric-preloader" ||
     slug === "preloader-pro" ||
+    slug === "premium-preloader" ||
     slug === "wave-bars-loader" ||
     slug === "electric-vijdi-cursor" ||
     slug === "circle-cursor" ||
