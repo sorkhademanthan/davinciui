@@ -174,8 +174,6 @@ export function DocsPreviewWrapper({
     : hideDefaultVariant && activeVariant === -1
       ? 0
       : activeVariant
-      ? 0
-      : activeVariant
 
   const { setActiveVariantIndex, personalizeOpen, setPersonalizeOpen } = useDocStore()
 
@@ -582,7 +580,7 @@ export function DocsPreviewWrapper({
           : "bg-muted/30 [background-image:radial-gradient(color-mix(in_oklab,var(--border)_55%,transparent)_1px,transparent_1px)] [background-size:20px_20px]",
         effectiveScrollable
           ? "min-h-0 flex-1 flex-col items-stretch overflow-x-hidden overflow-y-auto overscroll-contain"
-          : "h-full overflow-hidden",
+          : "min-h-0 flex-1 overflow-hidden",
         !effectiveScrollable && !fullWidthPreview && "items-center justify-center"
       )}
         data-preview-scroll-region={effectiveScrollable ? "true" : undefined}

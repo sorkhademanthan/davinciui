@@ -92,7 +92,7 @@ export function ExperienceSidebarNav() {
           const isFirst = idx === 0
 
           return (
-            <div key={section.title} className={cn(!isFirst && "mt-6")}>
+            <div key={`${section.title}-${idx}`} className={cn(!isFirst && "mt-6")}>
               <button
                 onClick={() => toggle(section.title)}
                 className={cn(
