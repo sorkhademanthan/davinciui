@@ -16,7 +16,8 @@
     "test:cms-media-bento": "node scripts/test-cms-media-bento.mjs",
     "optimize:previews": "./scripts/optimize-preview-videos.sh",
     "recompress:previews": "scripts/venv/bin/python scripts/recompress-and-reupload-previews.py",
-    "test:tilt-flip-polaroid": "node --test scripts/test-tilt-flip-polaroid.mjs"
+    "test:tilt-flip-polaroid": "node --test scripts/test-tilt-flip-polaroid.mjs",
+    "test:premium-preloader": "node --test scripts/test-premium-preloader-path.mjs"
   },
   "devDependencies": {
     "@workspace/eslint-config": "workspace:*",
