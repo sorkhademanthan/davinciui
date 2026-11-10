@@ -1,7 +1,8 @@
-import { DocsPageLayout } from "@/components/docs-page-layout";
-import { GeometricTrailCursorPreview } from "@/components/docs/previews/geometric-trail-cursor-preview";
-import { GeometricTrailCursorExampleStage } from "@/components/docs/previews/geometric-trail-cursor-preview";
-import { readComponentSource } from "@/lib/source-code";
+import {DocsPageLayout} from "@/components/docs-page-layout";
+
+import {GeometricTrailCursorExampleStage} from "@/components/docs/previews/geometric-trail-cursor-preview";
+import {readComponentSource} from "@/lib/source-code";
+import {GeometricTrailCursorPlayground, GeometricTrailCursorPersonalizePanel} from "@/components/docs/previews/cursor-playgrounds";
 
 const usageCode = `import { GeometricTrailCursor } from "@/components/ui/geometric-trail-cursor"
 
@@ -23,7 +24,8 @@ export async function GeometricTrailCursorDocs() {
       hideExamples
       title="Geometric Trail Cursor"
       description="A fullscreen procedural wireframe cursor history on pure black. Pointer movement extrudes twisting chains of outlined polygons along the exact cursor path. New shapes cycle through vivid hues before settling into a long-lived near-black geometric skeleton."
-      preview={<GeometricTrailCursorPreview />}
+      preview={<GeometricTrailCursorPlayground />}
+      personalizeContent={<GeometricTrailCursorPersonalizePanel />}
       previewCode={usageCode}
       usageCode={usageCode}
       installPackageName="geometric-trail-cursor"

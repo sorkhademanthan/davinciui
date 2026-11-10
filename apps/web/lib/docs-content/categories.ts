@@ -1,5 +1,6 @@
 // Category used for related links and docs coverage checks.
 export const docsCategoryBySlug: Record<string, string> = {
+  "3d-flow-gallery": "Premium Components",
   accordion: "Layout",
   alert: "Feedback",
   "alert-dialog": "Overlays",
@@ -39,6 +40,7 @@ export const docsCategoryBySlug: Record<string, string> = {
   collapsible: "Layout",
   combobox: "Forms",
   "context-menu": "Overlays",
+  "curved-inline-type": "Text Animations",
   "date-picker": "Forms",
   dialog: "Overlays",
   drawer: "Overlays",
@@ -122,6 +124,7 @@ export const docsCategoryBySlug: Record<string, string> = {
   "soft-fluid-gradient": "Hero Backgrounds",
   "spectra-noise": "Hero Backgrounds",
   spinner: "Feedback",
+  "spiral-media-gallery": "Premium Components",
   "stacked-scroll-gallery": "Premium Components",
   "staircase-preloader": "Preloaders",
   "sunlight-effect": "Hero Backgrounds",

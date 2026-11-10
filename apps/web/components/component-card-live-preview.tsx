@@ -145,6 +145,14 @@ const CharacterFieldCardPreview = dynamic(
   { ssr: false },
 );
 
+const CurvedInlineTypeCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/curved-inline-type-card-preview").then(
+      (module) => module.CurvedInlineTypeCardPreview,
+    ),
+  { ssr: false },
+);
+
 const PixelFlowCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/pixel-flow-card-preview").then(
@@ -353,6 +361,14 @@ const InfiniteImageGalleryCardPreview = dynamic(
   { ssr: false },
 );
 
+const SpiralMediaGalleryCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/spiral-media-gallery-card-preview").then(
+      (module) => module.SpiralMediaGalleryCardPreview,
+    ),
+  { ssr: false },
+);
+
 const EditorialImageStackCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/editorial-image-stack-card-preview").then(
@@ -373,6 +389,14 @@ const CurveWallCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/curve-wall-card-preview").then(
       (module) => module.CurveWallCardPreview,
+    ),
+  { ssr: false },
+);
+
+const FlowGalleryCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/3d-flow-gallery-card-preview").then(
+      (module) => module.FlowGalleryCardPreview,
     ),
   { ssr: false },
 );
@@ -696,6 +720,7 @@ type ComponentCardLivePreviewProps = {
     | "text-reveal"
     | "rolling-text"
     | "character-field"
+    | "curved-inline-type"
     | "pixel-flow"
     | "pixel-wipe-carousel"
     | "segmented-image-carousel"
@@ -725,6 +750,8 @@ type ComponentCardLivePreviewProps = {
     | "editorial-image-stack"
     | "circular-gallery"
     | "curve-wall"
+    | "spiral-media-gallery"
+    | "3d-flow-gallery"
     | "liquid-reveal-button"
     | "animated-metric"
     | "nudge-button"
@@ -895,6 +922,8 @@ export function ComponentCardLivePreview({
         <SilkAuroraCardPreview />
       ) : slug === "character-field" ? (
         <CharacterFieldCardPreview />
+      ) : slug === "curved-inline-type" ? (
+        <CurvedInlineTypeCardPreview />
       ) : slug === "pixel-flow" ? (
         <PixelFlowCardPreview />
       ) : slug === "pixel-wipe-carousel" ? (
@@ -953,6 +982,10 @@ export function ComponentCardLivePreview({
         <CircularGalleryCardPreview />
       ) : slug === "curve-wall" ? (
         <CurveWallCardPreview />
+      ) : slug === "spiral-media-gallery" ? (
+        <SpiralMediaGalleryCardPreview />
+      ) : slug === "3d-flow-gallery" ? (
+        <FlowGalleryCardPreview />
       ) : slug === "liquid-reveal-button" ? (
         <LiquidRevealButtonCardPreview />
       ) : slug === "animated-metric" ? (

@@ -1,7 +1,8 @@
-import { DemoFrame } from "@/components/docs/previews/demo-frame";
-import { DocsPageLayout } from "@/components/docs-page-layout";
-import { readComponentSource } from "@/lib/source-code";
-import { ScrollMediaExpandInteractivePreview } from "@/components/docs/previews/scroll-media-expand-interactive-preview";
+import {DemoFrame} from "@/components/docs/previews/demo-frame";
+import {DocsPageLayout} from "@/components/docs-page-layout";
+import {readComponentSource} from "@/lib/source-code";
+import {ScrollMediaExpandPlayground, ScrollMediaExpandPersonalizePanel} from "@/components/docs/previews/iframe-playgrounds";
+
 
 const defaultCode = `import { ScrollMediaExpand } from "@/components/ui/scroll-media-expand"
 
@@ -41,7 +42,8 @@ export async function ScrollMediaExpandDocs() {
         },
       ]}
       fullWidthPreview
-      preview={<ScrollMediaExpandInteractivePreview />}
+      preview={<ScrollMediaExpandPlayground />}
+      personalizeContent={<ScrollMediaExpandPersonalizePanel />}
       previewCode={defaultCode}
       installPackageName="scroll-media-expand"
       installDependencies=""

@@ -77,6 +77,7 @@ export interface PreviewDefinition {
 /** Tall (600px) detail stages — preloaders and portrait cards. */
 const TALL_STAGE_SLUGS: ReadonlySet<string> = new Set([
   "fanned-deck",
+  "3d-flow-gallery",
   "fill-preloader",
   "staircase-preloader",
   "pixel-preloader",
@@ -145,6 +146,7 @@ const SCROLLABLE_SLUGS: ReadonlySet<string> = new Set(["text-reveal"]);
  * (CSS-only) previews are inherently safe and covered by rule below.
  */
 const REDUCE_MOTION_SAFE_SLUGS: ReadonlySet<string> = new Set([
+  "3d-flow-gallery",
   "ambient-audio-toggle",
   "ambient-strip",
   "animated-metric",
@@ -160,6 +162,7 @@ const REDUCE_MOTION_SAFE_SLUGS: ReadonlySet<string> = new Set([
   "cinematic-card-carousel",
   "crumpled-paper-reveal",
   "editorial-image-stack",
+  "curved-inline-type",
   "focus-carousel",
   "glass-scene-dock",
   "hover-cards",
@@ -182,6 +185,7 @@ const REDUCE_MOTION_SAFE_SLUGS: ReadonlySet<string> = new Set([
   "silk-aurora",
   "soft-fluid-gradient",
   "spectra-noise",
+  "spiral-media-gallery",
   "sunlight-effect",
   "tilt-flip-polaroid",
   "vertical-image-marquee",

@@ -1,11 +1,9 @@
-import {
-  ProfileCarousel,
-  type Profile,
-} from "@workspace/ui/components/profile-carousel";
+import {ProfileCarousel, type Profile} from "@workspace/ui/components/profile-carousel";
 
-import { DocsPageLayout } from "@/components/docs-page-layout";
-import { ProfileCarouselPreview } from "@/components/docs/previews/profile-carousel-preview";
-import { readComponentSource } from "@/lib/source-code";
+import {DocsPageLayout} from "@/components/docs-page-layout";
+
+import {readComponentSource} from "@/lib/source-code";
+import {ProfileCarouselPlayground, ProfileCarouselPersonalizePanel} from "@/components/docs/previews/visual-effects-playgrounds";
 
 const usageCode = `import { ProfileCarousel, type Profile } from "@/components/ui/profile-carousel"
 
@@ -78,7 +76,8 @@ export async function ProfileCarouselDocs() {
       hideExamples
       title="Profile Carousel"
       description="An editorial team carousel — full portrait cards with one traveling profile detail card, edge-clipped viewport, seamless looping, and drag plus arrow navigation on a single GPU-accelerated track."
-      preview={<ProfileCarouselPreview />}
+      preview={<ProfileCarouselPlayground />}
+      personalizeContent={<ProfileCarouselPersonalizePanel />}
       previewCode={usageCode}
       usageCode={usageCode}
       installPackageName="profile-carousel"

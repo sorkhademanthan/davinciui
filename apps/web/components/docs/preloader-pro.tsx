@@ -1,9 +1,10 @@
-import { Section } from "@/components/component-layout";
-import { PreloaderPro } from "@workspace/ui/components/preloader-pro";
+import {Section} from "@/components/component-layout";
+import {PreloaderPro} from "@workspace/ui/components/preloader-pro";
+import {PreloaderProPlayground, PreloaderProPersonalizePanel} from "@/components/docs/previews/preloader-playgrounds";
 
-import { DocsPageLayout } from "@/components/docs-page-layout";
-import { PreloaderProPreview } from "@/components/docs/previews/preloader-pro-preview";
-import { readComponentSource } from "@/lib/source-code";
+import {DocsPageLayout} from "@/components/docs-page-layout";
+
+import {readComponentSource} from "@/lib/source-code";
 
 const defaultCode = `import { PreloaderPro } from "@/components/ui/preloader-pro"
 
@@ -125,12 +126,8 @@ export async function PreloaderProDocs() {
       hideExamples
       title="Preloader Pro"
       description="A cinematic two-stage loader: heavy percentage with a thin red line on white, then a sliding panel reveal into a dark DAVINCIUI hero."
-      preview={
-        <PreloaderProPreview
-          src="/demo/preloader-pro"
-          title="Preloader Pro Demo"
-        />
-      }
+      preview={<PreloaderProPlayground />}
+      personalizeContent={<PreloaderProPersonalizePanel />}
       previewCode={defaultCode}
       usageCode={defaultCode}
       installPackageName="preloader-pro"

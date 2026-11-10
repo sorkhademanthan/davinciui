@@ -1,8 +1,9 @@
 import React from "react";
-import { DemoFrame } from "@/components/docs/previews/demo-frame";
-import { DocsPageLayout } from "@/components/docs-page-layout";
-import { readComponentSource } from "@/lib/source-code";
-import { ScrollSyncGalleryPreview } from "@/components/docs/previews/scroll-sync-gallery-preview";
+import {DemoFrame} from "@/components/docs/previews/demo-frame";
+import {DocsPageLayout} from "@/components/docs-page-layout";
+import {readComponentSource} from "@/lib/source-code";
+import {ScrollSyncGalleryPlayground, ScrollSyncGalleryPersonalizePanel} from "@/components/docs/previews/iframe-playgrounds";
+
 
 const defaultCode = `import { ScrollSyncGallery } from "@/components/ui/scroll-sync-gallery"
 
@@ -45,12 +46,8 @@ export async function ScrollSyncGalleryDocs() {
       hideExamples
       title="Scroll Sync Gallery"
       description="Full-width pinned image wall — four vertical columns travel at different speeds and alternating directions, all driven by one normalized scroll progress. Fully reversible, GPU-friendly, with responsive redistribution and reduced-motion fallback."
-      preview={
-        <ScrollSyncGalleryPreview
-          src="/demo/scroll-sync-gallery"
-          title="Scroll Sync Gallery Demo"
-        />
-      }
+      preview={<ScrollSyncGalleryPlayground />}
+      personalizeContent={<ScrollSyncGalleryPersonalizePanel />}
       previewCode={defaultCode}
       installPackageName="scroll-sync-gallery"
       installDependencies=""

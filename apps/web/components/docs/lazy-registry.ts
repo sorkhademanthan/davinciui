@@ -314,6 +314,10 @@ const docsImportMap: Record<
     import("@/components/docs/cms-scroll-gallery").then((m) => ({
       default: m.CMSScrollGalleryDocs,
     })),
+  "curved-inline-type": () =>
+    import("@/components/docs/curved-inline-type").then((m) => ({
+      default: m.CurvedInlineTypeDocs,
+    })),
   "interactive-media-accordion": () =>
     import("@/components/docs/interactive-media-accordion").then((m) => ({
       default: m.InteractiveMediaAccordionDocs,
@@ -461,6 +465,14 @@ const docsImportMap: Record<
   "curve-wall": () =>
     import("@/components/docs/curve-wall").then((m) => ({
       default: m.CurveWallDocs,
+    })),
+  "spiral-media-gallery": () =>
+    import("@/components/docs/spiral-media-gallery").then((m) => ({
+      default: m.SpiralMediaGalleryDocs,
+    })),
+  "3d-flow-gallery": () =>
+    import("@/components/docs/3d-flow-gallery").then((m) => ({
+      default: m.FlowGalleryDocs,
     })),
   "ambient-strip": () =>
     import("@/components/docs/ambient-strip").then((m) => ({

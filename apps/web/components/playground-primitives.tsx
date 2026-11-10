@@ -139,6 +139,37 @@ export function PlaygroundSwitch({
   );
 }
 
+// ─── Select ──────────────────────────────────────────────────────────────────
+
+export function PlaygroundSelect({
+  value,
+  onChange,
+  label,
+  options,
+}: {
+  value: string;
+  onChange: (val: string) => void;
+  label: string;
+  options: { label: string; value: string }[];
+}) {
+  return (
+    <label className="block space-y-1.5">
+      <span className="text-xs font-semibold text-foreground/90">{label}</span>
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="h-10 w-full rounded-md border border-border/70 bg-transparent px-3 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/25"
+      >
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+    </label>
+  );
+}
+
 // ─── Color Picker ────────────────────────────────────────────────────────────
 
 export function normalizeHexColor(value: string) {

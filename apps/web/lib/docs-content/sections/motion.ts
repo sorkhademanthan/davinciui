@@ -1,5 +1,7 @@
 // Source-grounded notes for every component page. Keep entries alphabetical.
 export const motion: Record<string, string> = {
+  "3d-flow-gallery":
+    "A single flow scalar advances at autoSpeed world units per second, wheel adds deltaY × wheelSensitivity, and vertical drag subtracts dy × dragSensitivity. Release carries velocity that decays by 0.92 per 60fps frame, and a 0.1-per-frame lerp smooths the rendered position. The loop pauses offscreen and on hidden tabs; prefers-reduced-motion disables auto-flow but leaves wheel and drag active.",
   accordion:
     "Panel height animates via grid-template-rows: 300ms ease-out opening and 200ms closing, while inner content fades and shifts with a 75ms open delay. The chevron rotates 300ms. The motion-reduce variant disables these transitions.",
   alert:
@@ -75,6 +77,8 @@ export const motion: Record<string, string> = {
     "The popup opens and closes instantly with no animation; only the control border, chips, and icons use short CSS color transitions. prefers-reduced-motion is not queried because no motion is present.",
   "context-menu":
     "The popup enters and exits over 150ms with opacity, 4px translate, and 0.96 scale using cubic-bezier(0.23,1,0.32,1). Items press to 0.99 scale in 75ms. motion-reduce:transition-none removes the popup transition and starting transform; no easing props are exposed.",
+  "curved-inline-type":
+    "A single requestAnimationFrame loop reads page scroll, smooths the base angle with a stiffness 90 / damping 26 / mass 1 spring, and writes transforms straight to the DOM. The spring overshoots softly at both ends. prefers-reduced-motion jumps the ring directly to the scroll target and stops the caption pulse.",
   "date-picker":
     "The popup animates 150ms opacity, translate, and 0.96 to 0.97 scale with cubic-bezier(0.23,1,0.32,1); calendar month changes use motion-safe keyframe animations, and day buttons use short scale transitions. Reduced motion disables the popup transition and transform via motion-reduce utilities.",
   dialog:
@@ -240,6 +244,8 @@ export const motion: Record<string, string> = {
     "Shader time advances by animationSpeed; paused or zero speed freezes the field, and rendering also stops offscreen or on hidden tabs. prefers-reduced-motion is detected initially and on change, halting the loop at a static frame.",
   spinner:
     "Both the wrapper and Loader2 icon use the Tailwind animate-spin rotation, with no duration, easing, or reduced-motion handling. Size does not change animation timing.",
+  "spiral-media-gallery":
+    "One requestAnimationFrame loop writes transform, opacity, and z-index to the cards and nothing else. Drag and wheel feed a degrees-per-frame velocity that decays by dragFriction, while autoRotate adds autoRotateSpeed once the helix is idle. The loop pauses offscreen and on hidden tabs. prefers-reduced-motion is watched live and disables auto-rotation, though user-initiated drag, wheel, and arrow steps still rotate the helix.",
   "stacked-scroll-gallery":
     "Card transforms and dimming follow scroll progress, with smoothing, easing, dimming, and dimStrength props; videos pause when offscreen. prefers-reduced-motion disables smoothing and autoplay but not the stacked movement itself.",
   "staircase-preloader":

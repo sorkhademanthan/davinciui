@@ -1,8 +1,9 @@
-import { ServicesShowcase } from "@workspace/ui/components/services-showcase";
+import {ServicesShowcase} from "@workspace/ui/components/services-showcase";
 
-import { DocsPageLayout } from "@/components/docs-page-layout";
-import { ServicesShowcasePreview } from "@/components/docs/previews/services-showcase-preview";
-import { readComponentSource } from "@/lib/source-code";
+import {DocsPageLayout} from "@/components/docs-page-layout";
+
+import {readComponentSource} from "@/lib/source-code";
+import {ServicesShowcasePlayground, ServicesShowcasePersonalizePanel} from "@/components/docs/previews/visual-effects-playgrounds";
 
 const usageCode = `import { ServicesShowcase } from "@/components/ui/services-showcase"
 
@@ -35,7 +36,8 @@ export async function ServicesShowcaseDocs() {
       hideExamples
       title="Services Showcase"
       description="A layered image stack that unfolds into three portrait cards on hover, tap, or keyboard activation, with a subtle pointer perspective response."
-      preview={<ServicesShowcasePreview />}
+      preview={<ServicesShowcasePlayground />}
+      personalizeContent={<ServicesShowcasePersonalizePanel />}
       previewCode={usageCode}
       usageCode={usageCode}
       examples={[

@@ -1,5 +1,7 @@
 // Source-grounded notes for every component page. Keep entries alphabetical.
 export const accessibility: Record<string, string> = {
+  "3d-flow-gallery":
+    "The host is exposed as a labelled role='img' and the generated canvas is not focusable, so the tunnel adds no keyboard surface. Wheel and drag are pointer-only and have no keyboard equivalent; the image panels are decorative and are not announced individually.",
   accordion:
     "Triggers are native buttons in headings with aria-expanded; arrow keys move focus between them and panels are labelled. Focus-visible rings are provided, and disabled items are skipped. Content remains mounted only when keepMounted is set.",
   alert:
@@ -77,6 +79,8 @@ export const accessibility: Record<string, string> = {
     "The text input uses role='combobox' with aria-expanded, aria-controls, aria-activedescendant, and aria-autocomplete='list'; the popup is a listbox of options. Arrow keys, Home, End, Enter, Escape, and Backspace work. The input has no label prop, so the placeholder is the only accessible name.",
   "context-menu":
     "Base UI supplies role='menu', roving focus, type-ahead, Escape dismissal, and focus return. Right-click, Ctrl+click, long-press, and Shift+F10 open it while focus is inside. The trigger wrapper is a plain non-tabbable div, so add tabIndex for keyboard-only access; section labels and shortcuts are aria-hidden.",
+  "curved-inline-type":
+    "The stage is decorative: all lines rotate on an aria-hidden track, inline images use empty alt text, and the fixed caption is aria-hidden. The page itself remains keyboard-scrollable, so PageUp, PageDown, Space, and arrow keys still drive the ring through native scroll. Videos are muted, looping, and never focusable.",
   "date-picker":
     "The trigger exposes an aria-label describing the current date and opens a popup with role='dialog' and aria-label 'Choose date'. Calendar days are buttons with full-date labels, aria-pressed, and roving tabindex; arrow keys and live month and selection announcements work. Escape closes and focus returns.",
   dialog:
@@ -240,6 +244,8 @@ export const accessibility: Record<string, string> = {
     "The effect container and fallback gradient are aria-hidden with pointer-events-none, so screen readers skip the canvas entirely. It is decorative only and exposes no labels, focus targets, or content.",
   spinner:
     "The wrapper exposes role status with aria-label Loading and also renders hidden Loading text. The Lucide icon is decorative. The duplicated label may be announced twice, and callers can override aria-label but not the hidden text.",
+  "spiral-media-gallery":
+    "The root is a labelled region with aria-roledescription gallery. The 3D card stage is aria-hidden, and passing imageAlts adds a screen-reader-only list describing the source images. The region is focusable: ArrowUp and ArrowDown step one card, PageUp and PageDown step four, and Home resets. Drag and wheel are pointer-only, so the arrow keys provide an equivalent rotation path.",
   "stacked-scroll-gallery":
     "The section has an aria-label, inactive cards are aria-hidden, each image or video has alt or aria-label, and a polite live region announces the active item. There is no keyboard control beyond normal scrolling.",
   "staircase-preloader":

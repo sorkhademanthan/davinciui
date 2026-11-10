@@ -1,8 +1,9 @@
-import { SegmentedImageCarousel } from "@workspace/ui/components/segmented-image-carousel";
+import {SegmentedImageCarousel} from "@workspace/ui/components/segmented-image-carousel";
 
-import { DocsPageLayout } from "@/components/docs-page-layout";
-import { SegmentedImageCarouselPreview } from "@/components/docs/previews/segmented-image-carousel-preview";
-import { readComponentSource } from "@/lib/source-code";
+import {DocsPageLayout} from "@/components/docs-page-layout";
+
+import {readComponentSource} from "@/lib/source-code";
+import {SegmentedImageCarouselPlayground, SegmentedImageCarouselPersonalizePanel} from "@/components/docs/previews/visual-effects-playgrounds";
 
 const defaultCode = `import { SegmentedImageCarousel } from "@/components/ui/segmented-image-carousel"
 
@@ -56,7 +57,8 @@ export async function SegmentedImageCarouselDocs() {
       hideExamples
       title="Segmented Image Carousel"
       description="An autoplaying editorial image carousel that reconstructs each new frame through a staggered grid of monochrome slices."
-      preview={<SegmentedImageCarouselPreview />}
+      preview={<SegmentedImageCarouselPlayground />}
+      personalizeContent={<SegmentedImageCarouselPersonalizePanel />}
       previewCode={defaultCode}
       installPackageName="segmented-image-carousel"
       installDependencies="clsx tailwind-merge"

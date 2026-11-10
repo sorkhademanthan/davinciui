@@ -1,9 +1,9 @@
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import type { CSSProperties, ReactNode } from "react";
-import { TiltFlipPolaroidPreview } from "@/components/docs/previews/tilt-flip-polaroid-preview";
 import { readComponentSource } from "@/lib/source-code";
 import { caveatFont } from "@/lib/caveat-font";
 import { TiltFlipPolaroid } from "@workspace/ui/components/tilt-flip-polaroid";
+import { TiltFlipPolaroidPlayground, TiltFlipPolaroidPersonalizePanel } from "@/components/docs/previews/premium-playgrounds";
 
 const demoImage = {
   src: "https://images.unsplash.com/photo-1610846202780-b4d9837371ea?w=900&q=85&auto=format&fit=crop",
@@ -64,7 +64,8 @@ export async function TiltFlipPolaroidDocs() {
       hideExamples
       title="Tilt Flip Polaroid"
       description="A Polaroid print that tilts away from the pointer with a damped 3D tilt, then flips around its Y axis to reveal a handwritten note. The hit area stays flat while the card moves, so the pointer never chases a rotated target."
-      preview={<TiltFlipPolaroidPreview className={caveatFont.variable} />}
+      preview={<TiltFlipPolaroidPlayground className={caveatFont.variable} />}
+      personalizeContent={<TiltFlipPolaroidPersonalizePanel />}
       previewCode={defaultCode}
       usageCode={usageCode}
       installPackageName="tilt-flip-polaroid"

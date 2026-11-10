@@ -2,6 +2,13 @@
 
 import { useEffect } from "react";
 import { CMSScrollGallery } from "@workspace/ui/components/cms-scroll-gallery";
+import {
+  demoBoolean,
+  demoEnum,
+  demoNumber,
+  demoString,
+  useDemoSearchParams,
+} from "@/lib/demo-search-params";
 
 /**
  * Fullscreen demo — also embedded in the docs right-side preview.
@@ -10,6 +17,8 @@ import { CMSScrollGallery } from "@workspace/ui/components/cms-scroll-gallery";
  * takes over for a beat. Respects prefers-reduced-motion.
  */
 export default function CMSScrollGalleryDemoPage() {
+  const params = useDemoSearchParams();
+
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
@@ -50,5 +59,45 @@ export default function CMSScrollGalleryDemoPage() {
     };
   }, []);
 
-  return <CMSScrollGallery />;
+  if (!params) return null;
+
+  return (
+    <CMSScrollGallery
+      scrollLengthPerItem={demoNumber(params, "scrollLengthPerItem", 100)}
+      transitionSmoothing={demoNumber(params, "transitionSmoothing", 0.55)}
+      initialItem={demoNumber(params, "initialItem", 0)}
+      fit={demoEnum(params, "fit", ["cover", "contain"], "cover")}
+      positionX={demoNumber(params, "positionX", 50)}
+      positionY={demoNumber(params, "positionY", 50)}
+      fallbackColor={demoString(params, "fallbackColor", "#dddddd")}
+      overlayColor={demoString(params, "overlayColor", "#000000")}
+      overlayOpacity={demoNumber(params, "overlayOpacity", 0)}
+      fontSize={demoNumber(params, "fontSize", 168)}
+      fontWeight={demoNumber(params, "fontWeight", 800)}
+      lineHeight={demoNumber(params, "lineHeight", 1)}
+      titleColor={demoString(params, "titleColor", "#FFFFFF")}
+      titleAlign={demoEnum(
+        params,
+        "titleAlign",
+        ["center", "left", "right"],
+        "center",
+      )}
+      showThumbnails={demoBoolean(params, "showThumbnails", true)}
+      orientation={demoEnum(
+        params,
+        "orientation",
+        ["vertical", "horizontal"],
+        "vertical",
+      )}
+      thumbnailWidth={demoNumber(params, "thumbnailWidth", 56)}
+      thumbnailHeight={demoNumber(params, "thumbnailHeight", 56)}
+      thumbnailRadius={demoNumber(params, "thumbnailRadius", 10)}
+      gap={demoNumber(params, "gap", 10)}
+      dockPadding={demoNumber(params, "dockPadding", 12)}
+      activeBorderColor={demoString(params, "activeBorderColor", "#ffffff")}
+      activeBorderWidth={demoNumber(params, "activeBorderWidth", 2)}
+      activeBorderOffset={demoNumber(params, "activeBorderOffset", 5)}
+      activeBorderRadius={demoNumber(params, "activeBorderRadius", 14)}
+    />
+  );
 }

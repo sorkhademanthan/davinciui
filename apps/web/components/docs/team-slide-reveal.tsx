@@ -1,12 +1,13 @@
-import { TeamSlideReveal } from "@workspace/ui/components/team-slide-reveal";
+import {TeamSlideReveal} from "@workspace/ui/components/team-slide-reveal";
 
-import { DocsPageLayout } from "@/components/docs-page-layout";
-import { TeamSlideRevealPreview } from "@/components/docs/previews/team-slide-reveal-preview";
-import { readComponentSource } from "@/lib/source-code";
+import {DocsPageLayout} from "@/components/docs-page-layout";
+
+import {readComponentSource} from "@/lib/source-code";
+import {TeamSlideRevealPlayground, TeamSlideRevealPersonalizePanel} from "@/components/docs/previews/interaction-playgrounds";
 
 const usageCode = `"use client";
 
-import { TeamSlideReveal } from "@/components/ui/team-slide-reveal";
+import {TeamSlideReveal} from "@/components/ui/team-slide-reveal";
 
 export function FounderStory() {
   return (
@@ -31,7 +32,8 @@ export async function TeamSlideRevealDocs() {
       hideExamples
       title="Team Slide Reveal"
       description="An editorial portrait card that reveals a personal story in a rising sheet. Open the full card, then use the back control to return to the profile."
-      preview={<TeamSlideRevealPreview />}
+      preview={<TeamSlideRevealPlayground />}
+      personalizeContent={<TeamSlideRevealPersonalizePanel />}
       previewCode={usageCode}
       usageCode={usageCode}
       examples={[

@@ -1,7 +1,8 @@
-import { DemoFrame } from "@/components/docs/previews/demo-frame";
-import { DocsPageLayout } from "@/components/docs-page-layout";
-import { readComponentSource } from "@/lib/source-code";
-import { ScrollRevealImagePreview } from "@/components/docs/previews/scroll-reveal-image-preview";
+import {DemoFrame} from "@/components/docs/previews/demo-frame";
+import {DocsPageLayout} from "@/components/docs-page-layout";
+import {readComponentSource} from "@/lib/source-code";
+import {ScrollRevealImagePlayground, ScrollRevealImagePersonalizePanel} from "@/components/docs/previews/iframe-playgrounds";
+
 
 const defaultCode = `import { ScrollRevealImage } from "@/components/ui/scroll-reveal-image"
 
@@ -53,12 +54,8 @@ export async function ScrollRevealImageDocs() {
         },
       ]}
       fullWidthPreview
-      preview={
-        <ScrollRevealImagePreview
-          src="/demo/scroll-reveal-image"
-          title="Scroll Reveal Image Demo"
-        />
-      }
+      preview={<ScrollRevealImagePlayground />}
+      personalizeContent={<ScrollRevealImagePersonalizePanel />}
       previewCode={defaultCode}
       installPackageName="scroll-reveal-image"
       installDependencies="framer-motion clsx tailwind-merge"

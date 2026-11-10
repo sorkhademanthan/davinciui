@@ -1,11 +1,10 @@
-import { HoverCards } from "@workspace/ui/components/hover-cards";
+import {HoverCards} from "@workspace/ui/components/hover-cards";
 
-import { DocsPageLayout } from "@/components/docs-page-layout";
-import { hoverCardsDemoItems } from "@/components/docs/previews/hover-cards-items";
-import {
-  HoverCardsPreview,
-} from "@/components/docs/previews/hover-cards-preview";
-import { readComponentSource } from "@/lib/source-code";
+import {DocsPageLayout} from "@/components/docs-page-layout";
+import {hoverCardsDemoItems} from "@/components/docs/previews/hover-cards-items";
+
+import {readComponentSource} from "@/lib/source-code";
+import {HoverCardsPlayground, HoverCardsPersonalizePanel} from "@/components/docs/previews/visual-effects-playgrounds";
 
 const usageCode = `import { HoverCards, type HoverCardsItem } from "@/components/ui/hover-cards"
 
@@ -42,7 +41,8 @@ export async function HoverCardsDocs() {
       hideExamples
       title="Hover Cards"
       description="An editorial portrait row that opens the hovered card into a tall focal image while a blurred, full-bleed version of the same artwork washes across the stage. Pointer, keyboard, and tap interactions share the same responsive composition."
-      preview={<HoverCardsPreview />}
+      preview={<HoverCardsPlayground />}
+      personalizeContent={<HoverCardsPersonalizePanel />}
       previewCode={usageCode}
       usageCode={usageCode}
       examples={[

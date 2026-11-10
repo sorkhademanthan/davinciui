@@ -1,7 +1,8 @@
-import { DocsPageLayout } from "@/components/docs-page-layout";
-import { MagicCursorProPreview } from "@/components/docs/previews/magic-cursor-pro-preview";
-import { MagicCursorProExampleStage } from "@/components/docs/previews/magic-cursor-pro-preview";
-import { readComponentSource } from "@/lib/source-code";
+import {DocsPageLayout} from "@/components/docs-page-layout";
+
+import {MagicCursorProPlayground, MagicCursorProPersonalizePanel} from "@/components/docs/previews/cursor-playgrounds";
+import {MagicCursorProExampleStage} from "@/components/docs/previews/magic-cursor-pro-preview";
+import {readComponentSource} from "@/lib/source-code";
 
 const usageCode = `import { MagicCursorPro } from "@/components/ui/magic-cursor-pro"
 
@@ -22,7 +23,8 @@ export async function MagicCursorProDocs() {
       hideExamples
       title="Magic Cursor Pro"
       description="A compact outlined cursor with natural spring weight, subtle click compression, dynamic blend support, and automatic touch/portrait disablement."
-      preview={<MagicCursorProPreview />}
+      preview={<MagicCursorProPlayground />}
+      personalizeContent={<MagicCursorProPersonalizePanel />}
       previewCode={usageCode}
       usageCode={usageCode}
       installPackageName="magic-cursor-pro"

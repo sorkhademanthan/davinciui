@@ -3,7 +3,10 @@ import { Archivo_Narrow } from "next/font/google";
 import { FluidParticleText } from "@workspace/ui/components/fluid-particle-text";
 
 import { DocsPageLayout } from "@/components/docs-page-layout";
-import { FluidParticleTextPreview } from "@/components/docs/previews/fluid-particle-text-preview";
+import {
+  FluidParticleTextPlayground,
+  FluidParticleTextPersonalizePanel,
+} from "@/components/docs/previews/fluid-particle-text-playground";
 import { readComponentSource } from "@/lib/source-code";
 
 /* Reference typeface (confirmed from the published reference page). */
@@ -37,10 +40,11 @@ export async function FluidParticleTextDocs() {
         title="Fluid Particle Text"
         description="Interactive particle typography sampled from rasterized text. A dense sheet of material at rest, advected along your cursor trajectory with pressure, shear and topology coherence, then sprung home."
         preview={
-          <FluidParticleTextPreview
-            fontFamily={archivoNarrow.style.fontFamily}
+          <FluidParticleTextPlayground
+            extraProps={{ fontFamily: archivoNarrow.style.fontFamily }}
           />
         }
+        personalizeContent={<FluidParticleTextPersonalizePanel />}
         previewCode={defaultCode}
         examples={[
           {

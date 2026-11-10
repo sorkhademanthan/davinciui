@@ -1,8 +1,9 @@
-import { CinematicCardCarousel } from "@workspace/ui/components/cinematic-card-carousel";
-import { cinematicDemoCards } from "@/components/docs/previews/cinematic-card-carousel-items";
-import { DocsPageLayout } from "@/components/docs-page-layout";
-import { CinematicCardCarouselPreview } from "@/components/docs/previews/cinematic-card-carousel-preview";
-import { readComponentSource } from "@/lib/source-code";
+import {CinematicCardCarousel} from "@workspace/ui/components/cinematic-card-carousel";
+import {cinematicDemoCards} from "@/components/docs/previews/cinematic-card-carousel-items";
+import {DocsPageLayout} from "@/components/docs-page-layout";
+
+import {readComponentSource} from "@/lib/source-code";
+import {CinematicCardCarouselPlayground, CinematicCardCarouselPersonalizePanel} from "@/components/docs/previews/visual-effects-playgrounds";
 
 const defaultCode = `import { CinematicCardCarousel } from "@/components/ui/cinematic-card-carousel"
 
@@ -70,7 +71,8 @@ export async function CinematicCardCarouselDocs() {
       hideExamples
       title="Cinematic Card Carousel"
       description="A cinematic depth-based card gallery — one sharp hero portrait stays dominant in the center while neighbors compress behind it with progressive scale, blur, and fade. Drag, swipe, or click any card to promote it with weighted spring physics."
-      preview={<CinematicCardCarouselPreview />}
+      preview={<CinematicCardCarouselPlayground />}
+      personalizeContent={<CinematicCardCarouselPersonalizePanel />}
       previewCode={defaultCode}
       installPackageName="cinematic-card-carousel"
       installDependencies="framer-motion lucide-react clsx tailwind-merge"
@@ -78,10 +80,7 @@ export async function CinematicCardCarouselDocs() {
       installSourceFilename="components/ui/cinematic-card-carousel.tsx"
       importCode={`"use client";
 
-import {
-  CinematicCardCarousel,
-  type CinematicCardItem,
-} from "@/components/ui/cinematic-card-carousel";`}
+import {CinematicCardCarousel, type CinematicCardItem} from "@/components/ui/cinematic-card-carousel";`}
       usageCode={usageCode}
       examples={[
         {

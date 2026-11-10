@@ -9,6 +9,10 @@
   ],
   "items": [
     {
+      "name": "3d-flow-gallery",
+      "type": "registry:ui"
+    },
+    {
       "name": "accordion",
       "type": "registry:ui"
     },
@@ -158,6 +162,10 @@
     },
     {
       "name": "curve-wall",
+      "type": "registry:ui"
+    },
+    {
+      "name": "curved-inline-type",
       "type": "registry:ui"
     },
     {
@@ -550,6 +558,10 @@
     },
     {
       "name": "spinner",
+      "type": "registry:ui"
+    },
+    {
+      "name": "spiral-media-gallery",
       "type": "registry:ui"
     },
     {

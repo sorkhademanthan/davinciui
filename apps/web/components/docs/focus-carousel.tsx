@@ -1,6 +1,7 @@
-import { DocsPageLayout } from "@/components/docs-page-layout";
-import { FocusCarouselPreview } from "@/components/docs/previews/focus-carousel-preview";
-import { readComponentSource } from "@/lib/source-code";
+import {DocsPageLayout} from "@/components/docs-page-layout";
+
+import {readComponentSource} from "@/lib/source-code";
+import {FocusCarouselPlayground, FocusCarouselPersonalizePanel} from "@/components/docs/previews/visual-effects-playgrounds";
 
 const defaultCode = `import { FocusCarousel } from "@/components/ui/focus-carousel"
 
@@ -122,7 +123,8 @@ export async function FocusCarouselDocs() {
     <DocsPageLayout
       title="Focus Carousel"
       description="An infinite, horizontally centred media gallery where one sharp card holds focus while neighbours shrink, desaturate, and blur as a continuous function of distance. Click, drag, or use the keyboard to move the strip; an Image/Video toggle swaps the media in place."
-      preview={<FocusCarouselPreview />}
+      preview={<FocusCarouselPlayground />}
+      personalizeContent={<FocusCarouselPersonalizePanel />}
       previewCode={defaultCode}
       installPackageName="focus-carousel"
       installDependencies="framer-motion clsx tailwind-merge"
@@ -130,10 +132,7 @@ export async function FocusCarouselDocs() {
       installSourceFilename="components/ui/focus-carousel.tsx"
       importCode={`"use client";
 
-import {
-  FocusCarousel,
-  type FocusCarouselItem,
-} from "@/components/ui/focus-carousel";`}
+import {FocusCarousel, type FocusCarouselItem} from "@/components/ui/focus-carousel";`}
       usageCode={usageCode}
       fullWidthPreview
       props={[

@@ -1,7 +1,8 @@
-import { DocsPageLayout } from "@/components/docs-page-layout";
-import { TubesCursorPreview } from "@/components/docs/previews/tubes-cursor-preview";
-import { TubesCursorExampleStage } from "@/components/docs/previews/tubes-cursor-preview";
-import { readComponentSource } from "@/lib/source-code";
+import {DocsPageLayout} from "@/components/docs-page-layout";
+
+import {TubesCursorExampleStage} from "@/components/docs/previews/tubes-cursor-preview";
+import {readComponentSource} from "@/lib/source-code";
+import {TubesCursorPlayground, TubesCursorPersonalizePanel} from "@/components/docs/previews/cursor-playgrounds";
 
 const usageCode = `import { TubesCursor } from "@/components/ui/tubes-cursor"
 
@@ -23,7 +24,8 @@ export async function TubesCursorDocs() {
       hideExamples
       title="Tubes Cursor"
       description="A bundle of glowing 3D neon tubes that chases the pointer with fluid inertia, smooth spline curvature, and soft bloom. Clicking randomizes the palette."
-      preview={<TubesCursorPreview />}
+      preview={<TubesCursorPlayground />}
+      personalizeContent={<TubesCursorPersonalizePanel />}
       previewCode={usageCode}
       usageCode={usageCode}
       installPackageName="tubes-cursor"

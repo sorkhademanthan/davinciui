@@ -1,7 +1,10 @@
 import { GlitchLiquidText } from "@workspace/ui/components/glitch-liquid-text";
 
 import { DocsPageLayout } from "@/components/docs-page-layout";
-import { GlitchLiquidTextPreview } from "@/components/docs/previews/glitch-liquid-text-preview";
+import {
+  GlitchLiquidTextPlayground,
+  GlitchLiquidTextPersonalizePanel,
+} from "@/components/docs/previews/glitch-liquid-text-playground";
 import { readComponentSource } from "@/lib/source-code";
 import { MousePointer } from "lucide-react";
 
@@ -51,10 +54,11 @@ export async function GlitchLiquidTextDocs() {
       description="GPU-rendered interactive typography printed on a thin liquid membrane. The cursor stretches glyphs with viscous fluid distortion, velocity-driven smear, localized RGB channel separation, subtle glitch slices, and cinematic light rays — while untouched type stays razor sharp."
       preview={
         <div className="relative h-full min-h-[560px] w-full p-6 sm:p-10">
-          <GlitchLiquidTextPreview />
+          <GlitchLiquidTextPlayground />
           <HoverHint />
         </div>
       }
+      personalizeContent={<GlitchLiquidTextPersonalizePanel />}
       previewCode={defaultCode}
       fullWidthPreview
       installPackageName="glitch-liquid-text"

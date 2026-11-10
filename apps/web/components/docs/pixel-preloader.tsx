@@ -1,8 +1,9 @@
-import { Section } from "@/components/component-layout";
-import { DemoFrame } from "@/components/docs/previews/demo-frame";
-import { DocsPageLayout } from "@/components/docs-page-layout";
-import { PixelPreloaderPreview } from "@/components/docs/previews/pixel-preloader-preview";
-import { readComponentSource } from "@/lib/source-code";
+import {Section} from "@/components/component-layout";
+import {DemoFrame} from "@/components/docs/previews/demo-frame";
+import {DocsPageLayout} from "@/components/docs-page-layout";
+
+import {readComponentSource} from "@/lib/source-code";
+import {PixelPreloaderPlayground, PixelPreloaderPersonalizePanel} from "@/components/docs/previews/preloader-playgrounds";
 
 const defaultCode = `import { PixelPreloader } from "@/components/ui/pixel-preloader"
 
@@ -112,12 +113,8 @@ export async function PixelPreloaderDocs() {
       hideExamples
       title="Pixel Preloader"
       description="A fullscreen pixel-grid loader that takes over the viewport bottom-up behind a jagged orange frontier, with a top-left percentage HUD and a clean fade reveal."
-      preview={
-        <PixelPreloaderPreview
-          src="/demo/pixel-preloader"
-          title="Pixel Preloader Demo"
-        />
-      }
+      preview={<PixelPreloaderPlayground />}
+      personalizeContent={<PixelPreloaderPersonalizePanel />}
       previewCode={defaultCode}
       usageCode={defaultCode}
       installPackageName="pixel-preloader"

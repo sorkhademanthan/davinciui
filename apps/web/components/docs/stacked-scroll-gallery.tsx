@@ -1,8 +1,9 @@
 import React from "react";
-import { DemoFrame } from "@/components/docs/previews/demo-frame";
-import { DocsPageLayout } from "@/components/docs-page-layout";
-import { readComponentSource } from "@/lib/source-code";
-import { StackedScrollGalleryPreview } from "@/components/docs/previews/stacked-scroll-gallery-preview";
+import {DemoFrame} from "@/components/docs/previews/demo-frame";
+import {DocsPageLayout} from "@/components/docs-page-layout";
+import {readComponentSource} from "@/lib/source-code";
+import {StackedScrollGalleryPlayground, StackedScrollGalleryPersonalizePanel} from "@/components/docs/previews/iframe-playgrounds";
+
 
 const defaultCode = `import { StackedScrollGallery } from "@/components/ui/stacked-scroll-gallery"
 
@@ -32,12 +33,8 @@ export async function StackedScrollGalleryDocs() {
       hideExamples
       title="Stacked Scroll Gallery"
       description="Pinned layered media stack — the next panel rises from the bottom and physically covers the current one, driven directly by scroll. Fully reversible, with per-card rounding and a live next-card preview strip."
-      preview={
-        <StackedScrollGalleryPreview
-          src="/demo/stacked-scroll-gallery"
-          title="Stacked Scroll Gallery Demo"
-        />
-      }
+      preview={<StackedScrollGalleryPlayground />}
+      personalizeContent={<StackedScrollGalleryPersonalizePanel />}
       previewCode={defaultCode}
       installPackageName="stacked-scroll-gallery"
       installDependencies=""

@@ -1,9 +1,10 @@
-import { Section } from "@/components/component-layout";
-import { EditorialWipePreloader } from "@workspace/ui/components/editorial-wipe-preloader";
+import {Section} from "@/components/component-layout";
+import {EditorialWipePreloader} from "@workspace/ui/components/editorial-wipe-preloader";
+import {EditorialWipePreloaderPlayground, EditorialWipePreloaderPersonalizePanel} from "@/components/docs/previews/preloader-playgrounds";
 
-import { DocsPageLayout } from "@/components/docs-page-layout";
-import { EditorialWipePreloaderPreview } from "@/components/docs/previews/editorial-wipe-preloader-preview";
-import { readComponentSource } from "@/lib/source-code";
+import {DocsPageLayout} from "@/components/docs-page-layout";
+
+import {readComponentSource} from "@/lib/source-code";
 
 const defaultCode = `import { EditorialWipePreloader } from "@/components/ui/editorial-wipe-preloader"
 
@@ -115,12 +116,8 @@ export async function EditorialWipePreloaderDocs() {
       hideExamples
       title="Editorial Wipe Preloader"
       description="A fullscreen forest-to-cream horizontal wipe with a giant split-tone counter and a vertical slide-away reveal."
-      preview={
-        <EditorialWipePreloaderPreview
-          src="/demo/editorial-wipe-preloader"
-          title="Editorial Wipe Preloader Demo"
-        />
-      }
+      preview={<EditorialWipePreloaderPlayground />}
+      personalizeContent={<EditorialWipePreloaderPersonalizePanel />}
       previewCode={defaultCode}
       usageCode={defaultCode}
       installPackageName="editorial-wipe-preloader"

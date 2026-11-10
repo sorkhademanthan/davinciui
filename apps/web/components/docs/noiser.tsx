@@ -1,5 +1,9 @@
 import { Noiser } from "@workspace/ui/components/noiser";
 import { DocsPageLayout } from "@/components/docs-page-layout";
+import {
+  NoiserPlayground,
+  NoiserPersonalizePanel,
+} from "@/components/docs/previews/hero-background-playgrounds";
 import { readComponentSource } from "@/lib/source-code";
 
 const usageCode = `import Noiser from "@/components/ui/noiser"
@@ -30,34 +34,8 @@ export async function NoiserDocs() {
       hideExamples
       title="Noiser"
       description="Fine procedural grain for hero backgrounds, rendered with responsive SVG turbulence filters."
-      preview={
-        <div
-          className="relative h-full min-h-[360px] overflow-hidden bg-[radial-gradient(ellipse_at_25%_20%,#603c9a_0%,transparent_48%),linear-gradient(135deg,#11101c_0%,#29244a_55%,#10131f_100%)]"
-          style={{ containerType: "inline-size" }}
-        >
-          <Noiser
-            colorMode="duo"
-            colorA="#f5efff"
-            colorB="#a38bff"
-            frequency={0.32}
-            noiseOpacity={0.72}
-            colorOpacity={0.78}
-            animated
-            fps={12}
-          />
-          <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center px-4">
-            <span
-              className="whitespace-nowrap text-[clamp(2rem,11cqi,7rem)] font-black uppercase leading-none tracking-[-0.075em] text-white"
-              style={{
-                WebkitTextStroke: "0.8px rgba(17, 16, 28, 0.55)",
-                textShadow: "0 4px 18px rgba(0, 0, 0, 0.42)",
-              }}
-            >
-              DAVINCIUI
-            </span>
-          </div>
-        </div>
-      }
+      preview={<NoiserPlayground />}
+      personalizeContent={<NoiserPersonalizePanel />}
       previewCode={usageCode}
       usageCode={usageCode}
       installPackageName="noiser"

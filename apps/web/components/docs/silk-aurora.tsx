@@ -1,6 +1,10 @@
 import React from "react";
 import { SilkAurora } from "@workspace/ui/components/silk-aurora";
 import { DocsPageLayout } from "@/components/docs-page-layout";
+import {
+  SilkAuroraPlayground,
+  SilkAuroraPersonalizePanel,
+} from "@/components/docs/previews/hero-background-playgrounds";
 import { readComponentSource } from "@/lib/source-code";
 
 const basicUsageCode = `import { SilkAurora } from "@/components/ui/silk-aurora"
@@ -32,24 +36,8 @@ export async function SilkAuroraDocs() {
       hideExamples
       title="Silk Aurora"
       description="A premium WebGL hero background with satin-dark aurora ribbons, pearlescent highlights, subtle grain, and optional cursor depth."
-      preview={
-        <div className="relative h-full w-full overflow-hidden bg-[#060505]">
-          <SilkAurora
-            baseColor="#060505"
-            midColor="#19130f"
-            sheenColor="#ffe2a9"
-            accentColor="#c58d5d"
-            intensity={0.9}
-            speed={0.75}
-            className="h-full w-full min-h-0"
-          />
-          <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center px-4 text-center">
-            <span className="text-5xl font-black uppercase tracking-[-0.055em] text-white sm:text-6xl">
-              DAVINCIUI
-            </span>
-          </div>
-        </div>
-      }
+      preview={<SilkAuroraPlayground />}
+      personalizeContent={<SilkAuroraPersonalizePanel />}
       previewCode={basicUsageCode}
       installPackageName="silk-aurora"
       installSourceCode={sourceCode}

@@ -635,6 +635,15 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "cms-scroll-gallery",
     addedAt: "2026-09-15",
   },
+  "curved-inline-type": {
+    title: "Curved Inline Type",
+    description:
+      "A sticky scroll stage where headline lines ride an invisible vertical drum, rising, flattening, and fading over the top with images and looping videos inline between words.",
+    category: "Text Animations",
+    extraCategories: ["Scroll"],
+    slug: "curved-inline-type",
+    addedAt: "2026-11-06",
+  },
   "interactive-media-accordion": {
     title: "Interactive Media Accordion",
     description:
@@ -788,6 +797,22 @@ export const components: Record<string, ComponentMetadata> = {
     extraCategories: ["Interactions"],
     slug: "curve-wall",
     addedAt: "2026-11-04",
+  },
+  "spiral-media-gallery": {
+    title: "Spiral Media Gallery",
+    description:
+      "A 3D vertical helix of images that spins infinitely by drag, wheel, or arrow keys, with depth-based scale, opacity, and z-index written straight from one requestAnimationFrame loop.",
+    category: "Premium Components",
+    slug: "spiral-media-gallery",
+    addedAt: "2026-11-07",
+  },
+  "3d-flow-gallery": {
+    title: "3D Flow Gallery",
+    description:
+      "An infinite tunnel of image panels and a hairline grid, streamed toward the camera by wheel, drag, or auto-flow. Light and dark themes.",
+    category: "Premium Components",
+    slug: "3d-flow-gallery",
+    addedAt: "2026-11-07",
   },
   "ambient-strip": {
     title: "Ambient Strip",
@@ -1193,6 +1218,7 @@ export const FEATURED_SLUGS = [
   "crumpled-paper-reveal",
   "tubes-cursor",
   "text-video-mask",
+  "curved-inline-type",
   "neon-mesh-bg",
   "gsap-text",
   "shake-text",

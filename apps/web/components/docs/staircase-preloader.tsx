@@ -1,8 +1,9 @@
-import { Section } from "@/components/component-layout";
-import { DemoFrame } from "@/components/docs/previews/demo-frame";
-import { DocsPageLayout } from "@/components/docs-page-layout";
-import { StaircasePreloaderPreview } from "@/components/docs/previews/staircase-preloader-preview";
-import { readComponentSource } from "@/lib/source-code";
+import {Section} from "@/components/component-layout";
+import {DemoFrame} from "@/components/docs/previews/demo-frame";
+import {DocsPageLayout} from "@/components/docs-page-layout";
+
+import {readComponentSource} from "@/lib/source-code";
+import {StaircasePreloaderPlayground, StaircasePreloaderPersonalizePanel} from "@/components/docs/previews/preloader-playgrounds";
 
 const defaultCode = `import { StaircasePreloader } from "@/components/ui/staircase-preloader"
 
@@ -99,12 +100,8 @@ export async function StaircasePreloaderDocs() {
       hideExamples
       title="Staircase Preloader"
       description="A fullscreen orange stepped-curtain loader that exits upward with a left-to-right staircase edge and a top-right finish."
-      preview={
-        <StaircasePreloaderPreview
-          src="/demo/staircase-preloader"
-          title="Staircase Preloader Demo"
-        />
-      }
+      preview={<StaircasePreloaderPlayground />}
+      personalizeContent={<StaircasePreloaderPersonalizePanel />}
       previewCode={defaultCode}
       usageCode={defaultCode}
       installPackageName="staircase-preloader"

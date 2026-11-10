@@ -3,6 +3,7 @@ import { LENS_DRIFT_ITEMS } from "@workspace/ui/components/lens-drift-grid";
 import { LensDriftGrid } from "@workspace/ui/components/lens-drift-grid";
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import { readComponentSource } from "@/lib/source-code";
+import { LensDriftGridPlayground, LensDriftGridPersonalizePanel } from "@/components/docs/previews/visual-effects-playgrounds";
 
 const defaultCode = `import { LensDriftGrid } from "@/components/ui/lens-drift-grid"
 
@@ -25,7 +26,8 @@ export async function LensDriftGridDocs() {
       hideExamples
       title="Lens Drift Grid"
       description="A seamless two-axis image wall warped as one continuous fisheye surface, with dense editorial tiles, weighted drag navigation, and a gentle idle auto-drift that yields to touch."
-      preview={<LensDriftGrid className="h-full w-full" autoDrift />}
+      preview={<LensDriftGridPlayground />}
+      personalizeContent={<LensDriftGridPersonalizePanel />}
       previewCode={defaultCode}
       installPackageName="lens-drift-grid"
       installDependencies="clsx tailwind-merge"

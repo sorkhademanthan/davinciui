@@ -1,7 +1,8 @@
-import { DocsPageLayout } from "@/components/docs-page-layout";
-import { FluidCursorPreview } from "@/components/docs/previews/fluid-cursor-preview";
-import { FluidCursorExampleStage } from "@/components/docs/previews/fluid-cursor-preview";
-import { readComponentSource } from "@/lib/source-code";
+import {DocsPageLayout} from "@/components/docs-page-layout";
+
+import {FluidCursorPlayground, FluidCursorPersonalizePanel} from "@/components/docs/previews/cursor-playgrounds";
+import {FluidCursorExampleStage} from "@/components/docs/previews/fluid-cursor-preview";
+import {readComponentSource} from "@/lib/source-code";
 
 const usageCode = `import { FluidCursor } from "@/components/ui/fluid-cursor"
 
@@ -23,7 +24,8 @@ export async function FluidCursorDocs() {
       hideExamples
       title="Fluid Cursor"
       description="A fullscreen GPU fluid simulation on near-black. Pointer movement injects velocity and spectral dye into a persistent velocity field with vorticity confinement and pressure solving, so colorful liquid keeps drifting, curling, and fading after the cursor leaves."
-      preview={<FluidCursorPreview />}
+      preview={<FluidCursorPlayground />}
+      personalizeContent={<FluidCursorPersonalizePanel />}
       previewCode={usageCode}
       usageCode={usageCode}
       installPackageName="fluid-cursor"
