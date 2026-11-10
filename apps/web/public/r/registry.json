@@ -437,6 +437,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "premium-preloader",
+      "type": "registry:ui"
+    },
+    {
       "name": "pricing-01",
       "type": "registry:block"
     },

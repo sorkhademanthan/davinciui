@@ -12,6 +12,10 @@ const WEBGL_ERROR_BOUNDARY_SOURCE_PATH = path.join(
   COMPONENT_DIR,
   WEBGL_ERROR_BOUNDARY_FILENAME,
 );
+const PREMIUM_PRELOADER_PATH_SOURCE_PATH = path.join(
+  __dirname,
+  "../packages/ui/src/lib/premium-preloader-path.ts",
+);
 
 const args = process.argv.slice(2);
 
@@ -63,6 +67,10 @@ function normalizeRegistryContent(content) {
     content
       .replace(/@workspace\/ui\/lib\/utils/g, "@/lib/utils")
       .replace(/@workspace\/ui\/lib\/ease/g, "@/lib/ease")
+      .replace(
+        /@workspace\/ui\/lib\/premium-preloader-path/g,
+        "@/lib/premium-preloader-path",
+      )
       .replace(
         /@workspace\/ui\/components\/webgl-error-boundary/g,
         "./webgl-error-boundary",
@@ -169,6 +177,34 @@ if (usesWebGLErrorBoundary && fs.existsSync(WEBGL_ERROR_BOUNDARY_SOURCE_PATH)) {
       content: boundaryContent,
       type: "registry:ui",
     });
+  }
+}
+
+// Premium Preloader shares a pure path helper with its regression test.
+if (sourceContent.includes("premium-preloader-path")) {
+  if (fs.existsSync(PREMIUM_PRELOADER_PATH_SOURCE_PATH)) {
+    const helperContent = normalizeRegistryContent(
+      fs.readFileSync(PREMIUM_PRELOADER_PATH_SOURCE_PATH, "utf8"),
+    );
+    const helperTargetPath = "lib/premium-preloader-path.ts";
+    const helperIndex = registryData.files.findIndex(
+      (f) =>
+        f.path === helperTargetPath ||
+        f.path.endsWith("premium-preloader-path.ts"),
+    );
+    if (helperIndex >= 0) {
+      registryData.files[helperIndex].content = helperContent;
+    } else {
+      registryData.files.push({
+        path: helperTargetPath,
+        content: helperContent,
+        type: "registry:lib",
+      });
+    }
+  } else {
+    console.error(
+      `Warning: Premium Preloader path helper not found at: ${PREMIUM_PRELOADER_PATH_SOURCE_PATH}`,
+    );
   }
 }
 
