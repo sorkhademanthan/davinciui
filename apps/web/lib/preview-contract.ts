@@ -77,6 +77,7 @@ export interface PreviewDefinition {
 /** Tall (600px) detail stages — preloaders and portrait cards. */
 const TALL_STAGE_SLUGS: ReadonlySet<string> = new Set([
   "3d-flow-gallery",
+  "cms-media-bento",
   "fill-preloader",
   "staircase-preloader",
   "pixel-preloader",
@@ -152,6 +153,7 @@ const REDUCE_MOTION_SAFE_SLUGS: ReadonlySet<string> = new Set([
   "burn-plus",
   "character-field",
   "cinematic-card-carousel",
+  "cms-media-bento",
   "curved-inline-type",
   "focus-carousel",
   "glass-scene-dock",

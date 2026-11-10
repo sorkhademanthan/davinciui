@@ -55,6 +55,8 @@ export const accessibility: Record<string, string> = {
     "The deck is a focusable carousel region with left and right arrows. Only the active card is tabbable and can be promoted with Enter or Space, and a polite live region announces card and title.",
   "circle-cursor":
     "It is a decorative aria-hidden, pointer-events-none div that never receives focus. The effect runs only on fine pointers and disables itself for coarse pointers or reduced motion, restoring the native cursor.",
+  "cms-media-bento":
+    "Each tile is a native button, so Enter and Space open the lightbox without custom key handling; the bento itself adds no roving tabindex and every tile is reachable in source order. Lightbox dialogs use aria-modal, focus the close control on open, cycle Tab inside, close on Escape, and restore focus to the tile. Images keep meaningful alt text and honor lazy loading outside the first five tiles.",
   "cms-scroll-gallery":
     "Thumbnails form a tablist of labeled tabs with aria-selected and aria-current, plus a polite live title. Dragging the dock is pointer-only and its handle is hidden from assistive technology, though each thumbnail stays keyboard focusable.",
   collapsible:
