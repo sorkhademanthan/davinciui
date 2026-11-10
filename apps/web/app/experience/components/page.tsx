@@ -49,11 +49,12 @@ const BASIC_SUBS_ALL: readonly string[] = BASIC_SUBS;
 // Mirrors the global FEATURED_SLUGS relative order so the shuffled
 // mix stays consistent across All + Text tabs.
 const TEXT_ANIMATION_ORDER = [
+  "gsap-text",
   "text-video-mask",
+  "curved-inline-type",
   "shake-text",
   "rolling-text",
   "media-text-hover",
-  "gsap-text",
   "random-text-reveal",
   "text-morph",
   "text-reveal",

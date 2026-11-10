@@ -159,7 +159,11 @@ export function EditorialImageStack({
   }, [explicitCards, effectiveCount, palette, rawBgImages]);
 
   const size = Math.max(60, Math.floor(explicitCardSize ?? DEFAULT_CARD_SIZE));
-  const centerSize = explicitCenterSize ?? Math.floor(size * centerScale);
+  const centerSize =
+    explicitCenterSize ??
+    `calc(var(--stack-size, ${size}px) * ${centerScale})`;
+  const centerSizeOffset =
+    typeof centerSize === "number" ? -centerSize / 2 : `calc(${centerSize} / -2)`;
 
   const centerImages: readonly EditorialImageStackImage[] = React.useMemo(
     () => rawCenterImages,
@@ -404,8 +408,8 @@ export function EditorialImageStack({
           top: "50%",
           width: centerSize,
           height: centerSize,
-          marginLeft: -centerSize / 2,
-          marginTop: -centerSize / 2,
+          marginLeft: centerSizeOffset,
+          marginTop: centerSizeOffset,
           border: "1px solid rgba(0, 0, 0, 0.10)",
           borderRadius: 0,
           boxShadow:
