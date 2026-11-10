@@ -135,6 +135,7 @@ function hasLiveCardPreview(
   | "motion-hamburger"
   | "liquid-chrome-button"
   | "scroll-reveal-image"
+  | "cms-media-bento"
   | "cms-scroll-gallery"
   | "interactive-media-accordion"
   | "stacked-scroll-gallery"
@@ -222,6 +223,7 @@ function hasLiveCardPreview(
     slug === "motion-hamburger" ||
     slug === "liquid-chrome-button" ||
     slug === "scroll-reveal-image" ||
+    slug === "cms-media-bento" ||
     slug === "cms-scroll-gallery" ||
     slug === "interactive-media-accordion" ||
     slug === "stacked-scroll-gallery" ||

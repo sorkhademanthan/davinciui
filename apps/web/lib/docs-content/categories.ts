@@ -36,6 +36,7 @@ export const docsCategoryBySlug: Record<string, string> = {
   "circular-gallery": "Premium Components",
   "curve-wall": "Premium Components",
   "circle-cursor": "Cursor Effects",
+  "cms-media-bento": "Premium Components",
   "cms-scroll-gallery": "Premium Components",
   collapsible: "Layout",
   combobox: "Forms",

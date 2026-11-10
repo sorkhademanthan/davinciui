@@ -78,6 +78,7 @@ export interface PreviewDefinition {
 const TALL_STAGE_SLUGS: ReadonlySet<string> = new Set([
   "fanned-deck",
   "3d-flow-gallery",
+  "cms-media-bento",
   "fill-preloader",
   "staircase-preloader",
   "pixel-preloader",
@@ -162,6 +163,7 @@ const REDUCE_MOTION_SAFE_SLUGS: ReadonlySet<string> = new Set([
   "cinematic-card-carousel",
   "crumpled-paper-reveal",
   "editorial-image-stack",
+  "cms-media-bento",
   "curved-inline-type",
   "focus-carousel",
   "glass-scene-dock",

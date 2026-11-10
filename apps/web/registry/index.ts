@@ -635,6 +635,15 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "cms-scroll-gallery",
     addedAt: "2026-09-15",
   },
+  "cms-media-bento": {
+    title: "CMS Media Bento",
+    description:
+      "A CMS-ready media bento whose weighted slicing tree re-solves the whole composition around the tile you hover. Ten color portraits from the Spiral Media Gallery set, adaptive captions, and a keyboard-friendly lightbox.",
+    category: "Premium Components",
+    extraCategories: ["Layout"],
+    slug: "cms-media-bento",
+    addedAt: "2026-11-09",
+  },
   "curved-inline-type": {
     title: "Curved Inline Type",
     description:

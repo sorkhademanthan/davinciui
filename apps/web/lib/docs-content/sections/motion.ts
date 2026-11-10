@@ -69,6 +69,8 @@ export const motion: Record<string, string> = {
     "Each tile is projected from a shared bowed vertex grid through a homography every frame. Drag and wheel feed an inertial glide that settles at 0.92 per 60fps frame, while hover lifts a small surface bump through the same projection so neighbours stay attached. Clicking a tile animates its four corners into a flat viewer over 550ms; reduced motion removes the lift and makes the viewer transition instant.",
   "circle-cursor":
     "A requestAnimationFrame loop interpolates position using followSpeed, while opacity and color transition over 120ms and 200ms. prefers-reduced-motion is watched live and disables the follower, restoring the native cursor.",
+  "cms-media-bento":
+    "A weighted slicing tree re-solves every split when the hovered tile's weight is multiplied by hoverGrow, and the resulting left, top, width, and height values transition over transitionMs with cubic-bezier(0.22,1,0.36,1). Media scales to hoverZoom, the focus veil fades over 300ms, and tiles enter with a 14px rise and 0.985 scale staggered 60ms apart. prefers-reduced-motion removes layout, entrance, zoom, and lightbox motion while keeping captions and the lightbox itself.",
   "cms-scroll-gallery":
     "Page scroll drives Framer Motion opacity, scale, slide and blur presets, smoothed by a spring derived from transitionSmoothing. useReducedMotion or the reducedMotion prop removes the transforms, but the opacity crossfade remains.",
   collapsible:

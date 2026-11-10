@@ -306,6 +306,10 @@ const docsImportMap: Record<
     import("@/components/docs/tilt-flip-polaroid").then((m) => ({
       default: m.TiltFlipPolaroidDocs,
     })),
+  "cms-media-bento": () =>
+    import("@/components/docs/cms-media-bento").then((m) => ({
+      default: m.CmsMediaBentoDocs,
+    })),
   "crumpled-paper-reveal": () =>
     import("@/components/docs/crumpled-paper-reveal").then((m) => ({
       default: m.CrumpledPaperRevealDocs,
