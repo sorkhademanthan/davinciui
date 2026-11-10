@@ -321,6 +321,14 @@ const SpiralMediaGalleryCardPreview = dynamic(
   { ssr: false },
 );
 
+const CmsMediaBentoCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/cms-media-bento-card-preview").then(
+      (module) => module.CmsMediaBentoCardPreview,
+    ),
+  { ssr: false },
+);
+
 const FlowGalleryCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/3d-flow-gallery-card-preview").then(
@@ -678,6 +686,7 @@ type ComponentCardLivePreviewProps = {
     | "motion-hamburger"
     | "liquid-chrome-button"
     | "scroll-reveal-image"
+    | "cms-media-bento"
     | "cms-scroll-gallery"
     | "interactive-media-accordion"
     | "stacked-scroll-gallery"
@@ -908,6 +917,8 @@ export function ComponentCardLivePreview({
         <LiquidChromeButtonCardPreview />
       ) : slug === "scroll-reveal-image" ? (
         <ScrollRevealImageCardPreview />
+      ) : slug === "cms-media-bento" ? (
+        <CmsMediaBentoCardPreview />
       ) : slug === "cms-scroll-gallery" ? (
         <CMSScrollGalleryCardPreview />
       ) : slug === "interactive-media-accordion" ? (
