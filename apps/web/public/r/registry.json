@@ -125,6 +125,10 @@
       "type": "registry:ui"
     },
     {
+      "name": "cms-media-bento",
+      "type": "registry:ui"
+    },
+    {
       "name": "cms-scroll-gallery",
       "type": "registry:ui"
     },
