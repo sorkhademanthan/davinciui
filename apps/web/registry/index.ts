@@ -1010,6 +1010,15 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "vertical-image-marquee",
     addedAt: "2026-09-23",
   },
+  "wavy-flow-carousel": {
+    title: "Wavy Flow Carousel",
+    description:
+      "An infinite horizontal ribbon of portrait media rendered in one WebGL canvas on your theme background — slides rise and grow taller on the crests, sink and shrink on the troughs, auto-scroll, drag with momentum, and answer the wheel.",
+    category: "Premium Components",
+    extraCategories: ["Scroll"],
+    slug: "wavy-flow-carousel",
+    addedAt: "2026-11-06",
+  },
   "hover-cards": {
     title: "Hover Cards",
     description:
@@ -1228,6 +1237,7 @@ export const FEATURED_SLUGS = [
   "tubes-cursor",
   "text-video-mask",
   "curved-inline-type",
+  "wavy-flow-carousel",
   "neon-mesh-bg",
   "gsap-text",
   "shake-text",

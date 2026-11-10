@@ -667,6 +667,10 @@
     {
       "name": "wave-bars-loader",
       "type": "registry:ui"
+    },
+    {
+      "name": "wavy-flow-carousel",
+      "type": "registry:ui"
     }
   ]
 }

@@ -409,6 +409,14 @@ const FlowGalleryCardPreview = dynamic(
   { ssr: false },
 );
 
+const WavyFlowCarouselCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/wavy-flow-carousel-card-preview").then(
+      (module) => module.WavyFlowCarouselCardPreview,
+    ),
+  { ssr: false },
+);
+
 const LiquidRevealButtonCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/liquid-reveal-button-card-preview").then(
@@ -760,6 +768,7 @@ type ComponentCardLivePreviewProps = {
     | "curve-wall"
     | "spiral-media-gallery"
     | "3d-flow-gallery"
+    | "wavy-flow-carousel"
     | "liquid-reveal-button"
     | "animated-metric"
     | "nudge-button"
@@ -995,6 +1004,8 @@ export function ComponentCardLivePreview({
         <SpiralMediaGalleryCardPreview />
       ) : slug === "3d-flow-gallery" ? (
         <FlowGalleryCardPreview />
+      ) : slug === "wavy-flow-carousel" ? (
+        <WavyFlowCarouselCardPreview />
       ) : slug === "liquid-reveal-button" ? (
         <LiquidRevealButtonCardPreview />
       ) : slug === "animated-metric" ? (

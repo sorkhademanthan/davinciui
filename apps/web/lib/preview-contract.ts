@@ -165,6 +165,7 @@ const REDUCE_MOTION_SAFE_SLUGS: ReadonlySet<string> = new Set([
   "editorial-image-stack",
   "cms-media-bento",
   "curved-inline-type",
+  "wavy-flow-carousel",
   "focus-carousel",
   "glass-scene-dock",
   "hover-cards",
