@@ -50,7 +50,6 @@ export const components: Record<string, ComponentMetadata> = {
     description:
       "A smooth RGB canvas cursor with glowing, independently customizable color trails.",
     category: "Cursor Effects",
-    extraCategories: ["Premium Components"],
     slug: "chromatic-cursor",
     addedAt: "2026-09-19",
   },
@@ -67,7 +66,6 @@ export const components: Record<string, ComponentMetadata> = {
     description:
       "A white-hot violet lightning cursor that crackles through recent pointer movement and decays without blocking interaction.",
     category: "Cursor Effects",
-    extraCategories: ["Premium Components"],
     slug: "electric-vijdi-cursor",
     addedAt: "2026-09-19",
   },
@@ -100,8 +98,7 @@ export const components: Record<string, ComponentMetadata> = {
     title: "Geometric Trail Cursor",
     description:
       "A procedural wireframe cursor history on pure black — pointer movement extrudes twisting chains of outlined polygons, bright at the head and preserved as a long-lived dark geometric skeleton.",
-    category: "Premium Components",
-    extraCategories: ["Cursor Effects"],
+    category: "Cursor Effects",
     slug: "geometric-trail-cursor",
     addedAt: "2026-09-21",
   },
@@ -630,8 +627,8 @@ export const components: Record<string, ComponentMetadata> = {
   "cms-scroll-gallery": {
     title: "CMS Scroll Gallery",
     description:
-      "Sticky fullscreen scroll gallery — long page scroll drives synchronized media + title transitions with a draggable glass thumbnail dock.",
-    category: "Visual Effects",
+      "Sticky fullscreen scroll gallery — long page scroll drives synchronized media + title transitions with a draggable glass strip.",
+    category: "Scroll",
     slug: "cms-scroll-gallery",
     addedAt: "2026-09-15",
   },
@@ -665,7 +662,7 @@ export const components: Record<string, ComponentMetadata> = {
     title: "Scroll Reveal Image",
     description:
       "A scroll-scrubbed image sequence where each new frame arrives in a centered window before taking over the backdrop.",
-    category: "Premium Components",
+    category: "Visual Effects",
     slug: "scroll-reveal-image",
     addedAt: "2026-09-15",
   },
@@ -673,7 +670,7 @@ export const components: Record<string, ComponentMetadata> = {
     title: "Stacked Scroll Gallery",
     description:
       "Pinned layered media stack — the next panel rises from below and physically covers the current one, driven directly by scroll.",
-    category: "Visual Effects",
+    category: "Scroll",
     slug: "stacked-scroll-gallery",
     addedAt: "2026-09-15",
   },
@@ -697,7 +694,7 @@ export const components: Record<string, ComponentMetadata> = {
     title: "Scroll Timeline",
     description:
       "Pinned fullscreen year timeline — vertical scroll collapses each panel horizontally via clip-path while the oversized year rotates around its bottom-left anchor, exposing the next era underneath.",
-    category: "Premium Components",
+    category: "Scroll",
     slug: "scroll-timeline",
     addedAt: "2026-09-17",
   },
@@ -855,7 +852,6 @@ export const components: Record<string, ComponentMetadata> = {
     description:
       "A deep, hypnotic native WebGL background with an enormous looping ribbon of dark color and fluid illumination.",
     category: "Hero Backgrounds",
-    extraCategories: ["Premium Components"],
     slug: "soft-fluid-gradient",
     addedAt: "2026-09-14",
   },
@@ -910,7 +906,6 @@ export const components: Record<string, ComponentMetadata> = {
     description:
       "A fullscreen bottom-up blue fill loader with a giant bottom-right percentage counter and a vertical slide-away reveal.",
     category: "Preloaders",
-    extraCategories: ["Premium Components"],
     slug: "fill-preloader",
     addedAt: "2026-09-18",
   },
@@ -943,8 +938,7 @@ export const components: Record<string, ComponentMetadata> = {
     title: "Geometric Preloader",
     description:
       "A fullscreen geometric loader with nested rotating squares and a diamond-scale reveal.",
-    category: "Premium Components",
-    extraCategories: ["Preloaders"],
+    category: "Preloaders",
     slug: "geometric-preloader",
     addedAt: "2026-09-15",
   },
@@ -953,7 +947,6 @@ export const components: Record<string, ComponentMetadata> = {
     description:
       "A cinematic two-stage loader: heavy percentage with a thin red line on white, then a sliding panel reveal into a dark PRELOADER PRO hero.",
     category: "Preloaders",
-    extraCategories: ["Premium Components"],
     slug: "preloader-pro",
     addedAt: "2026-09-19",
   },
@@ -980,7 +973,6 @@ export const components: Record<string, ComponentMetadata> = {
     description:
       "A WebGL organic burn/dissolve mask — warped multi-octave noise eats through a dark surface to reveal your media, driven by hover, scroll, tap, load, or direct control.",
     category: "Visual Effects",
-    extraCategories: ["Premium Components"],
     slug: "burn-plus",
     addedAt: "2026-09-24",
   },
@@ -1033,7 +1025,6 @@ export const components: Record<string, ComponentMetadata> = {
     description:
       "An editorial team carousel with full portrait cards, one traveling profile detail card, edge clipping, and seamless looping.",
     category: "Visual Effects",
-    extraCategories: ["Premium Components"],
     slug: "profile-carousel",
     addedAt: "2026-09-23",
   },

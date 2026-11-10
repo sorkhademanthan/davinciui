@@ -119,6 +119,13 @@ export function Section() {
           description: "Follow responsiveness from 0.05 (soft) to 1 (tight).",
         },
         {
+          name: "glow",
+          type: "boolean",
+          default: "true",
+          description:
+            "Soft additive glow around the trail. Disable on small thumbnails to save GPU time.",
+        },
+        {
           name: "red",
           type: "string",
           default: '"#FF4040"',

@@ -14,6 +14,8 @@ export interface ChromaticCursorProps {
   fadeSpeed?: number;
   /** Cursor head radius and stroke scale in pixels. */
   size?: number;
+  /** Draw the soft additive glow around the trail. Disable on tiny thumbnails. */
+  glow?: boolean;
   /** Follow responsiveness from 0.05 (soft) to 1 (tight). */
   tension?: number;
   /** Red channel color. */
@@ -88,6 +90,7 @@ export function ChromaticCursor({
   splitDistance = 4,
   fadeSpeed = 0.55,
   size = 11,
+  glow = true,
   tension = 0.34,
   red = "#FF493D",
   green = "#F4FFB0",
@@ -101,8 +104,8 @@ export function ChromaticCursor({
   className,
 }: ChromaticCursorProps) {
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
-  const settingsRef = React.useRef({ trailLength, splitDistance, fadeSpeed, size, tension, red, green, blue, quality });
-  settingsRef.current = { trailLength, splitDistance, fadeSpeed, size, tension, red, green, blue, quality };
+  const settingsRef = React.useRef({ trailLength, splitDistance, fadeSpeed, size, glow, tension, red, green, blue, quality });
+  settingsRef.current = { trailLength, splitDistance, fadeSpeed, size, glow, tension, red, green, blue, quality };
   const themeRef = React.useRef(theme);
   themeRef.current = theme;
 
@@ -222,8 +225,9 @@ export function ChromaticCursor({
       context.lineCap = "round";
       context.lineJoin = "round";
       context.strokeStyle = color;
-      context.shadowColor = color;
-      context.shadowBlur = composite === "lighter" ? lineWidth * 0.8 : 0;
+      const glowOn = settingsRef.current.glow && composite === "lighter";
+      context.shadowColor = glowOn ? color : "transparent";
+      context.shadowBlur = glowOn ? lineWidth * 0.8 : 0;
       for (let index = 1; index < count; index += 1) {
         const previous = points[index - 1];
         const current = points[index];
@@ -360,8 +364,8 @@ export function ChromaticCursor({
           context.arc(head.x, head.y, radius * 2.6, 0, Math.PI * 2);
           context.fill();
           context.fillStyle = "#18181b";
-          context.shadowColor = settings.blue;
-          context.shadowBlur = radius;
+          context.shadowColor = settings.glow ? settings.blue : "transparent";
+          context.shadowBlur = settings.glow ? radius : 0;
           context.beginPath();
           context.arc(head.x, head.y, radius * 0.58, 0, Math.PI * 2);
           context.fill();
@@ -377,8 +381,8 @@ export function ChromaticCursor({
           context.arc(head.x, head.y, radius * 1.9, 0, Math.PI * 2);
           context.fill();
           context.fillStyle = "#ffffff";
-          context.shadowColor = "#ffffff";
-          context.shadowBlur = radius;
+          context.shadowColor = settings.glow ? "#ffffff" : "transparent";
+          context.shadowBlur = settings.glow ? radius : 0;
           context.beginPath();
           context.arc(head.x, head.y, radius * 0.58, 0, Math.PI * 2);
           context.fill();
