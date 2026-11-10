@@ -4,13 +4,23 @@ interface DemoFrameProps {
   src: string;
   title: string;
   height?: number;
+  fill?: boolean;
 }
 
-export function DemoFrame({ src, title, height = 360 }: DemoFrameProps) {
+export function DemoFrame({
+  src,
+  title,
+  height = 360,
+  fill = false,
+}: DemoFrameProps) {
   return (
     <div
-      className="relative w-full overflow-hidden rounded-xl border border-border bg-background"
-      style={{ height }}
+      className={
+        fill
+          ? "relative h-full w-full overflow-hidden rounded-xl border border-border bg-background"
+          : "relative w-full overflow-hidden rounded-xl border border-border bg-background"
+      }
+      style={fill ? undefined : { height }}
     >
       <iframe
         src={src}
