@@ -950,6 +950,14 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "preloader-pro",
     addedAt: "2026-09-19",
   },
+  "premium-preloader": {
+    title: "Premium Preloader",
+    description:
+      "A theme-aware editorial curtain with a three-line tagline, a centered DAVINCIUI wordmark, and mirrored streams of portrait cards.",
+    category: "Preloaders",
+    slug: "premium-preloader",
+    addedAt: "2026-11-10",
+  },
   // Visual Effects
   "pixel-wipe-carousel": {
     title: "Pixel Wipe Carousel",
@@ -1211,6 +1219,7 @@ export function getComponent(slug: string) {
 // to alphabetical after the featured set.
 // ─────────────────────────────────────────────────────────────
 export const FEATURED_SLUGS = [
+  "premium-preloader",
   "spiral-media-gallery",
   "circular-gallery",
   "focus-carousel",

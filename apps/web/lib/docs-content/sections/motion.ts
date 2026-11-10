@@ -196,6 +196,8 @@ export const motion: Record<string, string> = {
     "The popup animates 150ms ease-out opacity and scale from 95 percent with a side-dependent slide, driven by Base UI starting and ending data attributes. No timing props exist, and motion-reduce transition-none removes the animation.",
   "preloader-pro":
     "A piecewise curve drives the counter and scaleX line, then the panel slides away and the hero settles with ambient drift. duration, completionHold, exitDuration, and loopHold set timing; matchMedia reduced motion shortens phases and swaps the slide for a fade.",
+  "premium-preloader":
+    "One GSAP timeline runs both sequences: three tagline words blur upward, then either the wordmark leads or 20 cards fly along mirrored quadratic paths with a 0.145s stagger before the logo lands at 3.1s. The right panel slides down and the left panel up, and fonts plus the first three images gate playback for at most 1.5s. matchMedia reduced motion skips the choreography and fades the overlay in 0.4s.",
   "profile-carousel":
     "The track translates with a cubic-bezier ease over transitionDuration and snaps back below the 22 percent drag threshold, while autoplay steps on autoplayInterval. matchMedia reduced motion sets duration to zero, normalizes loop position instantly, and disables autoplay.",
   progress:
