@@ -286,6 +286,10 @@ const docsImportMap: Record<
     import("@/components/docs/tilt-flip-polaroid").then((m) => ({
       default: m.TiltFlipPolaroidDocs,
     })),
+  "cms-media-bento": () =>
+    import("@/components/docs/cms-media-bento").then((m) => ({
+      default: m.CmsMediaBentoDocs,
+    })),
   "cms-scroll-gallery": () =>
     import("@/components/docs/cms-scroll-gallery").then((m) => ({
       default: m.CMSScrollGalleryDocs,

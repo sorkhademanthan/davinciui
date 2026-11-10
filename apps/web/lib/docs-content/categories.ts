@@ -28,6 +28,7 @@ export const docsCategoryBySlug: Record<string, string> = {
   "chromatic-cursor": "Cursor Effects",
   "cinematic-card-carousel": "Visual Effects",
   "circle-cursor": "Cursor Effects",
+  "cms-media-bento": "Premium Components",
   "cms-scroll-gallery": "Premium Components",
   collapsible: "Layout",
   combobox: "Forms",
