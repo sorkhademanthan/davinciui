@@ -29,6 +29,10 @@ const SCROLL_SLUGS = new Set([
   "wavy-flow-carousel",
 ]);
 
+// Fixed design-frame previews that must keep a 16:9 surface so the whole
+// composition (label, strip, counter, bar) is visible at every card width.
+const WIDE_CARD_SLUGS = new Set(["preloader-pro-v1"]);
+
 const TOP_FILTERS = [
   "All",
   "Basic",
@@ -151,6 +155,7 @@ function hasLiveCardPreview(
   | "editorial-wipe-preloader"
   | "geometric-preloader"
   | "preloader-pro"
+  | "preloader-pro-v1"
   | "wave-bars-loader"
   | "electric-vijdi-cursor"
   | "circle-cursor"
@@ -240,6 +245,7 @@ function hasLiveCardPreview(
     slug === "editorial-wipe-preloader" ||
     slug === "geometric-preloader" ||
     slug === "preloader-pro" ||
+    slug === "preloader-pro-v1" ||
     slug === "wave-bars-loader" ||
     slug === "electric-vijdi-cursor" ||
     slug === "circle-cursor" ||
@@ -439,7 +445,12 @@ function ComponentsGallery() {
           const cardContent = (
             <>
               <div className="p-1.5">
-                <div className="relative h-48 rounded-xl border border-border bg-zinc-100 dark:bg-zinc-900 overflow-hidden">
+                <div
+                  className={cn(
+                    "relative rounded-xl border border-border bg-zinc-100 dark:bg-zinc-900 overflow-hidden",
+                    WIDE_CARD_SLUGS.has(c.slug) ? "aspect-video" : "h-48",
+                  )}
+                >
                   {sources ? (
                     <video
                       autoPlay
