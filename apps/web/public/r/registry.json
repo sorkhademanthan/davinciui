@@ -437,6 +437,11 @@
       "type": "registry:ui"
     },
     {
+      "name": "preloader-pro-v1",
+      "type": "registry:ui",
+      "description": "A cinematic strip preloader: drifting portrait cards on near-black, a zero-padded counter, random glitch bursts, and a sliced-shred RGB exit."
+    },
+    {
       "name": "pricing-01",
       "type": "registry:block"
     },
