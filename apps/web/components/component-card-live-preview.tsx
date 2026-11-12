@@ -654,6 +654,14 @@ const PreloaderProCardPreview = dynamic(
   { ssr: false },
 );
 
+const PreloaderProV1CardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/preloader-pro-v1-card-preview").then(
+      (module) => module.PreloaderProV1CardPreview,
+    ),
+  { ssr: false },
+);
+
 const WaveBarsLoaderCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/wave-bars-loader-card-preview").then(
@@ -798,6 +806,7 @@ type ComponentCardLivePreviewProps = {
     | "editorial-wipe-preloader"
     | "geometric-preloader"
     | "preloader-pro"
+    | "preloader-pro-v1"
     | "wave-bars-loader"
     | BasicPreviewSlug;
 };
@@ -1064,6 +1073,8 @@ export function ComponentCardLivePreview({
         <GeometricPreloaderCardPreview />
       ) : slug === "preloader-pro" ? (
         <PreloaderProCardPreview />
+      ) : slug === "preloader-pro-v1" ? (
+        <PreloaderProV1CardPreview />
       ) : slug === "wave-bars-loader" ? (
         <WaveBarsLoaderCardPreview />
       ) : isBasicPreviewSlug(slug) ? (

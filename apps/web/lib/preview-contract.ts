@@ -87,6 +87,7 @@ const TALL_STAGE_SLUGS: ReadonlySet<string> = new Set([
   "editorial-image-stack",
   "infinite-image-gallery",
   "preloader-pro",
+  "preloader-pro-v1",
   "team-slide-reveal",
 ]);
 
