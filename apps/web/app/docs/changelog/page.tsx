@@ -48,6 +48,25 @@ export default function ChangelogPage() {
           .
         </InfoBox>
 
+        <Section title="November 2026 — Preloader Pro V1 refinement" id="november-2026-preloader-pro-v1">
+          <p className="text-sm leading-6 text-muted-foreground">
+            Preloader Pro V1 now matches the reference composition more
+            closely: the counter keeps its full glyph height and baseline, the
+            exit reveals the page on a continuous coverage curve instead of
+            stalling, glitch bursts run on a deterministic schedule with a
+            counter-only pre-exit hit, and the fullscreen stage plus gallery
+            card fill their surfaces without clipping. It now follows the site
+            light/dark theme, opens the shred with seeded glitch bars, and
+            exposes <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs">onExitStart</code>{" "}
+            so underlying content can enter while the overlay breaks apart. The
+            component also exposes a seek clock used by its new Playwright
+            regression suite.
+          </p>
+          <DocsSnippet
+            code={`pnpm dlx shadcn@latest add @davinciui/preloader-pro-v1`}
+          />
+        </Section>
+
         <Section title="October 2026 — Agent skill" id="october-2026-skill">
           <p className="text-sm leading-6 text-muted-foreground">
             Your AI assistant can now learn DavinciUI. The{" "}

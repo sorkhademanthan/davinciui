@@ -196,6 +196,8 @@ export const accessibility: Record<string, string> = {
     "Base UI supplies trigger aria-expanded and aria-controls, dialog semantics, portal focus handling, Escape to close, and focus return. The wrapper adds no accessible name, so pass aria-label or render PopoverTitle inside.",
   "preloader-pro":
     "role progressbar with aria-label Page loading reports aria-valuenow only in 25 percent milestones, while the visual counter and hero are aria-hidden. The loader does not move focus or expose a skip control.",
+  "preloader-pro-v1":
+    "A role status with aria-live polite announces 0, 25, 50, 75, and 100 percent loaded, while the drifting cards, counter, and progress bar are aria-hidden. Scroll is locked while active, but the overlay is not modal, traps no focus, and offers no skip control; reduced-motion users get a short fade.",
   "profile-carousel":
     "A focusable region with carousel roledescription and the fixed label Team profiles supports Left and Right arrow navigation and labeled previous and next buttons. A polite live region announces Profile X of N, and hover or focus pauses autoplay.",
   progress:

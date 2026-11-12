@@ -196,6 +196,8 @@ export const motion: Record<string, string> = {
     "The popup animates 150ms ease-out opacity and scale from 95 percent with a side-dependent slide, driven by Base UI starting and ending data attributes. No timing props exist, and motion-reduce transition-none removes the animation.",
   "preloader-pro":
     "A piecewise curve drives the counter and scaleX line, then the panel slides away and the hero settles with ambient drift. duration, completionHold, exitDuration, and loopHold set timing; matchMedia reduced motion shortens phases and swaps the slide for a fade.",
+  "preloader-pro-v1":
+    "A single requestAnimationFrame timeline derives the strip drift, power-curve counter, scaleX bar, seeded glitch bursts, and 28-band shred exit; duration, holdTime, exitDuration, driftSpeed, and seed control timing. matchMedia reduced motion removes drift, glitches, and the shred in favor of a short opacity fade.",
   "profile-carousel":
     "The track translates with a cubic-bezier ease over transitionDuration and snaps back below the 22 percent drag threshold, while autoplay steps on autoplayInterval. matchMedia reduced motion sets duration to zero, normalizes loop position instantly, and disables autoplay.",
   progress:
