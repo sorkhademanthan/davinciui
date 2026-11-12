@@ -99,6 +99,7 @@ export const docsCategoryBySlug: Record<string, string> = {
   "pixel-wipe-carousel": "Visual Effects",
   popover: "Overlays",
   "preloader-pro": "Preloaders",
+  "preloader-pro-v1": "Preloaders",
   "profile-carousel": "Visual Effects",
   progress: "Feedback",
   questionnaire: "Forms",
