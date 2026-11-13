@@ -48,6 +48,22 @@ export default function ChangelogPage() {
           .
         </InfoBox>
 
+        <Section title="November 2026 — Preloader Pro V4" id="november-2026-preloader-pro-v4">
+          <p className="text-sm leading-6 text-muted-foreground">
+            Preloader Pro V4 is a seven-card editorial sequence: portrait stills
+            rise from the lower edge, collapse into a centred pile, then fan
+            into a shallow arc while the counter climbs to 100. The centre card
+            lifts and expands into a full-bleed 16:9 image before the overlay
+            fades or slides away. The whole sequence runs on one deterministic
+            requestAnimationFrame timeline with replay and seek handles,
+            reduced-motion fallback, page-load mode, responsive light/dark
+            palettes, scroll locking, and an optional once-per-session guard.
+          </p>
+          <DocsSnippet
+            code={`pnpm dlx shadcn@latest add @davinciui/preloader-pro-v4`}
+          />
+        </Section>
+
         <Section title="November 2026 — Preloader Pro V1 refinement" id="november-2026-preloader-pro-v1">
           <p className="text-sm leading-6 text-muted-foreground">
             Preloader Pro V1 now matches the reference composition more

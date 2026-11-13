@@ -198,6 +198,8 @@ export const accessibility: Record<string, string> = {
     "role progressbar with aria-label Page loading reports aria-valuenow only in 25 percent milestones, while the visual counter and hero are aria-hidden. The loader does not move focus or expose a skip control.",
   "preloader-pro-v1":
     "A role status with aria-live polite announces 0, 25, 50, 75, and 100 percent loaded, while the drifting cards, counter, and progress bar are aria-hidden. Scroll is locked while active, but the overlay is not modal, traps no focus, and offers no skip control; reduced-motion users get a short fade.",
+  "preloader-pro-v4":
+    "A role status with aria-live polite announces 0, 25, 50, 75, and 100 percent loaded, while the fan, counter, label, and expanding image are aria-hidden. Scroll is locked and the underlying main is marked inert while active, but the overlay is not modal, traps no focus, and offers no skip control; reduced-motion users get a static frame and a short fade.",
   "profile-carousel":
     "A focusable region with carousel roledescription and the fixed label Team profiles supports Left and Right arrow navigation and labeled previous and next buttons. A polite live region announces Profile X of N, and hover or focus pauses autoplay.",
   progress:
