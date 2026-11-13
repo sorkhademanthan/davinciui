@@ -442,6 +442,11 @@
       "description": "A cinematic strip preloader: drifting portrait cards on near-black, a zero-padded counter, random glitch bursts, and a sliced-shred RGB exit."
     },
     {
+      "name": "preloader-pro-v4",
+      "type": "registry:ui",
+      "description": "A theme-aware seven-card editorial preloader with a rising pile, fanned arc, percentage counter, centre-card lift, and a full-bleed 16:9 image expansion."
+    },
+    {
       "name": "pricing-01",
       "type": "registry:block"
     },
