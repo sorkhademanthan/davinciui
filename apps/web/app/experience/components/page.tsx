@@ -31,7 +31,7 @@ const SCROLL_SLUGS = new Set([
 
 // Fixed design-frame previews that must keep a 16:9 surface so the whole
 // composition (label, strip, counter, bar) is visible at every card width.
-const WIDE_CARD_SLUGS = new Set(["preloader-pro-v1"]);
+const WIDE_CARD_SLUGS = new Set(["preloader-pro-v1", "preloader-pro-v4"]);
 
 const TOP_FILTERS = [
   "All",
@@ -156,6 +156,7 @@ function hasLiveCardPreview(
   | "geometric-preloader"
   | "preloader-pro"
   | "preloader-pro-v1"
+  | "preloader-pro-v4"
   | "wave-bars-loader"
   | "electric-vijdi-cursor"
   | "circle-cursor"
@@ -246,6 +247,7 @@ function hasLiveCardPreview(
     slug === "geometric-preloader" ||
     slug === "preloader-pro" ||
     slug === "preloader-pro-v1" ||
+    slug === "preloader-pro-v4" ||
     slug === "wave-bars-loader" ||
     slug === "electric-vijdi-cursor" ||
     slug === "circle-cursor" ||
