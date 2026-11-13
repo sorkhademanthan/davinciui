@@ -447,6 +447,10 @@
       "description": "A theme-aware seven-card editorial preloader with a rising pile, fanned arc, percentage counter, centre-card lift, and a full-bleed 16:9 image expansion."
     },
     {
+      "name": "preloader-pro-v5",
+      "type": "registry:ui"
+    },
+    {
       "name": "pricing-01",
       "type": "registry:block"
     },
