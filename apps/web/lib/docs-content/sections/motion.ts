@@ -200,6 +200,8 @@ export const motion: Record<string, string> = {
     "A single requestAnimationFrame timeline derives the strip drift, power-curve counter, scaleX bar, seeded glitch bursts, and 28-band shred exit; duration, holdTime, exitDuration, driftSpeed, and seed control timing. matchMedia reduced motion removes drift, glitches, and the shred in favor of a short opacity fade.",
   "preloader-pro-v4":
     "A single requestAnimationFrame timeline derives the rising column, spring fan, ripple, power-curve counter, lift, real-rect expansion, and fade or slide exit; duration, exit, spread, rippleIntensity, and waveCount control timing. matchMedia reduced motion shows a static composed fan with a short opacity fade.",
+  "preloader-pro-v5":
+    "A single requestAnimationFrame timeline derives the masked intro and title, staggered arc entry, orbit drift, convergence, featured expansion, image title, split phase, and split, lift, or iris exit; animationDuration, staggerDelay, cardMovementSpeed, transitionDuration, and animationEasing control timing. matchMedia reduced motion shows a static composed arc with a short opacity fade.",
   "profile-carousel":
     "The track translates with a cubic-bezier ease over transitionDuration and snaps back below the 22 percent drag threshold, while autoplay steps on autoplayInterval. matchMedia reduced motion sets duration to zero, normalizes loop position instantly, and disables autoplay.",
   progress:

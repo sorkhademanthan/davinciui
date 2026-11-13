@@ -200,6 +200,8 @@ export const accessibility: Record<string, string> = {
     "A role status with aria-live polite announces 0, 25, 50, 75, and 100 percent loaded, while the drifting cards, counter, and progress bar are aria-hidden. Scroll is locked while active, but the overlay is not modal, traps no focus, and offers no skip control; reduced-motion users get a short fade.",
   "preloader-pro-v4":
     "A role status with aria-live polite announces 0, 25, 50, 75, and 100 percent loaded, while the fan, counter, label, and expanding image are aria-hidden. Scroll is locked and the underlying main is marked inert while active, but the overlay is not modal, traps no focus, and offers no skip control; reduced-motion users get a static frame and a short fade.",
+  "preloader-pro-v5":
+    "A role status with aria-live polite announces the intro, brand, and reveal phases while the arc cards and image title are aria-hidden. Scroll is locked while active, Escape skips the loader, and the overlay is not modal and moves no focus. Reduced-motion users get a static composed arc with a short fade.",
   "profile-carousel":
     "A focusable region with carousel roledescription and the fixed label Team profiles supports Left and Right arrow navigation and labeled previous and next buttons. A polite live region announces Profile X of N, and hover or focus pauses autoplay.",
   progress:
