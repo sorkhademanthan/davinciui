@@ -602,6 +602,10 @@ const docsImportMap: Record<
     import("@/components/docs/preloader-pro-v1").then((m) => ({
       default: m.PreloaderProV1Docs,
     })),
+  "preloader-pro-v4": () =>
+    import("@/components/docs/preloader-pro-v4").then((m) => ({
+      default: m.PreloaderProV4Docs,
+    })),
 };
 
 /**
