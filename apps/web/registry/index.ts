@@ -950,6 +950,30 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "preloader-pro",
     addedAt: "2026-09-19",
   },
+  "preloader-pro-v1": {
+    title: "Preloader Pro V1",
+    description:
+      "A cinematic strip preloader: drifting portrait cards on near-black, a zero-padded counter, random glitch bursts, and a sliced-shred RGB exit.",
+    category: "Preloaders",
+    slug: "preloader-pro-v1",
+    addedAt: "2026-11-12",
+  },
+  "preloader-pro-v4": {
+    title: "Preloader Pro V4",
+    description:
+      "A theme-aware seven-card editorial preloader with a rising pile, fanned arc, percentage counter, centre-card lift, and a full-bleed 16:9 image expansion.",
+    category: "Preloaders",
+    slug: "preloader-pro-v4",
+    addedAt: "2026-11-13",
+  },
+  "preloader-pro-v5": {
+    title: "Preloader Pro V5",
+    description:
+      "A cinematic image preloader with masked typography, a seven-card 3D arc, featured full-bleed expansion, and split, lift, or iris reveals.",
+    category: "Preloaders",
+    slug: "preloader-pro-v5",
+    addedAt: "2026-11-13",
+  },
   "premium-preloader": {
     title: "Premium Preloader",
     description:
@@ -1265,6 +1289,9 @@ export const FEATURED_SLUGS = [
   "chromatic-cursor",
   "text-morph",
   "preloader-pro",
+  "preloader-pro-v1",
+  "preloader-pro-v4",
+  "preloader-pro-v5",
   "liquid-reveal-button",
   "interactive-media-accordion",
   "services-showcase",

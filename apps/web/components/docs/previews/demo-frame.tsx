@@ -1,10 +1,13 @@
 "use client";
 
+import { cn } from "@/lib/utils";
+
 interface DemoFrameProps {
   src: string;
   title: string;
   height?: number;
   fill?: boolean;
+  flush?: boolean;
 }
 
 export function DemoFrame({
@@ -12,13 +15,20 @@ export function DemoFrame({
   title,
   height = 360,
   fill = false,
+  flush = false,
 }: DemoFrameProps) {
   return (
     <div
       className={
         fill
-          ? "relative h-full w-full overflow-hidden rounded-xl border border-border bg-background"
-          : "relative w-full overflow-hidden rounded-xl border border-border bg-background"
+          ? cn(
+              "relative h-full w-full overflow-hidden bg-background",
+              !flush && "rounded-xl border border-border",
+            )
+          : cn(
+              "relative w-full overflow-hidden bg-background",
+              !flush && "rounded-xl border border-border",
+            )
       }
       style={fill ? undefined : { height }}
     >

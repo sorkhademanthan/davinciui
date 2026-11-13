@@ -14,6 +14,8 @@
     "screenshot": "node scripts/screenshot.js",
     "test:focus-carousel": "node scripts/test-focus-carousel.mjs",
     "test:cms-media-bento": "node scripts/test-cms-media-bento.mjs",
+    "test:preloader-pro-v1": "node scripts/test-preloader-pro-v1.mjs",
+    "test:preloader-pro-v4": "node scripts/test-preloader-pro-v4.mjs",
     "optimize:previews": "./scripts/optimize-preview-videos.sh",
     "recompress:previews": "scripts/venv/bin/python scripts/recompress-and-reupload-previews.py",
     "test:tilt-flip-polaroid": "node --test scripts/test-tilt-flip-polaroid.mjs",

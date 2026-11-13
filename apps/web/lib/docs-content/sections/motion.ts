@@ -196,6 +196,12 @@ export const motion: Record<string, string> = {
     "The popup animates 150ms ease-out opacity and scale from 95 percent with a side-dependent slide, driven by Base UI starting and ending data attributes. No timing props exist, and motion-reduce transition-none removes the animation.",
   "preloader-pro":
     "A piecewise curve drives the counter and scaleX line, then the panel slides away and the hero settles with ambient drift. duration, completionHold, exitDuration, and loopHold set timing; matchMedia reduced motion shortens phases and swaps the slide for a fade.",
+  "preloader-pro-v1":
+    "A single requestAnimationFrame timeline derives the strip drift, power-curve counter, scaleX bar, seeded glitch bursts, and 28-band shred exit; duration, holdTime, exitDuration, driftSpeed, and seed control timing. matchMedia reduced motion removes drift, glitches, and the shred in favor of a short opacity fade.",
+  "preloader-pro-v4":
+    "A single requestAnimationFrame timeline derives the rising column, spring fan, ripple, power-curve counter, lift, real-rect expansion, and fade or slide exit; duration, exit, spread, rippleIntensity, and waveCount control timing. matchMedia reduced motion shows a static composed fan with a short opacity fade.",
+  "preloader-pro-v5":
+    "A single requestAnimationFrame timeline derives the masked intro and title, staggered arc entry, orbit drift, convergence, featured expansion, image title, split phase, and split, lift, or iris exit; animationDuration, staggerDelay, cardMovementSpeed, transitionDuration, and animationEasing control timing. matchMedia reduced motion shows a static composed arc with a short opacity fade.",
   "premium-preloader":
     "One GSAP timeline runs both sequences: three tagline words blur upward, then either the wordmark leads or 20 cards fly along mirrored quadratic paths with a 0.145s stagger before the logo lands at 3.1s. The right panel slides down and the left panel up, and fonts plus the first three images gate playback for at most 1.5s. matchMedia reduced motion skips the choreography and fades the overlay in 0.4s.",
   "profile-carousel":

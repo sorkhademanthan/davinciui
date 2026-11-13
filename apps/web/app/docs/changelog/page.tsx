@@ -48,6 +48,41 @@ export default function ChangelogPage() {
           .
         </InfoBox>
 
+        <Section title="November 2026 — Preloader Pro V4" id="november-2026-preloader-pro-v4">
+          <p className="text-sm leading-6 text-muted-foreground">
+            Preloader Pro V4 is a seven-card editorial sequence: portrait stills
+            rise from the lower edge, collapse into a centred pile, then fan
+            into a shallow arc while the counter climbs to 100. The centre card
+            lifts and expands into a full-bleed 16:9 image before the overlay
+            fades or slides away. The whole sequence runs on one deterministic
+            requestAnimationFrame timeline with replay and seek handles,
+            reduced-motion fallback, page-load mode, responsive light/dark
+            palettes, scroll locking, and an optional once-per-session guard.
+          </p>
+          <DocsSnippet
+            code={`pnpm dlx shadcn@latest add @davinciui/preloader-pro-v4`}
+          />
+        </Section>
+
+        <Section title="November 2026 — Preloader Pro V1 refinement" id="november-2026-preloader-pro-v1">
+          <p className="text-sm leading-6 text-muted-foreground">
+            Preloader Pro V1 now matches the reference composition more
+            closely: the counter keeps its full glyph height and baseline, the
+            exit reveals the page on a continuous coverage curve instead of
+            stalling, glitch bursts run on a deterministic schedule with a
+            counter-only pre-exit hit, and the fullscreen stage plus gallery
+            card fill their surfaces without clipping. It now follows the site
+            light/dark theme, opens the shred with seeded glitch bars, and
+            exposes <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs">onExitStart</code>{" "}
+            so underlying content can enter while the overlay breaks apart. The
+            component also exposes a seek clock used by its new Playwright
+            regression suite.
+          </p>
+          <DocsSnippet
+            code={`pnpm dlx shadcn@latest add @davinciui/preloader-pro-v1`}
+          />
+        </Section>
+
         <Section title="October 2026 — Agent skill" id="october-2026-skill">
           <p className="text-sm leading-6 text-muted-foreground">
             Your AI assistant can now learn DavinciUI. The{" "}

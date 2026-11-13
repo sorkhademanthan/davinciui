@@ -662,6 +662,30 @@ const PremiumPreloaderCardPreview = dynamic(
   { ssr: false },
 );
 
+const PreloaderProV1CardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/preloader-pro-v1-card-preview").then(
+      (module) => module.PreloaderProV1CardPreview,
+    ),
+  { ssr: false },
+);
+
+const PreloaderProV4CardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/preloader-pro-v4-card-preview").then(
+      (module) => module.PreloaderProV4CardPreview,
+    ),
+  { ssr: false },
+);
+
+const PreloaderProV5CardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/preloader-pro-v5-card-preview").then(
+      (module) => module.PreloaderProV5CardPreview,
+    ),
+  { ssr: false },
+);
+
 const WaveBarsLoaderCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/wave-bars-loader-card-preview").then(
@@ -806,6 +830,9 @@ type ComponentCardLivePreviewProps = {
     | "editorial-wipe-preloader"
     | "geometric-preloader"
     | "preloader-pro"
+    | "preloader-pro-v1"
+    | "preloader-pro-v4"
+    | "preloader-pro-v5"
     | "premium-preloader"
     | "wave-bars-loader"
     | BasicPreviewSlug;
@@ -1073,6 +1100,12 @@ export function ComponentCardLivePreview({
         <GeometricPreloaderCardPreview />
       ) : slug === "preloader-pro" ? (
         <PreloaderProCardPreview />
+      ) : slug === "preloader-pro-v1" ? (
+        <PreloaderProV1CardPreview />
+      ) : slug === "preloader-pro-v4" ? (
+        <PreloaderProV4CardPreview />
+      ) : slug === "preloader-pro-v5" ? (
+        <PreloaderProV5CardPreview />
       ) : slug === "premium-preloader" ? (
         <PremiumPreloaderCardPreview />
       ) : slug === "wave-bars-loader" ? (
