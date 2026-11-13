@@ -101,6 +101,7 @@ export const docsCategoryBySlug: Record<string, string> = {
   "preloader-pro": "Preloaders",
   "preloader-pro-v1": "Preloaders",
   "preloader-pro-v4": "Preloaders",
+  "preloader-pro-v5": "Preloaders",
   "profile-carousel": "Visual Effects",
   progress: "Feedback",
   questionnaire: "Forms",
