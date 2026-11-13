@@ -966,6 +966,14 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "preloader-pro-v4",
     addedAt: "2026-11-13",
   },
+  "preloader-pro-v5": {
+    title: "Preloader Pro V5",
+    description:
+      "A cinematic image preloader with masked typography, a seven-card 3D arc, featured full-bleed expansion, and split, lift, or iris reveals.",
+    category: "Preloaders",
+    slug: "preloader-pro-v5",
+    addedAt: "2026-11-13",
+  },
   // Visual Effects
   "pixel-wipe-carousel": {
     title: "Pixel Wipe Carousel",
@@ -1274,6 +1282,7 @@ export const FEATURED_SLUGS = [
   "preloader-pro",
   "preloader-pro-v1",
   "preloader-pro-v4",
+  "preloader-pro-v5",
   "liquid-reveal-button",
   "interactive-media-accordion",
   "services-showcase",
