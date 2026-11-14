@@ -16,7 +16,7 @@ type StageProps = Record<string, unknown>;
 
 function CursorLabel() {
   return (
-    <p className="pointer-events-none absolute inset-0 flex items-center justify-center px-8 text-center text-[clamp(2.5rem,7vw,5.5rem)] font-black tracking-[-0.07em] text-zinc-950 dark:text-white">
+    <p className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center px-8 text-center text-[clamp(2.5rem,7vw,5.5rem)] font-black tracking-[-0.07em] text-zinc-950 dark:text-white">
       DAVINCIUI
     </p>
   );
@@ -853,9 +853,9 @@ export const {
   component: TubesCursorStage as React.ComponentType<StageProps>,
   componentName: "TubesCursor",
   defaults: {
-    lightIntensity: 2.4,
+    lightIntensity: 200,
     theme: "auto",
-    tubeCount: 24,
+    tubeCount: 16,
     bloomThreshold: 0,
     bloomStrength: 1.5,
     bloomRadius: 0.5,
