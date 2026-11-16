@@ -70,6 +70,44 @@ export const BASIC_PREVIEW_SLUGS = [
 
 export type BasicPreviewSlug = (typeof BASIC_PREVIEW_SLUGS)[number];
 
+/**
+ * Basic cards that render a hand-built still instead of mounting the real
+ * component. The gallery shell can therefore mark them inert: they have no
+ * pointer interaction and must not expose hidden tab stops.
+ */
+export const STATIC_BASIC_PREVIEW_SLUGS: ReadonlySet<string> = new Set([
+  "link",
+  "form",
+  "questionnaire",
+  "calendar",
+  "combobox",
+  "date-picker",
+  "toast",
+  "progress",
+  "spinner",
+  "skeleton",
+  "breadcrumb",
+  "sidebar",
+  "navigation-menu",
+  "dialog",
+  "alert-dialog",
+  "drawer",
+  "popover",
+  "tooltip",
+  "dropdown-menu",
+  "context-menu",
+  "hover-card",
+  "sheet",
+  "chart",
+  "message-scroller",
+  "carousel",
+  "scroll-area",
+]);
+
 export function isBasicPreviewSlug(slug: string): slug is BasicPreviewSlug {
   return (BASIC_PREVIEW_SLUGS as readonly string[]).includes(slug);
+}
+
+export function isStaticBasicPreviewSlug(slug: string): boolean {
+  return STATIC_BASIC_PREVIEW_SLUGS.has(slug);
 }
