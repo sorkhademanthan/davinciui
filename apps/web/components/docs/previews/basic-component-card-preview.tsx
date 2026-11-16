@@ -3,74 +3,55 @@
 import * as React from "react";
 import {
   Bell,
+  CalendarDays,
   Check,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   FileText,
   Home,
   Inbox,
   Info,
   PackageOpen,
   Settings,
+  X,
 } from "lucide-react";
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@workspace/ui/components/accordion";
-import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from "@workspace/ui/components/alert-dialog";
 import { AspectRatio } from "@workspace/ui/components/aspect-ratio";
 import { Alert, AlertBody, AlertDescription, AlertIcon, AlertTitle } from "@workspace/ui/components/alert";
 import { Attachment, AttachmentContent, AttachmentDescription, AttachmentMedia, AttachmentTitle } from "@workspace/ui/components/attachment";
-import { Avatar, AvatarFallback } from "@workspace/ui/components/avatar";
-import { AvatarGroup } from "@workspace/ui/components/avatar";
+import { Avatar, AvatarFallback, AvatarGroup } from "@workspace/ui/components/avatar";
 import { Badge, BadgeDot } from "@workspace/ui/components/badge";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage } from "@workspace/ui/components/breadcrumb";
 import { Bubble, BubbleContent } from "@workspace/ui/components/bubble";
 import { Button } from "@workspace/ui/components/button";
 import { ButtonGroup } from "@workspace/ui/components/button-group";
-import { Calendar } from "@workspace/ui/components/calendar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@workspace/ui/components/card";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@workspace/ui/components/carousel";
 import { Checkbox, CheckboxField, CheckboxLabel } from "@workspace/ui/components/checkbox";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@workspace/ui/components/collapsible";
-import { Combobox } from "@workspace/ui/components/combobox";
-import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } from "@workspace/ui/components/context-menu";
-import { DatePicker } from "@workspace/ui/components/date-picker";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@workspace/ui/components/dialog";
-import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle, DrawerTrigger } from "@workspace/ui/components/drawer";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@workspace/ui/components/dropdown-menu";
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@workspace/ui/components/empty";
 import { Field, FieldDescription, FieldLabel } from "@workspace/ui/components/field";
-import { Form, FormControl, FormItem, FormLabel } from "@workspace/ui/components/form";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@workspace/ui/components/hover-card";
 import { Input } from "@workspace/ui/components/input";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@workspace/ui/components/input-group";
 import { Label } from "@workspace/ui/components/label";
 import { InputOTP } from "@workspace/ui/components/input-otp";
 import { Item, ItemContent, ItemDescription, ItemMedia, ItemTitle } from "@workspace/ui/components/item";
-import { Link } from "@workspace/ui/components/link";
 import { Marker, MarkerContent, MarkerIcon } from "@workspace/ui/components/marker";
 import { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarTrigger } from "@workspace/ui/components/menubar";
 import { Message, MessageAvatar, MessageContent } from "@workspace/ui/components/message";
-import { MessageScroller, MessageScrollerContent, MessageScrollerItem, MessageScrollerProvider, MessageScrollerViewport } from "@workspace/ui/components/message-scroller";
 import { NativeSelect, NativeSelectOption } from "@workspace/ui/components/native-select";
-import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from "@workspace/ui/components/navigation-menu";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@workspace/ui/components/pagination";
-import { Popover, PopoverContent, PopoverTrigger } from "@workspace/ui/components/popover";
 import { Progress, ProgressLabel, ProgressValue } from "@workspace/ui/components/progress";
-import { Questionnaire, QuestionnaireActions, QuestionnaireChoice, QuestionnaireChoices, QuestionnaireItem, QuestionnaireSubmit, QuestionnaireTitle } from "@workspace/ui/components/questionnaire";
 import { Radio, RadioGroup } from "@workspace/ui/components/radio";
-import { ScrollArea } from "@workspace/ui/components/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@workspace/ui/components/select";
 import { Separator } from "@workspace/ui/components/separator";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@workspace/ui/components/sheet";
-import { Sidebar, SidebarContent, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarProvider } from "@workspace/ui/components/sidebar";
-import { Skeleton } from "@workspace/ui/components/skeleton";
 import { Slider } from "@workspace/ui/components/slider";
-import { Spinner } from "@workspace/ui/components/spinner";
 import { Switch } from "@workspace/ui/components/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@workspace/ui/components/tabs";
 import { Textarea } from "@workspace/ui/components/textarea";
-import { Toaster, toast } from "@workspace/ui/components/toast";
 import { Toggle } from "@workspace/ui/components/toggle";
 import { ToggleGroup, ToggleGroupItem } from "@workspace/ui/components/toggle-group";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@workspace/ui/components/tooltip";
 
 /* ------------------------------------------------------------------ */
 /* slug registry                                                       */
@@ -109,23 +90,73 @@ function Stage({
   );
 }
 
-function ToastMini() {
-  const fired = React.useRef(false);
-  React.useEffect(() => {
-    if (fired.current) return;
-    fired.current = true;
-    const t = window.setTimeout(() => {
-      toast.success("Deployed", { description: "Your site is live." });
-    }, 500);
-    return () => window.clearTimeout(t);
-  }, []);
+function StillStage({
+  children,
+  className,
+  padded = true,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  padded?: boolean;
+}) {
   return (
-    <Stage>
-      <Toaster />
-      <Button size="sm" variant="outline" onClick={() => toast.success("Deployed", { description: "Your site is live." })}>
-        <Bell className="size-3.5" /> Show toast
-      </Button>
-    </Stage>
+    <div
+      className={`pointer-events-none relative flex h-full w-full items-center justify-center overflow-hidden bg-background ${
+        padded ? "p-3" : ""
+      } ${className ?? ""}`}
+    >
+      {children}
+    </div>
+  );
+}
+
+const MINI_CALENDAR_DAYS = [
+  ["26", "27", "28", "29", "30", "31", "1"],
+  ["2", "3", "4", "5", "6", "7", "8"],
+  ["9", "10", "11", "12", "13", "14", "15"],
+  ["16", "17", "18", "19", "20", "21", "22"],
+  ["23", "24", "25", "26", "27", "28", "29"],
+  ["30", "31", "1", "2", "3", "4", "5"],
+] as const;
+
+function MiniCalendar({ className }: { className?: string }) {
+  return (
+    <div className={`w-44 rounded-md border bg-popover p-2 text-[9px] text-popover-foreground shadow-sm ${className ?? ""}`}>
+      <div className="mb-1 flex items-center justify-between px-1">
+        <ChevronLeft className="size-3 text-muted-foreground" />
+        <span className="text-[10px] font-semibold">August 2026</span>
+        <ChevronRight className="size-3 text-muted-foreground" />
+      </div>
+      <div className="grid grid-cols-7 gap-0.5 text-center text-[8px] text-muted-foreground">
+        {["S", "M", "T", "W", "T", "F", "S"].map((day, index) => (
+          <span key={`${day}-${index}`}>{day}</span>
+        ))}
+      </div>
+      <div className="mt-0.5 grid grid-cols-7 gap-0.5 text-center">
+        {MINI_CALENDAR_DAYS.flatMap((week, weekIndex) =>
+          week.map((day, dayIndex) => {
+            const muted =
+              (weekIndex === 0 && dayIndex < 6) ||
+              (weekIndex === 5 && dayIndex > 1);
+            const selected = weekIndex === 2 && day === "14";
+            return (
+              <span
+                key={`${weekIndex}-${dayIndex}-${day}`}
+                className={`flex size-4 items-center justify-center rounded-full ${
+                  selected
+                    ? "bg-primary text-primary-foreground"
+                    : muted
+                      ? "text-muted-foreground/50"
+                      : "text-foreground"
+                }`}
+              >
+                {day}
+              </span>
+            );
+          }),
+        )}
+      </div>
+    </div>
   );
 }
 
@@ -178,7 +209,7 @@ function RadioMini() {
 function ChartMini() {
   const bars = [34, 52, 44, 68, 58, 82, 74, 96, 64, 88, 70, 60];
   return (
-    <Stage>
+    <StillStage>
       <div className="w-full max-w-55 px-2">
         <div className="flex h-24 items-end gap-1">
           {bars.map((h, i) => (
@@ -196,7 +227,7 @@ function ChartMini() {
           <span>Dec</span>
         </div>
       </div>
-    </Stage>
+    </StillStage>
   );
 }
 
@@ -259,14 +290,12 @@ export function BasicComponentCardPreview({ slug }: { slug: BasicPreviewSlug }) 
       );
     case "link":
       return (
-        <Stage>
+        <StillStage>
           <div className="flex flex-col items-center gap-1.5 text-sm">
-            <Link href="#">Documentation</Link>
-            <Link href="#" variant="muted">
-              Changelog
-            </Link>
+            <span className="font-medium text-primary underline underline-offset-4">Documentation</span>
+            <span className="font-medium text-muted-foreground underline underline-offset-4">Changelog</span>
           </div>
-        </Stage>
+        </StillStage>
       );
 
     /* -------------------------------- Forms ------------------------------- */
@@ -320,70 +349,77 @@ export function BasicComponentCardPreview({ slug }: { slug: BasicPreviewSlug }) 
       );
     case "form":
       return (
-        <Stage>
-          <Form className="w-44 space-y-2">
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input className="h-8 text-xs" placeholder="email@example.com" />
-              </FormControl>
-            </FormItem>
-            <Button type="submit" size="sm" className="w-full">
+        <StillStage>
+          <div className="w-44 space-y-2">
+            <p className="text-xs font-medium">Email</p>
+            <div className="flex h-8 items-center rounded-md border bg-background px-2 text-[10px] text-muted-foreground">
+              email@example.com
+            </div>
+            <div className="rounded-md bg-primary px-2 py-1.5 text-center text-[10px] font-medium text-primary-foreground">
               Submit
-            </Button>
-          </Form>
-        </Stage>
+            </div>
+          </div>
+        </StillStage>
       );
     case "questionnaire":
       return (
-        <Stage>
-          <Questionnaire className="w-full max-w-56">
-            <QuestionnaireItem name="bcp-q1" required>
-              <QuestionnaireTitle>Start now?</QuestionnaireTitle>
-              <QuestionnaireChoices>
-                <QuestionnaireChoice value="yes">Yes</QuestionnaireChoice>
-                <QuestionnaireChoice value="no">No</QuestionnaireChoice>
-              </QuestionnaireChoices>
-            </QuestionnaireItem>
-            <QuestionnaireActions>
-              <QuestionnaireSubmit>Submit</QuestionnaireSubmit>
-            </QuestionnaireActions>
-          </Questionnaire>
-        </Stage>
+        <StillStage>
+          <div className="w-full max-w-56 rounded-lg border bg-background p-3 text-xs">
+            <p className="font-semibold">Start now?</p>
+            <div className="mt-2 space-y-1.5">
+              <div className="flex items-center gap-2 rounded-md border border-primary bg-primary/5 px-2 py-1.5">
+                <span className="flex size-3 items-center justify-center rounded-full border border-primary bg-primary">
+                  <span className="size-1 rounded-full bg-primary-foreground" />
+                </span>
+                Yes
+              </div>
+              <div className="flex items-center gap-2 rounded-md border px-2 py-1.5">
+                <span className="size-3 rounded-full border" />
+                No
+              </div>
+            </div>
+            <div className="mt-2 rounded-md bg-primary px-2 py-1 text-center text-[10px] font-medium text-primary-foreground">
+              Submit
+            </div>
+          </div>
+        </StillStage>
       );
     case "calendar":
       return (
-        <div
-          className="flex h-full w-full cursor-default items-center justify-center overflow-hidden bg-background p-1"
-          onClick={stopCardNav}
-        >
-          <div className="origin-center scale-[0.8] [&_div.text-\[11px\]]:text-[8px] [&_div.text-\[11px\]]:tracking-normal">
-            <Calendar
-              defaultMonth={new Date(2026, 7, 1, 12)}
-              defaultSelected={new Date(2026, 7, 14, 12)}
-              cellSize={24}
-            />
+        <StillStage>
+          <div className="origin-center scale-[0.85]">
+            <MiniCalendar />
           </div>
-        </div>
+        </StillStage>
       );
     case "combobox":
       return (
-        <Stage>
-          <Combobox
-            className="w-44"
-            placeholder="Pick a framework…"
-            items={[
-              { value: "react", label: "React" },
-              { value: "vue", label: "Vue" },
-            ]}
-          />
-        </Stage>
+        <StillStage>
+          <div className="w-44 space-y-1">
+            <div className="flex h-8 items-center justify-between rounded-md border bg-background px-2 text-[10px] text-muted-foreground">
+              Pick a framework…
+              <ChevronDown className="size-3" />
+            </div>
+            <div className="rounded-md border bg-popover p-1 shadow-sm">
+              <div className="rounded-sm bg-accent px-2 py-1 text-[10px] text-accent-foreground">React</div>
+              <div className="px-2 py-1 text-[10px]">Vue</div>
+            </div>
+          </div>
+        </StillStage>
       );
     case "date-picker":
       return (
-        <Stage>
-          <DatePicker defaultValue={new Date(2026, 7, 14, 12)} />
-        </Stage>
+        <StillStage>
+          <div className="flex w-full max-w-52 flex-col items-center gap-1.5">
+            <div className="flex h-8 w-44 items-center justify-between rounded-md border bg-background px-2 text-[10px]">
+              Aug 14, 2026
+              <CalendarDays className="size-3 text-muted-foreground" />
+            </div>
+            <div className="h-[108px] origin-top scale-[0.72]">
+              <MiniCalendar />
+            </div>
+          </div>
+        </StillStage>
       );
     case "field":
       return (
@@ -442,36 +478,53 @@ export function BasicComponentCardPreview({ slug }: { slug: BasicPreviewSlug }) 
         </Stage>
       );
     case "toast":
-      return <ToastMini />;
+      return (
+        <StillStage>
+          <div className="relative w-48">
+            <div className="absolute inset-x-2 -top-2 h-12 rounded-lg border bg-background/70 shadow-sm" />
+            <div className="absolute inset-x-1 -top-1 h-12 rounded-lg border bg-background/85 shadow-sm" />
+            <div className="relative flex items-start gap-2 rounded-lg border bg-background p-2.5 shadow-md">
+              <div className="mt-0.5 flex size-5 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
+                <Check className="size-3" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-[11px] font-semibold">Deployed</p>
+                <p className="text-[10px] text-muted-foreground">Your site is live.</p>
+              </div>
+              <X className="size-3 text-muted-foreground" />
+            </div>
+          </div>
+        </StillStage>
+      );
     case "progress":
       return (
-        <Stage>
-          <Progress value={60} variant="primary" className="w-full max-w-52">
+        <StillStage>
+          <Progress value={65} variant="primary" className="w-full max-w-52 [&_[data-slot=progress-indicator]]:transition-none">
             <div className="flex justify-between text-[10px]">
               <ProgressLabel>Upload</ProgressLabel>
               <ProgressValue />
             </div>
           </Progress>
-        </Stage>
+        </StillStage>
       );
     case "spinner":
       return (
-        <Stage>
+        <StillStage>
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <Spinner />
+            <span className="size-6 rounded-full border-2 border-muted-foreground/25 border-t-muted-foreground" />
             Loading…
           </div>
-        </Stage>
+        </StillStage>
       );
     case "skeleton":
       return (
-        <Stage>
+        <StillStage>
           <div className="w-full max-w-52 space-y-1.5">
-            <Skeleton className="h-3 w-full" />
-            <Skeleton className="h-3 w-4/5" />
-            <Skeleton className="h-3 w-3/5" />
+            <div className="h-3 w-full rounded-md bg-muted" />
+            <div className="h-3 w-4/5 rounded-md bg-muted" />
+            <div className="h-3 w-3/5 rounded-md bg-muted" />
           </div>
-        </Stage>
+        </StillStage>
       );
     case "empty":
       return (
@@ -507,21 +560,25 @@ export function BasicComponentCardPreview({ slug }: { slug: BasicPreviewSlug }) 
       );
     case "breadcrumb":
       return (
-        <Stage>
+        <StillStage>
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem>
-                <BreadcrumbLink href="#">Home</BreadcrumbLink>
+                <BreadcrumbLink asChild>
+                  <span>Home</span>
+                </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbItem>
-                <BreadcrumbLink href="#">Docs</BreadcrumbLink>
+                <BreadcrumbLink asChild>
+                  <span>Docs</span>
+                </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbItem>
                 <BreadcrumbPage>Alert</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
-        </Stage>
+        </StillStage>
       );
     case "pagination":
       return (
@@ -546,35 +603,23 @@ export function BasicComponentCardPreview({ slug }: { slug: BasicPreviewSlug }) 
       );
     case "sidebar":
       return (
-        <div
-          className="h-full w-full cursor-default overflow-hidden bg-background"
-          onClick={stopCardNav}
-        >
+        <StillStage padded={false}>
           <div className="flex h-full w-full">
-            <div className="h-full w-[9.5rem] shrink-0 overflow-hidden">
-              <SidebarProvider defaultOpen>
-                <Sidebar
-                  collapsible="none"
-                  className="h-full border-r"
-                  style={{ "--sidebar-width": "9.5rem" } as React.CSSProperties}
-                >
-                  <SidebarContent>
-                    <SidebarMenu>
-                      <SidebarMenuItem>
-                        <SidebarMenuButton icon={<Home />} isActive>
-                          Home
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                      <SidebarMenuItem>
-                        <SidebarMenuButton icon={<Inbox />}>Inbox</SidebarMenuButton>
-                      </SidebarMenuItem>
-                      <SidebarMenuItem>
-                        <SidebarMenuButton icon={<Settings />}>Settings</SidebarMenuButton>
-                      </SidebarMenuItem>
-                    </SidebarMenu>
-                  </SidebarContent>
-                </Sidebar>
-              </SidebarProvider>
+            <div className="h-full w-[9.5rem] shrink-0 border-r bg-sidebar p-2">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 rounded-md bg-sidebar-accent px-2 py-1 text-[10px] font-medium text-sidebar-accent-foreground">
+                  <Home className="size-3" />
+                  Home
+                </div>
+                <div className="flex items-center gap-2 rounded-md px-2 py-1 text-[10px] text-muted-foreground">
+                  <Inbox className="size-3" />
+                  Inbox
+                </div>
+                <div className="flex items-center gap-2 rounded-md px-2 py-1 text-[10px] text-muted-foreground">
+                  <Settings className="size-3" />
+                  Settings
+                </div>
+              </div>
             </div>
             <div className="flex-1 space-y-1.5 p-3">
               <div className="h-3 w-2/3 rounded bg-foreground/80" />
@@ -583,27 +628,22 @@ export function BasicComponentCardPreview({ slug }: { slug: BasicPreviewSlug }) 
               <div className="h-2 w-4/6 rounded bg-muted" />
             </div>
           </div>
-        </div>
+        </StillStage>
       );
     case "navigation-menu":
       return (
-        <Stage>
-          <NavigationMenu>
-            <NavigationMenuList>
-              <NavigationMenuItem>
-                <NavigationMenuTrigger>Docs</NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <ul>
-                    <li>Getting started</li>
-                  </ul>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuLink href="#">About</NavigationMenuLink>
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
-        </Stage>
+        <StillStage>
+          <div className="flex flex-col items-center gap-2">
+            <div className="flex items-center gap-1 rounded-full border bg-background/80 px-2 py-1 text-[10px] shadow-xs backdrop-blur">
+              <span className="flex items-center gap-1 rounded-full bg-accent/60 px-2 py-0.5">
+                Docs
+                <ChevronDown className="size-3" />
+              </span>
+              <span className="px-2 py-0.5 text-muted-foreground">About</span>
+            </div>
+            <div className="rounded-md border bg-popover px-3 py-1.5 text-[10px] shadow-sm">Getting started</div>
+          </div>
+        </StillStage>
       );
     case "menubar":
       return (
@@ -630,43 +670,32 @@ export function BasicComponentCardPreview({ slug }: { slug: BasicPreviewSlug }) 
     /* ------------------------------- Overlays ----------------------------- */
     case "dialog":
       return (
-        <Stage>
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button size="sm" variant="outline">
-                Open Dialog
-              </Button>
-            </DialogTrigger>
-            <DialogContent size="sm">
-              <DialogHeader>
-                <DialogTitle>Sure?</DialogTitle>
-                <DialogDescription>This cannot be undone.</DialogDescription>
-              </DialogHeader>
-            </DialogContent>
-          </Dialog>
-        </Stage>
+        <StillStage>
+          <div className="absolute inset-0 bg-background/60 backdrop-blur-[1px]" />
+          <div className="relative w-40 rounded-xl border bg-popover p-3 shadow-lg">
+            <div className="flex items-start justify-between gap-2">
+              <div>
+                <p className="text-xs font-semibold">Sure?</p>
+                <p className="mt-1 text-[10px] text-muted-foreground">This cannot be undone.</p>
+              </div>
+              <X className="size-3 text-muted-foreground" />
+            </div>
+          </div>
+        </StillStage>
       );
     case "alert-dialog":
       return (
-        <Stage>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button size="sm" variant="outline">
-                Show Dialog
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                <AlertDialogDescription>This action cannot be undone.</AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction>Continue</AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </Stage>
+        <StillStage>
+          <div className="absolute inset-0 bg-background/60 backdrop-blur-[1px]" />
+          <div className="relative w-44 rounded-xl border bg-popover p-3 shadow-lg">
+            <p className="text-xs font-semibold">Are you sure?</p>
+            <p className="mt-1 text-[10px] text-muted-foreground">This action cannot be undone.</p>
+            <div className="mt-3 flex justify-end gap-1.5 text-[10px]">
+              <span className="rounded-md border px-2 py-1">Cancel</span>
+              <span className="rounded-md bg-primary px-2 py-1 text-primary-foreground">Continue</span>
+            </div>
+          </div>
+        </StillStage>
       );
     case "aspect-ratio":
       return (
@@ -680,112 +709,80 @@ export function BasicComponentCardPreview({ slug }: { slug: BasicPreviewSlug }) 
       );
     case "drawer":
       return (
-        <Stage>
-          <Drawer>
-            <DrawerTrigger asChild>
-              <Button size="sm" variant="outline">
-                Open Drawer
-              </Button>
-            </DrawerTrigger>
-            <DrawerContent>
-              <DrawerHeader>
-                <DrawerTitle>Confirm</DrawerTitle>
-                <DrawerDescription>This cannot be undone.</DrawerDescription>
-              </DrawerHeader>
-            </DrawerContent>
-          </Drawer>
-        </Stage>
+        <StillStage>
+          <div className="absolute inset-0 bg-background/50" />
+          <div className="absolute inset-x-0 bottom-0 rounded-t-xl border-t bg-background p-3 shadow-lg">
+            <div className="mx-auto mb-2 h-1 w-8 rounded-full bg-muted-foreground/30" />
+            <p className="text-xs font-semibold">Confirm</p>
+            <p className="text-[10px] text-muted-foreground">This cannot be undone.</p>
+          </div>
+        </StillStage>
       );
     case "popover":
       return (
-        <Stage>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button size="sm" variant="outline">
-                Open Popover
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent variant="compact" side="bottom">
-              <p className="text-xs">Billable · $48.20</p>
-            </PopoverContent>
-          </Popover>
-        </Stage>
+        <StillStage>
+          <div className="flex w-full max-w-52 flex-col items-center gap-2">
+            <div className="rounded-md border bg-popover px-3 py-1.5 text-[10px] shadow-sm">Billable · $48.20</div>
+            <span className="inline-flex h-7 items-center rounded-md border bg-background px-2 text-[10px]">Open Popover</span>
+          </div>
+        </StillStage>
       );
     case "tooltip":
       return (
-        <Stage>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button size="sm" variant="outline">
-                Hover me
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="top">Add to library</TooltipContent>
-          </Tooltip>
-        </Stage>
+        <StillStage>
+          <div className="flex flex-col items-center gap-2">
+            <div className="rounded-md bg-foreground px-2 py-1 text-[10px] text-background shadow-sm">Add to library</div>
+            <span className="inline-flex h-7 items-center rounded-md border bg-background px-2 text-[10px]">Hover me</span>
+          </div>
+        </StillStage>
       );
     case "dropdown-menu":
       return (
-        <Stage>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button size="sm" variant="outline">
-                Open Menu
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent side="bottom" align="start">
-              <DropdownMenuItem>Profile</DropdownMenuItem>
-              <DropdownMenuItem>Settings</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </Stage>
+        <StillStage>
+          <div className="flex flex-col items-center gap-1.5">
+            <span className="inline-flex h-7 items-center rounded-md border bg-background px-2 text-[10px]">Open Menu</span>
+            <div className="w-32 rounded-md border bg-popover p-1 shadow-sm">
+              <div className="rounded-sm bg-accent px-2 py-1 text-[10px] text-accent-foreground">Profile</div>
+              <div className="px-2 py-1 text-[10px]">Settings</div>
+            </div>
+          </div>
+        </StillStage>
       );
     case "context-menu":
       return (
-        <Stage>
-          <ContextMenu>
-            <ContextMenuTrigger>
-              <div className="rounded-md border border-dashed px-6 py-4 text-xs text-muted-foreground">
-                Right-click here
-              </div>
-            </ContextMenuTrigger>
-            <ContextMenuContent>
-              <ContextMenuItem>Copy</ContextMenuItem>
-              <ContextMenuItem>Paste</ContextMenuItem>
-            </ContextMenuContent>
-          </ContextMenu>
-        </Stage>
+        <StillStage>
+          <div className="flex items-center gap-3">
+            <div className="rounded-md border border-dashed px-3 py-2 text-[10px] text-muted-foreground">Right-click here</div>
+            <div className="w-28 rounded-md border bg-popover p-1 shadow-sm">
+              <div className="rounded-sm bg-accent px-2 py-1 text-[10px] text-accent-foreground">Copy</div>
+              <div className="px-2 py-1 text-[10px]">Paste</div>
+            </div>
+          </div>
+        </StillStage>
       );
     case "hover-card":
       return (
-        <Stage>
-          <HoverCard openDelay={0}>
-            <HoverCardTrigger>
-              <span className="cursor-pointer text-sm underline underline-offset-4">@ada</span>
-            </HoverCardTrigger>
-            <HoverCardContent>
-              <p className="text-xs">Ada — first programmer.</p>
-            </HoverCardContent>
-          </HoverCard>
-        </Stage>
+        <StillStage>
+          <div className="flex items-center gap-2">
+            <span className="text-sm underline underline-offset-4">@ada</span>
+            <div className="w-32 rounded-md border bg-popover p-2 text-[10px] shadow-sm">Ada — first programmer.</div>
+          </div>
+        </StillStage>
       );
     case "sheet":
       return (
-        <Stage>
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button size="sm" variant="outline">
-                Open Sheet
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right">
-              <SheetHeader>
-                <SheetTitle>Panel</SheetTitle>
-                <SheetDescription>3 unread messages.</SheetDescription>
-              </SheetHeader>
-            </SheetContent>
-          </Sheet>
-        </Stage>
+        <StillStage>
+          <div className="absolute inset-0 bg-background/50" />
+          <div className="absolute inset-y-0 right-0 w-2/5 rounded-l-xl border-l bg-background p-3 shadow-lg">
+            <div className="flex items-start justify-between gap-2">
+              <div>
+                <p className="text-xs font-semibold">Panel</p>
+                <p className="mt-1 text-[10px] text-muted-foreground">3 unread messages.</p>
+              </div>
+              <X className="size-3 text-muted-foreground" />
+            </div>
+          </div>
+        </StillStage>
       );
 
     /* ----------------------------- Data Display --------------------------- */
@@ -889,28 +886,19 @@ export function BasicComponentCardPreview({ slug }: { slug: BasicPreviewSlug }) 
       );
     case "message-scroller":
       return (
-        <div
-          className="h-full w-full cursor-default overflow-hidden bg-background p-3"
-          onClick={stopCardNav}
-        >
-          <MessageScrollerProvider autoScroll>
-            <MessageScroller className="h-full rounded-lg border">
-              <MessageScrollerViewport>
-                <MessageScrollerContent className="gap-1.5 p-2 text-xs">
-                  <MessageScrollerItem messageId="bcp-m1">
-                    <p>Hello!</p>
-                  </MessageScrollerItem>
-                  <MessageScrollerItem messageId="bcp-m2" scrollAnchor>
-                    <p>Hi back.</p>
-                  </MessageScrollerItem>
-                  <MessageScrollerItem messageId="bcp-m3">
-                    <p>Shipped it.</p>
-                  </MessageScrollerItem>
-                </MessageScrollerContent>
-              </MessageScrollerViewport>
-            </MessageScroller>
-          </MessageScrollerProvider>
-        </div>
+        <StillStage>
+          <div className="relative h-28 w-full max-w-52 overflow-hidden rounded-lg border bg-background p-2 pr-4 text-[10px]">
+            <div className="space-y-1.5">
+              <p className="w-fit rounded-md bg-muted px-2 py-1">Hello!</p>
+              <p className="ml-8 w-fit rounded-md bg-primary px-2 py-1 text-primary-foreground">Hi back.</p>
+              <p className="w-fit rounded-md bg-muted px-2 py-1">Shipped it.</p>
+              <p className="opacity-35">…</p>
+            </div>
+            <div className="absolute bottom-1 right-1 top-1 w-1.5 rounded-full bg-muted">
+              <div className="ml-auto h-7 w-full rounded-full bg-border" />
+            </div>
+          </div>
+        </StillStage>
       );
     case "message":
       return (
@@ -966,21 +954,17 @@ export function BasicComponentCardPreview({ slug }: { slug: BasicPreviewSlug }) 
       );
     case "carousel":
       return (
-        <Stage>
-          <Carousel opts={{ loop: true }} className="w-full max-w-52">
-            <CarouselContent>
-              {[1, 2, 3].map((n) => (
-                <CarouselItem key={n}>
-                  <div className="rounded-lg border bg-muted/40 p-6 text-center text-sm font-semibold">
-                    {n}
-                  </div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
-          </Carousel>
-        </Stage>
+        <StillStage>
+          <div className="relative w-full max-w-52">
+            <div className="rounded-lg border bg-muted/40 p-6 text-center text-sm font-semibold">1</div>
+            <span className="absolute left-1 top-1/2 flex size-5 -translate-y-1/2 items-center justify-center rounded-full border bg-background">
+              <ChevronLeft className="size-3" />
+            </span>
+            <span className="absolute right-1 top-1/2 flex size-5 -translate-y-1/2 items-center justify-center rounded-full border bg-background">
+              <ChevronRight className="size-3" />
+            </span>
+          </div>
+        </StillStage>
       );
     case "collapsible":
       return (
@@ -995,17 +979,20 @@ export function BasicComponentCardPreview({ slug }: { slug: BasicPreviewSlug }) 
       );
     case "scroll-area":
       return (
-        <Stage>
-          <ScrollArea className="h-28 w-full max-w-52 rounded-md border">
-            <div className="space-y-1.5 p-2.5 text-[10px]">
+        <StillStage>
+          <div className="relative h-28 w-full max-w-52 overflow-hidden rounded-md border">
+            <div className="space-y-1.5 p-2.5 pr-4 text-[10px]">
               {Array.from({ length: 8 }).map((_, i) => (
                 <p key={i} className="rounded bg-muted px-1.5 py-1">
                   Row {i + 1} — scroll for more
                 </p>
               ))}
             </div>
-          </ScrollArea>
-        </Stage>
+            <div className="absolute bottom-1 right-1 top-1 w-1.5 rounded-full bg-muted">
+              <div className="h-6 w-full rounded-full bg-border" />
+            </div>
+          </div>
+        </StillStage>
       );
     default:
       return null;
