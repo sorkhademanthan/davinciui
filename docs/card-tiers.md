@@ -56,10 +56,34 @@ no cover image, video, or CDN media.
 - toggle
 - toggle-group
 
-## Not in Tier C
+## Static Basic Cards
 
-These are intentionally excluded and need separate work:
+These 26 basic cards are intentionally not Tier C live previews. They now
+render static stills and are complete:
 
-- breadcrumb — nested anchors inside the card link
-- link — nested anchors inside the card link
-- scroll-area — Base UI mount timer and resize subscription
+- link — spans replace nested anchors
+- form
+- questionnaire
+- calendar
+- combobox
+- date-picker
+- toast
+- progress
+- spinner
+- skeleton
+- breadcrumb — spans replace nested anchors
+- sidebar
+- navigation-menu
+- dialog
+- alert-dialog
+- drawer
+- popover
+- tooltip
+- dropdown-menu
+- context-menu
+- hover-card
+- sheet
+- chart
+- message-scroller
+- carousel
+- scroll-area
