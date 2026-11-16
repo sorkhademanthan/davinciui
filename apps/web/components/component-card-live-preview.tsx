@@ -2,11 +2,16 @@
 
 import dynamic from "next/dynamic";
 import { useTheme } from "next-themes";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import {
   isBasicPreviewSlug,
+  isStaticBasicPreviewSlug,
   type BasicPreviewSlug,
 } from "@/components/docs/previews/basic-component-card-slugs";
+import {
+  useGalleryCardVisibility,
+  usePrefersReducedMotion,
+} from "@/components/gallery-card-runtime";
 import { getPreviewDefinition } from "@/lib/preview-contract";
 
 const TextMorph = dynamic(
@@ -842,44 +847,41 @@ export function ComponentCardLivePreview({
   slug,
 }: ComponentCardLivePreviewProps) {
   const hostRef = useRef<HTMLDivElement>(null);
-  const [shouldRender, setShouldRender] = useState(false);
-  const [reducedMotion, setReducedMotion] = useState(false);
+  const shouldRender = useGalleryCardVisibility(hostRef);
+  const reducedMotion = usePrefersReducedMotion();
+  const [hasFocusWithin, setHasFocusWithin] = useState(false);
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === "dark";
-
-  useEffect(() => {
-    const host = hostRef.current;
-    if (!host) return;
-
-    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const updateMotionPreference = () => setReducedMotion(motionQuery.matches);
-    updateMotionPreference();
-    motionQuery.addEventListener("change", updateMotionPreference);
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setShouldRender(Boolean(entry?.isIntersecting));
-      },
-      { rootMargin: "300px 0px", threshold: 0.01 },
-    );
-    observer.observe(host);
-
-    return () => {
-      observer.disconnect();
-      motionQuery.removeEventListener("change", updateMotionPreference);
-    };
-  }, []);
 
   const staticLabel = slug === "fluid-particle-text" ? "INK" : "DAVINCIUI";
   // One shared rulebook for card behavior — sizing, background, assistive
   // exposure, and reduced-motion policy come from the preview contract
   // instead of inline slug lists.
   const previewDef = getPreviewDefinition(slug);
+  const isStaticPreview = isStaticBasicPreviewSlug(slug);
+  const hideFromAssistiveTech = previewDef.ariaHidden && !hasFocusWithin;
 
   return (
     <div
       ref={hostRef}
-      aria-hidden={previewDef.ariaHidden}
+      aria-hidden={hideFromAssistiveTech || undefined}
+      inert={isStaticPreview && previewDef.ariaHidden ? true : undefined}
+      onFocusCapture={
+        previewDef.ariaHidden ? () => setHasFocusWithin(true) : undefined
+      }
+      onBlurCapture={
+        previewDef.ariaHidden
+          ? (event) => {
+              if (
+                !event.currentTarget.contains(
+                  event.relatedTarget as Node | null,
+                )
+              ) {
+                setHasFocusWithin(false);
+              }
+            }
+          : undefined
+      }
       className={`absolute inset-0 flex items-center justify-center overflow-hidden ${previewDef.cardBackground}`}
     >
       {slug === "ambient-audio-toggle" &&
