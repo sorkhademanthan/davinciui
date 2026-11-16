@@ -19,7 +19,8 @@
     "optimize:previews": "./scripts/optimize-preview-videos.sh",
     "recompress:previews": "scripts/venv/bin/python scripts/recompress-and-reupload-previews.py",
     "test:tilt-flip-polaroid": "node --test scripts/test-tilt-flip-polaroid.mjs",
-    "test:premium-preloader": "node --test scripts/test-premium-preloader-path.mjs"
+    "test:premium-preloader": "node --test scripts/test-premium-preloader-path.mjs",
+    "check:basic-preview": "node scripts/check-basic-preview-runtime.mjs"
   },
   "devDependencies": {
     "@workspace/eslint-config": "workspace:*",
