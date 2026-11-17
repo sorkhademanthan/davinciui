@@ -26,17 +26,17 @@ export default function Gallery() {
 
 const marqueeItems = [
   {
-    src: "/images/spiral-3d-slider/blue-double.jpg",
+    src: "/images/spiral-3d-slider/blue-double.webp",
     alt: "Blue double exposure",
   },
-  { src: "/images/spiral-3d-slider/red-echo.jpg", alt: "Red echo portrait" },
+  { src: "/images/spiral-3d-slider/red-echo.webp", alt: "Red echo portrait" },
   {
-    src: "/images/spiral-3d-slider/ghosted-portrait.jpg",
+    src: "/images/spiral-3d-slider/ghosted-portrait.webp",
     alt: "Ghosted portrait",
   },
-  { src: "/images/spiral-3d-slider/teal-echo.jpg", alt: "Teal echo portrait" },
+  { src: "/images/spiral-3d-slider/teal-echo.webp", alt: "Teal echo portrait" },
   {
-    src: "/images/spiral-3d-slider/white-motion.jpg",
+    src: "/images/spiral-3d-slider/white-motion.webp",
     alt: "White motion study",
   },
 ];

@@ -7,16 +7,16 @@ import { readComponentSource } from "@/lib/source-code";
 const defaultCode = `import { PreloaderProV5 } from "@/components/ui/preloader-pro-v5"
 
 const images = [
-  { src: "/images/spiral-3d-slider/crimson-profile.jpg" },
-  { src: "/images/spiral-3d-slider/blue-double.jpg" },
-  { src: "/images/spiral-3d-slider/prism-portrait.jpg" },
+  { src: "/images/spiral-3d-slider/crimson-profile.webp" },
+  { src: "/images/spiral-3d-slider/blue-double.webp" },
+  { src: "/images/spiral-3d-slider/prism-portrait.webp" },
   {
-    src: "/images/spiral-3d-slider/red-echo.jpg",
-    expandSrc: "/images/spiral-3d-slider/red-echo-16x9.jpg",
+    src: "/images/spiral-3d-slider/red-echo.webp",
+    expandSrc: "/images/spiral-3d-slider/red-echo-16x9.webp",
   },
-  { src: "/images/spiral-3d-slider/green-portrait.jpg" },
-  { src: "/images/spiral-3d-slider/orange-haze.jpg" },
-  { src: "/images/spiral-3d-slider/ghosted-portrait.jpg" },
+  { src: "/images/spiral-3d-slider/green-portrait.webp" },
+  { src: "/images/spiral-3d-slider/orange-haze.webp" },
+  { src: "/images/spiral-3d-slider/ghosted-portrait.webp" },
 ]
 
 export default function Page() {
