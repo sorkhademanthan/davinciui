@@ -47,21 +47,21 @@ export interface PreloaderProV4Handle {
 
 export const DEFAULT_PRELOADER_PRO_V4_CARDS: PreloaderProV4Card[] = [
   {
-    src: "/images/spiral-3d-slider/camera-reflection.jpg",
+    src: "/images/spiral-3d-slider/camera-reflection.webp",
     title: "Field study",
   },
-  { src: "/images/spiral-3d-slider/white-motion.jpg", title: "Quiet rooms" },
-  { src: "/images/spiral-3d-slider/orange-haze.jpg", title: "North light" },
+  { src: "/images/spiral-3d-slider/white-motion.webp", title: "Quiet rooms" },
+  { src: "/images/spiral-3d-slider/orange-haze.webp", title: "North light" },
   {
-    src: "/images/spiral-3d-slider/red-echo.jpg",
-    expandSrc: "/images/spiral-3d-slider/red-echo-16x9.jpg",
+    src: "/images/spiral-3d-slider/red-echo.webp",
+    expandSrc: "/images/spiral-3d-slider/red-echo-16x9.webp",
   },
   {
-    src: "/images/spiral-3d-slider/visor-portrait.jpg",
+    src: "/images/spiral-3d-slider/visor-portrait.webp",
     title: "Material notes",
   },
-  { src: "/images/spiral-3d-slider/dark-glitch.jpg", title: "Open studio" },
-  { src: "/images/spiral-3d-slider/teal-echo.jpg", title: "Late hours" },
+  { src: "/images/spiral-3d-slider/dark-glitch.webp", title: "Open studio" },
+  { src: "/images/spiral-3d-slider/teal-echo.webp", title: "Late hours" },
 ];
 
 const SESSION_KEY = "preloader-pro-v4-shown";

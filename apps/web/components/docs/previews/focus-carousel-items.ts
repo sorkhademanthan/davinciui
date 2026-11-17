@@ -10,12 +10,12 @@ export const focusCarouselDemoItems: FocusCarouselItem[] = [
     title: "Tessellate",
     subtitle: "Glass Form Study",
     image: {
-      src: "/images/spiral-3d-slider/prism-portrait.jpg",
+      src: "/images/spiral-3d-slider/prism-portrait.webp",
       alt: "Portrait split by green light and a magenta prism",
     },
     video: {
       ...spiralVideo,
-      poster: "/images/spiral-3d-slider/prism-portrait.jpg",
+      poster: "/images/spiral-3d-slider/prism-portrait.webp",
     },
   },
   {
@@ -23,12 +23,12 @@ export const focusCarouselDemoItems: FocusCarouselItem[] = [
     title: "Salvia",
     subtitle: "Garden Room Session",
     image: {
-      src: "/images/spiral-3d-slider/green-portrait.jpg",
+      src: "/images/spiral-3d-slider/green-portrait.webp",
       alt: "Portrait washed in deep garden green",
     },
     video: {
       ...spiralVideo,
-      poster: "/images/spiral-3d-slider/green-portrait.jpg",
+      poster: "/images/spiral-3d-slider/green-portrait.webp",
     },
   },
   {
@@ -36,12 +36,12 @@ export const focusCarouselDemoItems: FocusCarouselItem[] = [
     title: "Fathom",
     subtitle: "Deep Water Notes",
     image: {
-      src: "/images/spiral-3d-slider/blue-profile.jpg",
+      src: "/images/spiral-3d-slider/blue-profile.webp",
       alt: "Blue-lit profile against a dark field",
     },
     video: {
       ...spiralVideo,
-      poster: "/images/spiral-3d-slider/blue-profile.jpg",
+      poster: "/images/spiral-3d-slider/blue-profile.webp",
     },
   },
   {
@@ -49,12 +49,12 @@ export const focusCarouselDemoItems: FocusCarouselItem[] = [
     title: "Brindle",
     subtitle: "Slow Portrait Work",
     image: {
-      src: "/images/spiral-3d-slider/dark-glitch.jpg",
+      src: "/images/spiral-3d-slider/dark-glitch.webp",
       alt: "Dark editorial portrait crossed by light trails",
     },
     video: {
       ...spiralVideo,
-      poster: "/images/spiral-3d-slider/dark-glitch.jpg",
+      poster: "/images/spiral-3d-slider/dark-glitch.webp",
     },
   },
   {
@@ -62,12 +62,12 @@ export const focusCarouselDemoItems: FocusCarouselItem[] = [
     title: "Quillon",
     subtitle: "Edge and Shadow",
     image: {
-      src: "/images/spiral-3d-slider/visor-portrait.jpg",
+      src: "/images/spiral-3d-slider/visor-portrait.webp",
       alt: "Portrait under a reflective visor and hard shadow",
     },
     video: {
       ...spiralVideo,
-      poster: "/images/spiral-3d-slider/visor-portrait.jpg",
+      poster: "/images/spiral-3d-slider/visor-portrait.webp",
     },
   },
   {
@@ -75,12 +75,12 @@ export const focusCarouselDemoItems: FocusCarouselItem[] = [
     title: "Pewter",
     subtitle: "Cold Morning Frames",
     image: {
-      src: "/images/spiral-3d-slider/silver-motion.jpg",
+      src: "/images/spiral-3d-slider/silver-motion.webp",
       alt: "Silver portrait stretched through a soft exposure",
     },
     video: {
       ...spiralVideo,
-      poster: "/images/spiral-3d-slider/silver-motion.jpg",
+      poster: "/images/spiral-3d-slider/silver-motion.webp",
     },
   },
   {
@@ -88,7 +88,7 @@ export const focusCarouselDemoItems: FocusCarouselItem[] = [
     title: "Umbra",
     subtitle: "Half Lit Faces",
     image: {
-      src: "/images/spiral-3d-slider/ghosted-portrait.jpg",
+      src: "/images/spiral-3d-slider/ghosted-portrait.webp",
       alt: "Half-lit portrait sinking into shadow",
     },
   },
@@ -97,7 +97,7 @@ export const focusCarouselDemoItems: FocusCarouselItem[] = [
     title: "Marble",
     subtitle: "Street Studies",
     image: {
-      src: "/images/spiral-3d-slider/white-motion.jpg",
+      src: "/images/spiral-3d-slider/white-motion.webp",
       alt: "Pale portrait blurred through motion",
     },
   },
@@ -106,7 +106,7 @@ export const focusCarouselDemoItems: FocusCarouselItem[] = [
     title: "Marrow",
     subtitle: "Quiet Studio Hours",
     image: {
-      src: "/images/spiral-3d-slider/crimson-profile.jpg",
+      src: "/images/spiral-3d-slider/crimson-profile.webp",
       alt: "Crimson profile emerging from a deep green shadow",
     },
   },
@@ -115,7 +115,7 @@ export const focusCarouselDemoItems: FocusCarouselItem[] = [
     title: "Ochre",
     subtitle: "Desert Light Series",
     image: {
-      src: "/images/spiral-3d-slider/orange-haze.jpg",
+      src: "/images/spiral-3d-slider/orange-haze.webp",
       alt: "Warm orange haze across a portrait",
     },
   },

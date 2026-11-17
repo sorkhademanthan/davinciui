@@ -34,12 +34,12 @@ export interface WavyFlowCarouselProps {
 }
 
 export const DEFAULT_SLIDES: WavyFlowCarouselSlide[] = [
-  { src: "/images/spiral-3d-slider/orange-haze.jpg", type: "image" },
-  { src: "/images/spiral-3d-slider/blue-double.jpg", type: "image" },
-  { src: "/images/spiral-3d-slider/white-motion.jpg", type: "image" },
-  { src: "/images/spiral-3d-slider/camera-reflection.jpg", type: "image" },
-  { src: "/images/spiral-3d-slider/silver-motion.jpg", type: "image" },
-  { src: "/images/spiral-3d-slider/green-portrait.jpg", type: "image" },
+  { src: "/images/spiral-3d-slider/orange-haze.webp", type: "image" },
+  { src: "/images/spiral-3d-slider/blue-double.webp", type: "image" },
+  { src: "/images/spiral-3d-slider/white-motion.webp", type: "image" },
+  { src: "/images/spiral-3d-slider/camera-reflection.webp", type: "image" },
+  { src: "/images/spiral-3d-slider/silver-motion.webp", type: "image" },
+  { src: "/images/spiral-3d-slider/green-portrait.webp", type: "image" },
 ];
 
 export const DEFAULT_PROPS = {

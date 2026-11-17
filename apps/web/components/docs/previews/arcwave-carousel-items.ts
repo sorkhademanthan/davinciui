@@ -4,7 +4,7 @@ export const arcwaveCarouselDemoItems: ArcwaveSlide[] = [
   {
     type: "image",
     image: {
-      src: "/images/spiral-3d-slider/blue-double.jpg",
+      src: "/images/spiral-3d-slider/blue-double.webp",
       alt: "Blue double-exposure portrait in a dark studio",
     },
     title: "Blue Double",
@@ -13,7 +13,7 @@ export const arcwaveCarouselDemoItems: ArcwaveSlide[] = [
   {
     type: "image",
     image: {
-      src: "/images/spiral-3d-slider/red-echo.jpg",
+      src: "/images/spiral-3d-slider/red-echo.webp",
       alt: "Red fashion portrait swept through a long exposure",
     },
     title: "Red Echo",
@@ -22,7 +22,7 @@ export const arcwaveCarouselDemoItems: ArcwaveSlide[] = [
   {
     type: "image",
     image: {
-      src: "/images/spiral-3d-slider/prism-portrait.jpg",
+      src: "/images/spiral-3d-slider/prism-portrait.webp",
       alt: "Portrait illuminated by green light and a magenta prism",
     },
     title: "Prism",
@@ -31,7 +31,7 @@ export const arcwaveCarouselDemoItems: ArcwaveSlide[] = [
   {
     type: "image",
     image: {
-      src: "/images/spiral-3d-slider/silver-motion.jpg",
+      src: "/images/spiral-3d-slider/silver-motion.webp",
       alt: "Silver portrait stretched through a soft horizontal exposure",
     },
     title: "Silver Motion",
@@ -40,7 +40,7 @@ export const arcwaveCarouselDemoItems: ArcwaveSlide[] = [
   {
     type: "image",
     image: {
-      src: "/images/spiral-3d-slider/orange-haze.jpg",
+      src: "/images/spiral-3d-slider/orange-haze.webp",
       alt: "Orange haze drifting across a high-contrast figure",
     },
     title: "Orange Haze",
@@ -49,7 +49,7 @@ export const arcwaveCarouselDemoItems: ArcwaveSlide[] = [
   {
     type: "image",
     image: {
-      src: "/images/spiral-3d-slider/green-portrait.jpg",
+      src: "/images/spiral-3d-slider/green-portrait.webp",
       alt: "Green-lit portrait emerging from a deep shadow",
     },
     title: "Green Room",
@@ -58,7 +58,7 @@ export const arcwaveCarouselDemoItems: ArcwaveSlide[] = [
   {
     type: "image",
     image: {
-      src: "/images/spiral-3d-slider/red-blue-figure.jpg",
+      src: "/images/spiral-3d-slider/red-blue-figure.webp",
       alt: "Figure lit by saturated red and electric blue light",
     },
     title: "Two Tone",
@@ -67,7 +67,7 @@ export const arcwaveCarouselDemoItems: ArcwaveSlide[] = [
   {
     type: "image",
     image: {
-      src: "/images/spiral-3d-slider/crimson-profile.jpg",
+      src: "/images/spiral-3d-slider/crimson-profile.webp",
       alt: "Crimson profile emerging from a deep green shadow",
     },
     title: "Crimson",
@@ -76,7 +76,7 @@ export const arcwaveCarouselDemoItems: ArcwaveSlide[] = [
   {
     type: "image",
     image: {
-      src: "/images/spiral-3d-slider/teal-echo.jpg",
+      src: "/images/spiral-3d-slider/teal-echo.webp",
       alt: "Teal echo of a figure in motion",
     },
     title: "Teal Echo",
@@ -85,7 +85,7 @@ export const arcwaveCarouselDemoItems: ArcwaveSlide[] = [
   {
     type: "image",
     image: {
-      src: "/images/spiral-3d-slider/visor-portrait.jpg",
+      src: "/images/spiral-3d-slider/visor-portrait.webp",
       alt: "Portrait obscured by a reflective visor",
     },
     title: "Visor",
@@ -94,7 +94,7 @@ export const arcwaveCarouselDemoItems: ArcwaveSlide[] = [
   {
     type: "image",
     image: {
-      src: "/images/spiral-3d-slider/white-motion.jpg",
+      src: "/images/spiral-3d-slider/white-motion.webp",
       alt: "White motion study with a soft blurred figure",
     },
     title: "White Motion",
@@ -103,7 +103,7 @@ export const arcwaveCarouselDemoItems: ArcwaveSlide[] = [
   {
     type: "image",
     image: {
-      src: "/images/spiral-3d-slider/camera-reflection.jpg",
+      src: "/images/spiral-3d-slider/camera-reflection.webp",
       alt: "Camera reflection in a dark mirror surface",
     },
     title: "Reflection",

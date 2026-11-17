@@ -8,12 +8,12 @@ import { cn } from "@workspace/ui/lib/utils";
  * Six repo-owned portraits cycled through the tunnel in file order.
  */
 export const FLOW_GALLERY_DEFAULT_IMAGES: string[] = [
-  "/images/spiral-3d-slider/ghosted-portrait.jpg",
-  "/images/spiral-3d-slider/orange-haze.jpg",
-  "/images/spiral-3d-slider/blue-double.jpg",
-  "/images/spiral-3d-slider/prism-portrait.jpg",
-  "/images/spiral-3d-slider/visor-portrait.jpg",
-  "/images/spiral-3d-slider/white-motion.jpg",
+  "/images/spiral-3d-slider/ghosted-portrait.webp",
+  "/images/spiral-3d-slider/orange-haze.webp",
+  "/images/spiral-3d-slider/blue-double.webp",
+  "/images/spiral-3d-slider/prism-portrait.webp",
+  "/images/spiral-3d-slider/visor-portrait.webp",
+  "/images/spiral-3d-slider/white-motion.webp",
 ];
 
 export interface FlowGalleryProps {

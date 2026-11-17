@@ -43,7 +43,7 @@ export async function TeamSlideRevealDocs() {
             <div className="flex min-h-[420px] items-center justify-center px-6">
               <div className="aspect-[.73] h-[380px]">
                 <TeamSlideReveal
-                  image="/images/spiral-3d-slider/green-portrait.jpg"
+                  image="/images/spiral-3d-slider/green-portrait.webp"
                   imageAlt="Portrait lit in deep green"
                   name="Ari Vega"
                   role="Creative Director"
@@ -73,7 +73,7 @@ export async function TeamSlideRevealDocs() {
               <div className="aspect-[.73] h-[320px]">
                 <TeamSlideReveal
                   compact
-                  image="/images/spiral-3d-slider/blue-profile.jpg"
+                  image="/images/spiral-3d-slider/blue-profile.webp"
                   imageAlt="Profile lit in electric blue"
                   name="Noa Park"
                   role="Design Engineer"

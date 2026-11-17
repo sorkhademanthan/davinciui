@@ -1,10 +1,12 @@
 "use client";
 
 import React from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { SiteHeader } from "@/components/site-header";
 import { HeroButtons } from "@/components/landing/hero-buttons";
+import { useHydratedReducedMotion } from "@/hooks/use-hydrated-reduced-motion";
 import { HeroAtmosphere } from "@/components/landing/hero-atmosphere";
 import {
   LandingContent,
@@ -16,17 +18,80 @@ import { ComponentWorkbench } from "@/components/landing/component-workbench";
 import { DesignSystemWorkbench } from "@/components/landing/design-system-workbench";
 import { Footer } from "@/components/footer";
 
-// DavinciUI Previews for Bento
-import { CinematicCardCarouselCardPreview } from "@/components/docs/previews/cinematic-card-carousel-card-preview";
-import { HoverCardsCardPreview } from "@/components/docs/previews/hover-cards-card-preview";
-import { SunlightEffectCardPreview } from "@/components/docs/previews/sunlight-effect-card-preview";
-import { GeometricTrailCursorCardPreview } from "@/components/docs/previews/geometric-trail-cursor-card-preview";
-import { PixelFlowCardPreview } from "@/components/docs/previews/pixel-flow-card-preview";
-import { TextVideoMaskPlayground } from "@/components/docs/previews/text-video-mask-preview";
-import { PixelWipeCarouselCardPreview } from "@/components/docs/previews/pixel-wipe-carousel-card-preview";
-import { ScrollRevealImageAutoCardPreview } from "@/components/docs/previews/scroll-reveal-image-auto-card-preview";
-import { GSAPTextCardPreview } from "@/components/docs/previews/gsap-text-card-preview";
-import { LensDriftGridCardPreview } from "@/components/docs/previews/lens-drift-grid-card-preview";
+import { LazyPreview } from "@/components/landing/lazy-preview";
+
+// DavinciUI Previews for Bento — code-split so the hero payload does not
+// include every animation runtime; cards mount only when scrolled near.
+const CinematicCardCarouselCardPreview = dynamic(
+  () =>
+    import(
+      "@/components/docs/previews/cinematic-card-carousel-card-preview"
+    ).then((m) => m.CinematicCardCarouselCardPreview),
+  { ssr: false },
+);
+const HoverCardsCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/hover-cards-card-preview").then(
+      (m) => m.HoverCardsCardPreview,
+    ),
+  { ssr: false },
+);
+const SunlightEffectCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/sunlight-effect-card-preview").then(
+      (m) => m.SunlightEffectCardPreview,
+    ),
+  { ssr: false },
+);
+const GeometricTrailCursorCardPreview = dynamic(
+  () =>
+    import(
+      "@/components/docs/previews/geometric-trail-cursor-card-preview"
+    ).then((m) => m.GeometricTrailCursorCardPreview),
+  { ssr: false },
+);
+const PixelFlowCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/pixel-flow-card-preview").then(
+      (m) => m.PixelFlowCardPreview,
+    ),
+  { ssr: false },
+);
+const TextVideoMaskPlayground = dynamic(
+  () =>
+    import("@/components/docs/previews/text-video-mask-preview").then(
+      (m) => m.TextVideoMaskPlayground,
+    ),
+  { ssr: false },
+);
+const PixelWipeCarouselCardPreview = dynamic(
+  () =>
+    import(
+      "@/components/docs/previews/pixel-wipe-carousel-card-preview"
+    ).then((m) => m.PixelWipeCarouselCardPreview),
+  { ssr: false },
+);
+const ScrollRevealImageAutoCardPreview = dynamic(
+  () =>
+    import(
+      "@/components/docs/previews/scroll-reveal-image-auto-card-preview"
+    ).then((m) => m.ScrollRevealImageAutoCardPreview),
+  { ssr: false },
+);
+const GSAPTextCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/gsap-text-card-preview").then(
+      (m) => m.GSAPTextCardPreview,
+    ),
+  { ssr: false },
+);
+const LensDriftGridCardPreview = dynamic(
+  () =>
+    import("@/components/docs/previews/lens-drift-grid-card-preview").then(
+      (m) => m.LensDriftGridCardPreview,
+    ),
+  { ssr: false },
+);
 
 const cardVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -106,7 +171,7 @@ function FeatureCard({
 }
 
 export default function Home() {
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useHydratedReducedMotion();
   return (
     <div
       data-route-home
@@ -222,9 +287,9 @@ export default function Home() {
                   tag="Featured"
                   previewHeightClass="h-[320px] sm:h-[380px]"
                 >
-                  <div className="pointer-events-none absolute inset-0 scale-[1.6]">
+                  <LazyPreview className="pointer-events-none absolute inset-0 scale-[1.6]">
                     <CinematicCardCarouselCardPreview />
-                  </div>
+                  </LazyPreview>
                 </FeatureCard>
               </motion.div>
 
@@ -239,9 +304,9 @@ export default function Home() {
                   tag="Carousel"
                   previewHeightClass="h-[320px] sm:h-[380px]"
                 >
-                  <div className="pointer-events-none absolute inset-0">
+                  <LazyPreview className="pointer-events-none absolute inset-0">
                     <PixelWipeCarouselCardPreview />
-                  </div>
+                  </LazyPreview>
                 </FeatureCard>
               </motion.div>
 
@@ -253,9 +318,9 @@ export default function Home() {
                   tag="Effect"
                   previewHeightClass="h-[320px] sm:h-[380px]"
                 >
-                  <div className="pointer-events-none absolute inset-0">
+                  <LazyPreview className="pointer-events-none absolute inset-0">
                     <SunlightEffectCardPreview />
-                  </div>
+                  </LazyPreview>
                 </FeatureCard>
               </motion.div>
 
@@ -267,9 +332,9 @@ export default function Home() {
                   tag="Interactive"
                   previewHeightClass="h-[280px] sm:h-[340px]"
                 >
-                  <div className="absolute inset-0">
+                  <LazyPreview className="absolute inset-0">
                     <HoverCardsCardPreview />
-                  </div>
+                  </LazyPreview>
                 </FeatureCard>
               </motion.div>
 
@@ -281,9 +346,9 @@ export default function Home() {
                   tag="Generative"
                   previewHeightClass="h-[280px] sm:h-[340px]"
                 >
-                  <div className="pointer-events-none absolute inset-0">
+                  <LazyPreview className="pointer-events-none absolute inset-0">
                     <PixelFlowCardPreview />
-                  </div>
+                  </LazyPreview>
                 </FeatureCard>
               </motion.div>
 
@@ -294,9 +359,9 @@ export default function Home() {
                   blurb="Layered 3D kinetic typography in motion"
                   tag="Typography"
                 >
-                  <div className="absolute inset-0">
+                  <LazyPreview className="absolute inset-0">
                     <GSAPTextCardPreview fontSize={40} />
-                  </div>
+                  </LazyPreview>
                 </FeatureCard>
               </motion.div>
 
@@ -307,9 +372,9 @@ export default function Home() {
                   blurb="Video clipped inside bold type"
                   tag="Typography"
                 >
-                  <div className="pointer-events-none absolute inset-0">
+                  <LazyPreview className="pointer-events-none absolute inset-0">
                     <TextVideoMaskPlayground />
-                  </div>
+                  </LazyPreview>
                 </FeatureCard>
               </motion.div>
 
@@ -320,9 +385,9 @@ export default function Home() {
                   blurb="Image unfolds as you scroll"
                   tag="Scroll"
                 >
-                  <div className="absolute inset-0">
+                  <LazyPreview className="absolute inset-0">
                     <ScrollRevealImageAutoCardPreview />
-                  </div>
+                  </LazyPreview>
                 </FeatureCard>
               </motion.div>
 
@@ -334,9 +399,9 @@ export default function Home() {
                   tag="Gallery"
                   previewHeightClass="h-[260px] sm:h-[300px]"
                 >
-                  <div className="absolute inset-0">
+                  <LazyPreview className="absolute inset-0">
                     <LensDriftGridCardPreview />
-                  </div>
+                  </LazyPreview>
                 </FeatureCard>
               </motion.div>
 
@@ -348,9 +413,9 @@ export default function Home() {
                   tag="Cursor"
                   previewHeightClass="h-[260px] sm:h-[300px]"
                 >
-                  <div className="absolute inset-0">
+                  <LazyPreview className="absolute inset-0">
                     <GeometricTrailCursorCardPreview />
-                  </div>
+                  </LazyPreview>
                 </FeatureCard>
               </motion.div>
             </motion.div>

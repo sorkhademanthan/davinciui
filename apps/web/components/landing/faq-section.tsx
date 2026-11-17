@@ -2,9 +2,10 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUpRight, Plus } from "lucide-react";
 import { LandingContent } from "@/components/landing/landing-frame";
+import { useHydratedReducedMotion } from "@/hooks/use-hydrated-reduced-motion";
 import { cn } from "@/lib/utils";
 
 type Faq = {
@@ -120,7 +121,7 @@ function FaqItem({
   open: boolean;
   onToggle: () => void;
 }) {
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useHydratedReducedMotion();
   const panelId = `faq-panel-${index}`;
   const buttonId = `faq-button-${index}`;
 
@@ -198,7 +199,7 @@ function FaqItem({
 }
 
 export function FaqSection() {
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useHydratedReducedMotion();
   const [openIndex, setOpenIndex] = React.useState<number | null>(0);
 
   const jsonLd = React.useMemo(

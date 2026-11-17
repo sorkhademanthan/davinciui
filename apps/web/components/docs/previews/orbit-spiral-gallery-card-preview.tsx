@@ -4,27 +4,27 @@ import { OrbitSpiralGallery } from "@workspace/ui/components/orbit-spiral-galler
 
 const CARD_SLIDES = [
   {
-    src: "/images/spiral-3d-slider/red-echo.jpg",
+    src: "/images/spiral-3d-slider/red-echo.webp",
     alt: "Red fashion portrait swept through a long exposure",
   },
   {
-    src: "/images/spiral-3d-slider/blue-profile.jpg",
+    src: "/images/spiral-3d-slider/blue-profile.webp",
     alt: "Profile illuminated by vivid blue motion trails",
   },
   {
-    src: "/images/spiral-3d-slider/teal-echo.jpg",
+    src: "/images/spiral-3d-slider/teal-echo.webp",
     alt: "Teal portrait captured with an expressive camera blur",
   },
   {
-    src: "/images/spiral-3d-slider/orange-haze.jpg",
+    src: "/images/spiral-3d-slider/orange-haze.webp",
     alt: "Warm portrait dissolving through a soft orange exposure",
   },
   {
-    src: "/images/spiral-3d-slider/silver-motion.jpg",
+    src: "/images/spiral-3d-slider/silver-motion.webp",
     alt: "Silver portrait stretched into a quiet horizontal blur",
   },
   {
-    src: "/images/spiral-3d-slider/crimson-profile.jpg",
+    src: "/images/spiral-3d-slider/crimson-profile.webp",
     alt: "Crimson profile emerging from a green studio shadow",
   },
 ];

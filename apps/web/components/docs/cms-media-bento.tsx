@@ -8,18 +8,18 @@ import { CMSMediaBento, type BentoItem } from "@/components/ui/cms-media-bento"
 
 const items: BentoItem[] = [
   {
-    src: "/images/spiral-3d-slider/visor-portrait.jpg",
+    src: "/images/spiral-3d-slider/visor-portrait.webp",
     title: "Visor",
     category: "Portrait",
     size: "hero",
   },
   {
-    src: "/images/spiral-3d-slider/blue-double.jpg",
+    src: "/images/spiral-3d-slider/blue-double.webp",
     title: "Blue Double",
     size: "large",
   },
   {
-    src: "/images/spiral-3d-slider/prism-portrait.jpg",
+    src: "/images/spiral-3d-slider/prism-portrait.webp",
     title: "Prism",
     size: "regular",
   },

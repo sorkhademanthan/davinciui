@@ -8,14 +8,14 @@ import {CmsScrollGalleryPlayground, CmsScrollGalleryPersonalizePanel} from "@/co
 const defaultCode = `import { CMSScrollGallery } from "@/components/ui/cms-scroll-gallery"
 
 const items = [
-  { title: "Prism", media: "/images/spiral-3d-slider/prism-portrait.jpg" },
-  { title: "Ember", media: "/images/spiral-3d-slider/red-echo.jpg" },
-  { title: "Azure", media: "/images/spiral-3d-slider/blue-double.jpg" },
+  { title: "Prism", media: "/images/spiral-3d-slider/prism-portrait.webp" },
+  { title: "Ember", media: "/images/spiral-3d-slider/red-echo.webp" },
+  { title: "Azure", media: "/images/spiral-3d-slider/blue-double.webp" },
   { title: "Oculus", media: "/images/segmented-image-carousel/concrete-oculus.jpg" },
-  { title: "Crimson", media: "/images/spiral-3d-slider/crimson-profile.jpg" },
-  { title: "Verde", media: "/images/spiral-3d-slider/green-portrait.jpg" },
+  { title: "Crimson", media: "/images/spiral-3d-slider/crimson-profile.webp" },
+  { title: "Verde", media: "/images/spiral-3d-slider/green-portrait.webp" },
   { title: "Coast", media: "/images/segmented-image-carousel/coastal-tree.jpg" },
-  { title: "Ghost", media: "/images/spiral-3d-slider/ghosted-portrait.jpg" },
+  { title: "Ghost", media: "/images/spiral-3d-slider/ghosted-portrait.webp" },
 ]
 
 export default function Demo() {

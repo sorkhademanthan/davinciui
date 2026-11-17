@@ -23,7 +23,7 @@ const lines: CurvedInlineLine[] = [
     after: "Slow",
     media: {
       type: "image",
-      src: "/images/spiral-3d-slider/prism-portrait.jpg",
+      src: "/images/spiral-3d-slider/prism-portrait.webp",
       alt: "Prism portrait",
     },
   },

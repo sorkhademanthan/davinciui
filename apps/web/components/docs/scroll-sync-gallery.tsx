@@ -14,7 +14,7 @@ const columns = [
     speed: 1,
     images: [
       { src: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=900&q=80", alt: "Mountain above the clouds", aspectRatio: 0.72 },
-      { src: "/images/spiral-3d-slider/blue-double.jpg", alt: "Blue double-exposure portrait in a dark studio", aspectRatio: 0.72 },
+      { src: "/images/spiral-3d-slider/blue-double.webp", alt: "Blue double-exposure portrait in a dark studio", aspectRatio: 0.72 },
     ],
   },
   {
@@ -23,7 +23,7 @@ const columns = [
     speed: 0.72,
     images: [
       { src: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=900&q=80", alt: "Bright-wall editorial", aspectRatio: 1.4 },
-      { src: "/images/spiral-3d-slider/red-echo.jpg", alt: "Red fashion portrait swept through a long exposure", aspectRatio: 0.72 },
+      { src: "/images/spiral-3d-slider/red-echo.webp", alt: "Red fashion portrait swept through a long exposure", aspectRatio: 0.72 },
     ],
   },
 ]

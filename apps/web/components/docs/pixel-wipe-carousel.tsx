@@ -21,14 +21,14 @@ const slides = [
 />`;
 
 const pixelSlides = [
-  { src: "/images/spiral-3d-slider/dark-glitch.jpg", alt: "Dark glitch study" },
-  { src: "/images/spiral-3d-slider/visor-portrait.jpg", alt: "Visor portrait" },
+  { src: "/images/spiral-3d-slider/dark-glitch.webp", alt: "Dark glitch study" },
+  { src: "/images/spiral-3d-slider/visor-portrait.webp", alt: "Visor portrait" },
   {
-    src: "/images/spiral-3d-slider/white-motion.jpg",
+    src: "/images/spiral-3d-slider/white-motion.webp",
     alt: "White motion study",
   },
   {
-    src: "/images/spiral-3d-slider/camera-reflection.jpg",
+    src: "/images/spiral-3d-slider/camera-reflection.webp",
     alt: "Camera reflection",
   },
 ];

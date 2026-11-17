@@ -2,11 +2,11 @@ import type { InfiniteImageGalleryImage } from "@workspace/ui/components/infinit
 
 export const infiniteImageGalleryItems: InfiniteImageGalleryImage[] = [
   {
-    src: "/images/spiral-3d-slider/red-echo.jpg",
+    src: "/images/spiral-3d-slider/red-echo.webp",
     alt: "Red fashion portrait swept through a long exposure",
   },
   {
-    src: "/images/spiral-3d-slider/green-portrait.jpg",
+    src: "/images/spiral-3d-slider/green-portrait.webp",
     alt: "Shadowed portrait traced by muted green light",
   },
   {
@@ -14,11 +14,11 @@ export const infiniteImageGalleryItems: InfiniteImageGalleryImage[] = [
     alt: "Polished chrome chair photographed against a neutral wall",
   },
   {
-    src: "/images/spiral-3d-slider/blue-profile.jpg",
+    src: "/images/spiral-3d-slider/blue-profile.webp",
     alt: "Profile illuminated by vivid blue motion trails",
   },
   {
-    src: "/images/spiral-3d-slider/crimson-profile.jpg",
+    src: "/images/spiral-3d-slider/crimson-profile.webp",
     alt: "Crimson profile emerging from a green studio shadow",
   },
   {
@@ -26,11 +26,11 @@ export const infiniteImageGalleryItems: InfiniteImageGalleryImage[] = [
     alt: "Circular concrete opening framing an overcast sky",
   },
   {
-    src: "/images/spiral-3d-slider/dark-glitch.jpg",
+    src: "/images/spiral-3d-slider/dark-glitch.webp",
     alt: "Editorial portrait crossed by dark crimson light trails",
   },
   {
-    src: "/images/spiral-3d-slider/teal-echo.jpg",
+    src: "/images/spiral-3d-slider/teal-echo.webp",
     alt: "Teal portrait captured with an expressive camera blur",
   },
   {
@@ -38,15 +38,15 @@ export const infiniteImageGalleryItems: InfiniteImageGalleryImage[] = [
     alt: "Spiral staircase photographed in soft monochrome",
   },
   {
-    src: "/images/spiral-3d-slider/blue-double.jpg",
+    src: "/images/spiral-3d-slider/blue-double.webp",
     alt: "Blue studio portrait split into a double exposure",
   },
   {
-    src: "/images/spiral-3d-slider/camera-reflection.jpg",
+    src: "/images/spiral-3d-slider/camera-reflection.webp",
     alt: "Monochrome photographer reflected through moving glass",
   },
   {
-    src: "/images/spiral-3d-slider/prism-portrait.jpg",
+    src: "/images/spiral-3d-slider/prism-portrait.webp",
     alt: "Portrait washed in green light and a magenta prism haze",
   },
   {
@@ -54,31 +54,31 @@ export const infiniteImageGalleryItems: InfiniteImageGalleryImage[] = [
     alt: "Wind-shaped tree on a pale coastal hillside",
   },
   {
-    src: "/images/spiral-3d-slider/orange-haze.jpg",
+    src: "/images/spiral-3d-slider/orange-haze.webp",
     alt: "Warm portrait dissolving through a soft orange exposure",
   },
   {
-    src: "/images/spiral-3d-slider/silver-motion.jpg",
+    src: "/images/spiral-3d-slider/silver-motion.webp",
     alt: "Silver portrait stretched into a quiet horizontal blur",
   },
   {
-    src: "/images/spiral-3d-slider/red-blue-figure.jpg",
+    src: "/images/spiral-3d-slider/red-blue-figure.webp",
     alt: "Figure lit by saturated red and electric blue light",
   },
   {
-    src: "/images/spiral-3d-slider/visor-portrait.jpg",
+    src: "/images/spiral-3d-slider/visor-portrait.webp",
     alt: "Portrait distorted through a translucent silver visor",
   },
   {
-    src: "/images/spiral-3d-slider/ghosted-portrait.jpg",
+    src: "/images/spiral-3d-slider/ghosted-portrait.webp",
     alt: "Portrait fragmented by layered horizontal motion",
   },
   {
-    src: "/images/spiral-3d-slider/blue-motion.jpg",
+    src: "/images/spiral-3d-slider/blue-motion.webp",
     alt: "Blue portrait stretched through a long exposure",
   },
   {
-    src: "/images/spiral-3d-slider/white-motion.jpg",
+    src: "/images/spiral-3d-slider/white-motion.webp",
     alt: "White-clad figure swept into a luminous studio motion",
   },
 ];

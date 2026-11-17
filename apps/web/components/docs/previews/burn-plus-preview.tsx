@@ -109,7 +109,7 @@ function generateCode(config: BurnPlusConfig) {
   direction=${JSON.stringify(config.direction)}
   transition=${JSON.stringify(config.transition)}
   background=${JSON.stringify(background)}
-  media="/images/spiral-3d-slider/orange-haze.jpg"
+  media="/images/spiral-3d-slider/orange-haze.webp"
 />`;
 }
 
@@ -146,7 +146,7 @@ export function BurnPlusPreview() {
         {...config}
         background={resolvedBackground}
         className="h-full min-h-0 w-full"
-        media="/images/spiral-3d-slider/orange-haze.jpg"
+        media="/images/spiral-3d-slider/orange-haze.webp"
         fit="fill"
         ariaLabel="Burn reveal demo — portrait emerging through an organic burn mask"
       />

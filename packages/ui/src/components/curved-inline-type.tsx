@@ -106,7 +106,7 @@ export const DEFAULT_LINES: CurvedInlineLine[] = [
     after: "Slow",
     media: {
       type: "image",
-      src: "/images/spiral-3d-slider/prism-portrait.jpg",
+      src: "/images/spiral-3d-slider/prism-portrait.webp",
       alt: "Prism portrait",
     },
   },
@@ -126,7 +126,7 @@ export const DEFAULT_LINES: CurvedInlineLine[] = [
     after: "Breathe",
     media: {
       type: "image",
-      src: "/images/spiral-3d-slider/blue-double.jpg",
+      src: "/images/spiral-3d-slider/blue-double.webp",
       alt: "Blue double exposure",
     },
   },
@@ -146,7 +146,7 @@ export const DEFAULT_LINES: CurvedInlineLine[] = [
     after: "Rhythm",
     media: {
       type: "image",
-      src: "/images/spiral-3d-slider/red-echo.jpg",
+      src: "/images/spiral-3d-slider/red-echo.webp",
       alt: "Red echo portrait",
     },
   },
@@ -166,7 +166,7 @@ export const DEFAULT_LINES: CurvedInlineLine[] = [
     after: "Space",
     media: {
       type: "image",
-      src: "/images/spiral-3d-slider/orange-haze.jpg",
+      src: "/images/spiral-3d-slider/orange-haze.webp",
       alt: "Orange haze portrait",
     },
   },

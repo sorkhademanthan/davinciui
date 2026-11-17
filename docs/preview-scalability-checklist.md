@@ -181,14 +181,14 @@ Top 20 largest files in `apps/web/public`:
 | 10 | 391,941 | `apps/web/public/images/segmented-image-carousel/chrome-chair.jpg` |
 | 11 | 370,030 | `apps/web/public/audio/strangerthings/vecnaattack.mp3` |
 | 12 | 352,844 | `apps/web/public/audio/ambient-toggle-demo.wav` |
-| 13 | 256,334 | `apps/web/public/images/spiral-3d-slider/ghosted-portrait.jpg` |
+| 13 | 256,334 | `apps/web/public/images/spiral-3d-slider/ghosted-portrait.webp` |
 | 14 | 205,635 | `apps/web/public/audio/strangerthings/rockpunchcinematic.mp3` |
-| 15 | 183,281 | `apps/web/public/images/spiral-3d-slider/prism-portrait.jpg` |
+| 15 | 183,281 | `apps/web/public/images/spiral-3d-slider/prism-portrait.webp` |
 | 16 | 177,816 | `apps/web/public/LastoriaBoldRegular.otf` |
 | 17 | 169,612 | `apps/web/public/preview-videos/component-animations/spiral3dslider.mp4` |
-| 18 | 167,839 | `apps/web/public/images/spiral-3d-slider/orange-haze.jpg` |
-| 19 | 151,384 | `apps/web/public/images/spiral-3d-slider/blue-profile.jpg` |
-| 20 | 147,830 | `apps/web/public/images/spiral-3d-slider/teal-echo.jpg` |
+| 18 | 167,839 | `apps/web/public/images/spiral-3d-slider/orange-haze.webp` |
+| 19 | 151,384 | `apps/web/public/images/spiral-3d-slider/blue-profile.webp` |
+| 20 | 147,830 | `apps/web/public/images/spiral-3d-slider/teal-echo.webp` |
 
 ### 4) Heavy-slug baseline (A3.1 P0 & A3.2 P1)
 

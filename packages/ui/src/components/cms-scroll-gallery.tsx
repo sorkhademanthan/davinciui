@@ -129,17 +129,17 @@ export interface CMSScrollGalleryProps {
 const DEFAULT_ITEMS: CMSScrollGalleryItem[] = [
   {
     title: "Prism",
-    media: "/images/spiral-3d-slider/prism-portrait.jpg",
+    media: "/images/spiral-3d-slider/prism-portrait.webp",
     alt: "Prism — portrait illuminated by green light and a magenta prism",
   },
   {
     title: "Ember",
-    media: "/images/spiral-3d-slider/red-echo.jpg",
+    media: "/images/spiral-3d-slider/red-echo.webp",
     alt: "Ember — red fashion portrait swept through a long exposure",
   },
   {
     title: "Azure",
-    media: "/images/spiral-3d-slider/blue-double.jpg",
+    media: "/images/spiral-3d-slider/blue-double.webp",
     alt: "Azure — blue double-exposure portrait",
   },
   {
@@ -149,12 +149,12 @@ const DEFAULT_ITEMS: CMSScrollGalleryItem[] = [
   },
   {
     title: "Crimson",
-    media: "/images/spiral-3d-slider/crimson-profile.jpg",
+    media: "/images/spiral-3d-slider/crimson-profile.webp",
     alt: "Crimson — profile emerging from a deep green shadow",
   },
   {
     title: "Verde",
-    media: "/images/spiral-3d-slider/green-portrait.jpg",
+    media: "/images/spiral-3d-slider/green-portrait.webp",
     alt: "Verde — portrait washed in deep green light",
   },
   {
@@ -164,7 +164,7 @@ const DEFAULT_ITEMS: CMSScrollGalleryItem[] = [
   },
   {
     title: "Ghost",
-    media: "/images/spiral-3d-slider/ghosted-portrait.jpg",
+    media: "/images/spiral-3d-slider/ghosted-portrait.webp",
     alt: "Ghost — portrait layered in soft motion",
   },
 ];

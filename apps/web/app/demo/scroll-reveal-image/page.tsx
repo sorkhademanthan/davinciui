@@ -8,10 +8,10 @@ import {
 } from "@/lib/demo-search-params";
 
 const images = [
-  { src: "/images/spiral-3d-slider/dark-glitch.jpg", alt: "Editorial portrait crossed by dark horizontal light trails" },
-  { src: "/images/spiral-3d-slider/red-echo.jpg", alt: "Red fashion portrait swept through a long exposure" },
-  { src: "/images/spiral-3d-slider/crimson-profile.jpg", alt: "Crimson profile emerging from a deep green shadow" },
-  { src: "/images/spiral-3d-slider/silver-motion.jpg", alt: "Silver portrait stretched through a soft horizontal exposure" },
+  { src: "/images/spiral-3d-slider/dark-glitch.webp", alt: "Editorial portrait crossed by dark horizontal light trails" },
+  { src: "/images/spiral-3d-slider/red-echo.webp", alt: "Red fashion portrait swept through a long exposure" },
+  { src: "/images/spiral-3d-slider/crimson-profile.webp", alt: "Crimson profile emerging from a deep green shadow" },
+  { src: "/images/spiral-3d-slider/silver-motion.webp", alt: "Silver portrait stretched through a soft horizontal exposure" },
 ];
 
 export default function ScrollRevealImageDemoPage() {
