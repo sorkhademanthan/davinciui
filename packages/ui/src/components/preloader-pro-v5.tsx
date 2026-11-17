@@ -64,36 +64,36 @@ export interface PreloaderProV5Handle {
 
 export const DEFAULT_PRELOADER_PRO_V5_IMAGES: PreloaderProV5Image[] = [
   {
-    src: "/images/spiral-3d-slider/crimson-profile.jpg",
+    src: "/images/spiral-3d-slider/crimson-profile.webp",
     alt: "Portrait in crimson light",
   },
   {
-    src: "/images/spiral-3d-slider/blue-double.jpg",
+    src: "/images/spiral-3d-slider/blue-double.webp",
     alt: "Two figures in blue light",
   },
   {
-    src: "/images/spiral-3d-slider/prism-portrait.jpg",
+    src: "/images/spiral-3d-slider/prism-portrait.webp",
     alt: "Portrait under prismatic light",
   },
   {
-    src: "/images/spiral-3d-slider/red-echo.jpg",
-    expandSrc: "/images/spiral-3d-slider/red-echo-16x9.jpg",
+    src: "/images/spiral-3d-slider/red-echo.webp",
+    expandSrc: "/images/spiral-3d-slider/red-echo-16x9.webp",
     alt: "Close portrait in red light",
   },
   {
-    src: "/images/spiral-3d-slider/green-portrait.jpg",
+    src: "/images/spiral-3d-slider/green-portrait.webp",
     alt: "Portrait in green light",
   },
   {
-    src: "/images/spiral-3d-slider/orange-haze.jpg",
+    src: "/images/spiral-3d-slider/orange-haze.webp",
     alt: "Portrait in warm orange haze",
   },
   {
-    src: "/images/spiral-3d-slider/ghosted-portrait.jpg",
+    src: "/images/spiral-3d-slider/ghosted-portrait.webp",
     alt: "Motion-blurred portrait",
   },
   {
-    src: "/images/spiral-3d-slider/visor-portrait.jpg",
+    src: "/images/spiral-3d-slider/visor-portrait.webp",
     alt: "Portrait wearing a visor",
   },
 ];

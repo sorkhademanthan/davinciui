@@ -245,7 +245,7 @@ void main() {
 }
 `;
 
-const DEFAULT_MEDIA = "/images/spiral-3d-slider/prism-portrait.jpg";
+const DEFAULT_MEDIA = "/images/spiral-3d-slider/prism-portrait.webp";
 
 interface BurnSettings {
   burn: number;

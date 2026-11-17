@@ -9,11 +9,11 @@ import { cn } from "@workspace/ui/lib/utils";
  * These assets already live in the documentation site's public folder.
  */
 export const SPIRAL_MEDIA_GALLERY_DEFAULT_IMAGES: string[] = [
-  "/images/spiral-3d-slider/visor-portrait.jpg",
-  "/images/spiral-3d-slider/dark-glitch.jpg",
-  "/images/spiral-3d-slider/blue-double.jpg",
-  "/images/spiral-3d-slider/red-echo.jpg",
-  "/images/spiral-3d-slider/prism-portrait.jpg",
+  "/images/spiral-3d-slider/visor-portrait.webp",
+  "/images/spiral-3d-slider/dark-glitch.webp",
+  "/images/spiral-3d-slider/blue-double.webp",
+  "/images/spiral-3d-slider/red-echo.webp",
+  "/images/spiral-3d-slider/prism-portrait.webp",
 ];
 
 export interface SpiralMediaGalleryProps {

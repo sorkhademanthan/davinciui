@@ -30,15 +30,15 @@ export interface ServicesShowcaseProps
 
 const DEFAULT_IMAGES: ServiceImage[] = [
   {
-    src: "/images/spiral-3d-slider/orange-haze.jpg",
+    src: "/images/spiral-3d-slider/orange-haze.webp",
     alt: "Portrait wrapped in warm orange haze",
   },
   {
-    src: "/images/spiral-3d-slider/dark-glitch.jpg",
+    src: "/images/spiral-3d-slider/dark-glitch.webp",
     alt: "Dark graphic texture study",
   },
   {
-    src: "/images/spiral-3d-slider/crimson-profile.jpg",
+    src: "/images/spiral-3d-slider/crimson-profile.webp",
     alt: "Profile rendered in deep crimson",
   },
 ];

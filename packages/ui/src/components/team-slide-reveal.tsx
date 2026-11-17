@@ -27,7 +27,7 @@ export interface TeamSlideRevealProps extends Omit<React.HTMLAttributes<HTMLDivE
   compact?: boolean;
 }
 
-const DEFAULT_IMAGE = "/images/spiral-3d-slider/dark-glitch.jpg";
+const DEFAULT_IMAGE = "/images/spiral-3d-slider/dark-glitch.webp";
 
 /** A portrait card whose story rises into the same frame as the image. */
 export function TeamSlideReveal({
