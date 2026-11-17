@@ -7,27 +7,27 @@ import * as React from "react";
 const MINI_PROFILES = [
   {
     id: "blue-double",
-    src: "/images/spiral-3d-slider/blue-double.jpg",
+    src: "/images/spiral-3d-slider/blue-double.webp",
     alt: "Blue double-exposure portrait",
   },
   {
     id: "dark-glitch",
-    src: "/images/spiral-3d-slider/dark-glitch.jpg",
+    src: "/images/spiral-3d-slider/dark-glitch.webp",
     alt: "Editorial portrait with light trails",
   },
   {
     id: "prism-portrait",
-    src: "/images/spiral-3d-slider/prism-portrait.jpg",
+    src: "/images/spiral-3d-slider/prism-portrait.webp",
     alt: "Portrait in green and magenta light",
   },
   {
     id: "silver-motion",
-    src: "/images/spiral-3d-slider/silver-motion.jpg",
+    src: "/images/spiral-3d-slider/silver-motion.webp",
     alt: "Silver portrait in soft exposure",
   },
   {
     id: "red-echo",
-    src: "/images/spiral-3d-slider/red-echo.jpg",
+    src: "/images/spiral-3d-slider/red-echo.webp",
     alt: "Red fashion portrait",
   },
 ];

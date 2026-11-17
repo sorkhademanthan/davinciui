@@ -20,15 +20,15 @@ interface MiniItem {
 const ITEMS: MiniItem[] = [
   {
     title: "Prism",
-    media: "/images/spiral-3d-slider/prism-portrait.jpg",
+    media: "/images/spiral-3d-slider/prism-portrait.webp",
   },
   {
     title: "Azure",
-    media: "/images/spiral-3d-slider/blue-double.jpg",
+    media: "/images/spiral-3d-slider/blue-double.webp",
   },
   {
     title: "Ember",
-    media: "/images/spiral-3d-slider/red-echo.jpg",
+    media: "/images/spiral-3d-slider/red-echo.webp",
   },
 ];
 

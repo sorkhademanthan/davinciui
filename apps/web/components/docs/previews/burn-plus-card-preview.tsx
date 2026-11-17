@@ -17,7 +17,7 @@ export function BurnPlusCardPreview() {
       )}
     >
       <AshReveal
-        media="/images/spiral-3d-slider/orange-haze.jpg"
+        media="/images/spiral-3d-slider/orange-haze.webp"
         fit="fill"
         trigger="load"
         start={0.08}

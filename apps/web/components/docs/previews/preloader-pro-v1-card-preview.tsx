@@ -5,13 +5,13 @@ import { useTheme } from "next-themes";
 import { PreloaderProV1 } from "@workspace/ui/components/preloader-pro-v1";
 
 const images = [
-  "/images/spiral-3d-slider/blue-double.jpg",
-  "/images/spiral-3d-slider/blue-motion.jpg",
-  "/images/spiral-3d-slider/crimson-profile.jpg",
-  "/images/spiral-3d-slider/dark-glitch.jpg",
-  "/images/spiral-3d-slider/orange-haze.jpg",
-  "/images/spiral-3d-slider/red-echo.jpg",
-  "/images/spiral-3d-slider/visor-portrait.jpg",
+  "/images/spiral-3d-slider/blue-double.webp",
+  "/images/spiral-3d-slider/blue-motion.webp",
+  "/images/spiral-3d-slider/crimson-profile.webp",
+  "/images/spiral-3d-slider/dark-glitch.webp",
+  "/images/spiral-3d-slider/orange-haze.webp",
+  "/images/spiral-3d-slider/red-echo.webp",
+  "/images/spiral-3d-slider/visor-portrait.webp",
 ].map((src) => ({ src }));
 
 const DESIGN_WIDTH = 1280;

@@ -7,15 +7,15 @@ import {
 
 export const verticalImageMarqueeItems: readonly VerticalImageMarqueeItem[] = [
   {
-    src: "/images/spiral-3d-slider/blue-double.jpg",
+    src: "/images/spiral-3d-slider/blue-double.webp",
     alt: "A model in a pale blue double exposure",
   },
   {
-    src: "/images/spiral-3d-slider/red-echo.jpg",
+    src: "/images/spiral-3d-slider/red-echo.webp",
     alt: "A portrait cast in red light",
   },
   {
-    src: "/images/spiral-3d-slider/silver-motion.jpg",
+    src: "/images/spiral-3d-slider/silver-motion.webp",
     alt: "A silver editorial portrait in motion",
   },
 ];

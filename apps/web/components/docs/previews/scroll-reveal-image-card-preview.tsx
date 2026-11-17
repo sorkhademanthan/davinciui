@@ -19,15 +19,15 @@ interface MiniImage {
 
 const IMAGES: MiniImage[] = [
   {
-    src: "/images/spiral-3d-slider/dark-glitch.jpg",
+    src: "/images/spiral-3d-slider/dark-glitch.webp",
     alt: "Editorial portrait crossed by dark horizontal light trails",
   },
   {
-    src: "/images/spiral-3d-slider/red-echo.jpg",
+    src: "/images/spiral-3d-slider/red-echo.webp",
     alt: "Red fashion portrait swept through a long exposure",
   },
   {
-    src: "/images/spiral-3d-slider/crimson-profile.jpg",
+    src: "/images/spiral-3d-slider/crimson-profile.webp",
     alt: "Crimson profile emerging from a deep green shadow",
   },
 ];
