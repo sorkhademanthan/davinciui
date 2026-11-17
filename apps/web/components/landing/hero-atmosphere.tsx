@@ -1,39 +1,37 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { NeonMeshBG } from "@workspace/ui/components/neon-mesh-bg";
+import { useHydratedReducedMotion } from "@/hooks/use-hydrated-reduced-motion";
 
 const CLIP_OPEN = "ellipse(120% 160% at 50% 0%)";
 const CLIP_CLOSED = "ellipse(55% 0% at 50% 0%)";
 
 export function HeroAtmosphere() {
   const { resolvedTheme } = useTheme();
-  const shouldReduceMotion = useReducedMotion();
+  const shouldReduceMotion = useHydratedReducedMotion();
 
-  // The canvas swaps colors seamlessly on prop change (uniforms update
-  // next frame — no recompile, no blank frames), exactly like the rest of
-  // the site cuts themes instantly. So toggles just sync: no opacity dip,
-  // no re-wipe. The dip WAS the blink.
-  const [displayIsDark, setDisplayIsDark] = useState<boolean | null>(null);
-  if (resolvedTheme && displayIsDark === null) {
-    setDisplayIsDark(resolvedTheme === "dark");
-  }
+  // Nothing theme-dependent may render during hydration: the server cannot
+  // know the user's theme (next-themes resolves it pre-paint), so branching
+  // on `resolvedTheme` in the first render causes a hydration mismatch.
+  // Mount first, then reveal — the first client render matches SSR exactly.
+  const [mounted, setMounted] = useState(false);
   useEffect(() => {
-    if (resolvedTheme) setDisplayIsDark(resolvedTheme === "dark");
-  }, [resolvedTheme]);
+    setMounted(true);
+  }, []);
+
+  const isDark = resolvedTheme === "dark";
+  const pageBackground = isDark ? "#0a0a0a" : "#ffffff";
 
   // Entrance only: fade in once, then never touch opacity again.
   const [entered, setEntered] = useState(false);
   useEffect(() => {
-    if (displayIsDark === null || entered) return;
+    if (!mounted) return;
     const show = window.setTimeout(() => setEntered(true), 400);
     return () => window.clearTimeout(show);
-  }, [displayIsDark, entered]);
-
-  const isDark = displayIsDark ?? resolvedTheme === "dark";
-  const pageBackground = isDark ? "#0a0a0a" : "#ffffff";
+  }, [mounted]);
 
   return (
     <motion.div
@@ -52,7 +50,7 @@ export function HeroAtmosphere() {
           entered ? "opacity-0" : "opacity-100"
         } bg-[radial-gradient(ellipse_60%_70%_at_50%_0%,rgba(0,0,0,0.06),transparent_70%)] dark:bg-[radial-gradient(ellipse_60%_70%_at_50%_0%,rgba(255,255,255,0.07),transparent_70%)]`}
       />
-      {resolvedTheme && (
+      {mounted && resolvedTheme && (
         <motion.div
           className="absolute inset-0"
           initial={false}
