@@ -33,18 +33,18 @@ const slides = [
 
 const segmentedSlides = [
   {
-    src: "/images/spiral-3d-slider/blue-double.jpg",
+    src: "/images/spiral-3d-slider/blue-double.webp",
     alt: "Blue double exposure",
   },
   {
-    src: "/images/spiral-3d-slider/crimson-profile.jpg",
+    src: "/images/spiral-3d-slider/crimson-profile.webp",
     alt: "Crimson profile",
   },
   {
-    src: "/images/spiral-3d-slider/ghosted-portrait.jpg",
+    src: "/images/spiral-3d-slider/ghosted-portrait.webp",
     alt: "Ghosted portrait",
   },
-  { src: "/images/spiral-3d-slider/teal-echo.jpg", alt: "Teal echo portrait" },
+  { src: "/images/spiral-3d-slider/teal-echo.webp", alt: "Teal echo portrait" },
 ];
 
 export async function SegmentedImageCarouselDocs() {

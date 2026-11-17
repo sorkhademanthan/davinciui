@@ -8,19 +8,19 @@ const defaultCode = `import { ScrollRevealImage } from "@/components/ui/scroll-r
 
 const images = [
   {
-    src: "/images/spiral-3d-slider/dark-glitch.jpg",
+    src: "/images/spiral-3d-slider/dark-glitch.webp",
     alt: "Editorial portrait crossed by dark horizontal light trails",
   },
   {
-    src: "/images/spiral-3d-slider/red-echo.jpg",
+    src: "/images/spiral-3d-slider/red-echo.webp",
     alt: "Red fashion portrait swept through a long exposure",
   },
   {
-    src: "/images/spiral-3d-slider/crimson-profile.jpg",
+    src: "/images/spiral-3d-slider/crimson-profile.webp",
     alt: "Crimson profile emerging from a deep green shadow",
   },
   {
-    src: "/images/spiral-3d-slider/silver-motion.jpg",
+    src: "/images/spiral-3d-slider/silver-motion.webp",
     alt: "Silver portrait stretched through a soft horizontal exposure",
   },
 ]

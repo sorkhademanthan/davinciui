@@ -11,7 +11,7 @@ const profiles: Profile[] = [
   {
     id: "marcus-berendt",
     name: "Marcus Berendt",
-    image: "/images/spiral-3d-slider/red-echo.jpg",
+    image: "/images/spiral-3d-slider/red-echo.webp",
     description: "Product Designer focused on intuitive digital experiences.",
     category: "Product Design",
     objectPosition: "50% 20%",
@@ -19,7 +19,7 @@ const profiles: Profile[] = [
   {
     id: "ava-kim",
     name: "Ava Kim",
-    image: "/images/spiral-3d-slider/prism-portrait.jpg",
+    image: "/images/spiral-3d-slider/prism-portrait.webp",
     description: "UX researcher turning insight into clear direction.",
     category: "UX Research",
   },
@@ -38,7 +38,7 @@ const exampleProfiles: Profile[] = [
   {
     id: "marcus-berendt",
     name: "Marcus Berendt",
-    image: "/images/spiral-3d-slider/red-echo.jpg",
+    image: "/images/spiral-3d-slider/red-echo.webp",
     description: "Product Designer focused on intuitive digital experiences.",
     category: "Product Design",
     objectPosition: "50% 20%",
@@ -46,21 +46,21 @@ const exampleProfiles: Profile[] = [
   {
     id: "ava-kim",
     name: "Ava Kim",
-    image: "/images/spiral-3d-slider/prism-portrait.jpg",
+    image: "/images/spiral-3d-slider/prism-portrait.webp",
     description: "UX researcher turning insight into clear direction.",
     category: "UX Research",
   },
   {
     id: "noa-park",
     name: "Noa Park",
-    image: "/images/spiral-3d-slider/blue-profile.jpg",
+    image: "/images/spiral-3d-slider/blue-profile.webp",
     description: "Design engineer shipping polished interfaces.",
     category: "Engineering",
   },
   {
     id: "ari-vega",
     name: "Ari Vega",
-    image: "/images/spiral-3d-slider/green-portrait.jpg",
+    image: "/images/spiral-3d-slider/green-portrait.webp",
     description: "Creative director shaping brand systems.",
     category: "Creative Direction",
   },
