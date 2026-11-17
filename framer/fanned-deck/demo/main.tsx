@@ -28,7 +28,7 @@ const entrance =
 const items: FannedDeckItem[] = [
   {
     type: "image",
-    image: { src: "/images/spiral-3d-slider/blue-profile.jpg", alt: "Blue-lit profile portrait" },
+    image: { src: "/images/spiral-3d-slider/blue-profile.webp", alt: "Blue-lit profile portrait" },
     label: "@inkhouse",
     link: "https://example.com",
     newTab: true,
@@ -36,7 +36,7 @@ const items: FannedDeckItem[] = [
   },
   {
     type: "image",
-    image: { src: "/images/spiral-3d-slider/red-echo.jpg", alt: "Red fashion portrait" },
+    image: { src: "/images/spiral-3d-slider/red-echo.webp", alt: "Red fashion portrait" },
     label: "@paperlab",
     link: "https://example.com",
     newTab: true,
@@ -44,7 +44,7 @@ const items: FannedDeckItem[] = [
   },
   {
     type: "image",
-    image: { src: "/images/spiral-3d-slider/orange-haze.jpg", alt: "Orange haze portrait" },
+    image: { src: "/images/spiral-3d-slider/orange-haze.webp", alt: "Orange haze portrait" },
     label: "@softfocus",
     link: "https://example.com",
     newTab: true,
@@ -52,7 +52,7 @@ const items: FannedDeckItem[] = [
   },
   {
     type: "image",
-    image: { src: "/images/spiral-3d-slider/prism-portrait.jpg", alt: "Prism-lit portrait" },
+    image: { src: "/images/spiral-3d-slider/prism-portrait.webp", alt: "Prism-lit portrait" },
     label: "@dreamstate",
     link: "https://example.com",
     newTab: true,
@@ -60,7 +60,7 @@ const items: FannedDeckItem[] = [
   },
   {
     type: "image",
-    image: { src: "/images/spiral-3d-slider/crimson-profile.jpg", alt: "Crimson profile portrait" },
+    image: { src: "/images/spiral-3d-slider/crimson-profile.webp", alt: "Crimson profile portrait" },
     label: "@redroom",
     link: "https://example.com",
     newTab: true,
@@ -68,7 +68,7 @@ const items: FannedDeckItem[] = [
   },
   {
     type: "image",
-    image: { src: "/images/spiral-3d-slider/red-blue-figure.jpg", alt: "Red and blue figure" },
+    image: { src: "/images/spiral-3d-slider/red-blue-figure.webp", alt: "Red and blue figure" },
     label: "@posterclub",
     link: "https://example.com",
     newTab: true,
@@ -76,7 +76,7 @@ const items: FannedDeckItem[] = [
   },
   {
     type: "image",
-    image: { src: "/images/spiral-3d-slider/green-portrait.jpg", alt: "Green-lit portrait" },
+    image: { src: "/images/spiral-3d-slider/green-portrait.webp", alt: "Green-lit portrait" },
     label: "@greenline",
     link: "https://example.com",
     newTab: true,
