@@ -5,7 +5,7 @@ export const fannedDeckDemoItems: FannedDeckItem[] = [
   {
     type: "image",
     image: {
-      src: "/images/spiral-3d-slider/blue-profile.jpg",
+      src: "/images/spiral-3d-slider/blue-profile.webp",
       alt: "Blue-lit profile portrait",
     },
     label: "@inkhouse",
@@ -15,7 +15,7 @@ export const fannedDeckDemoItems: FannedDeckItem[] = [
   {
     type: "image",
     image: {
-      src: "/images/spiral-3d-slider/red-echo.jpg",
+      src: "/images/spiral-3d-slider/red-echo.webp",
       alt: "Red fashion portrait",
     },
     label: "@paperlab",
@@ -25,7 +25,7 @@ export const fannedDeckDemoItems: FannedDeckItem[] = [
   {
     type: "image",
     image: {
-      src: "/images/spiral-3d-slider/orange-haze.jpg",
+      src: "/images/spiral-3d-slider/orange-haze.webp",
       alt: "Orange haze portrait",
     },
     label: "@softfocus",
@@ -35,7 +35,7 @@ export const fannedDeckDemoItems: FannedDeckItem[] = [
   {
     type: "image",
     image: {
-      src: "/images/spiral-3d-slider/prism-portrait.jpg",
+      src: "/images/spiral-3d-slider/prism-portrait.webp",
       alt: "Prism-lit portrait",
     },
     label: "@dreamstate",
@@ -45,7 +45,7 @@ export const fannedDeckDemoItems: FannedDeckItem[] = [
   {
     type: "image",
     image: {
-      src: "/images/spiral-3d-slider/crimson-profile.jpg",
+      src: "/images/spiral-3d-slider/crimson-profile.webp",
       alt: "Crimson profile portrait",
     },
     label: "@redroom",
@@ -55,7 +55,7 @@ export const fannedDeckDemoItems: FannedDeckItem[] = [
   {
     type: "image",
     image: {
-      src: "/images/spiral-3d-slider/red-blue-figure.jpg",
+      src: "/images/spiral-3d-slider/red-blue-figure.webp",
       alt: "Red and blue figure",
     },
     label: "@posterclub",
@@ -65,7 +65,7 @@ export const fannedDeckDemoItems: FannedDeckItem[] = [
   {
     type: "image",
     image: {
-      src: "/images/spiral-3d-slider/green-portrait.jpg",
+      src: "/images/spiral-3d-slider/green-portrait.webp",
       alt: "Green-lit portrait",
     },
     label: "@greenline",
