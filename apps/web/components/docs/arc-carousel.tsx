@@ -58,21 +58,21 @@ export function WorkFan({ items }: { items: ArcCarouselItem[] }) {
 
 const arcExampleItems = [
   {
-    src: "/images/spiral-3d-slider/blue-double.jpg",
+    src: "/images/spiral-3d-slider/blue-double.webp",
     alt: "Blue double exposure",
   },
-  { src: "/images/spiral-3d-slider/red-echo.jpg", alt: "Red echo portrait" },
-  { src: "/images/spiral-3d-slider/prism-portrait.jpg", alt: "Prism portrait" },
+  { src: "/images/spiral-3d-slider/red-echo.webp", alt: "Red echo portrait" },
+  { src: "/images/spiral-3d-slider/prism-portrait.webp", alt: "Prism portrait" },
   {
-    src: "/images/spiral-3d-slider/silver-motion.jpg",
+    src: "/images/spiral-3d-slider/silver-motion.webp",
     alt: "Silver motion study",
   },
   {
-    src: "/images/spiral-3d-slider/orange-haze.jpg",
+    src: "/images/spiral-3d-slider/orange-haze.webp",
     alt: "Orange haze figure",
   },
   {
-    src: "/images/spiral-3d-slider/green-portrait.jpg",
+    src: "/images/spiral-3d-slider/green-portrait.webp",
     alt: "Green lit portrait",
   },
 ];

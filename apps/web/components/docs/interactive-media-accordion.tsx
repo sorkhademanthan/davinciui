@@ -22,28 +22,28 @@ export default function Demo() {
 const accordionItems = [
   {
     id: "blue-double",
-    media: "/images/spiral-3d-slider/blue-double.jpg",
+    media: "/images/spiral-3d-slider/blue-double.webp",
     alt: "Blue studio portrait split into a double exposure",
     title: "Night Call",
     description: "A double exposure lit in deep blue.",
   },
   {
     id: "red-echo",
-    media: "/images/spiral-3d-slider/red-echo.jpg",
+    media: "/images/spiral-3d-slider/red-echo.webp",
     alt: "Red fashion portrait swept through a long exposure",
     title: "Red Signal",
     description: "Long exposure, one moving subject.",
   },
   {
     id: "prism",
-    media: "/images/spiral-3d-slider/prism-portrait.jpg",
+    media: "/images/spiral-3d-slider/prism-portrait.webp",
     alt: "Portrait illuminated by green light and a magenta prism",
     title: "Prism Study",
     description: "Refraction held for a single frame.",
   },
   {
     id: "silver",
-    media: "/images/spiral-3d-slider/silver-motion.jpg",
+    media: "/images/spiral-3d-slider/silver-motion.webp",
     alt: "Silver portrait stretched through a soft horizontal exposure",
     title: "Silver Reel",
     description: "Archival motion, rescanned.",
