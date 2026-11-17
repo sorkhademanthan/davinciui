@@ -34,7 +34,7 @@ const SIZES = {
   "gsap-text": { width: 427, height: 260, scale: 1.8 },
   "text-video-mask": { width: 427, height: 260, scale: 1.8 },
   "scroll-reveal-image": { width: 427, height: 260, scale: 1.8 },
-  "lens-drift-grid": { width: 885, height: 300, scale: 0.9 },
+  "lens-drift-grid": { width: 885, height: 300, scale: 1 },
   "geometric-trail-cursor": { width: 427, height: 300, scale: 1.8 },
 };
 
@@ -110,15 +110,7 @@ async function mouseChoreography(page, slug, durationMs, stage) {
   }
 
   if (slug === "lens-drift-grid") {
-    await page.mouse.move(600, cy, { steps: 8 });
-    await page.mouse.down();
-    await page.mouse.move(200, cy + 40, { steps: 24 });
-    await page.mouse.up();
-    for (let i = 0; i < steps / 2; i += 1) {
-      const t = i / (steps / 2);
-      await page.mouse.move(200 + t * 360, cy - 60 + t * 120, { steps: 2 });
-      await sleep((durationMs / 2) / (steps / 2));
-    }
+    await sleep(durationMs);
   }
 }
 
@@ -134,6 +126,7 @@ async function record(browser, slug, theme) {
   await mkdir(videoDir, { recursive: true });
 
   const stage = stageSize(slug);
+  const recordingStartedAt = Date.now();
   const context = await browser.newContext({
     viewport: { width: stage.width, height: stage.height },
     deviceScaleFactor: 2,
@@ -156,6 +149,7 @@ async function record(browser, slug, theme) {
 
   const page = await context.newPage();
   const posterRaw = path.join(RAW, `${slug}-${theme}.png`);
+  let trimStart = 1.2;
 
   try {
     await page.goto(`${BASE_URL}/capture/${slug}`, {
@@ -163,6 +157,10 @@ async function record(browser, slug, theme) {
       timeout: 60_000,
     });
     await page.waitForSelector('[data-capture-ready="true"]', { timeout: 30_000 });
+    if (slug === "lens-drift-grid") {
+      const readyAt = (Date.now() - recordingStartedAt) / 1000;
+      trimStart = Math.max(1.2, readyAt + 0.3);
+    }
     await page.addStyleTag({
       content:
         "nextjs-portal{display:none!important} #skip-to-content{display:none!important}",
@@ -182,19 +180,19 @@ async function record(browser, slug, theme) {
       const recorded = await video.path();
       const rawWebm = path.join(RAW, `${slug}-${theme}.webm`);
       await rename(recorded, rawWebm).catch(() => {});
-      await encode(slug, theme, rawWebm, posterRaw);
+      await encode(slug, theme, rawWebm, posterRaw, trimStart);
     }
   }
 }
 
-async function encode(slug, theme, rawWebm, posterRaw) {
+async function encode(slug, theme, rawWebm, posterRaw, trimStart = 1.2) {
   const dir = path.join(OUT, slug);
   await mkdir(dir, { recursive: true });
   const base = path.join(dir, `${slug}-${theme}`);
 
   // Seek after the input (accurate) and pad the tail so every clip is 4.0s
   // even when Playwright's recording is shorter than expected.
-  const trim = ["-ss", "1.2", "-t", "4"];
+  const trim = ["-ss", String(trimStart), "-t", "4"];
   const pad = "fps=24,tpad=stop_mode=clone:stop_duration=4";
 
   await execFileAsync(

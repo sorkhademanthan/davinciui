@@ -6,6 +6,12 @@ import { useInViewport } from "@/hooks/use-in-viewport";
 import { useHydratedReducedMotion } from "@/hooks/use-hydrated-reduced-motion";
 import { homePreviewMedia } from "@/lib/home-preview-media";
 
+const PREVIEW_MEDIA_VERSION = "2";
+
+function withMediaVersion(url: string) {
+  return `${url}${url.includes("?") ? "&" : "?"}v=${PREVIEW_MEDIA_VERSION}`;
+}
+
 /**
  * Lightweight card media: a muted looping video (light/dark variants) that
  * only mounts while near the viewport, with the real interactive component
@@ -26,6 +32,7 @@ export function VideoPreviewMedia({
 }) {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
+  const [domTheme, setDomTheme] = React.useState<"dark" | "light" | null>(null);
   const reduceMotion = useHydratedReducedMotion();
   const { ref, inView } = useInViewport({ rootMargin: "300px 0px" });
   const [live, setLive] = React.useState(false);
@@ -33,10 +40,34 @@ export function VideoPreviewMedia({
   const [playing, setPlaying] = React.useState(false);
   const videoRef = React.useRef<HTMLVideoElement | null>(null);
 
-  React.useEffect(() => setMounted(true), []);
+  React.useEffect(() => {
+    setMounted(true);
+    const root = document.documentElement;
+    const readTheme = () => {
+      if (root.classList.contains("dark")) {
+        setDomTheme("dark");
+      } else if (root.classList.contains("light")) {
+        setDomTheme("light");
+      } else {
+        setDomTheme(
+          window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light",
+        );
+      }
+    };
+    readTheme();
+    const observer = new MutationObserver(readTheme);
+    observer.observe(root, { attributes: true, attributeFilter: ["class"] });
+    return () => observer.disconnect();
+  }, []);
 
-  const theme = mounted && resolvedTheme === "light" ? "light" : "dark";
+  const theme =
+    mounted && (domTheme ?? resolvedTheme) === "light" ? "light" : "dark";
   const media = homePreviewMedia(slug, theme);
+  const poster = withMediaVersion(media.poster);
+  const webm = withMediaVersion(media.webm);
+  const mp4 = withMediaVersion(media.mp4);
   const showVideo = mounted && inView && !reduceMotion && !live && !failed;
 
   React.useEffect(() => {
@@ -61,7 +92,7 @@ export function VideoPreviewMedia({
         ) : (
           <div className="absolute inset-0">
             <img
-              src={media.poster}
+              src={poster}
               alt=""
               aria-hidden="true"
               loading="lazy"
@@ -71,7 +102,7 @@ export function VideoPreviewMedia({
             />
             {showVideo ? (
               <video
-                key={theme}
+                key={`${theme}-v${PREVIEW_MEDIA_VERSION}`}
                 ref={videoRef}
                 className={`absolute inset-0 size-full object-cover transition-opacity duration-300 ${
                   playing ? "opacity-100" : "opacity-0"
@@ -81,14 +112,14 @@ export function VideoPreviewMedia({
                 loop
                 playsInline
                 preload="none"
-                poster={media.poster}
+                poster={poster}
                 aria-hidden="true"
                 tabIndex={-1}
                 onPlaying={() => setPlaying(true)}
                 onError={() => setFailed(true)}
               >
-                <source src={media.webm} type="video/webm" />
-                <source src={media.mp4} type="video/mp4" />
+                <source src={webm} type="video/webm" />
+                <source src={mp4} type="video/mp4" />
               </video>
             ) : null}
           </div>

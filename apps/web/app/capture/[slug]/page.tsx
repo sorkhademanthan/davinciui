@@ -37,7 +37,7 @@ const SCALES: Record<string, number> = {
   "gsap-text": 1.8,
   "text-video-mask": 1.8,
   "scroll-reveal-image": 1.8,
-  "lens-drift-grid": 0.9,
+  "lens-drift-grid": 1,
   "geometric-trail-cursor": 1.8,
 };
 

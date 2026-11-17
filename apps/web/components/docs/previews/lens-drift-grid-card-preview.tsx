@@ -14,7 +14,8 @@ export function LensDriftGridCardPreview() {
         tileWidth={120}
         tileHeight={140}
         lensStrength={0.3}
-        autoDrift={{ x: 30, y: -16 }}
+        autoDrift={{ x: 30, y: 0 }}
+        driftResumeMs={0}
         interactive={false}
       />
     </div>
