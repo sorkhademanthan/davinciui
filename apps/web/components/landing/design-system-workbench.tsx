@@ -2,10 +2,11 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUpRight, Check, Copy, RotateCcw, SunMoon } from "lucide-react";
 import posthog from "posthog-js";
 import { LandingContent } from "@/components/landing/landing-frame";
+import { useHydratedReducedMotion } from "@/hooks/use-hydrated-reduced-motion";
 import styles from "./component-workbench.module.css";
 
 const accents = [
@@ -168,7 +169,7 @@ function MotionRow({
 }
 
 export function DesignSystemWorkbench() {
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useHydratedReducedMotion();
   const [tab, setTab] = React.useState<Tab>("Color");
   const [accent, setAccent] = React.useState<string>(accents[3].value);
   const [dark, setDark] = React.useState(() =>

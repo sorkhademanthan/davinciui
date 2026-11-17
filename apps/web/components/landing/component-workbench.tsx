@@ -4,11 +4,11 @@ import * as React from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { ArrowUpRight, Check, Copy, RotateCcw, Repeat2, SunMoon, MousePointerClick, Timer, LayoutGrid } from "lucide-react";
-import { useReducedMotion } from "framer-motion";
 import { useTheme } from "next-themes";
 import posthog from "posthog-js";
 import { cinematicDemoCards } from "@/components/docs/previews/cinematic-card-carousel-items";
 import { LandingContent } from "@/components/landing/landing-frame";
+import { useHydratedReducedMotion } from "@/hooks/use-hydrated-reduced-motion";
 import styles from "./component-workbench.module.css";
 
 const installCommands = {
@@ -76,7 +76,15 @@ function CopyControl({ value, label }: { value: string; label: string }) {
 
 export function ComponentWorkbench() {
   const { resolvedTheme } = useTheme();
-  const reduceMotion = useReducedMotion() ?? false;
+  const reduceMotion = useHydratedReducedMotion();
+
+  // Theme is unknowable during SSR. Gate it until after mount so the first
+  // client render matches the server HTML exactly (prevents hydration
+  // mismatches); it settles on the next render.
+  const [mounted, setMounted] = React.useState(false);
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
   const sectionRef = React.useRef<HTMLElement>(null);
   const [isNear, setIsNear] = React.useState(false);
   const [isVisible, setIsVisible] = React.useState(false);
@@ -89,7 +97,7 @@ export function ComponentWorkbench() {
   const [activeIndex, setActiveIndex] = React.useState(2);
   const [packageManager, setPackageManager] = React.useState<PackageManager>("npm");
   const installCommand = installCommands[packageManager];
-  const previewTheme = themeOverride ?? (resolvedTheme === "dark" ? "dark" : "light");
+  const previewTheme = themeOverride ?? (mounted && resolvedTheme === "dark" ? "dark" : "light");
   const effectiveAutoPlay = loop && !reduceMotion ? autoPlayMs : undefined;
 
   React.useEffect(() => {
@@ -269,7 +277,7 @@ ${usageProps}
                 />
               ) : (
                 <div className={styles.previewPlaceholder} aria-hidden="true">
-                  <img src="/images/spiral-3d-slider/prism-portrait.jpg" alt="" loading="lazy" />
+                  <img src="/images/spiral-3d-slider/prism-portrait.webp" alt="" loading="lazy" />
                 </div>
               )}
             </div>
