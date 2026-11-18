@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { useTheme } from "next-themes";
 import { create } from "zustand";
 import { TextVideoMask } from "@workspace/ui/components/text-video-mask";
 import { configEquals, usePlaygroundStore } from "@/hooks/use-playground-store";
@@ -51,19 +50,20 @@ const useTextVideoMaskStore = create<TextVideoMaskStore>((set) => ({
   resetConfig: () => set({ config: DEFAULT_CONFIG }),
 }));
 
-function resolveColors(config: TextVideoMaskConfig, isDark: boolean) {
+/**
+ * Defaults follow the site's theme tokens instead of branching on
+ * `useTheme()`. CSS variables resolve from the `.dark` class before paint,
+ * so the preview is correct on first frame and during video capture.
+ */
+function resolveColors(config: TextVideoMaskConfig) {
   return {
     backgroundColor:
       config.backgroundColor === DEFAULT_CONFIG.backgroundColor
-        ? isDark
-          ? "#000000"
-          : "#f8fafc"
+        ? "var(--background)"
         : config.backgroundColor,
     fallbackColor:
       config.fallbackColor === DEFAULT_CONFIG.fallbackColor
-        ? isDark
-          ? "#f5f5f5"
-          : "#18181b"
+        ? "var(--foreground)"
         : config.fallbackColor,
   };
 }
@@ -89,18 +89,21 @@ function generateCode(
 
 export function TextVideoMaskPlayground() {
   const config = useTextVideoMaskStore((state) => state.config);
-  const { resolvedTheme } = useTheme();
-  const isDark = resolvedTheme === "dark";
-  const colors = resolveColors(config, isDark);
+  const colors = resolveColors(config);
+  const { backgroundColor, fallbackColor } = colors;
 
   React.useEffect(() => {
     const timeoutId = window.setTimeout(() => {
       const api = usePlaygroundStore.getState();
       api.registerPreviewReset("text-video-mask", () => useTextVideoMaskStore.getState().resetConfig());
-      api.setPersonalizedCode("text-video-mask", generateCode(config, colors), !configEquals(config, DEFAULT_CONFIG));
+      api.setPersonalizedCode(
+        "text-video-mask",
+        generateCode(config, { backgroundColor, fallbackColor }),
+        !configEquals(config, DEFAULT_CONFIG),
+      );
     }, 180);
     return () => window.clearTimeout(timeoutId);
-  }, [config, colors.backgroundColor, colors.fallbackColor]);
+  }, [config, backgroundColor, fallbackColor]);
 
   return (
     <TextVideoMask

@@ -172,18 +172,19 @@ export function DesignSystemWorkbench() {
   const reduceMotion = useHydratedReducedMotion();
   const [tab, setTab] = React.useState<Tab>("Color");
   const [accent, setAccent] = React.useState<string>(accents[3].value);
-  const [dark, setDark] = React.useState(() =>
-    typeof window !== "undefined" ? window.matchMedia("(prefers-color-scheme: dark)").matches : false
-  );
+  const [dark, setDark] = React.useState(false);
   const [userOverridden, setUserOverridden] = React.useState(false);
   const [replayKey, setReplayKey] = React.useState(0);
   const [gutter, setGutter] = React.useState(16);
   const [radiusDemo, setRadiusDemo] = React.useState(14);
 
   // Follow the system theme by default until the user manually toggles.
+  // Read `matchMedia` in an effect (not during render) so SSR and the first
+  // client render agree — otherwise dark-mode users hit a hydration mismatch.
   React.useEffect(() => {
     if (userOverridden || typeof window === "undefined") return;
     const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    setDark(mq.matches);
     const onChange = (e: MediaQueryListEvent) => setDark(e.matches);
     mq.addEventListener("change", onChange);
     return () => mq.removeEventListener("change", onChange);

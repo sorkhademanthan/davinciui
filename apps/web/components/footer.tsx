@@ -142,7 +142,7 @@ export function Footer() {
           {/* Link grid */}
           <div className="grid gap-12 py-14 sm:py-16 lg:grid-cols-12 lg:gap-10 lg:py-16">
             <div className="lg:col-span-5">
-              <Link href="/" className="group inline-flex items-center gap-3 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6366f1]">
+              <Link href="/" prefetch={false} className="group inline-flex items-center gap-3 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6366f1]">
                 <DavinciUILogo className="size-8 transition-transform duration-300 group-hover:rotate-[-8deg]" />
                 <span className="text-lg font-semibold tracking-[-0.055em]">DavinciUI</span>
               </Link>
@@ -176,6 +176,7 @@ export function Footer() {
                       <li key={link.label}>
                         <Link
                           href={link.href}
+                          prefetch={false}
                           {...("external" in link ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                           className="group inline-flex min-h-8 items-center gap-1.5 rounded-sm text-sm font-medium text-zinc-700 transition-colors hover:text-zinc-950 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6366f1] dark:text-zinc-400 dark:hover:text-white sm:text-[15px]"
                         >
@@ -201,8 +202,8 @@ export function Footer() {
           <div className="flex flex-wrap items-center justify-between gap-x-8 gap-y-4 border-t border-zinc-950/10 py-6 text-xs text-zinc-600 dark:border-white/10 dark:text-zinc-500 sm:text-sm">
             <p>© {new Date().getFullYear()} DavinciUI · <span className="rounded-full border border-zinc-950/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-widest dark:border-white/15">v0.1.0</span> · Crafted by <a href="https://www.manthansorkhade.in/" target="_blank" rel="noopener noreferrer" className="underline decoration-zinc-400/60 underline-offset-4 transition-colors hover:text-zinc-950 dark:hover:text-white">Manthan Sorkhade</a></p>
             <div className="flex items-center gap-5 sm:gap-7">
-              <Link href="/privacy-policy" className="transition-colors hover:text-zinc-950 dark:hover:text-white">Privacy</Link>
-              <Link href="/terms-of-service" className="transition-colors hover:text-zinc-950 dark:hover:text-white">Terms</Link>
+              <Link href="/privacy-policy" prefetch={false} className="transition-colors hover:text-zinc-950 dark:hover:text-white">Privacy</Link>
+              <Link href="/terms-of-service" prefetch={false} className="transition-colors hover:text-zinc-950 dark:hover:text-white">Terms</Link>
               <button type="button" onClick={scrollToTop} className="group inline-flex items-center gap-1.5 font-medium text-zinc-950 transition-colors hover:text-[#4f46e5] focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6366f1] dark:text-zinc-100 dark:hover:text-white">
                 Back to top <ArrowUp className="size-3.5 transition-transform group-hover:-translate-y-0.5" aria-hidden="true" />
               </button>

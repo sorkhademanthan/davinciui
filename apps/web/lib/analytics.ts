@@ -6,10 +6,11 @@
 // invoke unconditionally; events simply drop until opt-in.
 
 import posthog from "posthog-js";
+import { CONSENT_STORAGE_KEY, initPostHog } from "@/lib/posthog-client";
 
 export type AnalyticsConsent = "granted" | "denied" | null;
 
-const STORAGE_KEY = "davinciui.cookie-consent";
+const STORAGE_KEY = CONSENT_STORAGE_KEY;
 
 function readStorage(): string | null {
   try {
@@ -36,8 +37,12 @@ export function setConsent(granted: boolean): void {
     // Storage blocked — consent simply won't persist.
   }
   try {
-    if (granted) posthog.opt_in_capturing();
-    else posthog.opt_out_capturing();
+    if (granted) {
+      initPostHog();
+      posthog.opt_in_capturing();
+    } else {
+      posthog.opt_out_capturing();
+    }
   } catch {
     // PostHog unavailable — nothing to flip.
   }

@@ -18,7 +18,7 @@ import { ComponentWorkbench } from "@/components/landing/component-workbench";
 import { DesignSystemWorkbench } from "@/components/landing/design-system-workbench";
 import { Footer } from "@/components/footer";
 
-import { LazyPreview } from "@/components/landing/lazy-preview";
+import { VideoPreviewMedia } from "@/components/landing/video-preview-media";
 
 // DavinciUI Previews for Bento — code-split so the hero payload does not
 // include every animation runtime; cards mount only when scrolled near.
@@ -125,6 +125,7 @@ function FeatureCard({
   title,
   blurb,
   tag,
+  slug,
   className,
   previewHeightClass,
   children,
@@ -133,27 +134,28 @@ function FeatureCard({
   title: string;
   blurb: string;
   tag: string;
+  slug: string;
   className?: string;
   previewHeightClass?: string;
   children: React.ReactNode;
 }) {
   return (
-    <Link
-      href={href}
-      className={`group relative flex h-full flex-col overflow-hidden rounded-[20px] bg-white p-2 shadow-[0_0_0_1px_rgba(0,0,0,0.055),0_10px_30px_-18px_rgba(0,0,0,0.35)] transition-[box-shadow,transform] duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] hover:-translate-y-1 hover:shadow-[0_0_0_1px_rgba(0,0,0,0.08),0_24px_60px_-24px_rgba(0,0,0,0.5)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 focus-visible:ring-offset-2 dark:bg-[#161616] dark:shadow-[0_0_0_1px_rgba(255,255,255,0.07)] dark:hover:shadow-[0_0_0_1px_rgba(255,255,255,0.14),0_24px_70px_-24px_rgba(0,0,0,0.8)] ${className ?? ""}`}
+    <div
+      className={`group relative flex h-full flex-col overflow-hidden rounded-[20px] bg-white p-2 shadow-[0_0_0_1px_rgba(0,0,0,0.055),0_10px_30px_-18px_rgba(0,0,0,0.35)] transition-[box-shadow,transform] duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] hover:-translate-y-1 hover:shadow-[0_0_0_1px_rgba(0,0,0,0.08),0_24px_60px_-24px_rgba(0,0,0,0.5)] dark:bg-[#161616] dark:shadow-[0_0_0_1px_rgba(255,255,255,0.07)] dark:hover:shadow-[0_0_0_1px_rgba(255,255,255,0.14),0_24px_70px_-24px_rgba(0,0,0,0.8)] ${className ?? ""}`}
     >
-      <div
-        className={`relative w-full overflow-hidden rounded-[14px] bg-zinc-50 shadow-[inset_0_0_0_1px_rgba(0,0,0,0.045)] dark:bg-background dark:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.055)] ${previewHeightClass ?? "h-[240px] sm:h-[260px]"}`}
+      <VideoPreviewMedia
+        slug={slug}
+        title={title}
+        tag={tag}
+        heightClass={previewHeightClass}
       >
-        <div className="absolute inset-0 transition-transform duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:scale-[1.03]">
-          {children}
-        </div>
-        <span className="absolute left-3 top-3 z-10 inline-flex items-center rounded-full border border-black/[0.06] bg-white/85 px-2.5 py-1 text-[11px] font-semibold tracking-tight text-zinc-700 backdrop-blur-md dark:border-white/[0.1] dark:bg-black/55 dark:text-zinc-200">
-          {tag}
-        </span>
-        <span className="pointer-events-none absolute inset-0 z-10 rounded-[14px] ring-1 ring-inset ring-black/[0.04] dark:ring-white/[0.06]" />
-      </div>
-      <div className="flex items-start justify-between gap-3 px-2.5 pb-2 pt-3">
+        {children}
+      </VideoPreviewMedia>
+      <Link
+        href={href}
+        prefetch={false}
+        className="flex items-start justify-between gap-3 rounded-[12px] px-2.5 pb-2 pt-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 dark:focus-visible:ring-zinc-400"
+      >
         <div className="min-w-0">
           <p className="truncate text-[14px] font-semibold tracking-tight text-zinc-900 dark:text-zinc-100 sm:text-[15px]">
             {title}
@@ -165,8 +167,8 @@ function FeatureCard({
         <span className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full border border-black/[0.06] text-zinc-500 transition-all duration-300 group-hover:border-black/[0.12] group-hover:bg-zinc-900 group-hover:text-white dark:border-white/[0.1] dark:text-zinc-400 dark:group-hover:bg-white dark:group-hover:text-zinc-900">
           <ArrowIcon className="size-4 transition-transform duration-300 group-hover:rotate-45" />
         </span>
-      </div>
-    </Link>
+      </Link>
+    </div>
   );
 }
 
@@ -282,14 +284,15 @@ export default function Home() {
               >
                 <FeatureCard
                   href="/experience/components/cinematic-card-carousel"
+                  slug="cinematic-card-carousel"
                   title="Cinematic card carousel"
                   blurb="Depth carousel with a film-like focus pull"
                   tag="Featured"
                   previewHeightClass="h-[320px] sm:h-[380px]"
                 >
-                  <LazyPreview className="pointer-events-none absolute inset-0 scale-[1.6]">
+                  <div className="pointer-events-none absolute inset-0 scale-[1.6]">
                     <CinematicCardCarouselCardPreview />
-                  </LazyPreview>
+                  </div>
                 </FeatureCard>
               </motion.div>
 
@@ -299,123 +302,132 @@ export default function Home() {
               >
                 <FeatureCard
                   href="/experience/components/pixel-wipe-carousel"
+                  slug="pixel-wipe-carousel"
                   title="Pixel wipe carousel"
                   blurb="Pixel-dissolve slide transition"
                   tag="Carousel"
                   previewHeightClass="h-[320px] sm:h-[380px]"
                 >
-                  <LazyPreview className="pointer-events-none absolute inset-0">
+                  <div className="pointer-events-none absolute inset-0">
                     <PixelWipeCarouselCardPreview />
-                  </LazyPreview>
+                  </div>
                 </FeatureCard>
               </motion.div>
 
               <motion.div variants={cardVariants} className="lg:col-span-3">
                 <FeatureCard
                   href="/experience/components/sunlight-effect"
+                  slug="sunlight-effect"
                   title="Sunlight effect"
                   blurb="Light sweep across the surface"
                   tag="Effect"
                   previewHeightClass="h-[320px] sm:h-[380px]"
                 >
-                  <LazyPreview className="pointer-events-none absolute inset-0">
+                  <div className="pointer-events-none absolute inset-0">
                     <SunlightEffectCardPreview />
-                  </LazyPreview>
+                  </div>
                 </FeatureCard>
               </motion.div>
 
               <motion.div variants={cardVariants} className="sm:col-span-2 lg:col-span-8">
                 <FeatureCard
                   href="/experience/components/hover-cards"
+                  slug="hover-cards"
                   title="Hover cards"
                   blurb="Spotlight cards that react to your cursor"
                   tag="Interactive"
                   previewHeightClass="h-[280px] sm:h-[340px]"
                 >
-                  <LazyPreview className="absolute inset-0">
+                  <div className="absolute inset-0">
                     <HoverCardsCardPreview />
-                  </LazyPreview>
+                  </div>
                 </FeatureCard>
               </motion.div>
 
               <motion.div variants={cardVariants} className="lg:col-span-4">
                 <FeatureCard
                   href="/experience/components/pixel-flow"
+                  slug="pixel-flow"
                   title="Pixel flow"
                   blurb="Generative particle typography"
                   tag="Generative"
                   previewHeightClass="h-[280px] sm:h-[340px]"
                 >
-                  <LazyPreview className="pointer-events-none absolute inset-0">
+                  <div className="pointer-events-none absolute inset-0">
                     <PixelFlowCardPreview />
-                  </LazyPreview>
+                  </div>
                 </FeatureCard>
               </motion.div>
 
               <motion.div variants={cardVariants} className="lg:col-span-4">
                 <FeatureCard
                   href="/experience/components/gsap-text"
+                  slug="gsap-text"
                   title="GSAP Text"
                   blurb="Layered 3D kinetic typography in motion"
                   tag="Typography"
                 >
-                  <LazyPreview className="absolute inset-0">
+                  <div className="absolute inset-0">
                     <GSAPTextCardPreview fontSize={40} />
-                  </LazyPreview>
+                  </div>
                 </FeatureCard>
               </motion.div>
 
               <motion.div variants={cardVariants} className="lg:col-span-4">
                 <FeatureCard
                   href="/experience/components/text-video-mask"
+                  slug="text-video-mask"
                   title="Text video mask"
                   blurb="Video clipped inside bold type"
                   tag="Typography"
                 >
-                  <LazyPreview className="pointer-events-none absolute inset-0">
+                  <div className="pointer-events-none absolute inset-0">
                     <TextVideoMaskPlayground />
-                  </LazyPreview>
+                  </div>
                 </FeatureCard>
               </motion.div>
 
               <motion.div variants={cardVariants} className="lg:col-span-4">
                 <FeatureCard
                   href="/experience/components/scroll-reveal-image"
+                  slug="scroll-reveal-image"
                   title="Scroll reveal image"
                   blurb="Image unfolds as you scroll"
                   tag="Scroll"
                 >
-                  <LazyPreview className="absolute inset-0">
+                  <div className="absolute inset-0">
                     <ScrollRevealImageAutoCardPreview />
-                  </LazyPreview>
+                  </div>
                 </FeatureCard>
               </motion.div>
 
               <motion.div variants={cardVariants} className="sm:col-span-2 lg:col-span-8">
                 <FeatureCard
                   href="/experience/components/lens-drift-grid"
+                  slug="lens-drift-grid"
                   title="Lens drift grid"
                   blurb="Fisheye image wall with drag and auto-drift"
                   tag="Gallery"
                   previewHeightClass="h-[260px] sm:h-[300px]"
                 >
-                  <LazyPreview className="absolute inset-0">
+                  <div className="absolute inset-0">
                     <LensDriftGridCardPreview />
-                  </LazyPreview>
+                  </div>
                 </FeatureCard>
               </motion.div>
 
               <motion.div variants={cardVariants} className="lg:col-span-4">
                 <FeatureCard
                   href="/experience/components/geometric-trail-cursor"
+                  slug="geometric-trail-cursor"
                   title="Geometric trail cursor"
                   blurb="Cursor that paints as you move"
                   tag="Cursor"
                   previewHeightClass="h-[260px] sm:h-[300px]"
                 >
-                  <LazyPreview className="absolute inset-0">
+                  <div className="absolute inset-0">
                     <GeometricTrailCursorCardPreview />
-                  </LazyPreview>
+                  </div>
                 </FeatureCard>
               </motion.div>
             </motion.div>
