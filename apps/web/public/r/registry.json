@@ -261,10 +261,6 @@
       "type": "registry:ui"
     },
     {
-      "name": "gradient-hero-01",
-      "type": "registry:block"
-    },
-    {
       "name": "gsap-text",
       "type": "registry:ui"
     },
@@ -433,36 +429,28 @@
       "type": "registry:ui"
     },
     {
-      "name": "preloader-pro",
+      "name": "cinematic-panel-preloader",
       "type": "registry:ui"
     },
     {
-      "name": "preloader-pro-v1",
+      "name": "glitch-shred-preloader",
       "type": "registry:ui",
       "description": "A cinematic strip preloader: drifting portrait cards on near-black, a zero-padded counter, random glitch bursts, and a sliced-shred RGB exit."
     },
     {
-      "name": "preloader-pro-v4",
+      "name": "editorial-card-arc-preloader",
       "type": "registry:ui",
       "description": "A theme-aware seven-card editorial preloader with a rising pile, fanned arc, percentage counter, centre-card lift, and a full-bleed 16:9 image expansion."
     },
     {
-      "name": "preloader-pro-v5",
+      "name": "masked-arc-preloader",
       "type": "registry:ui",
       "description": "A cinematic image preloader with masked typography, a seven-card 3D arc, featured full-bleed expansion, and split, lift, or iris reveals."
     },
     {
-      "name": "premium-preloader",
+      "name": "editorial-curtain-preloader",
       "type": "registry:ui",
       "description": "A theme-aware editorial curtain with a three-line tagline, a centered DAVINCIUI wordmark, and mirrored streams of portrait cards."
-    },
-    {
-      "name": "pricing-01",
-      "type": "registry:block"
-    },
-    {
-      "name": "pricing-02",
-      "type": "registry:block"
     },
     {
       "name": "profile-carousel",
@@ -691,6 +679,18 @@
     {
       "name": "wavy-flow-carousel",
       "type": "registry:ui"
+    },
+    {
+      "name": "gradient-hero-01",
+      "type": "registry:block"
+    },
+    {
+      "name": "pricing-01",
+      "type": "registry:block"
+    },
+    {
+      "name": "pricing-02",
+      "type": "registry:block"
     }
   ]
 }

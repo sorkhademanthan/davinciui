@@ -942,44 +942,44 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "geometric-preloader",
     addedAt: "2026-09-15",
   },
-  "preloader-pro": {
-    title: "Preloader Pro",
+  "cinematic-panel-preloader": {
+    title: "Cinematic Panel Preloader",
     description:
       "A cinematic two-stage loader: heavy percentage with a thin red line on white, then a sliding panel reveal into a dark PRELOADER PRO hero.",
     category: "Preloaders",
-    slug: "preloader-pro",
+    slug: "cinematic-panel-preloader",
     addedAt: "2026-09-19",
   },
-  "preloader-pro-v1": {
-    title: "Preloader Pro V1",
+  "glitch-shred-preloader": {
+    title: "Glitch Shred Preloader",
     description:
       "A cinematic strip preloader: drifting portrait cards on near-black, a zero-padded counter, random glitch bursts, and a sliced-shred RGB exit.",
     category: "Preloaders",
-    slug: "preloader-pro-v1",
+    slug: "glitch-shred-preloader",
     addedAt: "2026-11-12",
   },
-  "preloader-pro-v4": {
-    title: "Preloader Pro V4",
+  "editorial-card-arc-preloader": {
+    title: "Editorial Card Arc Preloader",
     description:
       "A theme-aware seven-card editorial preloader with a rising pile, fanned arc, percentage counter, centre-card lift, and a full-bleed 16:9 image expansion.",
     category: "Preloaders",
-    slug: "preloader-pro-v4",
+    slug: "editorial-card-arc-preloader",
     addedAt: "2026-11-13",
   },
-  "preloader-pro-v5": {
-    title: "Preloader Pro V5",
+  "masked-arc-preloader": {
+    title: "Masked Arc Preloader",
     description:
       "A cinematic image preloader with masked typography, a seven-card 3D arc, featured full-bleed expansion, and split, lift, or iris reveals.",
     category: "Preloaders",
-    slug: "preloader-pro-v5",
+    slug: "masked-arc-preloader",
     addedAt: "2026-11-13",
   },
-  "premium-preloader": {
-    title: "Premium Preloader",
+  "editorial-curtain-preloader": {
+    title: "Editorial Curtain Preloader",
     description:
       "A theme-aware editorial curtain with a three-line tagline, a centered DAVINCIUI wordmark, and mirrored streams of portrait cards.",
     category: "Preloaders",
-    slug: "premium-preloader",
+    slug: "editorial-curtain-preloader",
     addedAt: "2026-11-10",
   },
   // Visual Effects
@@ -1243,7 +1243,7 @@ export function getComponent(slug: string) {
 // to alphabetical after the featured set.
 // ─────────────────────────────────────────────────────────────
 export const FEATURED_SLUGS = [
-  "premium-preloader",
+  "editorial-curtain-preloader",
   "spiral-media-gallery",
   "circular-gallery",
   "focus-carousel",
@@ -1288,10 +1288,10 @@ export const FEATURED_SLUGS = [
   "burn-plus",
   "chromatic-cursor",
   "text-morph",
-  "preloader-pro",
-  "preloader-pro-v1",
-  "preloader-pro-v4",
-  "preloader-pro-v5",
+  "cinematic-panel-preloader",
+  "glitch-shred-preloader",
+  "editorial-card-arc-preloader",
+  "masked-arc-preloader",
   "liquid-reveal-button",
   "interactive-media-accordion",
   "services-showcase",
