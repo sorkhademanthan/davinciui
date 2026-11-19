@@ -1,5 +1,5 @@
 import { chromium } from 'playwright';
-const slugs = 'button gsap-text wave-bars-loader circle-cursor hover-transition fluid-particle-text label aspect-ratio preloader-pro silk-aurora chart message-scroller skeleton accordion'.split(' ');
+const slugs = 'button gsap-text wave-bars-loader circle-cursor hover-transition fluid-particle-text label aspect-ratio cinematic-panel-preloader silk-aurora chart message-scroller skeleton accordion'.split(' ');
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
 for (const slug of slugs) {
