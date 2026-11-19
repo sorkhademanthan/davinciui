@@ -194,15 +194,15 @@ export const accessibility: Record<string, string> = {
     "A region with carousel roledescription and aria-label contains an aria-hidden canvas, while the current alt is announced through an aria-live polite span. There are no keyboard controls, and autoplay pauses only on hover when pauseOnHover is set.",
   popover:
     "Base UI supplies trigger aria-expanded and aria-controls, dialog semantics, portal focus handling, Escape to close, and focus return. The wrapper adds no accessible name, so pass aria-label or render PopoverTitle inside.",
-  "preloader-pro":
+  "cinematic-panel-preloader":
     "role progressbar with aria-label Page loading reports aria-valuenow only in 25 percent milestones, while the visual counter and hero are aria-hidden. The loader does not move focus or expose a skip control.",
-  "preloader-pro-v1":
+  "glitch-shred-preloader":
     "A role status with aria-live polite announces 0, 25, 50, 75, and 100 percent loaded, while the drifting cards, counter, and progress bar are aria-hidden. Scroll is locked while active, but the overlay is not modal, traps no focus, and offers no skip control; reduced-motion users get a short fade.",
-  "preloader-pro-v4":
+  "editorial-card-arc-preloader":
     "A role status with aria-live polite announces 0, 25, 50, 75, and 100 percent loaded, while the fan, counter, label, and expanding image are aria-hidden. Scroll is locked and the underlying main is marked inert while active, but the overlay is not modal, traps no focus, and offers no skip control; reduced-motion users get a static frame and a short fade.",
-  "preloader-pro-v5":
+  "masked-arc-preloader":
     "A role status with aria-live polite announces the intro, brand, and reveal phases while the arc cards and image title are aria-hidden. Scroll is locked while active, Escape skips the loader, and the overlay is not modal and moves no focus. Reduced-motion users get a static composed arc with a short fade.",
-  "premium-preloader":
+  "editorial-curtain-preloader":
     "A role status with aria-label Loading announces only the overlay state; the tagline, wordmark, marks, and cards are aria-hidden decoration. Fullscreen mode locks scroll and marks background branches inert until the reveal, then restores them exactly. There are no focusable controls, and reduced-motion users get a short fade instead of the sequence.",
   "profile-carousel":
     "A focusable region with carousel roledescription and the fixed label Team profiles supports Left and Right arrow navigation and labeled previous and next buttons. A polite live region announces Profile X of N, and hover or focus pauses autoplay.",

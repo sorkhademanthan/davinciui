@@ -594,24 +594,24 @@ const docsImportMap: Record<
     import("@/components/docs/geometric-preloader").then((m) => ({
       default: m.GeometricPreloaderDocs,
     })),
-  "preloader-pro": () =>
-    import("@/components/docs/preloader-pro").then((m) => ({
+  "cinematic-panel-preloader": () =>
+    import("@/components/docs/cinematic-panel-preloader").then((m) => ({
       default: m.PreloaderProDocs,
     })),
-  "preloader-pro-v1": () =>
-    import("@/components/docs/preloader-pro-v1").then((m) => ({
+  "glitch-shred-preloader": () =>
+    import("@/components/docs/glitch-shred-preloader").then((m) => ({
       default: m.PreloaderProV1Docs,
     })),
-  "preloader-pro-v4": () =>
-    import("@/components/docs/preloader-pro-v4").then((m) => ({
+  "editorial-card-arc-preloader": () =>
+    import("@/components/docs/editorial-card-arc-preloader").then((m) => ({
       default: m.PreloaderProV4Docs,
     })),
-  "preloader-pro-v5": () =>
-    import("@/components/docs/preloader-pro-v5").then((m) => ({
+  "masked-arc-preloader": () =>
+    import("@/components/docs/masked-arc-preloader").then((m) => ({
       default: m.PreloaderProV5Docs,
     })),
-  "premium-preloader": () =>
-    import("@/components/docs/premium-preloader").then((m) => ({
+  "editorial-curtain-preloader": () =>
+    import("@/components/docs/editorial-curtain-preloader").then((m) => ({
       default: m.PremiumPreloaderDocs,
     })),
 };

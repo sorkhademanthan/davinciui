@@ -48,7 +48,7 @@ export default function ChangelogPage() {
           .
         </InfoBox>
 
-        <Section title="November 2026 — Preloader Pro V4" id="november-2026-preloader-pro-v4">
+        <Section title="November 2026 — Preloader Pro V4" id="november-2026-editorial-card-arc-preloader">
           <p className="text-sm leading-6 text-muted-foreground">
             Preloader Pro V4 is a seven-card editorial sequence: portrait stills
             rise from the lower edge, collapse into a centred pile, then fan
@@ -60,11 +60,11 @@ export default function ChangelogPage() {
             palettes, scroll locking, and an optional once-per-session guard.
           </p>
           <DocsSnippet
-            code={`pnpm dlx shadcn@latest add @davinciui/preloader-pro-v4`}
+            code={`pnpm dlx shadcn@latest add @davinciui/editorial-card-arc-preloader`}
           />
         </Section>
 
-        <Section title="November 2026 — Preloader Pro V1 refinement" id="november-2026-preloader-pro-v1">
+        <Section title="November 2026 — Preloader Pro V1 refinement" id="november-2026-glitch-shred-preloader">
           <p className="text-sm leading-6 text-muted-foreground">
             Preloader Pro V1 now matches the reference composition more
             closely: the counter keeps its full glyph height and baseline, the
@@ -79,7 +79,7 @@ export default function ChangelogPage() {
             regression suite.
           </p>
           <DocsSnippet
-            code={`pnpm dlx shadcn@latest add @davinciui/preloader-pro-v1`}
+            code={`pnpm dlx shadcn@latest add @davinciui/glitch-shred-preloader`}
           />
         </Section>
 
@@ -130,7 +130,7 @@ export default function ChangelogPage() {
             recorder:
           </p>
           <DocsSnippet
-            code={`pnpm dlx shadcn@latest add @davinciui/preloader-pro
+            code={`pnpm dlx shadcn@latest add @davinciui/cinematic-panel-preloader
 pnpm dlx shadcn@latest add @davinciui/ambient-audio-toggle`}
           />
         </Section>

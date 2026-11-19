@@ -205,7 +205,7 @@ export const CARD_LIVE_SLUGS = [
   "pixel-preloader",
   "editorial-wipe-preloader",
   "geometric-preloader",
-  "preloader-pro",
+  "cinematic-panel-preloader",
   "wave-bars-loader",
 ] as const;
 
