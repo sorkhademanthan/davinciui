@@ -1,3 +1,4 @@
+import { CONTENTFUL_PREVIEW_MEDIA } from "@/lib/contentful-preview-media.generated";
 import type { HomePreviewOverrides, HomePreviewTheme } from "@/lib/home-preview-media";
 
 type ContentfulLink = {
@@ -30,18 +31,28 @@ function assetUrl(link: ContentfulLink | undefined, assets: Map<string, Contentf
   return typeof url === "string" && url.length > 0 ? url : undefined;
 }
 
+function mergePreviewMedia(
+  base: HomePreviewOverrides,
+  next: HomePreviewOverrides,
+): HomePreviewOverrides {
+  const merged: HomePreviewOverrides = { ...base };
+  for (const [slug, themes] of Object.entries(next)) {
+    merged[slug] = { ...merged[slug], ...themes };
+  }
+  return merged;
+}
+
 /**
- * Fetches published `component` entries from the Contentful Delivery API.
- * Returns an empty map when delivery credentials are missing or the request
- * fails; CMS-owned previews then show only their poster instead of falling
- * back to local video files.
+ * Fetches published `component` entries from the Contentful Delivery API and
+ * merges them over the generated published asset URLs. The generated map keeps
+ * CMS-owned previews working when delivery credentials are unavailable.
  */
 export async function getHomePreviewMedia(): Promise<HomePreviewOverrides> {
   const space = process.env.CONTENTFUL_SPACE_ID;
   const accessToken = process.env.CONTENTFUL_ACCESS_TOKEN;
   const environment = process.env.CONTENTFUL_ENVIRONMENT || "master";
 
-  if (!space || !accessToken) return {};
+  if (!space || !accessToken) return CONTENTFUL_PREVIEW_MEDIA;
 
   const params = new URLSearchParams({
     content_type: "component",
@@ -55,7 +66,7 @@ export async function getHomePreviewMedia(): Promise<HomePreviewOverrides> {
       headers: { Authorization: `Bearer ${accessToken}` },
       next: { revalidate: 300 },
     });
-    if (!response.ok) return {};
+    if (!response.ok) return CONTENTFUL_PREVIEW_MEDIA;
 
     const body = (await response.json()) as ContentfulResponse;
     const assets = new Map(
@@ -77,8 +88,8 @@ export async function getHomePreviewMedia(): Promise<HomePreviewOverrides> {
         if (value) overrides[slug] = { ...overrides[slug], [theme]: value };
       }
     }
-    return overrides;
+    return mergePreviewMedia(CONTENTFUL_PREVIEW_MEDIA, overrides);
   } catch {
-    return {};
+    return CONTENTFUL_PREVIEW_MEDIA;
   }
 }
