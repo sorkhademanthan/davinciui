@@ -10,6 +10,8 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import Script from "next/script";
 import "@workspace/ui/globals.css";
 import { Providers } from "@/components/providers";
+import { HomePreviewMediaProvider } from "@/components/landing/video-preview-media";
+import { getHomePreviewMedia } from "@/lib/contentful";
 import { SkipToContent } from "@/components/skip-to-content";
 import { CookieConsent } from "@/components/cookie-consent";
 import { JsonLd } from "@/components/seo/json-ld";
@@ -144,11 +146,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>): React.JSX.Element {
+}>): Promise<React.JSX.Element> {
+  const previewMedia = await getHomePreviewMedia();
+
   return (
     // NOTE: no hardcoded style on <html> — a blocking script in <head>
     // resolves the theme (stored pref → system → default dark) and sets the
@@ -177,7 +181,9 @@ export default function RootLayout({
         <div className="isolate relative flex min-h-svh flex-col">
           <SkipToContent />
           <RouteScrollbarController />
-          <Providers>{children}</Providers>
+          <HomePreviewMediaProvider value={previewMedia}>
+            <Providers>{children}</Providers>
+          </HomePreviewMediaProvider>
         </div>
         <SpeedInsights />
         <CookieConsent />

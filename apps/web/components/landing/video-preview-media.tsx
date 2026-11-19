@@ -4,41 +4,37 @@ import * as React from "react";
 import { useTheme } from "next-themes";
 import { useInViewport } from "@/hooks/use-in-viewport";
 import { useHydratedReducedMotion } from "@/hooks/use-hydrated-reduced-motion";
-import { homePreviewMedia } from "@/lib/home-preview-media";
+import {
+  contentfulPreviewSource,
+  homePreviewMedia,
+  type HomePreviewOverrides,
+  type HomePreviewTheme,
+} from "@/lib/home-preview-media";
 
-const PREVIEW_MEDIA_VERSION = "2";
+const PREVIEW_MEDIA_VERSION = "6";
 
-function withMediaVersion(url: string) {
-  return `${url}${url.includes("?") ? "&" : "?"}v=${PREVIEW_MEDIA_VERSION}`;
-}
+type PreviewMediaContextValue = {
+  overrides: HomePreviewOverrides;
+  theme: HomePreviewTheme;
+  mounted: boolean;
+};
 
-/**
- * Lightweight card media: a muted looping video (light/dark variants) that
- * only mounts while near the viewport, with the real interactive component
- * mounted on click. Falls back to the poster if video can't play.
- */
-export function VideoPreviewMedia({
-  slug,
-  title,
-  tag,
-  heightClass,
+const HomePreviewMediaContext = React.createContext<PreviewMediaContextValue>({
+  overrides: {},
+  theme: "dark",
+  mounted: false,
+});
+
+export function HomePreviewMediaProvider({
+  value,
   children,
 }: {
-  slug: string;
-  title: string;
-  tag: string;
-  heightClass?: string;
+  value: HomePreviewOverrides;
   children: React.ReactNode;
 }) {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
   const [domTheme, setDomTheme] = React.useState<"dark" | "light" | null>(null);
-  const reduceMotion = useHydratedReducedMotion();
-  const { ref, inView } = useInViewport({ rootMargin: "300px 0px" });
-  const [live, setLive] = React.useState(false);
-  const [failed, setFailed] = React.useState(false);
-  const [playing, setPlaying] = React.useState(false);
-  const videoRef = React.useRef<HTMLVideoElement | null>(null);
 
   React.useEffect(() => {
     setMounted(true);
@@ -62,13 +58,93 @@ export function VideoPreviewMedia({
     return () => observer.disconnect();
   }, []);
 
-  const theme =
+  const theme: HomePreviewTheme =
     mounted && (domTheme ?? resolvedTheme) === "light" ? "light" : "dark";
-  const media = homePreviewMedia(slug, theme);
+
+  return (
+    <HomePreviewMediaContext.Provider value={{ overrides: value, theme, mounted }}>
+      {children}
+    </HomePreviewMediaContext.Provider>
+  );
+}
+
+export function usePreviewMedia() {
+  return React.useContext(HomePreviewMediaContext);
+}
+
+export function useContentfulPreviewSource(slug: string) {
+  const { overrides, theme } = usePreviewMedia();
+  return contentfulPreviewSource(slug, theme, overrides);
+}
+
+function withMediaVersion(url: string) {
+  return `${url}${url.includes("?") ? "&" : "?"}v=${PREVIEW_MEDIA_VERSION}`;
+}
+
+export function CmsPreviewVideo({
+  slug,
+  className,
+  children,
+}: {
+  slug: string;
+  className?: string;
+  children?: React.ReactNode;
+}) {
+  const source = useContentfulPreviewSource(slug);
+  if (!source) return <>{children}</>;
+
+  return (
+    <video
+      key={source.src}
+      autoPlay
+      muted
+      loop
+      playsInline
+      preload="metadata"
+      className={className}
+      aria-hidden="true"
+    >
+      <source src={withMediaVersion(source.src)} type="video/mp4" />
+    </video>
+  );
+}
+
+/**
+ * Lightweight card media: a muted looping video (light/dark variants) that
+ * only mounts while near the viewport, with the real interactive component
+ * mounted on click. Falls back to the poster if video can't play.
+ */
+export function VideoPreviewMedia({
+  slug,
+  title,
+  tag,
+  heightClass,
+  children,
+}: {
+  slug: string;
+  title: string;
+  tag: string;
+  heightClass?: string;
+  children: React.ReactNode;
+}) {
+  const reduceMotion = useHydratedReducedMotion();
+  const { overrides, theme, mounted } = usePreviewMedia();
+  const { ref, inView } = useInViewport({ rootMargin: "300px 0px" });
+  const [live, setLive] = React.useState(false);
+  const [failed, setFailed] = React.useState(false);
+  const [playing, setPlaying] = React.useState(false);
+  const videoRef = React.useRef<HTMLVideoElement | null>(null);
+
+  const media = homePreviewMedia(slug, theme, overrides);
+  const source = media.sources[0];
   const poster = withMediaVersion(media.poster);
-  const webm = withMediaVersion(media.webm);
-  const mp4 = withMediaVersion(media.mp4);
-  const showVideo = mounted && inView && !reduceMotion && !live && !failed;
+  const showVideo =
+    mounted && inView && !reduceMotion && !live && !failed && Boolean(source);
+
+  React.useEffect(() => {
+    setFailed(false);
+    setPlaying(false);
+  }, [source?.src]);
 
   React.useEffect(() => {
     const video = videoRef.current;
@@ -98,11 +174,10 @@ export function VideoPreviewMedia({
               loading="lazy"
               decoding="async"
               className="absolute inset-0 size-full object-cover"
-              onError={() => setFailed(true)}
             />
             {showVideo ? (
               <video
-                key={`${theme}-v${PREVIEW_MEDIA_VERSION}`}
+                key={`${theme}-${source?.src ?? "none"}-v${PREVIEW_MEDIA_VERSION}`}
                 ref={videoRef}
                 className={`absolute inset-0 size-full object-cover transition-opacity duration-300 ${
                   playing ? "opacity-100" : "opacity-0"
@@ -118,8 +193,13 @@ export function VideoPreviewMedia({
                 onPlaying={() => setPlaying(true)}
                 onError={() => setFailed(true)}
               >
-                <source src={webm} type="video/webm" />
-                <source src={mp4} type="video/mp4" />
+                {media.sources.map((source) => (
+                  <source
+                    key={source.src}
+                    src={withMediaVersion(source.src)}
+                    type={source.type}
+                  />
+                ))}
               </video>
             ) : null}
           </div>

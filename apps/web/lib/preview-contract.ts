@@ -86,11 +86,11 @@ const TALL_STAGE_SLUGS: ReadonlySet<string> = new Set([
   "geometric-preloader",
   "editorial-image-stack",
   "infinite-image-gallery",
-  "preloader-pro",
-  "preloader-pro-v1",
-  "preloader-pro-v4",
-  "preloader-pro-v5",
-  "premium-preloader",
+  "cinematic-panel-preloader",
+  "glitch-shred-preloader",
+  "editorial-card-arc-preloader",
+  "masked-arc-preloader",
+  "editorial-curtain-preloader",
   "team-slide-reveal",
 ]);
 
