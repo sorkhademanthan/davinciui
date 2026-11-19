@@ -45,7 +45,7 @@ _Apply via infra/assets/card-preview wrappers only — no edits to `packages/ui/
   - [ ] WebGL/Three/shaders/particles: `tubes-cursor`, `fluid-cursor`, `fluid-particle-text`, `glitch-liquid-text`, `ink-flow`, `silk-aurora`, `soft-fluid-gradient`, `pixel-flow`, `shader-text`, `neon-mesh-bg`, `spectra-noise`, `sunlight-effect`, `liquid-chrome-button`
   - [ ] Video/media-decode & SVG-anim heavy: `text-video-mask` (remove remote live decode in card), `focus-carousel`, `ambient-strip`, `curve-wall`, `media-text-hover` (if video), `noiser`
 - [ ] **A3.2 — P1 (frozen/static frame or poster/video; no continuous loop)**
-  - [ ] Preloaders: `preloader-pro`, `preloader-pro-v1`, `preloader-pro-v4`, `preloader-pro-v5` (use frozen frame approach where available), `fill-preloader`, `staircase-preloader`, `pixel-preloader`, `editorial-wipe-preloader`, `geometric-preloader`, `wave-bars-loader`
+  - [ ] Preloaders: `cinematic-panel-preloader`, `glitch-shred-preloader`, `editorial-card-arc-preloader`, `masked-arc-preloader` (use frozen frame approach where available), `fill-preloader`, `staircase-preloader`, `pixel-preloader`, `editorial-wipe-preloader`, `geometric-preloader`, `wave-bars-loader`
   - [ ] Scroll sims, galleries, bento/accordion: `scroll-reveal-image`, `cms-media-bento`, `cms-scroll-gallery`, `interactive-media-accordion`, `stacked-scroll-gallery`, `scroll-sync-gallery`, `scroll-media-expand`, `scroll-timeline`, `infinite-image-gallery`, `orbit-spiral-gallery`, `spiral-media-gallery`, `3d-flow-gallery`, `circular-gallery`, `editorial-image-stack`
   - [ ] Auto-motion carousels/marquees/reveals: `vertical-image-marquee`, `cinematic-card-carousel`, `pixel-wipe-carousel`, `segmented-image-carousel`, `arc-carousel`, `arcwave-carousel`, `streamline-carousel`, `depth-carousel-3d`, `wavy-flow-carousel`, `profile-carousel`, `team-slide-reveal`, `hover-transition`, `crumpled-paper-reveal`, `radial-fan-deck`, `tilt-flip-polaroid`, `lens-drift-grid`, `services-showcase`, `glass-scene-dock`
 - [ ] **A3.3 — P2 (play-once or hover/focus-to-play, capped)**
@@ -132,7 +132,7 @@ Captured: **2026-11-13** (local). Command: `pnpm --filter web build` (Next.js 16
   - `○ /experience/components` — Static
   - `● /experience/components/[slug]` — SSG via `generateStaticParams` (150 paths shown in build log, e.g. `/experience/components/circle-cursor`, `.../chromatic-cursor`, `.../magic-cursor-pro`, +147 more)
   - `● /docs/components/[slug]` — SSG (150 paths)
-  - `○ /demo/preloader-pro-v5` — Static (and other demo routes static/dynamic as listed)
+  - `○ /demo/masked-arc-preloader` — Static (and other demo routes static/dynamic as listed)
   - `ƒ /experience/components/opengraph-image` — Dynamic (edge runtime warning shown during build)
 - **Preview module inventory (code):** `apps/web/components/component-card-live-preview.tsx` contains **91** `next/dynamic(..., { ssr: false })` imports (90 named preview modules/primitives + basic preview module path mapping coverage) for gallery card previews.
 - **Production chunk attribution note:** In `.next/static/chunks/*.js`, only some preview identifiers were directly attributable by string search (e.g. `ink-flow`, `shader-text`, `text-video-mask` matched shared chunk `0a774d74f4b44cb8.js`). Most per-slug card-preview modules were **not individually attributable** to unique hashed static chunks in this build output (likely merged/split/shared by bundler). Dev named chunks exist under `.next/dev/...` but are not production baseline. Per-slug sizes below are therefore reported as **chunk attribution (prod)** + **code-based module/dependency analysis**.
@@ -222,10 +222,10 @@ Legend: deps/tech flags are **code-based** (card preview + underlying UI/compone
 
 | Slug | Exists | Preview/module files (primary) | Code deps/tech flags | Prod chunk attribution |
 |---|---|---|---|---|
-| `preloader-pro` | yes | `.../preloader-pro-card-preview.tsx`, `packages/ui/src/components/preloader-pro.tsx` | `RAF/timers` | not uniquely attributable |
-| `preloader-pro-v1` | yes | `.../preloader-pro-v1-card-preview.tsx`, `packages/ui/src/components/preloader-pro-v1.tsx` | `RAF/timers` | not uniquely attributable |
-| `preloader-pro-v4` | yes | `.../preloader-pro-v4-card-preview.tsx`, `packages/ui/src/components/preloader-pro-v4.tsx` | `RAF/timers` | not uniquely attributable |
-| `preloader-pro-v5` | yes | `.../preloader-pro-v5-card-preview.tsx`, `packages/ui/src/components/preloader-pro-v5.tsx` | `RAF/timers` | not uniquely attributable |
+| `cinematic-panel-preloader` | yes | `.../cinematic-panel-preloader-card-preview.tsx`, `packages/ui/src/components/cinematic-panel-preloader.tsx` | `RAF/timers` | not uniquely attributable |
+| `glitch-shred-preloader` | yes | `.../glitch-shred-preloader-card-preview.tsx`, `packages/ui/src/components/glitch-shred-preloader.tsx` | `RAF/timers` | not uniquely attributable |
+| `editorial-card-arc-preloader` | yes | `.../editorial-card-arc-preloader-card-preview.tsx`, `packages/ui/src/components/editorial-card-arc-preloader.tsx` | `RAF/timers` | not uniquely attributable |
+| `masked-arc-preloader` | yes | `.../masked-arc-preloader-card-preview.tsx`, `packages/ui/src/components/masked-arc-preloader.tsx` | `RAF/timers` | not uniquely attributable |
 | `fill-preloader` | yes | `.../fill-preloader-card-preview.tsx`, `packages/ui/src/components/fill-preloader.tsx` | `RAF/timers`, `framer-motion` | not uniquely attributable |
 | `staircase-preloader` | yes | `.../staircase-preloader-card-preview.tsx`, `packages/ui/src/components/staircase-preloader.tsx` | `RAF/timers`, `framer-motion` | not uniquely attributable |
 | `pixel-preloader` | yes | `.../pixel-preloader-card-preview.tsx`, `packages/ui/src/components/pixel-preloader.tsx` | `canvas/WebGL`, `RAF/timers` | not uniquely attributable |
@@ -273,7 +273,7 @@ Legend: deps/tech flags are **code-based** (card preview + underlying UI/compone
 ### 5) Runtime baseline (code-based, current IO + grid)
 
 - **Current behavior:** `IntersectionObserver` with `rootMargin: "300px 0px"`, `threshold: 0.01`; card mounts while intersecting expanded band and unmounts when leaving (`component-card-live-preview.tsx:850-856`).
-- **Card layout:** gallery grid `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3`, default preview height `h-48` (~192px) except wide 16:9 (`preloader-pro-v1/v4/v5`) (`experience/components/page.tsx:445,469`).
+- **Card layout:** gallery grid `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3`, default preview height `h-48` (~192px) except wide 16:9 (`glitch-shred-preloader/v4/v5`) (`experience/components/page.tsx:445,469`).
 - **Estimated simultaneously mountable preview cards** (approx., margin adds 300px above+below viewport; `ceil((viewportH + 600) / (cardH + gap)) * cols`):
 
 | Viewport | Size (W×H) | Columns | ~Visible cards | ~Mountable with 300px margin |

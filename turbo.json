@@ -1,7 +1,13 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
-  "globalEnv": ["NODE_ENV", "GITHUB_TOKEN"],
+  "globalEnv": [
+    "NODE_ENV",
+    "GITHUB_TOKEN",
+    "CONTENTFUL_SPACE_ID",
+    "CONTENTFUL_ENVIRONMENT",
+    "CONTENTFUL_ACCESS_TOKEN"
+  ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],

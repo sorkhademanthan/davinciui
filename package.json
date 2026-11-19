@@ -14,13 +14,15 @@
     "screenshot": "node scripts/screenshot.js",
     "test:focus-carousel": "node scripts/test-focus-carousel.mjs",
     "test:cms-media-bento": "node scripts/test-cms-media-bento.mjs",
-    "test:preloader-pro-v1": "node scripts/test-preloader-pro-v1.mjs",
-    "test:preloader-pro-v4": "node scripts/test-preloader-pro-v4.mjs",
+    "test:glitch-shred-preloader": "node scripts/test-glitch-shred-preloader.mjs",
+    "test:editorial-card-arc-preloader": "node scripts/test-editorial-card-arc-preloader.mjs",
     "optimize:previews": "./scripts/optimize-preview-videos.sh",
     "recompress:previews": "scripts/venv/bin/python scripts/recompress-and-reupload-previews.py",
     "test:tilt-flip-polaroid": "node --test scripts/test-tilt-flip-polaroid.mjs",
-    "test:premium-preloader": "node --test scripts/test-premium-preloader-path.mjs",
-    "check:basic-preview": "node scripts/check-basic-preview-runtime.mjs"
+    "test:editorial-curtain-preloader": "node --test scripts/test-premium-preloader-path.mjs",
+    "check:basic-preview": "node scripts/check-basic-preview-runtime.mjs",
+    "contentful:check": "node scripts/check-contentful.mjs",
+    "contentful:migrate": "node scripts/migrate-to-contentful.cjs"
   },
   "devDependencies": {
     "@workspace/eslint-config": "workspace:*",
@@ -34,7 +36,10 @@
   "engines": {
     "node": ">=20"
   },
-  "dependencies": {},
+  "dependencies": {
+    "contentful-management": "^12.21.0",
+    "dotenv": "^18.0.10"
+  },
   "workspaces": [
     "apps/*",
     "packages/*"
