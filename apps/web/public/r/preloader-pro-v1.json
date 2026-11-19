@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "preloader-pro-v1",
   "type": "registry:ui",
-  "title": "Preloader Pro V1",
+  "title": "Glitch Shred Preloader",
   "dependencies": [],
   "devDependencies": [],
   "registryDependencies": [],

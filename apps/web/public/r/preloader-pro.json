@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "preloader-pro",
   "type": "registry:ui",
-  "title": "Preloader Pro",
+  "title": "Cinematic Panel Preloader",
   "dependencies": [],
   "devDependencies": [],
   "registryDependencies": [],
