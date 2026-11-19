@@ -1,10 +1,10 @@
 /**
- * Homepage bento preview videos.
+ * Preview media sources.
  *
- * Defaults to the app's own static assets (served from the Vercel CDN).
- * Point `NEXT_PUBLIC_HOME_PREVIEW_VIDEO_BASE` at the R2 public bucket to serve
- * the same paths from Cloudflare instead, e.g.
- * `https://pub-a50e7f4ea75a4970a1738e50d53b6eb1.r2.dev/preview-videos/home`.
+ * Slugs in CONTENTFUL_PREVIEW_SLUGS are CMS-owned: their video must come from
+ * the published Contentful `component` entry only. The local WebP poster is
+ * still used as a placeholder, but no local video fallback is emitted.
+ * Other slugs keep using the app's static assets.
  */
 const BASE = (
   process.env.NEXT_PUBLIC_HOME_PREVIEW_VIDEO_BASE ?? "/preview-videos/home"
@@ -12,11 +12,102 @@ const BASE = (
 
 export type HomePreviewTheme = "light" | "dark";
 
-export function homePreviewMedia(slug: string, theme: HomePreviewTheme) {
+export type HomePreviewOverrides = Record<
+  string,
+  Partial<Record<HomePreviewTheme, string>>
+>;
+
+export type HomePreviewMedia = {
+  poster: string;
+  sources: { src: string; type: "video/mp4" | "video/webm" }[];
+};
+
+export const CONTENTFUL_PREVIEW_SLUGS = new Set([
+  "neon-mesh-bg",
+  "silk-aurora",
+  "soft-fluid-gradient",
+  "ink-flow",
+  "character-field",
+  "spectra-noise",
+  "noiser",
+  "sunlight-effect",
+  "hover-cards",
+  "pixel-flow",
+  "gsap-text",
+  "text-video-mask",
+  "scroll-reveal-image",
+  "geometric-trail-cursor",
+  "tubes-cursor",
+  "electric-vijdi-cursor",
+  "chromatic-cursor",
+  "magic-cursor-pro",
+  "circle-cursor",
+  "elastic-blob-cursor",
+  "fluid-cursor",
+  "curved-inline-type",
+  "shake-text",
+  "rolling-text",
+  "media-text-hover",
+  "random-text-reveal",
+  "text-morph",
+  "text-reveal",
+  "shader-text",
+  "fluid-particle-text",
+  "encrypted-text",
+  "glitch-liquid-text",
+  "editorial-curtain-preloader",
+  "pixel-preloader",
+  "fill-preloader",
+  "cinematic-panel-preloader",
+  "glitch-shred-preloader",
+  "editorial-card-arc-preloader",
+  "masked-arc-preloader",
+  "staircase-preloader",
+  "geometric-preloader",
+  "editorial-wipe-preloader",
+  "wavy-flow-carousel",
+  "scroll-sync-gallery",
+  "scroll-timeline",
+  "scroll-media-expand",
+  "interactive-media-accordion",
+  "cms-scroll-gallery",
+  "stacked-scroll-gallery",
+]);
+
+function absoluteAssetUrl(url: string) {
+  return url.startsWith("//") ? `https:${url}` : url;
+}
+
+export function contentfulPreviewSource(
+  slug: string,
+  theme: HomePreviewTheme,
+  overrides?: HomePreviewOverrides,
+): HomePreviewMedia["sources"][number] | null {
+  if (!CONTENTFUL_PREVIEW_SLUGS.has(slug)) return null;
+  const url = overrides?.[slug]?.[theme];
+  if (!url) return null;
+  return { src: absoluteAssetUrl(url), type: "video/mp4" };
+}
+
+export function homePreviewMedia(
+  slug: string,
+  theme: HomePreviewTheme,
+  overrides?: HomePreviewOverrides,
+): HomePreviewMedia {
   const path = `${BASE}/${slug}/${slug}-${theme}`;
+  const localWebm = { src: `${path}.webm`, type: "video/webm" } as const;
+  const localMp4 = { src: `${path}.mp4`, type: "video/mp4" } as const;
+  const contentful = contentfulPreviewSource(slug, theme, overrides);
+
+  if (CONTENTFUL_PREVIEW_SLUGS.has(slug)) {
+    return {
+      poster: `${path}.webp`,
+      sources: contentful ? [contentful] : [],
+    };
+  }
+
   return {
-    webm: `${path}.webm`,
-    mp4: `${path}.mp4`,
     poster: `${path}.webp`,
+    sources: [localWebm, localMp4],
   };
 }
