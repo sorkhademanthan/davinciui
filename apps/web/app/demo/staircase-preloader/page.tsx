@@ -10,7 +10,7 @@ export default function StaircasePreloaderDemoPage() {
       {/* Page content sitting underneath the overlay */}
       <main className="flex min-h-screen items-center justify-center px-6">
         <h1 className="text-center text-[clamp(3rem,12vw,10rem)] font-bold leading-none tracking-[-0.04em] select-none">
-          DAVINCI
+          DAVINCIUI
         </h1>
       </main>
     </div>

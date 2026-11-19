@@ -6,7 +6,7 @@ import { PixelPreloader } from "@workspace/ui/components/pixel-preloader";
 import { StaircasePreloader } from "@workspace/ui/components/staircase-preloader";
 import { FillPreloader } from "@workspace/ui/components/fill-preloader";
 import { EditorialWipePreloader } from "@workspace/ui/components/editorial-wipe-preloader";
-import { PreloaderPro } from "@workspace/ui/components/preloader-pro";
+import { PreloaderPro } from "@workspace/ui/components/cinematic-panel-preloader";
 import { createComponentPlayground } from "@/components/docs/previews/generic-playground";
 
 function ReplayableStage({
@@ -539,7 +539,7 @@ export const {
   Preview: PreloaderProPlayground,
   PersonalizePanel: PreloaderProPersonalizePanel,
 } = createComponentPlayground({
-  slug: "preloader-pro",
+  slug: "cinematic-panel-preloader",
   component: PreloaderPro as unknown as React.ComponentType<
     Record<string, unknown>
   >,
@@ -615,7 +615,7 @@ export const {
   render: (config, renderVersion) => {
     const props = config as unknown as React.ComponentProps<typeof PreloaderPro>;
     return (
-      <ReplayableStage title="Preloader Pro" runId={String(renderVersion)}>
+      <ReplayableStage title="Cinematic Panel Preloader" runId={String(renderVersion)}>
         <PreloaderPro {...props} />
       </ReplayableStage>
     );

@@ -69,8 +69,8 @@ function StaircasePreloaderNotes() {
           </li>
           <li>
             <strong className="text-foreground">Theme</strong> — the curtain is
-            an opaque brand color, so it is identical in light and dark mode by
-            design; the revealed page underneath adapts as usual.
+            an opaque brand color, while the revealed DAVINCIUI wordmark uses a
+            theme-aware high-contrast color in light and dark mode.
           </li>
           <li>
             <strong className="text-foreground">Reduced motion</strong> keeps
@@ -130,6 +130,19 @@ export async function StaircasePreloaderDocs() {
           type: "string",
           default: '"#FF3D00"',
           description: "Solid color of the fullscreen curtain.",
+        },
+        {
+          name: "text",
+          type: "string",
+          default: '"DAVINCIUI"',
+          description: "Wordmark revealed as the staircase curtain lifts.",
+        },
+        {
+          name: "textColor / theme",
+          type: "string / auto | light | dark",
+          default: "theme-aware high contrast",
+          description:
+            "Wordmark color, with a light/dark default that follows the site theme.",
         },
         {
           name: "stepCount",

@@ -7,7 +7,7 @@ const COLUMN_COUNT = 8;
 /**
  * Miniature looping version of the staircase preloader for the gallery
  * card: solid orange holds, then 8 strips lift upward with a left → right
- * stagger so the lower edge reads as a staircase, revealing DAVINCI behind.
+ * stagger so the lower edge reads as a staircase, revealing DAVINCIUI behind.
  */
 export function StaircasePreloaderCardPreview() {
   const columnRefs = React.useRef<(HTMLDivElement | null)[]>([]);
@@ -58,7 +58,7 @@ export function StaircasePreloaderCardPreview() {
       {/* Page content sitting underneath the overlay */}
       <div className="absolute inset-0 flex items-center justify-center px-3">
         <span className="whitespace-nowrap text-[clamp(1.75rem,11cqi,3rem)] font-black leading-none tracking-[-0.04em] text-zinc-950 select-none dark:text-zinc-50">
-          DAVINCI
+          DAVINCIUI
         </span>
       </div>
       {/* Stepped curtain overlay */}

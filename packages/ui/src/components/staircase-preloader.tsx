@@ -10,9 +10,17 @@ export type StaircasePreloaderPhase =
   | "exiting"
   | "finished";
 
+export type StaircasePreloaderTheme = "auto" | "light" | "dark";
+
 export interface StaircasePreloaderProps {
   /** Solid color of the fullscreen curtain. Defaults to vivid red-orange. */
   color?: string;
+  /** Wordmark revealed as the curtain lifts. */
+  text?: string;
+  /** Wordmark color. Defaults to a theme-aware high-contrast value. */
+  textColor?: string;
+  /** Color scheme for the default wordmark color. */
+  theme?: StaircasePreloaderTheme;
   /** Number of vertical strips forming the staircase. Defaults to 8. */
   stepCount?: number;
   /** Milliseconds the fully-covered orange frame is held before exiting. */
@@ -33,6 +41,85 @@ export interface StaircasePreloaderProps {
 
 const EXIT_EASE: [number, number, number, number] = [0.76, 0, 0.24, 1];
 
+const THEME_DEFAULTS = {
+  dark: { textColor: "#FFFFFF" },
+  light: { textColor: "#111111" },
+} as const;
+
+function resolveColorScheme(): "light" | "dark" {
+  if (typeof document === "undefined") return "dark";
+  const root = document.documentElement;
+  if (root.classList.contains("dark")) return "dark";
+  if (root.classList.contains("light")) return "light";
+  const dataTheme = root.dataset.theme;
+  if (dataTheme === "dark" || dataTheme === "light") return dataTheme;
+  if (
+    typeof window !== "undefined" &&
+    typeof window.matchMedia === "function" &&
+    window.matchMedia("(prefers-color-scheme: light)").matches
+  ) {
+    return "light";
+  }
+  return "dark";
+}
+
+function useColorScheme(mode: StaircasePreloaderTheme): "light" | "dark" {
+  const [scheme, setScheme] = React.useState<"light" | "dark">("dark");
+  React.useEffect(() => {
+    if (mode !== "auto") {
+      setScheme(mode);
+      return;
+    }
+    setScheme(resolveColorScheme());
+    const root = document.documentElement;
+    const observer = new MutationObserver(() => setScheme(resolveColorScheme()));
+    observer.observe(root, {
+      attributes: true,
+      attributeFilter: ["class", "data-theme", "style"],
+    });
+    const query = window.matchMedia("(prefers-color-scheme: light)");
+    const onChange = () => setScheme(resolveColorScheme());
+    query.addEventListener("change", onChange);
+    return () => {
+      observer.disconnect();
+      query.removeEventListener("change", onChange);
+    };
+  }, [mode]);
+  return scheme;
+}
+
+let scrollLockCount = 0;
+let restorePageScroll: (() => void) | null = null;
+
+function lockPageScroll() {
+  if (scrollLockCount === 0) {
+    const root = document.documentElement;
+    const body = document.body;
+    const previousRootOverflow = root.style.overflow;
+    const previousBodyOverflow = body.style.overflow;
+    const previousBodyTouchAction = body.style.touchAction;
+    root.style.overflow = "hidden";
+    body.style.overflow = "hidden";
+    body.style.touchAction = "none";
+    restorePageScroll = () => {
+      root.style.overflow = previousRootOverflow;
+      body.style.overflow = previousBodyOverflow;
+      body.style.touchAction = previousBodyTouchAction;
+    };
+  }
+  scrollLockCount += 1;
+  let released = false;
+  return () => {
+    if (released) return;
+    released = true;
+    scrollLockCount = Math.max(0, scrollLockCount - 1);
+    if (scrollLockCount === 0) {
+      restorePageScroll?.();
+      restorePageScroll = null;
+    }
+  };
+}
+
 /**
  * StaircasePreloader — a fullscreen stepped-curtain reveal.
  *
@@ -46,6 +133,9 @@ const EXIT_EASE: [number, number, number, number] = [0.76, 0, 0.24, 1];
  */
 export function StaircasePreloader({
   color = "#FF3D00",
+  text = "DAVINCIUI",
+  textColor,
+  theme = "auto",
   stepCount = 8,
   holdDuration = 200,
   exitDuration = 850,
@@ -57,6 +147,9 @@ export function StaircasePreloader({
 }: StaircasePreloaderProps) {
   const [phase, setPhase] = React.useState<StaircasePreloaderPhase>("idle");
   const reduceMotion = useReducedMotion();
+  const scheme = useColorScheme(theme);
+  const resolvedTextColor = textColor ?? THEME_DEFAULTS[scheme].textColor;
+  const releaseScrollLock = React.useRef<(() => void) | null>(null);
   const phaseRef = React.useRef<StaircasePreloaderPhase>("idle");
   const timers = React.useRef<ReturnType<typeof setTimeout>[]>([]);
   const onPhaseChangeRef = React.useRef(onPhaseChange);
@@ -124,23 +217,25 @@ export function StaircasePreloader({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Lock page scroll while the overlay is alive; restore on exit/unmount.
+  const locked = phase !== "finished";
   React.useEffect(() => {
-    if (phase === "finished") return;
-    const root = document.documentElement;
-    const body = document.body;
-    const previousRootOverflow = root.style.overflow;
-    const previousBodyOverflow = body.style.overflow;
-    const previousBodyTouchAction = body.style.touchAction;
-    root.style.overflow = "hidden";
-    body.style.overflow = "hidden";
-    body.style.touchAction = "none";
-    return () => {
-      root.style.overflow = previousRootOverflow;
-      body.style.overflow = previousBodyOverflow;
-      body.style.touchAction = previousBodyTouchAction;
-    };
-  }, [phase]);
+    if (!locked) {
+      releaseScrollLock.current?.();
+      releaseScrollLock.current = null;
+      return;
+    }
+    if (!releaseScrollLock.current) {
+      releaseScrollLock.current = lockPageScroll();
+    }
+  }, [locked]);
+
+  React.useEffect(
+    () => () => {
+      releaseScrollLock.current?.();
+      releaseScrollLock.current = null;
+    },
+    [],
+  );
 
   if (phase === "finished") return null;
 
@@ -160,12 +255,30 @@ export function StaircasePreloader({
       data-phase={phase}
       className={cn("fixed inset-0 overflow-hidden", className)}
       style={{
-        width: "100vw",
-        height: "100dvh",
+        width: "100%",
+        height: "100%",
         zIndex,
         pointerEvents: "auto",
       }}
     >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 flex items-center justify-center px-6"
+        style={{ zIndex: 0, color: resolvedTextColor }}
+      >
+        <span
+          style={{
+            fontFamily: "inherit",
+            fontSize: "clamp(2.5rem, 8vw, 8rem)",
+            fontWeight: 800,
+            lineHeight: 1,
+            letterSpacing: "-0.05em",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {text}
+        </span>
+      </div>
       {columns.map((index) => (
         <motion.div
           key={index}
@@ -177,6 +290,7 @@ export function StaircasePreloader({
             // one continuous orange surface.
             width: `calc(${100 / columnCount}% + 1.5px)`,
             backgroundColor: color,
+            zIndex: 1,
             willChange: exiting ? "transform" : undefined,
           }}
           initial={{ y: "0%" }}
