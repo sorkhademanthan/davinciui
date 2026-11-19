@@ -6,6 +6,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Search, ArrowUpRight } from "lucide-react";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { ComponentCardLivePreview } from "@/components/component-card-live-preview";
+import { useContentfulPreviewSource } from "@/components/landing/video-preview-media";
 import {
   isBasicPreviewSlug,
   type BasicPreviewSlug,
@@ -32,9 +33,9 @@ const SCROLL_SLUGS = new Set([
 // Fixed design-frame previews that must keep a 16:9 surface so the whole
 // composition (label, strip, counter, bar) is visible at every card width.
 const WIDE_CARD_SLUGS = new Set([
-  "preloader-pro-v1",
-  "preloader-pro-v4",
-  "preloader-pro-v5",
+  "glitch-shred-preloader",
+  "editorial-card-arc-preloader",
+  "masked-arc-preloader",
 ]);
 
 const TOP_FILTERS = [
@@ -77,6 +78,73 @@ const TEXT_ANIMATION_RANK = new Map<string, number>(
 
 type TopFilter = (typeof TOP_FILTERS)[number];
 type BasicSub = (typeof BASIC_SUBS)[number];
+
+function getPreviewSources(url?: string) {
+  if (!url) return null;
+  const m = url.match(/^(.*)\.(mov|mp4|webm)(\?.*)?$/i);
+  if (!m) return { webm: url, mp4: url };
+  return { webm: `${m[1]}.webm${m[3] || ""}`, mp4: `${m[1]}.mp4${m[3] || ""}` };
+}
+
+function GalleryCardMedia({
+  slug,
+  title,
+  previewVideo,
+  previewImage,
+  className,
+}: {
+  slug: string;
+  title: string;
+  previewVideo?: string;
+  previewImage?: string;
+  className: string;
+}) {
+  const cms = useContentfulPreviewSource(slug);
+  if (cms) {
+    return (
+      <video
+        key={cms.src}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        className={className}
+        aria-hidden="true"
+      >
+        <source src={cms.src} type="video/mp4" />
+      </video>
+    );
+  }
+
+  const sources = getPreviewSources(previewVideo);
+  if (sources) {
+    return (
+      <video autoPlay muted loop playsInline preload="metadata" className={className}>
+        <source src={sources.webm} type="video/webm" />
+        <source src={sources.mp4} type="video/mp4" />
+      </video>
+    );
+  }
+  if (previewImage) {
+    return <img src={previewImage} alt={title} className={className} />;
+  }
+  if (hasLiveCardPreview(slug)) {
+    return <ComponentCardLivePreview slug={slug} />;
+  }
+  return (
+    <div
+      className={cn(
+        "absolute inset-0 flex items-center justify-center bg-gradient-to-br from-zinc-900/[0.04] via-transparent to-transparent dark:from-white/[0.04]",
+        className.includes("aspect-video") ? "" : "",
+      )}
+    >
+      <div className="flex size-10 items-center justify-center rounded-xl bg-zinc-900 text-xs font-mono text-white shadow-sm dark:bg-white dark:text-zinc-900">
+        {title.slice(0, 2).toUpperCase()}
+      </div>
+    </div>
+  );
+}
 
 function hasLiveCardPreview(
   slug: string,
@@ -158,10 +226,10 @@ function hasLiveCardPreview(
   | "pixel-preloader"
   | "editorial-wipe-preloader"
   | "geometric-preloader"
-  | "preloader-pro"
-  | "preloader-pro-v1"
-  | "preloader-pro-v4"
-  | "preloader-pro-v5"
+  | "cinematic-panel-preloader"
+  | "glitch-shred-preloader"
+  | "editorial-card-arc-preloader"
+  | "masked-arc-preloader"
   | "wave-bars-loader"
   | "electric-vijdi-cursor"
   | "circle-cursor"
@@ -250,11 +318,11 @@ function hasLiveCardPreview(
     slug === "pixel-preloader" ||
     slug === "editorial-wipe-preloader" ||
     slug === "geometric-preloader" ||
-    slug === "preloader-pro" ||
-    slug === "preloader-pro-v1" ||
-    slug === "preloader-pro-v4" ||
-    slug === "preloader-pro-v5" ||
-    slug === "premium-preloader" ||
+    slug === "cinematic-panel-preloader" ||
+    slug === "glitch-shred-preloader" ||
+    slug === "editorial-card-arc-preloader" ||
+    slug === "masked-arc-preloader" ||
+    slug === "editorial-curtain-preloader" ||
     slug === "wave-bars-loader" ||
     slug === "electric-vijdi-cursor" ||
     slug === "circle-cursor" ||
@@ -439,16 +507,6 @@ function ComponentsGallery() {
 
       <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {filtered.map((c) => {
-          const getSources = (url?: string) => {
-            if (!url) return null;
-            // Derive webm/mp4 from any extension (mov/webm/mp4) for resilient playback
-            const m = url.match(/^(.*)\.(mov|mp4|webm)(\?.*)?$/i);
-            if (!m) return { webm: url, mp4: url };
-            const base = m[1];
-            const q = m[3] || "";
-            return { webm: `${base}.webm${q}`, mp4: `${base}.mp4${q}` };
-          };
-          const sources = getSources(c.previewVideo);
           const cardClassName =
             "group relative flex flex-col rounded-2xl border border-border bg-white dark:bg-zinc-900/50 overflow-hidden hover:border-input hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-300";
           const cardContent = (
@@ -460,33 +518,13 @@ function ComponentsGallery() {
                     WIDE_CARD_SLUGS.has(c.slug) ? "aspect-video" : "h-48",
                   )}
                 >
-                  {sources ? (
-                    <video
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                      preload="metadata"
-                      className="absolute inset-0 h-full w-full object-cover"
-                    >
-                      <source src={sources.webm} type="video/webm" />
-                      <source src={sources.mp4} type="video/mp4" />
-                    </video>
-                  ) : c.previewImage ? (
-                    <img
-                      src={c.previewImage}
-                      alt={c.title}
-                      className="absolute inset-0 h-full w-full object-cover"
-                    />
-                  ) : hasLiveCardPreview(c.slug) ? (
-                    <ComponentCardLivePreview slug={c.slug} />
-                  ) : (
-                    <div className="absolute inset-0 bg-gradient-to-br from-zinc-900/[0.04] via-transparent to-transparent dark:from-white/[0.04] flex items-center justify-center">
-                      <div className="size-10 rounded-xl bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 flex items-center justify-center text-xs font-mono shadow-sm">
-                        {c.title.slice(0, 2).toUpperCase()}
-                      </div>
-                    </div>
-                  )}
+                  <GalleryCardMedia
+                    slug={c.slug}
+                    title={c.title}
+                    previewVideo={c.previewVideo}
+                    previewImage={c.previewImage}
+                    className="absolute inset-0 h-full w-full object-cover"
+                  />
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
                   {c.slug !== "ambient-audio-toggle" && (
                     <span className="absolute bottom-2 right-2 text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/90 dark:bg-black/50 border border-border backdrop-blur">

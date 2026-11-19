@@ -9,6 +9,8 @@ import { docsConfig } from "@/config/docs"
 import { components } from "@/registry"
 import { useDocsSidebar } from "@/components/docs-sidebar-context"
 import { DocsSidebarNav } from "@/components/docs-sidebar-nav"
+import { usePreviewMedia } from "@/components/landing/video-preview-media"
+import { contentfulPreviewSource } from "@/lib/home-preview-media"
 
 type PreviewSources = {
   mp4: string
@@ -24,7 +26,7 @@ function getPreferredPreviewSrc(sources: PreviewSources) {
     const supportsWebm = Boolean(probe.canPlayType('video/webm; codecs="vp9,opus"'))
     preferredPreviewFormat = supportsWebm ? "webm" : "mp4"
   }
-  return preferredPreviewFormat === "webm" ? sources.webm : "mp4"
+  return preferredPreviewFormat === "webm" ? sources.webm : sources.mp4
 }
 
 function getPreviewSources(previewVideo?: string) {
@@ -40,6 +42,7 @@ function getPreviewSources(previewVideo?: string) {
 
 export function FloatingDocsSidebarPanel() {
   const pathname = usePathname()
+  const { overrides, theme } = usePreviewMedia()
   const { isOpen, close } = useDocsSidebar()
   const [isHoverVideoReady, setIsHoverVideoReady] = React.useState(false)
   const [hoverPreview, setHoverPreview] = React.useState<{
@@ -80,8 +83,10 @@ export function FloatingDocsSidebarPanel() {
         setHoverPreview(null)
         return
       }
-      const previewVideo = components[slug]?.previewVideo
-      const sources = getPreviewSources(previewVideo)
+      const cms = contentfulPreviewSource(slug, theme, overrides)
+      const sources = cms
+        ? { mp4: cms.src, webm: cms.src }
+        : getPreviewSources(components[slug]?.previewVideo)
       if (!sources) {
         setHoverPreview(null)
         setHoverPosition(null)
@@ -91,7 +96,7 @@ export function FloatingDocsSidebarPanel() {
       setHoverPosition(getPreviewPosition(event))
       setHoverPreview({ title: item.title, videoSrc: getPreferredPreviewSrc(sources) })
     },
-    [getPreviewPosition, warmPreviewAssets]
+    [getPreviewPosition, overrides, theme, warmPreviewAssets]
   )
 
   const updateHoverPosition = React.useCallback(

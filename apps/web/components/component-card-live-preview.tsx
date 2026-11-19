@@ -653,7 +653,7 @@ const GeometricPreloaderCardPreview = dynamic(
 
 const PreloaderProCardPreview = dynamic(
   () =>
-    import("@/components/docs/previews/preloader-pro-card-preview").then(
+    import("@/components/docs/previews/cinematic-panel-preloader-card-preview").then(
       (module) => module.PreloaderProCardPreview,
     ),
   { ssr: false },
@@ -661,7 +661,7 @@ const PreloaderProCardPreview = dynamic(
 
 const PremiumPreloaderCardPreview = dynamic(
   () =>
-    import("@/components/docs/previews/premium-preloader-card-preview").then(
+    import("@/components/docs/previews/editorial-curtain-preloader-card-preview").then(
       (module) => module.PremiumPreloaderCardPreview,
     ),
   { ssr: false },
@@ -669,7 +669,7 @@ const PremiumPreloaderCardPreview = dynamic(
 
 const PreloaderProV1CardPreview = dynamic(
   () =>
-    import("@/components/docs/previews/preloader-pro-v1-card-preview").then(
+    import("@/components/docs/previews/glitch-shred-preloader-card-preview").then(
       (module) => module.PreloaderProV1CardPreview,
     ),
   { ssr: false },
@@ -677,7 +677,7 @@ const PreloaderProV1CardPreview = dynamic(
 
 const PreloaderProV4CardPreview = dynamic(
   () =>
-    import("@/components/docs/previews/preloader-pro-v4-card-preview").then(
+    import("@/components/docs/previews/editorial-card-arc-preloader-card-preview").then(
       (module) => module.PreloaderProV4CardPreview,
     ),
   { ssr: false },
@@ -685,7 +685,7 @@ const PreloaderProV4CardPreview = dynamic(
 
 const PreloaderProV5CardPreview = dynamic(
   () =>
-    import("@/components/docs/previews/preloader-pro-v5-card-preview").then(
+    import("@/components/docs/previews/masked-arc-preloader-card-preview").then(
       (module) => module.PreloaderProV5CardPreview,
     ),
   { ssr: false },
@@ -834,11 +834,11 @@ type ComponentCardLivePreviewProps = {
     | "pixel-preloader"
     | "editorial-wipe-preloader"
     | "geometric-preloader"
-    | "preloader-pro"
-    | "preloader-pro-v1"
-    | "preloader-pro-v4"
-    | "preloader-pro-v5"
-    | "premium-preloader"
+    | "cinematic-panel-preloader"
+    | "glitch-shred-preloader"
+    | "editorial-card-arc-preloader"
+    | "masked-arc-preloader"
+    | "editorial-curtain-preloader"
     | "wave-bars-loader"
     | BasicPreviewSlug;
 };
@@ -1100,15 +1100,15 @@ export function ComponentCardLivePreview({
         <EditorialWipePreloaderCardPreview />
       ) : slug === "geometric-preloader" ? (
         <GeometricPreloaderCardPreview />
-      ) : slug === "preloader-pro" ? (
+      ) : slug === "cinematic-panel-preloader" ? (
         <PreloaderProCardPreview />
-      ) : slug === "preloader-pro-v1" ? (
+      ) : slug === "glitch-shred-preloader" ? (
         <PreloaderProV1CardPreview />
-      ) : slug === "preloader-pro-v4" ? (
+      ) : slug === "editorial-card-arc-preloader" ? (
         <PreloaderProV4CardPreview />
-      ) : slug === "preloader-pro-v5" ? (
+      ) : slug === "masked-arc-preloader" ? (
         <PreloaderProV5CardPreview />
-      ) : slug === "premium-preloader" ? (
+      ) : slug === "editorial-curtain-preloader" ? (
         <PremiumPreloaderCardPreview />
       ) : slug === "wave-bars-loader" ? (
         <WaveBarsLoaderCardPreview />

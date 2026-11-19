@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { ComponentCardLivePreview } from "@/components/component-card-live-preview";
+import { CmsPreviewVideo } from "@/components/landing/video-preview-media";
 import { components } from "@/registry";
 
 // Scroll-driven experiences showcased on this page.
@@ -70,35 +71,40 @@ export default function ScrollAnimationsPage() {
             >
               <div className="p-1.5">
                 <div className="relative h-48 rounded-xl border border-border bg-zinc-100 dark:bg-zinc-900 overflow-hidden">
-                  {sources ? (
-                    <video
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                      preload="metadata"
-                      className="absolute inset-0 h-full w-full object-cover"
-                    >
-                      <source src={sources.webm} type="video/webm" />
-                      <source src={sources.mp4} type="video/mp4" />
-                    </video>
-                  ) : c.previewImage ? (
-                    <img
-                      src={c.previewImage}
-                      alt={c.title}
-                      className="absolute inset-0 h-full w-full object-cover"
-                    />
-                  ) : LIVE_CARD_SLUGS.has(c.slug) ? (
-                    <ComponentCardLivePreview
-                      slug={c.slug as "scroll-media-expand" | "scroll-reveal-image" | "cms-scroll-gallery" | "stacked-scroll-gallery" | "scroll-sync-gallery"}
-                    />
-                  ) : (
-                    <div className="absolute inset-0 bg-gradient-to-br from-zinc-900/[0.04] via-transparent to-transparent dark:from-white/[0.04] flex items-center justify-center">
-                      <div className="size-10 rounded-xl bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 flex items-center justify-center text-xs font-mono shadow-sm">
-                        {c.title.slice(0, 2).toUpperCase()}
+                  <CmsPreviewVideo
+                    slug={c.slug}
+                    className="absolute inset-0 h-full w-full object-cover"
+                  >
+                    {sources ? (
+                      <video
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        preload="metadata"
+                        className="absolute inset-0 h-full w-full object-cover"
+                      >
+                        <source src={sources.webm} type="video/webm" />
+                        <source src={sources.mp4} type="video/mp4" />
+                      </video>
+                    ) : c.previewImage ? (
+                      <img
+                        src={c.previewImage}
+                        alt={c.title}
+                        className="absolute inset-0 h-full w-full object-cover"
+                      />
+                    ) : LIVE_CARD_SLUGS.has(c.slug) ? (
+                      <ComponentCardLivePreview
+                        slug={c.slug as "scroll-media-expand" | "scroll-reveal-image" | "cms-scroll-gallery" | "stacked-scroll-gallery" | "scroll-sync-gallery"}
+                      />
+                    ) : (
+                      <div className="absolute inset-0 bg-gradient-to-br from-zinc-900/[0.04] via-transparent to-transparent dark:from-white/[0.04] flex items-center justify-center">
+                        <div className="size-10 rounded-xl bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 flex items-center justify-center text-xs font-mono shadow-sm">
+                          {c.title.slice(0, 2).toUpperCase()}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </CmsPreviewVideo>
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
                   <span className="absolute bottom-2 right-2 text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/90 dark:bg-black/50 border border-border backdrop-blur">
                     {c.category || "component"}
