@@ -303,8 +303,8 @@ export function FillPreloader({
       data-phase={phase}
       className={cn("fixed inset-0 overflow-hidden", className)}
       style={{
-        width: "100vw",
-        height: "100dvh",
+        width: "100%",
+        height: "100%",
         backgroundColor: resolvedBackground,
         zIndex,
       }}
