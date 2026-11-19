@@ -369,18 +369,31 @@ export function CurvedInlineType(props: CurvedInlineTypeProps) {
     initialized: false,
   });
   const progressRef = React.useRef(0);
+  const trackMetricsRef = React.useRef({ top: 0, travel: 1 });
+  const lastAppliedAngleRef = React.useRef<number | null>(null);
+  const lastFrontsRef = React.useRef<number[]>([]);
+  const blurValuesRef = React.useRef<number[]>([]);
+
+  const measureTrack = React.useCallback(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    const rect = track.getBoundingClientRect();
+    const viewport = window.innerHeight || 1;
+    trackMetricsRef.current = {
+      top: rect.top + window.scrollY,
+      travel: Math.max(1, rect.height - viewport),
+    };
+  }, []);
 
   const readProgress = () => {
-    const track = trackRef.current;
-    if (!track) return 0;
-    const viewport = window.innerHeight || 1;
-    const rect = track.getBoundingClientRect();
-    const travel = rect.height - viewport;
-    if (travel <= 0) return 0;
-    return Math.min(1, Math.max(0, -rect.top / travel));
+    const { top, travel } = trackMetricsRef.current;
+    return Math.min(1, Math.max(0, (window.scrollY - top) / travel));
   };
 
   const applyLines = (baseAngle: number) => {
+    if (lastAppliedAngleRef.current === baseAngle) {
+      return lastFrontsRef.current;
+    }
     const config = configRef.current;
     const fronts: number[] = [];
     for (let index = 0; index < config.lines.length; index += 1) {
@@ -399,11 +412,16 @@ export function CurvedInlineType(props: CurvedInlineTypeProps) {
         blurAmount: config.blurAmount,
       });
       outer.style.transform = formatLineTransform(state);
-      outer.style.opacity = state.opacity.toFixed(6);
-      row.style.filter =
-        state.blur < 0.06 ? "none" : `blur(${state.blur.toFixed(2)}px)`;
+      outer.style.opacity = state.opacity.toFixed(3);
+      const nextBlur = state.blur < 0.06 ? 0 : Math.round(state.blur * 4) / 4;
+      if (blurValuesRef.current[index] !== nextBlur) {
+        row.style.filter = nextBlur === 0 ? "none" : `blur(${nextBlur}px)`;
+        blurValuesRef.current[index] = nextBlur;
+      }
       fronts[index] = state.front;
     }
+    lastAppliedAngleRef.current = baseAngle;
+    lastFrontsRef.current = fronts;
     return fronts;
   };
 
@@ -435,9 +453,14 @@ export function CurvedInlineType(props: CurvedInlineTypeProps) {
   };
 
   React.useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
     let frame = 0;
-    let last = performance.now();
+    let last = 0;
     let videoTimer = 0;
+    let visible = true;
+    let pageVisible = document.visibilityState !== "hidden";
+    let disposed = false;
 
     const applyVideos = (fronts: number[]) => {
       const gate = (Math.cos(70 * DEG) + 1) / 2;
@@ -463,30 +486,25 @@ export function CurvedInlineType(props: CurvedInlineTypeProps) {
       }
     };
 
+    const stop = () => {
+      if (frame) window.cancelAnimationFrame(frame);
+      frame = 0;
+    };
+
     const tick = (now: number) => {
-      const config = configRef.current;
+      frame = 0;
+      if (disposed || !visible || !pageVisible) return;
       const dt = Math.min(0.05, Math.max(0.001, (now - last) / 1000));
       last = now;
 
+      const config = configRef.current;
       const progress = readProgress();
       progressRef.current = progress;
-      const targetBase = progressToBaseAngle(progress, {
-        mapping: config.mapping,
-        direction: config.direction,
-        sweepDeg: config.sweepDeg,
-        sweepFrom: config.sweepFrom,
-        sweepTo: config.sweepTo,
-      });
-
+      const targetBase = progressToBaseAngle(progress, config);
       const springState = springRef.current;
-      if (!springState.initialized) {
-        springState.value = targetBase;
-        springState.target = targetBase;
-        springState.velocity = 0;
-        springState.initialized = true;
-      }
-
       springState.target = targetBase;
+
+      let moving = false;
       if (reducedMotion) {
         springState.value = targetBase;
         springState.velocity = 0;
@@ -494,7 +512,7 @@ export function CurvedInlineType(props: CurvedInlineTypeProps) {
         const stiffness = config.spring.stiffness ?? 90;
         const damping = config.spring.damping ?? 26;
         const mass = Math.max(0.1, config.spring.mass ?? 1);
-        const subSteps = 4;
+        const subSteps = dt > 0.032 ? 3 : 2;
         const subDt = dt / subSteps;
         for (let step = 0; step < subSteps; step += 1) {
           const acceleration =
@@ -504,42 +522,110 @@ export function CurvedInlineType(props: CurvedInlineTypeProps) {
           springState.velocity += acceleration * subDt;
           springState.value += springState.velocity * subDt;
         }
-        if (
-          Math.abs(springState.value - springState.target) < 0.001 &&
-          Math.abs(springState.velocity) < 0.01
-        ) {
+        moving =
+          Math.abs(springState.value - springState.target) > 0.0008 ||
+          Math.abs(springState.velocity) > 0.008;
+        if (!moving) {
           springState.value = springState.target;
           springState.velocity = 0;
         }
       }
 
       const fronts = applyLines(springState.value);
-
       if (now - videoTimer > 110) {
         videoTimer = now;
         applyVideos(fronts);
       }
+      if (moving) frame = window.requestAnimationFrame(tick);
+    };
 
+    const kick = () => {
+      if (disposed || frame || !visible || !pageVisible) return;
+      last = performance.now();
       frame = window.requestAnimationFrame(tick);
     };
 
-    frame = window.requestAnimationFrame(tick);
-    return () => {
-      window.cancelAnimationFrame(frame);
+    const syncTarget = () => {
+      const targetBase = progressToBaseAngle(readProgress(), configRef.current);
+      const springState = springRef.current;
+      springState.target = targetBase;
+      if (!springState.initialized) {
+        springState.value = targetBase;
+        springState.velocity = 0;
+        springState.initialized = true;
+      }
+      if (reducedMotion) {
+        springState.value = targetBase;
+        springState.velocity = 0;
+        applyLines(targetBase);
+      }
+      kick();
     };
-  }, [reducedMotion]);
+
+    const onScroll = () => syncTarget();
+    const onResize = () => {
+      measureTrack();
+      lastAppliedAngleRef.current = null;
+      blurValuesRef.current = [];
+      syncTarget();
+    };
+    const onVisibility = () => {
+      pageVisible = document.visibilityState !== "hidden";
+      if (pageVisible) onResize();
+      else stop();
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onResize, { passive: true });
+    document.addEventListener("visibilitychange", onVisibility);
+
+    const resizeObserver =
+      typeof ResizeObserver !== "undefined"
+        ? new ResizeObserver(() => onResize())
+        : null;
+    resizeObserver?.observe(track);
+
+    const intersectionObserver =
+      typeof IntersectionObserver !== "undefined"
+        ? new IntersectionObserver(
+            ([entry]) => {
+              visible = entry?.isIntersecting ?? true;
+              if (visible) onResize();
+              else stop();
+            },
+            { rootMargin: "200px 0px" },
+          )
+        : null;
+    intersectionObserver?.observe(track);
+
+    onResize();
+
+    return () => {
+      disposed = true;
+      stop();
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onResize);
+      document.removeEventListener("visibilitychange", onVisibility);
+      resizeObserver?.disconnect();
+      intersectionObserver?.disconnect();
+    };
+  }, [reducedMotion, measureTrack]);
 
   useIsoLayoutEffect(() => {
-    const baseAngle = progressToBaseAngle(readProgress(), configRef.current);
+    measureTrack();
+    const progress = readProgress();
+    const baseAngle = progressToBaseAngle(progress, configRef.current);
     springRef.current = {
       value: baseAngle,
       target: baseAngle,
       velocity: 0,
       initialized: true,
     };
-    progressRef.current = readProgress();
+    progressRef.current = progress;
+    lastAppliedAngleRef.current = null;
+    blurValuesRef.current = [];
     applyLines(baseAngle);
-  }, []);
+  }, [measureTrack]);
 
   const rowStyle: React.CSSProperties = {
     display: "flex",

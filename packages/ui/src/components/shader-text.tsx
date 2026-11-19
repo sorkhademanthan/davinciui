@@ -376,6 +376,8 @@ function buildMaskUrl(opts: {
   letterSpacing: number;
   lineHeight: number;
   textAlign: ShaderTextAlign;
+  paddingX: number;
+  paddingY: number;
 }): string | undefined {
   const {
     lines,
@@ -388,18 +390,26 @@ function buildMaskUrl(opts: {
     letterSpacing,
     lineHeight,
     textAlign,
+    paddingX,
+    paddingY,
   } = opts;
   const w = Math.max(1, Math.round(width));
   const h = Math.max(1, Math.round(height));
   if (!Number.isFinite(w) || !Number.isFinite(h) || w < 2 || h < 2) {
     return undefined;
   }
+  const safePaddingX = Math.max(0, Math.min(paddingX, w / 2 - 1));
+  const safePaddingY = Math.max(0, Math.min(paddingY, h / 2 - 1));
+  const contentW = Math.max(1, w - safePaddingX * 2);
   const maskScale = 2;
   const lineH = Math.max(1, fontSize * lineHeight);
   const anchor: Record<ShaderTextAlign, { x: string; anchor: string }> = {
-    left: { x: "0", anchor: "start" },
-    center: { x: (w / 2).toFixed(2), anchor: "middle" },
-    right: { x: `${w}`, anchor: "end" },
+    left: { x: safePaddingX.toFixed(2), anchor: "start" },
+    center: {
+      x: (safePaddingX + contentW / 2).toFixed(2),
+      anchor: "middle",
+    },
+    right: { x: (w - safePaddingX).toFixed(2), anchor: "end" },
   };
   const pos = anchor[textAlign] ?? anchor.center;
   const family = escapeXml(fontFamily);
@@ -408,7 +418,7 @@ function buildMaskUrl(opts: {
   const texts = lines
     .map((line, i) => {
       const safe = escapeXml(line === "" ? " " : line);
-      const y = (lineH * (i + 0.5)).toFixed(2);
+      const y = (safePaddingY + lineH * (i + 0.5)).toFixed(2);
       return `<text x="${pos.x}" y="${y}" text-anchor="${pos.anchor}" dominant-baseline="central" font-family="${family}" font-size="${fontSize}" font-weight="${fontWeight}" font-style="${style}" letter-spacing="${letterSpacing}">${safe}</text>`;
     })
     .join("");
@@ -475,6 +485,9 @@ export function ShaderText({
   const safeLineHeight =
     Number.isFinite(lineHeight) && lineHeight > 0 ? lineHeight : 1;
   const safeLetterSpacing = Number.isFinite(letterSpacing) ? letterSpacing : 0;
+  const lineHeightPx = safeFontSize * safeLineHeight;
+  const paddingX = Math.ceil(safeFontSize * 0.08);
+  const paddingY = Math.ceil(lineHeightPx * 0.14);
   const safeSpeed = Number.isFinite(speed) ? speed : 1;
   const safeScale = Number.isFinite(scale) && scale > 0 ? scale : 1.6;
   const safeResolution =
@@ -544,6 +557,8 @@ export function ShaderText({
       letterSpacing: safeLetterSpacing,
       lineHeight: safeLineHeight,
       textAlign: align,
+      paddingX,
+      paddingY,
     });
   }, [
       lines,
@@ -555,6 +570,8 @@ export function ShaderText({
       safeLetterSpacing,
       safeLineHeight,
       align,
+      paddingX,
+      paddingY,
       fontNonce,
     ],
   );
@@ -874,7 +891,6 @@ export function ShaderText({
     // recompile lazily inside the frame loop. Size/mask via observers.
   }, []);
 
-  const lineHeightPx = safeFontSize * safeLineHeight;
   const justify =
     align === "left" ? "flex-start" : align === "right" ? "flex-end" : "center";
 
@@ -911,7 +927,7 @@ export function ShaderText({
       data-slot="shader-text"
       data-preset={presetName}
       className={cn("relative inline-block max-w-full overflow-hidden", className)}
-      style={style}
+      style={{ ...style, padding: `${paddingY}px ${paddingX}px` }}
       {...props}
     >
       {/* Invisible sizing node — defines intrinsic layout exactly. */}

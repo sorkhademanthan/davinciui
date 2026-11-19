@@ -80,6 +80,9 @@ export function TextMorph({
   const reducedMotion = usePrefersReducedMotion();
   const reactId = useId().replace(/:/g, "");
   const filterId = `text-morph-threshold-${reactId}`;
+  const measureLayerRefs = useRef<Array<HTMLSpanElement | null>>([]);
+  const [stageSize, setStageSize] = useState({ width: 0, height: 0 });
+  const [fontNonce, setFontNonce] = useState(0);
 
   const safeIndex = currentIndex % values.length;
   const nextIndex = (safeIndex + 1) % values.length;
@@ -87,32 +90,23 @@ export function TextMorph({
   const nextWord = values[nextIndex]!;
   const thresholdOffset = -MORPH_THRESHOLD * 0.46;
 
-  const measureStage = useCallback(
-    (target: "current" | "next", immediate = false) => {
-      const stage = stageRef.current;
-      const layer =
-        target === "current" ? currentLayerRef.current : nextLayerRef.current;
-      if (!stage || !layer) return;
-
-      // offsetWidth/offsetHeight exclude transforms, so both layers are
-      // measured from their crisp resting geometry around the same center.
-      const width = layer.offsetWidth;
-      const height = layer.offsetHeight;
-      if (immediate || reducedMotion) {
-        const previousTransition = stage.style.transition;
-        stage.style.transition = "none";
-        stage.style.width = `${width}px`;
-        stage.style.height = `${height}px`;
-        void stage.offsetWidth;
-        stage.style.transition = previousTransition;
-        return;
-      }
-
-      stage.style.width = `${width}px`;
-      stage.style.height = `${height}px`;
-    },
-    [reducedMotion],
-  );
+  const measureStage = useCallback(() => {
+    const layers = measureLayerRefs.current.filter(
+      (layer): layer is HTMLSpanElement => layer !== null,
+    );
+    if (layers.length === 0) return;
+    const width = Math.ceil(
+      Math.max(...layers.map((layer) => layer.offsetWidth)),
+    );
+    const height = Math.ceil(
+      Math.max(...layers.map((layer) => layer.offsetHeight)),
+    );
+    setStageSize((previous) =>
+      previous.width === width && previous.height === height
+        ? previous
+        : { width, height },
+    );
+  }, []);
 
   useLayoutEffect(() => {
     const currentLayer = currentLayerRef.current;
@@ -125,24 +119,34 @@ export function TextMorph({
     currentLayer.style.willChange = "auto";
     nextLayer.style.willChange = "auto";
     stage.style.filter = "none";
-    stage.style.transition = reducedMotion
-      ? "none"
-      : `width ${Math.max(160, morphDuration)}ms cubic-bezier(0.22, 1, 0.36, 1), height ${Math.max(160, morphDuration)}ms cubic-bezier(0.22, 1, 0.36, 1)`;
-    measureStage("current", true);
-  }, [currentIndex, measureStage, morphDuration, reducedMotion, values]);
+  }, [currentIndex, morphDuration, reducedMotion, values]);
 
   useEffect(() => {
-    const currentLayer = currentLayerRef.current;
-    const nextLayer = nextLayerRef.current;
-    if (!currentLayer || !nextLayer) return;
-
-    const observer = new ResizeObserver(() => {
-      if (!morphingRef.current) measureStage("current", true);
+    measureStage();
+    const observer =
+      typeof ResizeObserver === "undefined" ? null : new ResizeObserver(measureStage);
+    measureLayerRefs.current.forEach((layer) => {
+      if (layer) observer?.observe(layer);
     });
-    observer.observe(currentLayer);
-    observer.observe(nextLayer);
-    return () => observer.disconnect();
+    return () => observer?.disconnect();
+  }, [measureStage, values]);
+
+  useEffect(() => {
+    if (!("fonts" in document)) return;
+    let cancelled = false;
+    void document.fonts.ready.then(() => {
+      if (cancelled) return;
+      setFontNonce((value) => value + 1);
+      measureStage();
+    });
+    return () => {
+      cancelled = true;
+    };
   }, [measureStage]);
+
+  useEffect(() => {
+    measureStage();
+  }, [fontNonce, measureStage]);
 
   const beginMorph = useCallback(() => {
     const currentLayer = currentLayerRef.current;
@@ -162,7 +166,6 @@ export function TextMorph({
     currentLayer.style.willChange = "opacity, filter, transform";
     nextLayer.style.willChange = "opacity, filter, transform";
     stage.style.filter = reducedMotion ? "none" : `url(#${filterId})`;
-    measureStage("next");
 
     const startedAt = performance.now();
     const resolvedDuration = reducedMotion ? 140 : Math.max(240, morphDuration);
@@ -207,14 +210,7 @@ export function TextMorph({
     };
 
     frameRef.current = window.requestAnimationFrame(renderFrame);
-  }, [
-    filterId,
-    measureStage,
-    morphDuration,
-    nextIndex,
-    reducedMotion,
-    values.length,
-  ]);
+  }, [filterId, morphDuration, nextIndex, reducedMotion, values.length]);
 
   useEffect(() => {
     if (values.length < 2) return;
@@ -250,6 +246,7 @@ export function TextMorph({
 
   return (
     <span
+      data-slot="text-morph"
       className={cn(
         "relative inline-block max-w-full align-baseline",
         className,
@@ -257,6 +254,23 @@ export function TextMorph({
       aria-label={currentWord}
       aria-live="off"
     >
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute left-0 top-0 block"
+        style={{ visibility: "hidden" }}
+      >
+        {values.map((word, index) => (
+          <span
+            key={`${index}-${word}`}
+            ref={(node) => {
+              measureLayerRefs.current[index] = node;
+            }}
+            className="block w-max whitespace-pre"
+          >
+            {word}
+          </span>
+        ))}
+      </span>
       <svg
         aria-hidden="true"
         focusable="false"
@@ -286,6 +300,10 @@ export function TextMorph({
         ref={stageRef}
         aria-hidden="true"
         className="relative block min-w-0 max-w-full select-none"
+        style={{
+          width: stageSize.width ? `${stageSize.width}px` : undefined,
+          height: stageSize.height ? `${stageSize.height}px` : undefined,
+        }}
       >
         <span
           ref={currentLayerRef}

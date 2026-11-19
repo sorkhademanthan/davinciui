@@ -257,6 +257,17 @@ function OrbitScene({
       const material = materials.current[index];
       if (!mesh || !material) return;
 
+      const shaderUniforms = material.uniforms as Partial<
+        Record<"uBlur" | "uBend" | "uPlaneAspect", { value: number }>
+      >;
+      if (
+        !shaderUniforms.uBlur ||
+        !shaderUniforms.uBend ||
+        !shaderUniforms.uPlaneAspect
+      ) {
+        return;
+      }
+
       const position = wrappedPosition(index - progress.current, count);
       const angle = position * 0.78;
       const depth = (Math.cos(angle) + 1) / 2;
@@ -271,9 +282,9 @@ function OrbitScene({
       mesh.rotation.set(0, Math.sin(angle) * -1.12, 0);
       mesh.scale.set(planeWidth * scale, planeHeight * scale, 1);
 
-      material.uniforms.uBlur!.value = Math.pow(distance, 1.28) * blurStrength;
-      material.uniforms.uBend!.value = planeWidth * bend;
-      material.uniforms.uPlaneAspect!.value = cardAspectRatio;
+      shaderUniforms.uBlur.value = Math.pow(distance, 1.28) * blurStrength;
+      shaderUniforms.uBend.value = planeWidth * bend;
+      shaderUniforms.uPlaneAspect.value = cardAspectRatio;
     });
   });
 
