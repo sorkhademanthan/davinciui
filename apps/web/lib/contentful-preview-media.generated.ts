@@ -17,10 +17,6 @@ export const CONTENTFUL_PREVIEW_MEDIA: HomePreviewOverrides = {
     "light": "https://videos.ctfassets.net/70s3wjhkhwgo/48pPNPPVBQOM8s11DCLPjo/fa695372ab8fc3c0825b83309945dafc/Chromatic_Cursor_Light_.mp4",
     "dark": "https://videos.ctfassets.net/70s3wjhkhwgo/48ju6w3mR30mbHKXosLAg9/f64bbf5f7a733cbe14f5efd1816473d5/Circle_Cursor_Dark_.mp4"
   },
-  "cms-scroll-gallery": {
-    "light": "https://videos.ctfassets.net/70s3wjhkhwgo/5Q478abSMG1adzwVPEhJ9Q/f968f6ad0e33e7560e252145fd0ea19a/cms-scroll-gallery-light.mp4",
-    "dark": "https://videos.ctfassets.net/70s3wjhkhwgo/5VHJUf6NHeQ0zGBnxF0upw/7ccf90ca19c702bf1a9a242ad5da817b/cms-scroll-gallery-dark.mp4"
-  },
   "curved-inline-type": {
     "light": "https://videos.ctfassets.net/70s3wjhkhwgo/J8J2ABU9O96o9HBNCJ0RR/6af64071584049d6c2b99cdf7f318f87/curved-inline-type-light.mp4",
     "dark": "https://videos.ctfassets.net/70s3wjhkhwgo/3FF9niMgojQjYFLJG3N67G/3d83f68241b11cd68bbfc3999206f308/curved-inline-type-dark.mp4"
@@ -52,10 +48,6 @@ export const CONTENTFUL_PREVIEW_MEDIA: HomePreviewOverrides = {
   "fill-preloader": {
     "light": "https://videos.ctfassets.net/70s3wjhkhwgo/6YKpmbPuJ2rCJ6FN8vSglW/8e3ad5c44e97b5badf3888b8fcc836bf/Fill_Preloader_Light_.mp4",
     "dark": "https://videos.ctfassets.net/70s3wjhkhwgo/1GDDrY17BLea5YG3Yb7hng/7bfd387b4c8f8ef4f2225b351332877c/Fill_Preloader_Dark_.mp4"
-  },
-  "fluid-cursor": {
-    "light": "https://videos.ctfassets.net/70s3wjhkhwgo/6E3WcW7wbDRE25eWrmshvy/45ce2e9fb5975047664a48702b6e1064/Fluid_Cursor_Light_.mp4",
-    "dark": "https://videos.ctfassets.net/70s3wjhkhwgo/2Qe2AwY8poFLaUeqp9HA5o/90a46df27243c1f6d8cdf67a3d98af23/Fluid_Cursor__Dark_.mp4"
   },
   "fluid-particle-text": {
     "light": "https://videos.ctfassets.net/70s3wjhkhwgo/2T1810TZZ1K2d07qybDedr/4d3b5aae1ab77a840c0c39f75c16af2e/fluid-particle-text-light.mp4",
@@ -216,10 +208,6 @@ export const CONTENTFUL_PREVIEW_MEDIA: HomePreviewOverrides = {
   "depth-carousel-3d": {
     "light": "https://videos.ctfassets.net/70s3wjhkhwgo/5UbmQB7QQVp1290Q4qGxXm/2c2bd1421f590ae7121659f3175e67fc/Depth_Carousel_3D_Light_.mp4",
     "dark": "https://videos.ctfassets.net/70s3wjhkhwgo/3rtWAInTPlp81pNYhavrBb/743f4cb8cab17cb58eb3d95693c41c09/Depth_Carousel_3D_Dark_.mp4"
-  },
-  "fanned-deck": {
-    "light": "https://videos.ctfassets.net/70s3wjhkhwgo/17sxAR6yux4hH8KBKZZ457/7b5a17c73141602565f9737e580a4dfa/Fanned_Deck_Light_.mp4",
-    "dark": "https://videos.ctfassets.net/70s3wjhkhwgo/4ztBD2NQ9ZWiQBXyKRP5oE/4fceba6038b098a475e6ffccc8d26fe7/Fanned_Deck_Dark_.mp4"
   },
   "glass-scene-dock": {
     "light": "https://videos.ctfassets.net/70s3wjhkhwgo/6XlvbEqs7P1lAqxHq2p5fy/c8694723840558c398b078c25b79c9cb/Glass_Scene_Dock_Light_.mp4",

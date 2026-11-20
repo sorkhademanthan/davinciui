@@ -36,7 +36,6 @@ const SLUGS = [
   "scroll-timeline",
   "scroll-media-expand",
   "interactive-media-accordion",
-  "cms-scroll-gallery",
   "stacked-scroll-gallery",
 ];
 

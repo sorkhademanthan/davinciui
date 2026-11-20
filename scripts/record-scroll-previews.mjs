@@ -26,7 +26,6 @@ const TARGETS = {
   "scroll-timeline": { selector: '[data-testid="scroll-timeline-track"]' },
   "scroll-media-expand": { selector: '[data-testid="scroll-media-expand-track"]' },
   "interactive-media-accordion": { selector: '[data-slot="interactive-media-accordion"]' },
-  "cms-scroll-gallery": { selector: '[data-testid="cms-scroll-gallery-track"]', query: "?transitionSmoothing=0", reducedMotion: "reduce" },
   "stacked-scroll-gallery": { selector: '[data-testid="stacked-scroll-gallery-track"]', query: "?smoothing=0" },
 };
 

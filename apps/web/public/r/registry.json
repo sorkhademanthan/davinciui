@@ -69,10 +69,6 @@
       "type": "registry:ui"
     },
     {
-      "name": "bookshelf",
-      "type": "registry:ui"
-    },
-    {
       "name": "border-beam",
       "type": "registry:ui"
     },
@@ -141,10 +137,6 @@
       "type": "registry:ui"
     },
     {
-      "name": "cms-scroll-gallery",
-      "type": "registry:ui"
-    },
-    {
       "name": "collapsible",
       "type": "registry:ui"
     },
@@ -193,10 +185,6 @@
       "type": "registry:ui"
     },
     {
-      "name": "editorial-image-stack",
-      "type": "registry:ui"
-    },
-    {
       "name": "editorial-wipe-preloader",
       "type": "registry:ui"
     },
@@ -217,19 +205,11 @@
       "type": "registry:ui"
     },
     {
-      "name": "fanned-deck",
-      "type": "registry:ui"
-    },
-    {
       "name": "field",
       "type": "registry:ui"
     },
     {
       "name": "fill-preloader",
-      "type": "registry:ui"
-    },
-    {
-      "name": "fluid-cursor",
       "type": "registry:ui"
     },
     {
@@ -506,10 +486,6 @@
     },
     {
       "name": "scrub-input",
-      "type": "registry:ui"
-    },
-    {
-      "name": "segmented-image-carousel",
       "type": "registry:ui"
     },
     {

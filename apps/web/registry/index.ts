@@ -77,14 +77,6 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "elastic-blob-cursor",
     addedAt: "2026-09-21",
   },
-  "fluid-cursor": {
-    title: "Fluid Cursor",
-    description:
-      "A fullscreen GPU fluid simulation where pointer movement injects velocity and spectral dye into liquid light that drifts, curls, and fades into black.",
-    category: "Cursor Effects",
-    slug: "fluid-cursor",
-    addedAt: "2026-09-21",
-  },
   "tubes-cursor": {
     title: "Tubes Cursor",
     description:
@@ -371,14 +363,6 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "navigation-menu",
     addedAt: "2026-09-04",
   },
-  "bookshelf": {
-    title: "Bookshelf",
-    description:
-      "A 3D bookshelf carousel with real book geometry — spines, covers, and thickness — that rotate into view with coordinated horizontal movement and perspective depth.",
-    category: "Motion",
-    slug: "bookshelf",
-    addedAt: "2026-10-29",
-  },
   "motion-hamburger": {
     title: "Motion Hamburger",
     description:
@@ -624,14 +608,6 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "lens-drift-grid",
     addedAt: "2026-08-08",
   },
-  "cms-scroll-gallery": {
-    title: "CMS Scroll Gallery",
-    description:
-      "Sticky fullscreen scroll gallery — long page scroll drives synchronized media + title transitions with a draggable glass strip.",
-    category: "Scroll",
-    slug: "cms-scroll-gallery",
-    addedAt: "2026-09-15",
-  },
   "cms-media-bento": {
     title: "CMS Media Bento",
     description:
@@ -733,15 +709,6 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "depth-carousel-3d",
     addedAt: "2026-11-03",
   },
-  "fanned-deck": {
-    title: "Fanned Deck",
-    description:
-      "A 3D fan of up to 14 portrait cards on a curved arc; each card is bent from 14 slices, overlapping 40%, with hover straighten, uncurl, lift, neighbour spread, username bubbles, and deal/flip/rise/sweep entrances.",
-    category: "Premium Components",
-    extraCategories: ["Interactions"],
-    slug: "fanned-deck",
-    addedAt: "2026-11-03",
-  },
   "tilt-flip-polaroid": {
     title: "Tilt Flip Polaroid",
     description:
@@ -775,15 +742,6 @@ export const components: Record<string, ComponentMetadata> = {
     category: "Premium Components",
     extraCategories: ["Visual Effects"],
     slug: "infinite-image-gallery",
-    addedAt: "2026-11-02",
-  },
-  "editorial-image-stack": {
-    title: "Editorial Image Stack",
-    description:
-      "A large fixed center photograph with a fast blur-crossfade, framed by a tight, subdued stack that shuffles in sync.",
-    category: "Premium Components",
-    extraCategories: ["Visual Effects"],
-    slug: "editorial-image-stack",
     addedAt: "2026-11-02",
   },
   "circular-gallery": {
@@ -990,14 +948,6 @@ export const components: Record<string, ComponentMetadata> = {
     category: "Visual Effects",
     extraCategories: ["Premium Components"],
     slug: "pixel-wipe-carousel",
-    addedAt: "2026-09-22",
-  },
-  "segmented-image-carousel": {
-    title: "Segmented Image Carousel",
-    description:
-      "A monochrome editorial carousel that rebuilds every image through a staggered grid of horizontal slices.",
-    category: "Visual Effects",
-    slug: "segmented-image-carousel",
     addedAt: "2026-09-22",
   },
   "burn-plus": {
@@ -1301,8 +1251,6 @@ export const FEATURED_SLUGS = [
   "shader-text",
   "staircase-preloader",
   "glass-scene-dock",
-  "cms-scroll-gallery",
-  "segmented-image-carousel",
   "motion-hamburger",
   "character-field",
   "circle-cursor",

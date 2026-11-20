@@ -22,7 +22,6 @@ const BASIC_ALL = Object.values(BASIC_SLUGS).flat();
 // Scroll-driven experiences showcased under Components > Scroll.
 const SCROLL_SLUGS = new Set([
   "scroll-media-expand",
-  "cms-scroll-gallery",
   "interactive-media-accordion",
   "stacked-scroll-gallery",
   "scroll-sync-gallery",
@@ -190,7 +189,6 @@ function hasLiveCardPreview(
   | "wavy-flow-carousel"
   | "pixel-flow"
   | "pixel-wipe-carousel"
-  | "segmented-image-carousel"
   | "cinematic-card-carousel"
   | "focus-carousel"
   | "ambient-strip"
@@ -198,7 +196,6 @@ function hasLiveCardPreview(
   | "arcwave-carousel"
   | "streamline-carousel"
   | "depth-carousel-3d"
-  | "fanned-deck"
   | "tilt-flip-polaroid"
   | "crumpled-paper-reveal"
   | "radial-fan-deck"
@@ -214,7 +211,6 @@ function hasLiveCardPreview(
   | "lens-drift-grid"
   | "orbit-spiral-gallery"
   | "infinite-image-gallery"
-  | "editorial-image-stack"
   | "circular-gallery"
   | "curve-wall"
   | "spiral-media-gallery"
@@ -224,7 +220,6 @@ function hasLiveCardPreview(
   | "nudge-button"
   | "animated-pill-button"
   | "burn-plus"
-  | "bookshelf"
   | "team-slide-reveal"
   | "hover-transition"
   | "ambient-audio-toggle"
@@ -236,7 +231,6 @@ function hasLiveCardPreview(
   | "liquid-chrome-button"
   | "scroll-reveal-image"
   | "cms-media-bento"
-  | "cms-scroll-gallery"
   | "interactive-media-accordion"
   | "stacked-scroll-gallery"
   | "scroll-sync-gallery"
@@ -257,7 +251,6 @@ function hasLiveCardPreview(
   | "tubes-cursor"
   | "magic-cursor-pro"
   | "chromatic-cursor"
-  | "fluid-cursor"
   | "geometric-trail-cursor"
   | "elastic-blob-cursor"
   | BasicPreviewSlug {
@@ -282,7 +275,6 @@ function hasLiveCardPreview(
     slug === "wavy-flow-carousel" ||
     slug === "pixel-flow" ||
     slug === "pixel-wipe-carousel" ||
-    slug === "segmented-image-carousel" ||
     slug === "cinematic-card-carousel" ||
     slug === "focus-carousel" ||
     slug === "ambient-strip" ||
@@ -290,7 +282,6 @@ function hasLiveCardPreview(
     slug === "arcwave-carousel" ||
     slug === "streamline-carousel" ||
     slug === "depth-carousel-3d" ||
-    slug === "fanned-deck" ||
     slug === "tilt-flip-polaroid" ||
     slug === "crumpled-paper-reveal" ||
     slug === "radial-fan-deck" ||
@@ -306,7 +297,6 @@ function hasLiveCardPreview(
     slug === "lens-drift-grid" ||
     slug === "orbit-spiral-gallery" ||
     slug === "infinite-image-gallery" ||
-    slug === "editorial-image-stack" ||
     slug === "circular-gallery" ||
     slug === "curve-wall" ||
     slug === "spiral-media-gallery" ||
@@ -316,7 +306,6 @@ function hasLiveCardPreview(
     slug === "nudge-button" ||
     slug === "animated-pill-button" ||
     slug === "burn-plus" ||
-    slug === "bookshelf" ||
     slug === "team-slide-reveal" ||
     slug === "hover-transition" ||
     slug === "ambient-audio-toggle" ||
@@ -328,7 +317,6 @@ function hasLiveCardPreview(
     slug === "liquid-chrome-button" ||
     slug === "scroll-reveal-image" ||
     slug === "cms-media-bento" ||
-    slug === "cms-scroll-gallery" ||
     slug === "interactive-media-accordion" ||
     slug === "stacked-scroll-gallery" ||
     slug === "scroll-sync-gallery" ||
@@ -350,7 +338,6 @@ function hasLiveCardPreview(
     slug === "tubes-cursor" ||
     slug === "magic-cursor-pro" ||
     slug === "chromatic-cursor" ||
-    slug === "fluid-cursor" ||
     slug === "geometric-trail-cursor" ||
     slug === "elastic-blob-cursor" ||
     isBasicPreviewSlug(slug)

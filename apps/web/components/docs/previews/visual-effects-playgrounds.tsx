@@ -3,7 +3,6 @@
 import * as React from "react";
 import { AmbientStrip } from "@workspace/ui/components/ambient-strip";
 import { PixelWipeCarousel } from "@workspace/ui/components/pixel-wipe-carousel";
-import { SegmentedImageCarousel } from "@workspace/ui/components/segmented-image-carousel";
 import { CinematicCardCarousel } from "@workspace/ui/components/cinematic-card-carousel";
 import { FocusCarousel } from "@workspace/ui/components/focus-carousel";
 import { VerticalImageMarquee } from "@workspace/ui/components/vertical-image-marquee";
@@ -14,7 +13,6 @@ import { LensDriftGrid } from "@workspace/ui/components/lens-drift-grid";
 import { createComponentPlayground } from "@/components/docs/previews/generic-playground";
 import { ambientStripDemoItems } from "@/components/docs/previews/ambient-strip-items";
 import { pixelWipeSlides } from "@/components/docs/previews/pixel-wipe-carousel-slides";
-import { segmentedImageSlides } from "@/components/docs/previews/segmented-image-carousel-slides";
 import { cinematicDemoCards } from "@/components/docs/previews/cinematic-card-carousel-items";
 import { focusCarouselDemoItems } from "@/components/docs/previews/focus-carousel-items";
 import {
@@ -169,101 +167,6 @@ export const {
   ],
   stageClassName: "min-h-[660px]",
   intro: "Control the mosaic wipe's cell size and cadence.",
-});
-
-// ─── Segmented Image Carousel ───────────────────────────────────────────────
-
-function SegmentedStage(props: StageProps) {
-  return (
-    <div className="flex h-full min-h-[660px] w-full items-center justify-center bg-[#e7e7e5] p-5 transition-colors duration-300 dark:bg-[#10100f] sm:p-9">
-      <div className="relative aspect-[397/492] w-full max-w-[min(100%,62.94vh)] overflow-hidden border border-black/12 bg-white shadow-[0_24px_70px_rgba(0,0,0,0.18)] transition-colors duration-300 dark:border-white/14 dark:bg-[#1a1a18] dark:shadow-[0_28px_90px_rgba(0,0,0,0.58)]">
-        <SegmentedImageCarousel
-          slides={segmentedImageSlides}
-          className="h-full w-full"
-          ariaLabel="Segmented editorial image carousel preview"
-          {...props}
-        />
-      </div>
-    </div>
-  );
-}
-
-export const {
-  Preview: SegmentedImageCarouselPlayground,
-  PersonalizePanel: SegmentedImageCarouselPersonalizePanel,
-} = createComponentPlayground({
-  slug: "segmented-image-carousel",
-  component: SegmentedStage as unknown as React.ComponentType<StageProps>,
-  componentName: "SegmentedImageCarousel",
-  defaults: {
-    rows: 9,
-    columns: 2,
-    interval: 1500,
-    transitionDuration: 680,
-    autoPlay: true,
-    pauseOnHover: false,
-    showGrid: true,
-  },
-  fields: [
-    {
-      key: "rows",
-      label: "Rows",
-      type: "slider",
-      min: 1,
-      max: 20,
-      step: 1,
-      section: "Grid",
-    },
-    {
-      key: "columns",
-      label: "Columns",
-      type: "slider",
-      min: 1,
-      max: 16,
-      step: 1,
-      section: "Grid",
-    },
-    {
-      key: "showGrid",
-      label: "Show Grid",
-      type: "switch",
-      section: "Grid",
-    },
-    {
-      key: "interval",
-      label: "Interval",
-      type: "slider",
-      min: 400,
-      max: 5000,
-      step: 100,
-      unit: "ms",
-      section: "Timing",
-    },
-    {
-      key: "transitionDuration",
-      label: "Handoff Duration",
-      type: "slider",
-      min: 200,
-      max: 2000,
-      step: 20,
-      unit: "ms",
-      section: "Timing",
-    },
-    {
-      key: "autoPlay",
-      label: "Auto Play",
-      type: "switch",
-      section: "Timing",
-    },
-    {
-      key: "pauseOnHover",
-      label: "Pause On Hover",
-      type: "switch",
-      section: "Timing",
-    },
-  ],
-  stageClassName: "min-h-[660px]",
-  intro: "Shape the segmented handoff grid and timing.",
 });
 
 // ─── Cinematic Card Carousel ────────────────────────────────────────────────

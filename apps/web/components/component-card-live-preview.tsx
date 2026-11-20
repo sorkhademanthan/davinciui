@@ -78,14 +78,6 @@ const ElasticBlobCursorCardPreview = dynamic(
   { ssr: false },
 );
 
-const FluidCursorCardPreview = dynamic(
-  () =>
-    import("@/components/docs/previews/fluid-cursor-card-preview").then(
-      (module) => module.FluidCursorCardPreview,
-    ),
-  { ssr: false },
-);
-
 const GeometricTrailCursorCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/geometric-trail-cursor-card-preview").then(
@@ -174,14 +166,6 @@ const PixelWipeCarouselCardPreview = dynamic(
   { ssr: false },
 );
 
-const SegmentedImageCarouselCardPreview = dynamic(
-  () =>
-    import("@/components/docs/previews/segmented-image-carousel-card-preview").then(
-      (module) => module.SegmentedImageCarouselCardPreview,
-    ),
-  { ssr: false },
-);
-
 const CinematicCardCarouselCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/cinematic-card-carousel-card-preview").then(
@@ -242,14 +226,6 @@ const DepthCarousel3DCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/depth-carousel-3d-card-preview").then(
       (module) => module.DepthCarousel3DCardPreview,
-    ),
-  { ssr: false },
-);
-
-const FannedDeckCardPreview = dynamic(
-  () =>
-    import("@/components/docs/previews/fanned-deck-card-preview").then(
-      (module) => module.FannedDeckCardPreview,
     ),
   { ssr: false },
 );
@@ -374,14 +350,6 @@ const SpiralMediaGalleryCardPreview = dynamic(
   { ssr: false },
 );
 
-const EditorialImageStackCardPreview = dynamic(
-  () =>
-    import("@/components/docs/previews/editorial-image-stack-card-preview").then(
-      (module) => module.EditorialImageStackCardPreview,
-    ),
-  { ssr: false },
-);
-
 const CircularGalleryCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/circular-gallery-card-preview").then(
@@ -462,14 +430,6 @@ const BurnPlusCardPreview = dynamic(
   { ssr: false },
 );
 
-const BookshelfCardPreview = dynamic(
-  () =>
-    import("@/components/docs/previews/bookshelf-card-preview").then(
-      (module) => module.BookshelfCardPreview,
-    ),
-  { ssr: false },
-);
-
 const TeamSlideRevealCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/team-slide-reveal-card-preview").then(
@@ -543,14 +503,6 @@ const ScrollRevealImageCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/scroll-reveal-image-card-preview").then(
       (module) => module.ScrollRevealImageCardPreview,
-    ),
-  { ssr: false },
-);
-
-const CMSScrollGalleryCardPreview = dynamic(
-  () =>
-    import("@/components/docs/previews/cms-scroll-gallery-card-preview").then(
-      (module) => module.CMSScrollGalleryCardPreview,
     ),
   { ssr: false },
 );
@@ -754,7 +706,6 @@ type ComponentCardLivePreviewProps = {
     | "tubes-cursor"
     | "magic-cursor-pro"
     | "chromatic-cursor"
-    | "fluid-cursor"
     | "geometric-trail-cursor"
     | "elastic-blob-cursor"
     | "gsap-text"
@@ -776,7 +727,6 @@ type ComponentCardLivePreviewProps = {
     | "curved-inline-type"
     | "pixel-flow"
     | "pixel-wipe-carousel"
-    | "segmented-image-carousel"
     | "cinematic-card-carousel"
     | "focus-carousel"
     | "ambient-strip"
@@ -784,7 +734,6 @@ type ComponentCardLivePreviewProps = {
     | "arcwave-carousel"
     | "streamline-carousel"
     | "depth-carousel-3d"
-    | "fanned-deck"
     | "tilt-flip-polaroid"
     | "crumpled-paper-reveal"
     | "radial-fan-deck"
@@ -800,7 +749,6 @@ type ComponentCardLivePreviewProps = {
     | "lens-drift-grid"
     | "orbit-spiral-gallery"
     | "infinite-image-gallery"
-    | "editorial-image-stack"
     | "circular-gallery"
     | "curve-wall"
     | "spiral-media-gallery"
@@ -811,7 +759,6 @@ type ComponentCardLivePreviewProps = {
     | "nudge-button"
     | "animated-pill-button"
     | "burn-plus"
-    | "bookshelf"
     | "team-slide-reveal"
     | "hover-transition"
     | "ambient-audio-toggle"
@@ -823,7 +770,6 @@ type ComponentCardLivePreviewProps = {
     | "liquid-chrome-button"
     | "scroll-reveal-image"
     | "cms-media-bento"
-    | "cms-scroll-gallery"
     | "interactive-media-accordion"
     | "stacked-scroll-gallery"
     | "scroll-sync-gallery"
@@ -900,8 +846,6 @@ export function ComponentCardLivePreview({
         <MagicCursorProCardPreview />
       ) : slug === "chromatic-cursor" ? (
         <ChromaticCursorCardPreview />
-      ) : slug === "fluid-cursor" ? (
-        <FluidCursorCardPreview />
       ) : slug === "geometric-trail-cursor" ? (
         <GeometricTrailCursorCardPreview />
       ) : slug === "elastic-blob-cursor" ? (
@@ -984,8 +928,6 @@ export function ComponentCardLivePreview({
         <PixelFlowCardPreview />
       ) : slug === "pixel-wipe-carousel" ? (
         <PixelWipeCarouselCardPreview />
-      ) : slug === "segmented-image-carousel" ? (
-        <SegmentedImageCarouselCardPreview />
       ) : slug === "cinematic-card-carousel" ? (
         <CinematicCardCarouselCardPreview />
       ) : slug === "focus-carousel" ? (
@@ -1000,8 +942,6 @@ export function ComponentCardLivePreview({
         <StreamlineCarouselCardPreview />
       ) : slug === "depth-carousel-3d" ? (
         <DepthCarousel3DCardPreview />
-      ) : slug === "fanned-deck" ? (
-        <FannedDeckCardPreview />
       ) : slug === "tilt-flip-polaroid" ? (
         <TiltFlipPolaroidCardPreview />
       ) : slug === "crumpled-paper-reveal" ? (
@@ -1032,8 +972,6 @@ export function ComponentCardLivePreview({
         <OrbitSpiralGalleryCardPreview />
       ) : slug === "infinite-image-gallery" ? (
         <InfiniteImageGalleryCardPreview />
-      ) : slug === "editorial-image-stack" ? (
-        <EditorialImageStackCardPreview />
       ) : slug === "circular-gallery" ? (
         <CircularGalleryCardPreview />
       ) : slug === "curve-wall" ? (
@@ -1054,8 +992,6 @@ export function ComponentCardLivePreview({
         <AnimatedPillButtonCardPreview />
       ) : slug === "burn-plus" ? (
         <BurnPlusCardPreview />
-      ) : slug === "bookshelf" ? (
-        <BookshelfCardPreview />
       ) : slug === "team-slide-reveal" ? (
         <TeamSlideRevealCardPreview />
       ) : slug === "hover-transition" ? (
@@ -1078,8 +1014,6 @@ export function ComponentCardLivePreview({
         <ScrollRevealImageCardPreview />
       ) : slug === "cms-media-bento" ? (
         <CmsMediaBentoCardPreview />
-      ) : slug === "cms-scroll-gallery" ? (
-        <CMSScrollGalleryCardPreview />
       ) : slug === "interactive-media-accordion" ? (
         <InteractiveMediaAccordionCardPreview />
       ) : slug === "stacked-scroll-gallery" ? (

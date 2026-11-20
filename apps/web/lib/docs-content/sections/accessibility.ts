@@ -24,8 +24,6 @@ export const accessibility: Record<string, string> = {
     "The root is a labelled region with aria-roledescription='media carousel', containing a single focusable canvas (aria-label 'Drag or use the arrow keys to browse') and a visually hidden ordered list naming every slide. ArrowLeft and ArrowRight tween focus between cards along the shortest wrapped path; clicking a side card centres it, and a centred card's link opens in a new tab with noopener (or same tab). Plain vertical scrolling is never intercepted. Media is drawn, not DOM-rendered, so images and videos carry no alt text or captions; convey meaning in surrounding copy. Reduced motion disables autoplay and entrance animation.",
   "depth-carousel-3d":
     "The root is a labelled region with aria-roledescription='carousel'; each virtual slide is role='group' labelled 'n of N', and aria-hidden is set on every non-active slide as you navigate. The drag layer is focusable with an aria-label ('Drag, swipe, or use arrow keys to browse'); ArrowLeft and ArrowRight move one slot with a spring, Home and End jump to the first and last slot. Clicking a side card springs it to the centre; the active card follows its link in a new tab with noopener (or same tab). Keyboard focus is on the layer, not per-card. Reduced motion replaces springs with a short tween and disables autoplay.",
-  "fanned-deck":
-    "The root is a role='list' and each card a focusable listitem with an aria-label (the @username). Hover and keyboard focus both activate a card (lift, uncurl, bubble), so focus is announced by the label and made visible through the lift. Linked cards are real anchors with target=_blank and rel=noopener noreferrer; Enter follows the link. On touch the first tap activates and the second follows the link. The bubble and shadow layers are aria-hidden decoration. prefers-reduced-motion skips the entrance and bob and renders the settled fan.",
   "tilt-flip-polaroid":
     "The static hit area is a role='button' with tabIndex 0, aria-pressed reflecting the flipped state, and a label built from the photo alt text. Space and Enter flip, a focus-visible ring is shown, and the face that is not visible is aria-hidden. Tilt is pointer-only and disabled for coarse pointers; touch and keyboard still flip.",
   "aspect-ratio":
@@ -40,8 +38,6 @@ export const accessibility: Record<string, string> = {
     "The nav is labelled 'breadcrumb', items are list entries, separators are presentation-only, and the current page uses aria-current='page'. The collapse expander is a button with a count label, though its aria-expanded stays false after expanding.",
   bubble:
     "Bubble is presentational markup with no implicit role; BubbleContent can render as a button or link and then gains a focus-visible ring. Reactions remain unlabeled unless you add role='img' and aria-label, as the docs example does.",
-  "bookshelf":
-    "Each book is a native button in the tab order with an aria-label built from its title and aria-pressed reflecting the active state. Arrow keys move focus between books, Enter and Space select, and focus-visible rings remain visible. Prev/Next controls are labelled buttons. Decorative cover, spine, and side faces are aria-hidden so titles are announced once per book.",
   "burn-plus":
     "Exposes the effect as a role img host with a configurable aria label while the canvas is aria-hidden. Tap mode listens only to pointerup, so its reveal has no keyboard equivalent.",
   button:
@@ -73,8 +69,6 @@ export const accessibility: Record<string, string> = {
     "It is a decorative aria-hidden, pointer-events-none div that never receives focus. The effect runs only on fine pointers and disables itself for coarse pointers or reduced motion, restoring the native cursor.",
   "cms-media-bento":
     "Each tile is a native button, so Enter and Space open the lightbox without custom key handling; the bento itself adds no roving tabindex and every tile is reachable in source order. Lightbox dialogs use aria-modal, focus the close control on open, cycle Tab inside, close on Escape, and restore focus to the tile. Images keep meaningful alt text and honor lazy loading outside the first five tiles.",
-  "cms-scroll-gallery":
-    "Thumbnails form a tablist of labeled tabs with aria-selected and aria-current, plus a polite live title. Dragging the dock is pointer-only and its handle is hidden from assistive technology, though each thumbnail stays keyboard focusable.",
   collapsible:
     "CollapsibleTrigger renders a native button with aria-expanded and aria-controls tied to the panel id; Enter and Space toggle it. The closed panel unmounts by default, so its content leaves the accessibility tree. Focus stays on the trigger.",
   combobox:
@@ -93,8 +87,6 @@ export const accessibility: Record<string, string> = {
     "Vaul supplies focus trapping, Escape dismissal, aria-modal dialog semantics, and focus return, with DrawerTitle and DrawerDescription wired for labelling. The grabber is aria-hidden and pointer-only, so swipe dismissal has no keyboard equivalent beyond Escape. Add your own labelled close control.",
   "dropdown-menu":
     "Base UI provides role='menu', arrow-key roving focus, type-ahead, Escape dismissal, submenu handling, and focus return. Checkbox and radio items expose checked state through the primitive. DropdownMenuLabel and DropdownMenuShortcut are aria-hidden, so section headings and shortcut hints are not announced.",
-  "editorial-image-stack":
-    "The root is a labelled region with aria-roledescription 'image stack'. The shuffling background cards are decorative and aria-hidden; the fixed foreground image exposes alt text for the current photograph. The shared animation tick stops offscreen and when the tab is hidden. Under prefers-reduced-motion the background drift, shuffle, and blur are removed, and foreground switches slow to a simple low-motion cadence.",
   "editorial-wipe-preloader":
     "The overlay is role='status' with an aria-label like 'Page loading, LOADING'; all visual counters and the wipe are aria-hidden. A polite live region announces only 0, 25, 50, 75, and 100 percent milestones. Page scroll is locked while the overlay is mounted.",
   "elastic-blob-cursor":
@@ -109,8 +101,6 @@ export const accessibility: Record<string, string> = {
     "FieldControl wires a child control's id, aria-invalid, and aria-describedby to the Field-generated description and error ids; FieldLabel falls back to that id. FieldError renders role='alert' with an icon, and FieldSeparator exposes role='separator'. FieldSet uses native fieldset and legend.",
   "fill-preloader":
     "The overlay exposes role=progressbar with aria-label Page loading and aria-valuenow updated as progress changes. The visible percentage counter and fill are aria-hidden, scroll is locked, and there is no keyboard dismiss or skip control.",
-  "fluid-cursor":
-    "The entire effect is decorative: the host and canvas are aria-hidden and pointer-events-none, so it adds nothing to the accessibility tree and never blocks interaction. There is no keyboard or focus behavior because it only responds to pointer movement.",
   "fluid-particle-text":
     "The container exposes role=img with aria-label defaulting to the text, while the canvas is aria-hidden. Pointer movement drives the effect and touch is ignored; there is no focusable control or keyboard alternative, so the deformation is purely decorative.",
   form: "FieldContext generates stable ids and auto-wires labels via htmlFor, plus aria-invalid and aria-describedby on the control. FormMessage renders role=alert with an icon, so errors are announced; behavior otherwise relies on native form and input semantics.",
@@ -228,8 +218,6 @@ export const accessibility: Record<string, string> = {
     "Images keep their alt text and the section is labelled, but repeated duplicate copies can expose the same alt text more than once to screen readers. The gallery is scroll-driven with no focusable controls; the disabled-animation fallback renders a static grid.",
   "scroll-timeline":
     "The section accepts ariaLabel, panels after the first are aria-hidden when inactive, and a polite live region announces the active year and title. Each panel includes sr-only full text while the oversized year is aria-hidden; there are no keyboard controls beyond native scrolling.",
-  "segmented-image-carousel":
-    "The host is a labelled region with aria-roledescription carousel, while the canvas is aria-hidden and an sr-only text node exposes the active alt. There are no next, previous, or pause controls, so keyboard users cannot manually change slides.",
   select:
     "Base UI supplies combobox and listbox semantics with arrow-key navigation, typeahead, Escape dismissal, and focus return to the trigger. The trigger sets aria-expanded, aria-haspopup, aria-controls, and aria-invalid; consumers must still provide an accessible name via a label or aria-label.",
   separator:

@@ -13,7 +13,6 @@ import { Providers } from "@/components/providers";
 import { HomePreviewMediaProvider } from "@/components/landing/video-preview-media";
 import { getHomePreviewMedia } from "@/lib/contentful";
 import { SkipToContent } from "@/components/skip-to-content";
-import { CookieConsent } from "@/components/cookie-consent";
 import { JsonLd } from "@/components/seo/json-ld";
 import { RouteScrollbarController } from "@/components/route-scrollbar-controller";
 import { siteConfig } from "@/lib/site";
@@ -186,7 +185,6 @@ export default async function RootLayout({
           </HomePreviewMediaProvider>
         </div>
         <SpeedInsights />
-        <CookieConsent />
         <Script
           src="https://cloud.umami.is/script.js"
           data-website-id="26f17963-74a5-48ce-8d5c-6cebb2ca2baa"

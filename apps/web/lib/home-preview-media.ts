@@ -43,7 +43,6 @@ export const CONTENTFUL_PREVIEW_SLUGS = new Set([
   "magic-cursor-pro",
   "circle-cursor",
   "elastic-blob-cursor",
-  "fluid-cursor",
   "curved-inline-type",
   "shake-text",
   "rolling-text",
@@ -70,7 +69,6 @@ export const CONTENTFUL_PREVIEW_SLUGS = new Set([
   "scroll-timeline",
   "scroll-media-expand",
   "interactive-media-accordion",
-  "cms-scroll-gallery",
   "stacked-scroll-gallery",
   "circular-gallery",
   "arcwave-carousel",
@@ -83,7 +81,6 @@ export const CONTENTFUL_PREVIEW_SLUGS = new Set([
   "glass-scene-dock",
   "nudge-button",
   "team-slide-reveal",
-  "fanned-deck",
 ]);
 
 function absoluteAssetUrl(url: string) {

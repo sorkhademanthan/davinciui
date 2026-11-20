@@ -76,7 +76,6 @@ export interface PreviewDefinition {
 
 /** Tall (600px) detail stages — preloaders and portrait cards. */
 const TALL_STAGE_SLUGS: ReadonlySet<string> = new Set([
-  "fanned-deck",
   "3d-flow-gallery",
   "cms-media-bento",
   "fill-preloader",
@@ -84,7 +83,6 @@ const TALL_STAGE_SLUGS: ReadonlySet<string> = new Set([
   "pixel-preloader",
   "editorial-wipe-preloader",
   "geometric-preloader",
-  "editorial-image-stack",
   "infinite-image-gallery",
   "cinematic-panel-preloader",
   "glitch-shred-preloader",
@@ -159,14 +157,11 @@ const REDUCE_MOTION_SAFE_SLUGS: ReadonlySet<string> = new Set([
   "arcwave-carousel",
   "streamline-carousel",
   "depth-carousel-3d",
-  "fanned-deck",
   "animated-pill-button",
   "burn-plus",
-  "bookshelf",
   "character-field",
   "cinematic-card-carousel",
   "crumpled-paper-reveal",
-  "editorial-image-stack",
   "cms-media-bento",
   "curved-inline-type",
   "wavy-flow-carousel",
@@ -186,7 +181,6 @@ const REDUCE_MOTION_SAFE_SLUGS: ReadonlySet<string> = new Set([
   "pixel-flow",
   "pixel-wipe-carousel",
   "radial-fan-deck",
-  "segmented-image-carousel",
   "services-showcase",
   "shader-text",
   "silk-aurora",
@@ -220,7 +214,6 @@ const KEEP_MOUNTED_SLUGS: ReadonlySet<string> = NON_DECORATIVE_SLUGS;
 const CARD_BACKGROUNDS: Readonly<Record<string, string>> = {
   "ambient-audio-toggle": "bg-[#eef4f0] dark:bg-[#101815]",
   "crumpled-paper-reveal": "bg-[#ece6da] dark:bg-[#12110f]",
-  "editorial-image-stack": "bg-[#e5e5e5] dark:bg-[#151515]",
   "infinite-image-gallery": "bg-[#f3f1ec] dark:bg-[#11100e]",
   "tilt-flip-polaroid": "bg-[#FAFAFA] dark:bg-[#0A0A0B]",
 };

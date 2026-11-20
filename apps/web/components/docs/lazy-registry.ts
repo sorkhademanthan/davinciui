@@ -30,10 +30,6 @@ const docsImportMap: Record<
     import("@/components/docs/elastic-blob-cursor").then((m) => ({
       default: m.ElasticBlobCursorDocs,
     })),
-  "fluid-cursor": () =>
-    import("@/components/docs/fluid-cursor").then((m) => ({
-      default: m.FluidCursorDocs,
-    })),
   "tubes-cursor": () =>
     import("@/components/docs/tubes-cursor").then((m) => ({
       default: m.TubesCursorDocs,
@@ -262,14 +258,6 @@ const docsImportMap: Record<
     import("@/components/docs/pixel-wipe-carousel").then((m) => ({
       default: m.PixelWipeCarouselDocs,
     })),
-  "segmented-image-carousel": () =>
-    import("@/components/docs/segmented-image-carousel").then((m) => ({
-      default: m.SegmentedImageCarouselDocs,
-    })),
-  "bookshelf": () =>
-    import("@/components/docs/bookshelf").then((m) => ({
-      default: m.BookshelfDocs,
-    })),
   "burn-plus": () =>
     import("@/components/docs/burn-plus").then((m) => ({
       default: m.BurnPlusDocs,
@@ -298,10 +286,6 @@ const docsImportMap: Record<
     import("@/components/docs/depth-carousel-3d").then((m) => ({
       default: m.DepthCarousel3DDocs,
     })),
-  "fanned-deck": () =>
-    import("@/components/docs/fanned-deck").then((m) => ({
-      default: m.FannedDeckDocs,
-    })),
   "tilt-flip-polaroid": () =>
     import("@/components/docs/tilt-flip-polaroid").then((m) => ({
       default: m.TiltFlipPolaroidDocs,
@@ -313,10 +297,6 @@ const docsImportMap: Record<
   "crumpled-paper-reveal": () =>
     import("@/components/docs/crumpled-paper-reveal").then((m) => ({
       default: m.CrumpledPaperRevealDocs,
-    })),
-  "cms-scroll-gallery": () =>
-    import("@/components/docs/cms-scroll-gallery").then((m) => ({
-      default: m.CMSScrollGalleryDocs,
     })),
   "curved-inline-type": () =>
     import("@/components/docs/curved-inline-type").then((m) => ({
@@ -461,10 +441,6 @@ const docsImportMap: Record<
   "infinite-image-gallery": () =>
     import("@/components/docs/infinite-image-gallery").then((m) => ({
       default: m.InfiniteImageGalleryDocs,
-    })),
-  "editorial-image-stack": () =>
-    import("@/components/docs/editorial-image-stack").then((m) => ({
-      default: m.EditorialImageStackDocs,
     })),
   "circular-gallery": () =>
     import("@/components/docs/circular-gallery").then((m) => ({

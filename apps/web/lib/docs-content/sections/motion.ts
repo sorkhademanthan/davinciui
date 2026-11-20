@@ -24,8 +24,6 @@ export const motion: Record<string, string> = {
     "One requestAnimationFrame loop integrates strip position with exponential easing toward the autoplay target; drag sets position directly and release velocity decays with momentum. Click-to-focus and arrow keys run an easeInOutCubic tween over 0.7-0.8s along the shortest wrapped path. Visual speed eases at 12/s and drives the edge exaggeration and fringe. Widths lerp toward targets at 8/s, so natural-aspect re-layout after media loads is smooth. The loop idles (RAF kept alive, work skipped) offscreen, and prefers-reduced-motion disables autoplay and entrance from the first frame.",
   "depth-carousel-3d":
     "Framer Motion springs drive the slot position (default stiffness 170, damping 26, mass 1; 'Scroll damping' maps to damping). Drag sets position directly with per-slot delta and release velocity from the last 100ms; snap targets the nearest slot, capped at a 6-slot throw. Click-to-focus and arrow keys spring along the shortest wrapped path. Column styles are written straight to element refs per frame; no React re-render. Under reduced motion springs become a 0.2s tween and autoplay is disabled; images preload via decode().",
-  "fanned-deck":
-    "All motion is CSS: layer transitions use a 560ms cubic-bezier(0.25,1.45,0.45,1) overshoot (slices 620ms cubic-bezier(0.3,1.35,0.5,1), bubble pop 480ms cubic-bezier(0.34,1.56,0.64,1), pointer tilt 260ms ease-out, dim 360ms). Hover writes the hovered index and the face tilt from the pointer. The entrance replays on viewport re-entry once images decode, staggering 70ms per card; per-card bob cycles 5.4/6.3/7.2s at 5px. prefers-reduced-motion skips the entrance and bob entirely.",
   "tilt-flip-polaroid":
     "Pointer tilt retargets rotateX and rotateY motion values through a stiffness 100 / damping 18 spring, and the flip retargets a stiffness 400 / damping 40 spring so rapid clicks reverse without a jump. Reduced motion disables tilt and replaces the 180deg flip with a 150ms opacity crossfade.",
   "aspect-ratio":
@@ -71,8 +69,6 @@ export const motion: Record<string, string> = {
     "A requestAnimationFrame loop interpolates position using followSpeed, while opacity and color transition over 120ms and 200ms. prefers-reduced-motion is watched live and disables the follower, restoring the native cursor.",
   "cms-media-bento":
     "A weighted slicing tree re-solves every split when the hovered tile's weight is multiplied by hoverGrow, and the resulting left, top, width, and height values transition over transitionMs with cubic-bezier(0.22,1,0.36,1). Media scales to hoverZoom, the focus veil fades over 300ms, and tiles enter with a 14px rise and 0.985 scale staggered 60ms apart. prefers-reduced-motion removes layout, entrance, zoom, and lightbox motion while keeping captions and the lightbox itself.",
-  "cms-scroll-gallery":
-    "Page scroll drives Framer Motion opacity, scale, slide and blur presets, smoothed by a spring derived from transitionSmoothing. useReducedMotion or the reducedMotion prop removes the transforms, but the opacity crossfade remains.",
   collapsible:
     "Panel height animates via grid-template-rows: 300ms ease-out cubic-bezier(0.22,1,0.36,1) on open, 200ms cubic-bezier(0.4,0,0.2,1) on close. motion-reduce:transition-none disables both; no timing props are exposed.",
   combobox:
@@ -91,8 +87,6 @@ export const motion: Record<string, string> = {
     "Vaul's internal spring physics drive slide-in, drag, snap, and background scaling; the overlay uses a 200ms opacity fade disabled by motion-reduce. No duration or easing props are forwarded, and vaul does not detect prefers-reduced-motion, so sheet movement continues for reduced-motion users.",
   "dropdown-menu":
     "The popup fades, translates 4px, and scales 0.96 over 150ms with cubic-bezier(0.23,1,0.32,1). Check and radio indicators scale in over 150ms, and items press to 0.99. motion-reduce:transition-none disables these transitions and the starting transform.",
-  "editorial-image-stack":
-    "A single requestAnimationFrame tick drives both layers. Every switchIntervalMs (1100ms default) the fixed center card changes through a 300ms GSAP blur-crossfade with a brief color tint while the seven background cards shuffle to new positions over 360ms ease-out. The stack also drifts slowly through a +/-4.5-degree rotation over nine seconds. Background photographs sit at 0.7 opacity with dark, desaturated filters. The tick stops offscreen and in hidden tabs, and prefers-reduced-motion disables the drift, shuffle, and blur while slowing the image cadence.",
   "editorial-wipe-preloader":
     "A framer-motion progress value drives the wipe, counter, and mask; duration, completionHold, and exitDuration control a 3.8s simulated load and cubic-bezier(0.76,0,0.24,1) vertical exit. useReducedMotion caps loading at 450ms and exit at 250ms when respectReducedMotion is true.",
   "elastic-blob-cursor":
@@ -107,8 +101,6 @@ export const motion: Record<string, string> = {
     "Field is a static layout primitive with no animation; its parts only apply spacing, borders, and typography. No transitions are defined and reduced-motion handling is unnecessary.",
   "fill-preloader":
     "Framer Motion animates the blue fill via scaleY and slides the overlay up on exit using a fixed cubic-bezier ease. duration, completionHold and exitDuration set timing; useReducedMotion caps progress at 400ms and exit at 250ms while keeping the same sequence.",
-  "fluid-cursor":
-    "A WebGL fluid simulation injects velocity and dye along pointer movement, controlled by intensity, force, curl, velocityDissipation, dyeDissipation and pointerSmoothing. When prefers-reduced-motion matches at initialization, the loop renders one static frame and skips all simulation; changes to the preference are not observed live.",
   "fluid-particle-text":
     "Particles advect along the cursor path and spring home, tuned by pointerFollow, advectionStrength, pressureStrength, shearStrength, homeStrength, trailLifetime and trailLength. prefers-reduced-motion is detected via matchMedia; when it matches, the canvas shows the resting glyph and the simulation loop does not run.",
   form: "Static composition primitive with no animation, transitions or timing props. It does not check prefers-reduced-motion because it has no motion to reduce.",
@@ -170,8 +162,6 @@ export const motion: Record<string, string> = {
     "Programmatic scrolling uses native smooth behavior by default, tunable per command or button via behavior. prefers-reduced-motion forces auto scrolling, and the button's 200ms fade and translate are removed with motion-reduce.",
   "motion-hamburger":
     "Top and bottom SVG paths redraw with 620ms stroke-dash transitions, the icon rotates with an overshoot easing, and the middle line collapses. prefers-reduced-motion reduces transition durations to near zero; no timing props are exposed beyond hoverGrowth.",
-  "bookshelf":
-    "Books rotate around their vertical axis between spine-facing and cover-facing orientations while the shelf translates horizontally to center the active book. Neighboring books scale and recede in depth based on distance from the active position. GSAP timelines with power2.inOut easing coordinate translation and rotation. Reduced motion snaps transitions and disables autoplay.",
   "native-select":
     "Only CSS state transitions animate: border, shadow, and background colours over 150ms ease-out, plus the chevron colour. motion-reduce disables them. There is no JavaScript motion or timing prop.",
   "navigation-menu":
@@ -228,8 +218,6 @@ export const motion: Record<string, string> = {
     "Columns translate on the y axis from one normalized scroll progress with optional smoothing, and introZoom briefly scales the wall; presets and travel set directions and distance. A matchMedia check replaces the effect with a static grid for prefers-reduced-motion.",
   "scroll-timeline":
     "Panels collapse horizontally via clip-path and the oversized year rotates around its bottom-left anchor as scroll progress changes; scrollPerItem, easing, rotationAmount, and smoothing tune it. prefers-reduced-motion or disableAnimation renders a static accessible list.",
-  "segmented-image-carousel":
-    "The canvas redraws a shuffled grid of slices with smootherStep easing; interval, transitionDuration, rows, and columns control pacing and granularity, and pauseOnHover pauses advancement. Reduced motion is detected via matchMedia, which cancels work and draws a still frame.",
   select:
     "The popup fades, zooms, and slides over 150ms using data-state animation classes, while trigger, icon, and item color transitions are CSS-only. motion-reduce classes disable the popup animation and the color transitions when prefers-reduced-motion is set.",
   separator:
