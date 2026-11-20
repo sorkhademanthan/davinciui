@@ -6,11 +6,10 @@ import { SpectraNoise } from "@workspace/ui/components/spectra-noise";
 import { create } from "zustand";
 import { configEquals, usePlaygroundStore } from "@/hooks/use-playground-store";
 import {
-  PlaygroundColorPicker,
-  PlaygroundSectionTitle,
-  PlaygroundSlider,
-  PlaygroundSwitch,
-} from "@/components/playground-primitives";
+  CustomizePanel,
+  bindCustomizeUpdate,
+  type CustomizeControl,
+} from "@/components/customize-panel";
 
 type SpectraNoiseConfig = {
   hueShift: number;
@@ -43,6 +42,22 @@ const DEFAULT_CONFIG: SpectraNoiseConfig = {
   highlightColor: "#c5f58a",
   effectIntensity: 1,
 };
+
+const CONTROLS: CustomizeControl[] = [
+  { type: "color", key: "glowColor", label: "Glow", defaultColor: DEFAULT_CONFIG.glowColor, group: "Color" },
+  { type: "color", key: "highlightColor", label: "Highlight", defaultColor: DEFAULT_CONFIG.highlightColor, group: "Color" },
+  { type: "color", key: "backgroundColor", label: "Background", defaultColor: DEFAULT_CONFIG.backgroundColor, group: "Color" },
+  { type: "slider", key: "hueShift", label: "Hue", min: 0, max: 360, step: 1, unit: "deg", group: "Color" },
+  { type: "slider", key: "effectIntensity", label: "Effect", min: 0, max: 2, step: 0.05, group: "Color" },
+  { type: "slider", key: "noiseIntensity", label: "Noise", min: 0, max: 1, step: 0.01, group: "Texture" },
+  { type: "slider", key: "scanlineDensity", label: "Scanline density", min: 0.2, max: 3, step: 0.05, group: "Scanlines" },
+  { type: "slider", key: "scanlineIntensity", label: "Scanline intensity", min: 0, max: 1, step: 0.01, group: "Scanlines" },
+  { type: "slider", key: "warpAmount", label: "Warp", min: 0, max: 2, step: 0.05, group: "Distortion" },
+  { type: "slider", key: "seed", label: "Seed", min: 0, max: 100, step: 1, group: "Distortion" },
+  { type: "slider", key: "animationSpeed", label: "Speed", min: 0, max: 3, step: 0.05, group: "Motion" },
+  { type: "slider", key: "resolutionScale", label: "Resolution", min: 0.5, max: 1.5, step: 0.25, group: "Rendering" },
+  { type: "toggle", key: "paused", label: "Paused", group: "Motion" },
+];
 
 const useSpectraNoiseStore = create<{
   config: SpectraNoiseConfig;
@@ -111,147 +126,15 @@ export function SpectraNoisePreview() {
 export function SpectraNoisePersonalizePanel() {
   const config = useSpectraNoiseStore((state) => state.config);
   const update = useSpectraNoiseStore((state) => state.update);
-  const reset = useSpectraNoiseStore((state) => state.reset);
 
   return (
-    <div className="h-full overflow-auto bg-background [scrollbar-width:thin]">
-      <div className="space-y-7 px-4 pb-12 pt-5">
-        <header className="space-y-2">
-          <p className="text-sm leading-relaxed text-muted-foreground/90">
-            Recolor the spectrum, bend the field, and tune the film texture.
-          </p>
-        </header>
-
-        <div className="flex justify-end">
-          <button
-            type="button"
-            onClick={reset}
-            className="rounded-md border border-border/60 px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            Reset
-          </button>
-        </div>
-
-        <section className="space-y-3">
-          <PlaygroundSectionTitle>Color</PlaygroundSectionTitle>
-          <PlaygroundColorPicker
-            label="Glow color"
-            value={config.glowColor}
-            onChange={(glowColor) => update({ glowColor })}
-            defaultColor={DEFAULT_CONFIG.glowColor}
-          />
-          <PlaygroundColorPicker
-            label="Highlight color"
-            value={config.highlightColor}
-            onChange={(highlightColor) => update({ highlightColor })}
-            defaultColor={DEFAULT_CONFIG.highlightColor}
-          />
-          <PlaygroundSlider
-            label="Hue shift"
-            min={0}
-            max={360}
-            step={1}
-            unit="°"
-            value={config.hueShift}
-            onChange={(hueShift) => update({ hueShift })}
-          />
-          <PlaygroundSlider
-            label="Effect intensity"
-            min={0}
-            max={2}
-            step={0.05}
-            value={config.effectIntensity}
-            onChange={(effectIntensity) => update({ effectIntensity })}
-          />
-          <PlaygroundColorPicker
-            label="Background"
-            value={config.backgroundColor}
-            onChange={(backgroundColor) => update({ backgroundColor })}
-            defaultColor={DEFAULT_CONFIG.backgroundColor}
-          />
-        </section>
-
-        <section className="space-y-3">
-          <PlaygroundSectionTitle>Texture</PlaygroundSectionTitle>
-          <PlaygroundSlider
-            label="Noise intensity"
-            min={0}
-            max={1}
-            step={0.01}
-            value={config.noiseIntensity}
-            onChange={(noiseIntensity) => update({ noiseIntensity })}
-          />
-        </section>
-
-        <section className="space-y-3">
-          <PlaygroundSectionTitle>Scanlines</PlaygroundSectionTitle>
-          <PlaygroundSlider
-            label="Scanline density"
-            min={0.2}
-            max={3}
-            step={0.05}
-            value={config.scanlineDensity}
-            onChange={(scanlineDensity) => update({ scanlineDensity })}
-          />
-          <PlaygroundSlider
-            label="Scanline intensity"
-            min={0}
-            max={1}
-            step={0.01}
-            value={config.scanlineIntensity}
-            onChange={(scanlineIntensity) => update({ scanlineIntensity })}
-          />
-        </section>
-
-        <section className="space-y-3">
-          <PlaygroundSectionTitle>Distortion</PlaygroundSectionTitle>
-          <PlaygroundSlider
-            label="Warp amount"
-            min={0}
-            max={2}
-            step={0.05}
-            value={config.warpAmount}
-            onChange={(warpAmount) => update({ warpAmount })}
-          />
-          <PlaygroundSlider
-            label="Seed"
-            min={0}
-            max={100}
-            step={1}
-            value={config.seed}
-            onChange={(seed) => update({ seed })}
-          />
-        </section>
-
-        <section className="space-y-3">
-          <PlaygroundSectionTitle>Motion</PlaygroundSectionTitle>
-          <PlaygroundSlider
-            label="Animation speed"
-            min={0}
-            max={3}
-            step={0.05}
-            value={config.animationSpeed}
-            onChange={(animationSpeed) => update({ animationSpeed })}
-          />
-          <PlaygroundSwitch
-            label="Paused"
-            checked={config.paused}
-            onChange={(paused) => update({ paused })}
-          />
-        </section>
-
-        <section className="space-y-3">
-          <PlaygroundSectionTitle>Rendering</PlaygroundSectionTitle>
-          <PlaygroundSlider
-            label="Resolution scale"
-            min={0.5}
-            max={1.5}
-            step={0.25}
-            value={config.resolutionScale}
-            onChange={(resolutionScale) => update({ resolutionScale })}
-          />
-        </section>
-      </div>
-    </div>
+    <CustomizePanel
+      slug="spectra-noise"
+      controls={CONTROLS}
+      values={config}
+      defaults={DEFAULT_CONFIG}
+      onChange={bindCustomizeUpdate(update)}
+      onReset={() => usePlaygroundStore.getState().resetPreview("spectra-noise")}
+    />
   );
 }

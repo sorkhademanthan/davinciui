@@ -7,15 +7,12 @@ import {
   type RollingTextHandle,
   type RollingTextPattern,
 } from "@workspace/ui/components/rolling-text";
-import { cn } from "@/lib/utils";
 import { configEquals, usePlaygroundStore } from "@/hooks/use-playground-store";
 import {
-  PlaygroundColorPicker,
-  PlaygroundInput,
-  PlaygroundSectionTitle,
-  PlaygroundSlider,
-  PlaygroundSwitch,
-} from "@/components/playground-primitives";
+  CustomizePanel,
+  bindCustomizeUpdate,
+  type CustomizeControl,
+} from "@/components/customize-panel";
 
 // ─────────────────────────────────────────────────────────────
 // Store
@@ -86,6 +83,28 @@ const FONT_OPTIONS: Array<{ label: string; value: string }> = [
 const WEIGHT_OPTIONS = [400, 600, 700, 800, 900];
 
 const ALIGN_OPTIONS: Array<RollingTextPlaygroundConfig["textAlign"]> = ["left", "center", "right"];
+
+const CONTROLS: CustomizeControl[] = [
+  { type: "text", key: "text", label: "Text", placeholder: "DAVINCIUI", maxLength: 48, group: "Content" },
+  { type: "select", key: "pattern", label: "Pattern", options: [
+    { label: "Sequential", value: "sequential" },
+    { label: "Alternating", value: "alternating" },
+  ], group: "Animation" },
+  { type: "slider", key: "duplicateCount", label: "Duplicate count", min: 2, max: 16, step: 1, group: "Animation" },
+  { type: "slider", key: "rollDuration", label: "Roll duration", min: 0.2, max: 2, step: 0.05, unit: "s", group: "Animation" },
+  { type: "slider", key: "staggerDelay", label: "Stagger delay", min: 0, max: 0.15, step: 0.005, unit: "s", group: "Animation" },
+  { type: "slider", key: "blurIntensity", label: "Blur intensity", min: 0, max: 20, step: 0.5, unit: "px", group: "Animation" },
+  { type: "toggle", key: "autoPlay", label: "Auto play", group: "Animation" },
+  { type: "select", key: "fontFamily", label: "Font family", options: FONT_OPTIONS, group: "Typography" },
+  { type: "slider", key: "fontSize", label: "Font size", min: 24, max: 140, step: 1, unit: "px", group: "Typography" },
+  { type: "select", key: "fontWeight", label: "Font weight", options: WEIGHT_OPTIONS.map((weight) => ({ label: String(weight), value: String(weight) })), group: "Typography" },
+  { type: "slider", key: "lineHeight", label: "Line height", min: 0.9, max: 1.6, step: 0.05, group: "Typography" },
+  { type: "text", key: "letterSpacing", label: "Letter spacing", placeholder: "-0.02em", maxLength: 12, group: "Typography" },
+  { type: "color", key: "textColor", label: "Text", defaultColor: DEFAULT_CONFIG.textColor, group: "Typography" },
+  { type: "select", key: "textAlign", label: "Text align", options: ALIGN_OPTIONS.map((align) => ({ label: align.charAt(0).toUpperCase() + align.slice(1), value: align })), group: "Typography" },
+  { type: "toggle", key: "autoTheme", label: "Match site theme", group: "Appearance" },
+  { type: "color", key: "backgroundColor", label: "Background", defaultColor: DEFAULT_CONFIG.backgroundColor, group: "Appearance" },
+];
 
 function generateCode(c: RollingTextPlaygroundConfig) {
   const themeProps = c.autoTheme
@@ -162,165 +181,35 @@ export function RollingTextPreview() {
 export function RollingTextPersonalizePanel() {
   const config = useRollingTextPlayground((s) => s.config);
   const update = useRollingTextPlayground((s) => s.updateConfig);
-  const reset = useRollingTextPlayground((s) => s.resetConfig);
-  const handle = useRollingTextPlayground((s) => s.handle);
+  const applyControlUpdate = bindCustomizeUpdate(update);
+  const values = { ...config, fontWeight: String(config.fontWeight) };
+  const defaults = {
+    ...DEFAULT_CONFIG,
+    fontWeight: String(DEFAULT_CONFIG.fontWeight),
+  };
 
   return (
-    <div className="h-full overflow-auto bg-background [scrollbar-width:thin]">
-      <div className="space-y-7 px-4 pb-10 pt-5">
-        <header className="space-y-2">
-          <p className="text-sm leading-relaxed text-muted-foreground/90">
-            Tune the rolling columns — pattern, timing, typography and stage.
-          </p>
-        </header>
-
-        <div className="flex items-center justify-end gap-2">
-          <button
-            type="button"
-            onClick={() => handle?.play()}
-            className="rounded-md border border-border/40 px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-foreground hover:bg-foreground/5"
-          >
-            Replay
-          </button>
-          <button
-            type="button"
-            onClick={reset}
-            className="rounded-md border border-border/40 px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground hover:text-foreground"
-          >
-            Reset
-          </button>
-        </div>
-
-        <div>
-          <PlaygroundSectionTitle>Content</PlaygroundSectionTitle>
-          <PlaygroundInput
-            value={config.text}
-            onChange={(e) => update({ text: e.target.value.slice(0, 48) || "DAVINCIUI" })}
-            placeholder="DAVINCIUI"
-          />
-        </div>
-
-        <div className="space-y-4">
-          <PlaygroundSectionTitle>Animation</PlaygroundSectionTitle>
-          <div className="grid grid-cols-2 gap-1.5">
-            {(["sequential", "alternating"] as const).map((pattern) => (
-              <button
-                key={pattern}
-                type="button"
-                onClick={() => update({ pattern })}
-                className={cn(
-                  "rounded-md border px-2 py-2 font-mono text-[10px] uppercase tracking-wide capitalize",
-                  config.pattern === pattern
-                    ? "border-foreground/60 bg-foreground text-background"
-                    : "border-border/70 text-muted-foreground hover:text-foreground",
-                )}
-              >
-                {pattern}
-              </button>
-            ))}
-          </div>
-          <PlaygroundSlider label="Duplicate count" min={2} max={16} step={1} value={config.duplicateCount} onChange={(v) => update({ duplicateCount: Math.round(v) })} />
-          <PlaygroundSlider label="Roll duration" min={0.2} max={2} step={0.05} value={config.rollDuration} unit="s" onChange={(v) => update({ rollDuration: v })} />
-          <PlaygroundSlider label="Stagger delay" min={0} max={0.15} step={0.005} value={config.staggerDelay} unit="s" onChange={(v) => update({ staggerDelay: v })} />
-          <PlaygroundSlider label="Blur intensity" min={0} max={20} step={0.5} value={config.blurIntensity} unit="px" onChange={(v) => update({ blurIntensity: v })} />
-          <PlaygroundSwitch label="Auto play" checked={config.autoPlay} onChange={(autoPlay) => update({ autoPlay })} />
-          <button
-            type="button"
-            onClick={() => handle?.play()}
-            className="w-full rounded-md border border-border/70 px-3 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-foreground/5"
-          >
-            Replay animation
-          </button>
-        </div>
-
-        <div className="space-y-4">
-          <PlaygroundSectionTitle>Typography</PlaygroundSectionTitle>
-          <div className="grid grid-cols-3 gap-1.5">
-            {FONT_OPTIONS.map((font) => (
-              <button
-                key={font.label}
-                type="button"
-                onClick={() => update({ fontFamily: font.value })}
-                className={cn(
-                  "rounded-md border px-2 py-2 text-xs font-semibold",
-                  config.fontFamily === font.value
-                    ? "border-foreground/60 bg-foreground text-background"
-                    : "border-border/70 text-muted-foreground hover:text-foreground",
-                )}
-              >
-                {font.label}
-              </button>
-            ))}
-          </div>
-          <PlaygroundSlider label="Font size" min={24} max={140} step={1} value={config.fontSize} unit="px" onChange={(v) => update({ fontSize: Math.round(v) })} />
-          <div className="grid grid-cols-5 gap-1.5">
-            {WEIGHT_OPTIONS.map((weight) => (
-              <button
-                key={weight}
-                type="button"
-                onClick={() => update({ fontWeight: weight })}
-                className={cn(
-                  "rounded-md border px-2 py-2 font-mono text-[10px] tracking-wide",
-                  config.fontWeight === weight
-                    ? "border-foreground/60 bg-foreground text-background"
-                    : "border-border/70 text-muted-foreground hover:text-foreground",
-                )}
-              >
-                {weight}
-              </button>
-            ))}
-          </div>
-          <PlaygroundSlider label="Line height" min={0.9} max={1.6} step={0.05} value={config.lineHeight} onChange={(v) => update({ lineHeight: v })} />
-          <div>
-            <div className="mb-3 text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
-              Letter spacing
-            </div>
-            <PlaygroundInput
-              value={config.letterSpacing}
-              onChange={(e) => update({ letterSpacing: e.target.value.slice(0, 12) || "-0.02em" })}
-              placeholder="-0.02em"
-            />
-          </div>
-          <PlaygroundColorPicker
-            label="Text"
-            value={config.textColor}
-            onChange={(textColor) => update({ textColor, autoTheme: false })}
-            defaultColor="#ffffff"
-          />
-          <div className="grid grid-cols-3 gap-1.5">
-            {ALIGN_OPTIONS.map((align) => (
-              <button
-                key={align}
-                type="button"
-                onClick={() => update({ textAlign: align })}
-                className={cn(
-                  "rounded-md border px-2 py-2 font-mono text-[10px] uppercase tracking-wide capitalize",
-                  config.textAlign === align
-                    ? "border-foreground/60 bg-foreground text-background"
-                    : "border-border/70 text-muted-foreground hover:text-foreground",
-                )}
-              >
-                {align}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="space-y-3">
-          <PlaygroundSectionTitle>Appearance</PlaygroundSectionTitle>
-          <PlaygroundSwitch
-            label="Match site theme"
-            checked={config.autoTheme}
-            onChange={(autoTheme) => update({ autoTheme })}
-          />
-          <PlaygroundColorPicker
-            label="Background"
-            value={config.backgroundColor}
-            onChange={(backgroundColor) => update({ backgroundColor, autoTheme: false })}
-            defaultColor="#000000"
-          />
-        </div>
-      </div>
-    </div>
+    <CustomizePanel
+      slug="rolling-text"
+      controls={CONTROLS}
+      values={values}
+      defaults={defaults}
+      onChange={(key, value) => {
+        if (key === "text") {
+          update({ text: String(value) || "DAVINCIUI" });
+        } else if (key === "letterSpacing") {
+          update({ letterSpacing: String(value) || "-0.02em" });
+        } else if (key === "fontWeight") {
+          update({ fontWeight: Number(value) });
+        } else if (key === "textColor") {
+          update({ textColor: String(value), autoTheme: false });
+        } else if (key === "backgroundColor") {
+          update({ backgroundColor: String(value), autoTheme: false });
+        } else {
+          applyControlUpdate(key, value);
+        }
+      }}
+      onReset={() => usePlaygroundStore.getState().resetPreview("rolling-text")}
+    />
   );
 }

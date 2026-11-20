@@ -12,7 +12,6 @@ import {
   DocsPreviewWrapper,
   type VariantItem,
 } from "@/components/docs-preview-wrapper";
-import { PersonalizeController } from "@/components/personalize-controller";
 import { LazyExamplePreview } from "@/components/lazy-example-preview";
 import { highlightCode } from "@/lib/shiki";
 import { splitImportAndUsage, stripImportFromCode } from "@/lib/split-import";
@@ -330,12 +329,11 @@ export async function DocsPageLayout({
               </DocsPreviewWrapper>
             </div>
 
-            {/* Single page-owned personalization drawer (one portal — example
-                wrappers never render their own). */}
-            <PersonalizeController
-              id={installPackageName}
-              content={personalizeContent}
-            />
+            {personalizeContent ? (
+              <div data-customize-slot className="mt-6">
+                {personalizeContent}
+              </div>
+            ) : null}
 
             {/* Installation */}
             <Section
@@ -404,10 +402,7 @@ export async function DocsPageLayout({
                     className="scroll-mt-24 pt-4"
                     id={slugify(ex.title)}
                   >
-                    <LazyExamplePreview
-                      unstyledPreview={unstyledPreview}
-                      personalizeContent={personalizeContent}
-                    >
+                    <LazyExamplePreview unstyledPreview={unstyledPreview}>
                       {ex.preview}
                     </LazyExamplePreview>
                   </Section>

@@ -42,7 +42,7 @@ function SoftFluidGradientNotes() {
         </div>
       </Section>
 
-      <Section title="Controls" className="pt-8">
+      <Section id="controls-prose" title="Controls" className="pt-8" hideFromToc>
         <ul className="max-w-2xl list-disc space-y-2 pl-5 text-[15px] leading-7 text-muted-foreground">
           <li>
             <strong className="text-foreground">Flow Speed</strong> changes the

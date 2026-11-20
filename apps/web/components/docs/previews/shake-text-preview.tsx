@@ -5,11 +5,10 @@ import { create } from "zustand";
 import { ShakeText } from "@workspace/ui/components/shake-text";
 import { configEquals, usePlaygroundStore } from "@/hooks/use-playground-store";
 import {
-  PlaygroundColorPicker,
-  PlaygroundInput,
-  PlaygroundSectionTitle,
-  PlaygroundSlider,
-} from "@/components/playground-primitives";
+  CustomizePanel,
+  bindCustomizeUpdate,
+  type CustomizeControl,
+} from "@/components/customize-panel";
 
 // ─────────────────────────────────────────────────────────────
 // Store
@@ -30,6 +29,20 @@ const DEFAULT_CONFIG: ShakeTextPlaygroundConfig = {
   frontColor: "#fff8e7",
   layerColors: ["#50adbf", "#5f845c", "#e76168", "#fdda76"],
 };
+
+const CONTROLS: CustomizeControl[] = [
+  { type: "text", key: "text", label: "Text", placeholder: "DAVINCIUI", maxLength: 16, group: "Content" },
+  { type: "slider", key: "shakeIntensity", label: "Intensity", min: 0.2, max: 2.5, step: 0.1, group: "Shake" },
+  { type: "slider", key: "shakeDuration", label: "Duration", min: 0.2, max: 1.5, step: 0.05, unit: "s", group: "Shake" },
+  { type: "color", key: "frontColor", label: "Foreground", defaultColor: DEFAULT_CONFIG.frontColor, group: "Colors" },
+  ...DEFAULT_CONFIG.layerColors.map((color, index) => ({
+    type: "color" as const,
+    key: `layerColors.${index}`,
+    label: `Layer ${index + 1}`,
+    defaultColor: color,
+    group: "Colors",
+  })),
+];
 
 const PREVIEW_FONT_SIZE = "clamp(2.5rem, 7.5vw, 6.5rem)";
 
@@ -99,67 +112,44 @@ export function ShakeTextPreview() {
 export function ShakeTextPersonalizePanel() {
   const config = useShakeTextPlayground((s) => s.config);
   const update = useShakeTextPlayground((s) => s.updateConfig);
-  const reset = useShakeTextPlayground((s) => s.resetConfig);
-
-  const updateLayerColor = (index: number, color: string) => {
-    const layerColors = [...config.layerColors] as [string, string, string, string];
-    layerColors[index] = color;
-    update({ layerColors });
+  const applyControlUpdate = bindCustomizeUpdate(update);
+  const values = {
+    ...config,
+    ...Object.fromEntries(
+      config.layerColors.map((color, index) => [`layerColors.${index}`, color]),
+    ),
+  };
+  const defaults = {
+    ...DEFAULT_CONFIG,
+    ...Object.fromEntries(
+      DEFAULT_CONFIG.layerColors.map((color, index) => [
+        `layerColors.${index}`,
+        color,
+      ]),
+    ),
   };
 
   return (
-    <div className="h-full overflow-auto bg-background [scrollbar-width:thin]">
-      <div className="space-y-7 px-4 pb-10 pt-5">
-        <header className="space-y-2">
-          <p className="text-sm leading-relaxed text-muted-foreground/90">
-            Tune the continuous layered motion, content and colors.
-          </p>
-        </header>
-
-        <div className="flex justify-end">
-          <button
-            type="button"
-            onClick={reset}
-            className="rounded-md border border-border/40 px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground hover:text-foreground"
-          >
-            Reset
-          </button>
-        </div>
-
-        <div>
-          <PlaygroundSectionTitle>Content</PlaygroundSectionTitle>
-          <PlaygroundInput
-            value={config.text}
-            onChange={(e) => update({ text: e.target.value.slice(0, 16) || "DAVINCIUI" })}
-            placeholder="DAVINCIUI"
-          />
-        </div>
-
-        <div className="space-y-4">
-          <PlaygroundSectionTitle>Shake</PlaygroundSectionTitle>
-          <PlaygroundSlider label="Intensity" min={0.2} max={2.5} step={0.1} value={config.shakeIntensity} onChange={(v) => update({ shakeIntensity: v })} />
-          <PlaygroundSlider label="Duration" min={0.2} max={1.5} step={0.05} value={config.shakeDuration} unit="s" onChange={(v) => update({ shakeDuration: v })} />
-        </div>
-
-        <div className="space-y-3">
-          <PlaygroundSectionTitle>Colors</PlaygroundSectionTitle>
-          <PlaygroundColorPicker
-            label="Foreground"
-            value={config.frontColor}
-            onChange={(frontColor) => update({ frontColor })}
-            defaultColor="#fff8e7"
-          />
-          {config.layerColors.map((color, index) => (
-            <PlaygroundColorPicker
-              key={index}
-              label={`Layer ${index + 1}`}
-              value={color}
-              onChange={(value) => updateLayerColor(index, value)}
-              defaultColor={DEFAULT_CONFIG.layerColors[index]}
-            />
-          ))}
-        </div>
-      </div>
-    </div>
+    <CustomizePanel
+      slug="shake-text"
+      controls={CONTROLS}
+      values={values}
+      defaults={defaults}
+      onChange={(key, value) => {
+        if (key.startsWith("layerColors.")) {
+          const index = Number(key.slice("layerColors.".length));
+          const layerColors = [
+            ...config.layerColors,
+          ] as ShakeTextPlaygroundConfig["layerColors"];
+          layerColors[index] = String(value);
+          update({ layerColors });
+        } else if (key === "text") {
+          update({ text: String(value) || "DAVINCIUI" });
+        } else {
+          applyControlUpdate(key, value);
+        }
+      }}
+      onReset={() => usePlaygroundStore.getState().resetPreview("shake-text")}
+    />
   );
 }

@@ -3,7 +3,7 @@
 import * as React from "react"
 import * as ReactDOM from "react-dom"
 import { cn } from "@/lib/utils"
-import { RotateCcw, Search, SlidersHorizontal, Check, Maximize, Minimize, CodeXml, Copy, X } from "lucide-react"
+import { RotateCcw, Search, Check, Maximize, Minimize, CodeXml, Copy, X } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { motion, AnimatePresence, useDragControls, type PanInfo } from "framer-motion"
 import { useDocStore } from "@/hooks/use-doc-store"
@@ -175,7 +175,9 @@ export function DocsPreviewWrapper({
       ? 0
       : activeVariant
 
-  const { setActiveVariantIndex, personalizeOpen, setPersonalizeOpen } = useDocStore()
+  const setActiveVariantIndex = useDocStore((state) => state.setActiveVariantIndex)
+  const registerPersonalizeContent = useDocStore((state) => state.registerPersonalizeContent)
+  const clearPersonalizeContent = useDocStore((state) => state.clearPersonalizeContent)
 
   // Sync state with store — but only when this wrapper actually owns variant
   // selection. Example wrappers render with no variants (hideDefaultVariant);
@@ -186,9 +188,12 @@ export function DocsPreviewWrapper({
     setActiveVariantIndex(resolvedActiveVariant)
   }, [resolvedActiveVariant, setActiveVariantIndex, variants.length])
 
-  // Note: drawer rendering + registration live in the page-owned
-  // PersonalizeController (one portal per page). Wrappers only read the
-  // shared open state for their toolbar pill.
+  React.useEffect(() => {
+    if (!personalizeContent) return
+    const id = slug || "preview"
+    registerPersonalizeContent(id, personalizeContent)
+    return () => clearPersonalizeContent(id)
+  }, [slug, personalizeContent, registerPersonalizeContent, clearPersonalizeContent])
 
   const hasSourceCode = Boolean(sourceCodeKey)
 
@@ -317,8 +322,13 @@ export function DocsPreviewWrapper({
     setActiveVariant(index)
   }, [effectiveScrollable])
 
+  const handleReloadPreview = React.useCallback(() => {
+    if (slug) usePlaygroundStore.getState().resetPreview(slug)
+    selectVariant(resolvedActiveVariant)
+    setKey((k) => k + 1)
+  }, [resolvedActiveVariant, selectVariant, slug])
+
   const handleSourceOpen = React.useCallback(async () => {
-    setPersonalizeOpen(false)
     if (isExpanded) {
       collapseFullscreen()
     }
@@ -349,7 +359,7 @@ export function DocsPreviewWrapper({
     } finally {
       setIsSourceLoading(false)
     }
-  }, [collapseFullscreen, isExpanded, isSourceLoading, sourceCodeKey, sourceHtml, setPersonalizeOpen])
+  }, [collapseFullscreen, isExpanded, isSourceLoading, sourceCodeKey, sourceHtml])
 
   const handleToggleExpanded = React.useCallback(() => {
     if (isExpanded) {
@@ -357,9 +367,8 @@ export function DocsPreviewWrapper({
       return
     }
     setShowSource(false)
-    setPersonalizeOpen(false)
     expandFullscreen()
-  }, [collapseFullscreen, expandFullscreen, isExpanded, setPersonalizeOpen])
+  }, [collapseFullscreen, expandFullscreen, isExpanded])
 
   React.useEffect(() => {
     setMounted(true)
@@ -449,6 +458,7 @@ export function DocsPreviewWrapper({
   return (
     <div
       ref={previewRef}
+      data-preview-shell
       data-preview-expanded={isExpanded ? "true" : undefined}
       role={isExpanded ? "dialog" : undefined}
       aria-modal={isExpanded || undefined}
@@ -522,32 +532,9 @@ export function DocsPreviewWrapper({
             </PreviewIconButton>
           )}
 
-          {personalizeContent && (
-            <PreviewIconButton
-              onClick={() => {
-                if (isExpanded) {
-                  collapseFullscreen()
-                }
-                setPersonalizeOpen(true)
-                setShowSource(false)
-              }}
-              label="Personalize"
-              active={personalizeOpen}
-            >
-              <SlidersHorizontal className={previewIconClass} />
-            </PreviewIconButton>
-          )}
-
           {showReload && (
           <PreviewIconButton
-            onClick={() => {
-              // True reset: restore the component's defaults first so the
-              // remount below renders pristine state (not surviving
-              // personalization), then replay the preview subtree.
-              if (slug) usePlaygroundStore.getState().resetPreview(slug)
-              selectVariant(resolvedActiveVariant)
-              setKey((k) => k + 1)
-            }}
+            onClick={handleReloadPreview}
             label="Reload preview"
           >
             <RotateCcw className={previewIconClass} />
@@ -614,9 +601,6 @@ export function DocsPreviewWrapper({
           </div>
         </div>
       </div>
-
-      {/* Personalize drawer is page-owned (PersonalizeController) — never
-          rendered per-wrapper, so examples cannot spawn competing portals. */}
 
       {/* Source Code Panel Portal */}
       {mounted && ReactDOM.createPortal(

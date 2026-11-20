@@ -6,10 +6,10 @@ import { SunlightEffect } from "@workspace/ui/components/sunlight-effect";
 import { create } from "zustand";
 import { configEquals, usePlaygroundStore } from "@/hooks/use-playground-store";
 import {
-  PlaygroundColorPicker,
-  PlaygroundSectionTitle,
-  PlaygroundSlider,
-} from "@/components/playground-primitives";
+  CustomizePanel,
+  bindCustomizeUpdate,
+  type CustomizeControl,
+} from "@/components/customize-panel";
 
 type SunlightEffectConfig = {
   colors: [string, string, string, string, string];
@@ -44,6 +44,29 @@ const DEFAULT_CONFIG: SunlightEffectConfig = {
   offsetX: 0,
   offsetY: 0,
 };
+
+const CONTROLS: CustomizeControl[] = [
+  ...DEFAULT_CONFIG.colors.map((color, index) => ({
+    type: "color" as const,
+    key: `colors.${index}`,
+    label: `Ray ${index + 1}`,
+    defaultColor: color,
+    group: "Colors",
+  })),
+  { type: "color", key: "backgroundColor", label: "Background", defaultColor: DEFAULT_CONFIG.backgroundColor, group: "Colors" },
+  { type: "color", key: "bloomColor", label: "Bloom", defaultColor: DEFAULT_CONFIG.bloomColor, group: "Colors" },
+  { type: "slider", key: "bloom", label: "Bloom", min: 0, max: 2.5, step: 0.01, group: "Light" },
+  { type: "slider", key: "intensity", label: "Intensity", min: 0, max: 3, step: 0.01, group: "Light" },
+  { type: "slider", key: "density", label: "Density", min: 0.2, max: 3, step: 0.01, group: "Rays" },
+  { type: "slider", key: "spotty", label: "Spotty", min: 0, max: 1, step: 0.01, group: "Rays" },
+  { type: "slider", key: "midSize", label: "Mid size", min: 0, max: 1.5, step: 0.01, group: "Center" },
+  { type: "slider", key: "midIntensity", label: "Mid intensity", min: 0, max: 3, step: 0.01, group: "Center" },
+  { type: "slider", key: "speed", label: "Speed", min: 0, max: 2, step: 0.01, group: "Motion" },
+  { type: "slider", key: "scale", label: "Scale", min: 0.25, max: 3, step: 0.01, group: "Transform" },
+  { type: "slider", key: "rotation", label: "Rotation", min: -180, max: 180, step: 1, unit: "°", group: "Transform" },
+  { type: "slider", key: "offsetX", label: "Offset X", min: -1, max: 1, step: 0.01, group: "Transform" },
+  { type: "slider", key: "offsetY", label: "Offset Y", min: -1, max: 1, step: 0.01, group: "Transform" },
+];
 
 const useSunlightEffectStore = create<{
   config: SunlightEffectConfig;
@@ -120,161 +143,37 @@ export function SunlightEffectPersonalizePanel() {
   const config = useSunlightEffectStore((state) => state.config);
   const update = useSunlightEffectStore((state) => state.update);
   const setColor = useSunlightEffectStore((state) => state.setColor);
-  const reset = useSunlightEffectStore((state) => state.reset);
+  const applyControlUpdate = bindCustomizeUpdate(update);
+  const values = {
+    ...config,
+    ...Object.fromEntries(
+      config.colors.map((color, index) => [`colors.${index}`, color]),
+    ),
+  };
+  const defaults = {
+    ...DEFAULT_CONFIG,
+    ...Object.fromEntries(
+      DEFAULT_CONFIG.colors.map((color, index) => [`colors.${index}`, color]),
+    ),
+  };
 
   return (
-    <div className="h-full overflow-auto bg-background [scrollbar-width:thin]">
-      <div className="space-y-7 px-4 pb-12 pt-5">
-        <header className="space-y-2">
-          <p className="text-sm leading-relaxed text-muted-foreground/90">
-            Shape the rays, luminous core, palette, and inward light flow.
-          </p>
-        </header>
-
-        <div className="flex justify-end">
-          <button
-            type="button"
-            onClick={reset}
-            className="rounded-md border border-border/60 px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            Reset
-          </button>
-        </div>
-
-        <section className="space-y-3">
-          <PlaygroundSectionTitle>Colors</PlaygroundSectionTitle>
-          {config.colors.map((color, index) => (
-            <PlaygroundColorPicker
-              key={index}
-              label={`Ray ${index + 1}`}
-              value={color}
-              onChange={(nextColor) => setColor(index, nextColor)}
-              defaultColor={DEFAULT_CONFIG.colors[index]}
-            />
-          ))}
-          <PlaygroundColorPicker
-            label="Background"
-            value={config.backgroundColor}
-            onChange={(backgroundColor) => update({ backgroundColor })}
-            defaultColor={DEFAULT_CONFIG.backgroundColor}
-          />
-          <PlaygroundColorPicker
-            label="Bloom"
-            value={config.bloomColor}
-            onChange={(bloomColor) => update({ bloomColor })}
-            defaultColor={DEFAULT_CONFIG.bloomColor}
-          />
-        </section>
-
-        <section className="space-y-3">
-          <PlaygroundSectionTitle>Light</PlaygroundSectionTitle>
-          <PlaygroundSlider
-            label="Bloom"
-            min={0}
-            max={2.5}
-            step={0.01}
-            value={config.bloom}
-            onChange={(bloom) => update({ bloom })}
-          />
-          <PlaygroundSlider
-            label="Intensity"
-            min={0}
-            max={3}
-            step={0.01}
-            value={config.intensity}
-            onChange={(intensity) => update({ intensity })}
-          />
-        </section>
-
-        <section className="space-y-3">
-          <PlaygroundSectionTitle>Rays</PlaygroundSectionTitle>
-          <PlaygroundSlider
-            label="Density"
-            min={0.2}
-            max={3}
-            step={0.01}
-            value={config.density}
-            onChange={(density) => update({ density })}
-          />
-          <PlaygroundSlider
-            label="Spotty"
-            min={0}
-            max={1}
-            step={0.01}
-            value={config.spotty}
-            onChange={(spotty) => update({ spotty })}
-          />
-        </section>
-
-        <section className="space-y-3">
-          <PlaygroundSectionTitle>Center</PlaygroundSectionTitle>
-          <PlaygroundSlider
-            label="Mid size"
-            min={0}
-            max={1.5}
-            step={0.01}
-            value={config.midSize}
-            onChange={(midSize) => update({ midSize })}
-          />
-          <PlaygroundSlider
-            label="Mid intensity"
-            min={0}
-            max={3}
-            step={0.01}
-            value={config.midIntensity}
-            onChange={(midIntensity) => update({ midIntensity })}
-          />
-        </section>
-
-        <section className="space-y-3">
-          <PlaygroundSectionTitle>Motion</PlaygroundSectionTitle>
-          <PlaygroundSlider
-            label="Speed"
-            min={0}
-            max={2}
-            step={0.01}
-            value={config.speed}
-            onChange={(speed) => update({ speed })}
-          />
-        </section>
-
-        <section className="space-y-3">
-          <PlaygroundSectionTitle>Transform</PlaygroundSectionTitle>
-          <PlaygroundSlider
-            label="Scale"
-            min={0.25}
-            max={3}
-            step={0.01}
-            value={config.scale}
-            onChange={(scale) => update({ scale })}
-          />
-          <PlaygroundSlider
-            label="Rotation"
-            min={-180}
-            max={180}
-            step={1}
-            unit="°"
-            value={config.rotation}
-            onChange={(rotation) => update({ rotation })}
-          />
-          <PlaygroundSlider
-            label="Offset X"
-            min={-1}
-            max={1}
-            step={0.01}
-            value={config.offsetX}
-            onChange={(offsetX) => update({ offsetX })}
-          />
-          <PlaygroundSlider
-            label="Offset Y"
-            min={-1}
-            max={1}
-            step={0.01}
-            value={config.offsetY}
-            onChange={(offsetY) => update({ offsetY })}
-          />
-        </section>
-      </div>
-    </div>
+    <CustomizePanel
+      slug="sunlight-effect"
+      controls={CONTROLS}
+      values={values}
+      defaults={defaults}
+      onChange={(key, value) => {
+        if (key.startsWith("colors.")) {
+          const index = Number(key.slice("colors.".length));
+          setColor(index, String(value));
+        } else {
+          applyControlUpdate(key, value);
+        }
+      }}
+      onReset={() =>
+        usePlaygroundStore.getState().resetPreview("sunlight-effect")
+      }
+    />
   );
 }

@@ -6,9 +6,10 @@ import { SoftFluidGradient } from "@workspace/ui/components/soft-fluid-gradient"
 import { create } from "zustand";
 import { configEquals, usePlaygroundStore } from "@/hooks/use-playground-store";
 import {
-  PlaygroundSectionTitle,
-  PlaygroundSlider,
-} from "@/components/playground-primitives";
+  CustomizePanel,
+  bindCustomizeUpdate,
+  type CustomizeControl,
+} from "@/components/customize-panel";
 
 type SoftFluidGradientConfig = {
   speed: number;
@@ -19,6 +20,11 @@ const DEFAULT_CONFIG: SoftFluidGradientConfig = {
   speed: 0.26,
   density: 1,
 };
+
+const CONTROLS: CustomizeControl[] = [
+  { type: "slider", key: "speed", label: "Speed", min: 0, max: 2, step: 0.01, group: "Flow" },
+  { type: "slider", key: "density", label: "Density (loops)", min: 0.35, max: 3, step: 0.05, group: "Flow" },
+];
 
 const useSoftFluidGradientStore = create<{
   config: SoftFluidGradientConfig;
@@ -75,47 +81,17 @@ export function SoftFluidGradientPreview() {
 export function SoftFluidGradientPersonalizePanel() {
   const config = useSoftFluidGradientStore((state) => state.config);
   const update = useSoftFluidGradientStore((state) => state.update);
-  const reset = useSoftFluidGradientStore((state) => state.reset);
 
   return (
-    <div className="h-full overflow-auto bg-background [scrollbar-width:thin]">
-      <div className="space-y-7 px-4 pb-12 pt-5">
-        <header className="space-y-2">
-          <p className="text-sm leading-relaxed text-muted-foreground/90">
-            Tune the flow speed and the breadth of the looping light field.
-          </p>
-        </header>
-
-        <div className="flex justify-end">
-          <button
-            type="button"
-            onClick={reset}
-            className="rounded-md border border-border/60 px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            Reset
-          </button>
-        </div>
-
-        <section className="space-y-3">
-          <PlaygroundSectionTitle>Flow</PlaygroundSectionTitle>
-          <PlaygroundSlider
-            label="Speed"
-            min={0}
-            max={2}
-            step={0.01}
-            value={config.speed}
-            onChange={(speed) => update({ speed })}
-          />
-          <PlaygroundSlider
-            label="Density (loops)"
-            min={0.35}
-            max={3}
-            step={0.05}
-            value={config.density}
-            onChange={(density) => update({ density })}
-          />
-        </section>
-      </div>
-    </div>
+    <CustomizePanel
+      slug="soft-fluid-gradient"
+      controls={CONTROLS}
+      values={config}
+      defaults={DEFAULT_CONFIG}
+      onChange={bindCustomizeUpdate(update)}
+      onReset={() =>
+        usePlaygroundStore.getState().resetPreview("soft-fluid-gradient")
+      }
+    />
   );
 }

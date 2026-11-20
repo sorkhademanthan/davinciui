@@ -13,14 +13,10 @@ import {
   type PlaygroundValue,
 } from "@/hooks/use-generic-playground-store";
 import {
-  PlaygroundColorPicker,
-  PlaygroundInput,
-  PlaygroundSectionTitle,
-  PlaygroundSelect,
-  PlaygroundSlider,
-  PlaygroundSwitch,
-  PlaygroundTextArea,
-} from "@/components/playground-primitives";
+  CustomizePanel,
+  type CustomizeControl,
+  type CustomizeControlValue,
+} from "@/components/customize-panel";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Types
@@ -264,191 +260,90 @@ export function createComponentPlayground<T extends GenericPlaygroundConfig>(
     );
   }
 
+  const controls: CustomizeControl[] = definition.fields.map((field) => {
+    const base = {
+      key: field.key,
+      label: field.label,
+      group: field.section,
+    };
+    switch (field.type) {
+      case "slider":
+        return {
+          ...base,
+          type: "slider" as const,
+          min: field.min,
+          max: field.max,
+          step: field.step,
+          unit: field.unit,
+        };
+      case "switch":
+        return { ...base, type: "toggle" as const };
+      case "color":
+        return { ...base, type: "color" as const };
+      case "select":
+        return { ...base, type: "select" as const, options: field.options };
+      case "textarea":
+        return {
+          ...base,
+          type: "textarea" as const,
+          placeholder: field.placeholder,
+        };
+      case "text":
+      default:
+        return {
+          ...base,
+          type: "text" as const,
+          placeholder: field.placeholder,
+          maxLength: field.maxLength,
+        };
+    }
+  });
+
   function PersonalizePanel() {
     const config = useGenericPlaygroundConfig(slug, defaults);
     const activePreset = useGenericPlaygroundStore(
       (state) => state.activePresets[slug] ?? "Default",
     );
 
-    const update = React.useCallback(
-      (key: string, value: PlaygroundValue) => {
-        const store = useGenericPlaygroundStore.getState();
-        store.updateConfig(slug, { [key]: value });
-        const next = { ...store.configs[slug], [key]: value } as T;
-        const matched = definition.presets?.find((preset) =>
-          configEquals(preset.config, next),
-        );
-        store.setActivePreset(slug, matched?.name ?? "Custom");
-      },
-      [],
-    );
+    const update = React.useCallback((key: string, value: CustomizeControlValue) => {
+      const store = useGenericPlaygroundStore.getState();
+      const next = {
+        ...(store.configs[slug] ?? defaults),
+        [key]: value,
+      } as T;
+      store.updateConfig(slug, { [key]: value });
+      const matched = definition.presets?.find((preset) =>
+        configEquals(preset.config, next),
+      );
+      store.setActivePreset(slug, matched?.name ?? "Custom");
+    }, []);
 
-    const handlePreset = (preset: PlaygroundPreset<T>) => {
+    const handlePreset = (name: string) => {
+      const preset = definition.presets?.find((candidate) => candidate.name === name);
+      if (!preset) return;
       const store = useGenericPlaygroundStore.getState();
       store.setConfig(slug, { ...preset.config });
       store.setActivePreset(slug, preset.name);
       store.bumpRenderVersion(slug);
     };
 
-    const sections: { title: string; fields: PlaygroundField[] }[] = [];
-    for (const field of definition.fields) {
-      const title = field.section ?? "Options";
-      const existing = sections.find((section) => section.title === title);
-      if (existing) existing.fields.push(field);
-      else sections.push({ title, fields: [field] });
-    }
-
     return (
-      <div className="h-full overflow-auto bg-background [scrollbar-width:thin]">
-        <div className="space-y-6 px-4 pb-10 pt-5">
-          <header className="space-y-2">
-            <p className="text-sm leading-relaxed text-muted-foreground/90">
-              {definition.intro ??
-                "Personalize this component. Changes update the preview and the usage snippet live."}
-            </p>
-          </header>
-
-          <div className="flex items-center justify-between">
-            <div className="text-sm text-muted-foreground/90">
-              Current preset:{" "}
-              <span className="font-mono text-foreground">{activePreset}</span>
-            </div>
-            <button
-              type="button"
-              onClick={() => useGenericPlaygroundStore.getState().reset(slug)}
-              className="rounded-md border border-border/40 bg-white/50 px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground transition-colors hover:text-foreground dark:bg-white/[0.03]"
-            >
-              Reset
-            </button>
-          </div>
-
-          {definition.presets?.length ? (
-            <div>
-              <PlaygroundSectionTitle>Presets</PlaygroundSectionTitle>
-              <div className="grid grid-cols-4 gap-1.5">
-                {definition.presets.map((preset) => {
-                  const swatch = definition.presetSwatch
-                    ? String(preset.config[definition.presetSwatch] ?? "")
-                    : "";
-                  return (
-                    <button
-                      key={preset.name}
-                      type="button"
-                      onClick={() => handlePreset(preset)}
-                      className={cn(
-                        "rounded-md border p-1.5 text-center transition-colors",
-                        activePreset === preset.name
-                          ? "border-zinc-500/70 bg-zinc-100 dark:border-zinc-500/80 dark:bg-zinc-900/70"
-                          : "border-border/70 bg-transparent",
-                      )}
-                    >
-                      <div
-                        className="mb-1.5 h-4 rounded-sm border border-white/20"
-                        style={{
-                          background: swatch || "var(--muted)",
-                        }}
-                      />
-                      <span className="block truncate font-mono text-[10px] uppercase tracking-widest text-foreground/90">
-                        {preset.name}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          ) : null}
-
-          {sections.map((section) => (
-            <div key={section.title}>
-              <PlaygroundSectionTitle>{section.title}</PlaygroundSectionTitle>
-              <div className="grid grid-cols-1 gap-4">
-                {section.fields.map((field) => (
-                  <FieldControl
-                    key={field.key}
-                    field={field}
-                    value={config[field.key]}
-                    onChange={(value) => update(field.key, value)}
-                  />
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+      <CustomizePanel
+        slug={slug}
+        controls={controls}
+        values={config}
+        defaults={defaults}
+        onChange={update}
+        onReset={() => usePlaygroundStore.getState().resetPreview(slug)}
+        presets={definition.presets?.map((preset) => ({
+          label: preset.name,
+          value: preset.name,
+        }))}
+        activePreset={activePreset}
+        onPresetChange={handlePreset}
+      />
     );
   }
 
   return { Preview, PersonalizePanel };
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Field renderer
-// ─────────────────────────────────────────────────────────────────────────────
-
-function FieldControl({
-  field,
-  value,
-  onChange,
-}: {
-  field: PlaygroundField;
-  value: PlaygroundValue | undefined;
-  onChange: (value: PlaygroundValue) => void;
-}) {
-  switch (field.type) {
-    case "slider":
-      return (
-        <PlaygroundSlider
-          label={field.label}
-          min={field.min}
-          max={field.max}
-          step={field.step}
-          value={typeof value === "number" ? value : field.min}
-          onChange={onChange}
-          unit={field.unit}
-        />
-      );
-    case "switch":
-      return (
-        <PlaygroundSwitch
-          label={field.label}
-          checked={Boolean(value)}
-          onChange={onChange}
-        />
-      );
-    case "color":
-      return (
-        <PlaygroundColorPicker
-          label={field.label}
-          value={typeof value === "string" ? value : "#000000"}
-          onChange={onChange}
-        />
-      );
-    case "select":
-      return (
-        <PlaygroundSelect
-          label={field.label}
-          value={typeof value === "string" ? value : field.options[0]?.value ?? ""}
-          options={field.options}
-          onChange={onChange}
-        />
-      );
-    case "textarea":
-      return (
-        <PlaygroundTextArea
-          value={typeof value === "string" ? value : ""}
-          onChange={(event) => onChange(event.target.value)}
-          placeholder={field.placeholder}
-        />
-      );
-    case "text":
-    default:
-      return (
-        <PlaygroundInput
-          value={typeof value === "string" ? value : ""}
-          onChange={(event) => onChange(event.target.value)}
-          placeholder={field.placeholder}
-          maxLength={field.type === "text" ? field.maxLength : undefined}
-        />
-      );
-  }
 }

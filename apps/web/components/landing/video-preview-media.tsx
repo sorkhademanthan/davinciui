@@ -91,21 +91,26 @@ export function CmsPreviewVideo({
   children?: React.ReactNode;
 }) {
   const source = useContentfulPreviewSource(slug);
+  const { ref, inView } = useInViewport({ rootMargin: "160px 0px" });
   if (!source) return <>{children}</>;
 
   return (
-    <video
-      key={source.src}
-      autoPlay
-      muted
-      loop
-      playsInline
-      preload="metadata"
-      className={className}
-      aria-hidden="true"
-    >
-      <source src={withMediaVersion(source.src)} type="video/mp4" />
-    </video>
+    <div ref={ref} className={className}>
+      {inView ? (
+        <video
+          key={source.src}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          className="absolute inset-0 size-full object-cover"
+          aria-hidden="true"
+        >
+          <source src={withMediaVersion(source.src)} type="video/mp4" />
+        </video>
+      ) : null}
+    </div>
   );
 }
 

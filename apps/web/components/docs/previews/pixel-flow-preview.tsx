@@ -1,18 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { create } from "zustand";
 import { PixelFlow } from "@workspace/ui/components/pixel-flow";
 import type { PixelFlowPresetName } from "@workspace/ui/components/pixel-flow";
 import { PIXEL_FLOW_PRESETS } from "@workspace/ui/components/pixel-flow";
-import { cn } from "@/lib/utils";
 import { configEquals, usePlaygroundStore } from "@/hooks/use-playground-store";
 import {
-  PlaygroundColorPicker,
-  PlaygroundSectionTitle,
-  PlaygroundSlider,
-  PlaygroundSwitch,
-} from "@/components/playground-primitives";
+  CustomizePanel,
+  bindCustomizeUpdate,
+  type CustomizeControl,
+} from "@/components/customize-panel";
 
 const PRESET_ORDER: PixelFlowPresetName[] = [
   "reference-purple",
@@ -94,6 +92,35 @@ function configForPreset(preset: PixelFlowPresetName): PixelFlowPlaygroundConfig
 }
 
 const PIXEL_FLOW_DEFAULT_CONFIG = configForPreset("reference-purple");
+
+const CONTROLS: CustomizeControl[] = [
+  { type: "slider", key: "containerWidth", label: "Width", min: 0, max: 1400, step: 10, unit: "px", group: "Content" },
+  { type: "slider", key: "containerHeight", label: "Height", min: 0, max: 900, step: 10, unit: "px", group: "Content" },
+  { type: "slider", key: "pixelSize", label: "Pixel size", min: 1, max: 12, step: 0.5, unit: "px", group: "Pixel grid" },
+  { type: "slider", key: "ditherStrength", label: "Dithering", min: 0, max: 1, step: 0.01, group: "Pixel grid" },
+  { type: "slider", key: "dotStrength", label: "Dot strength", min: 0, max: 1, step: 0.01, group: "Pixel grid" },
+  { type: "slider", key: "speed", label: "Speed", min: 0, max: 2, step: 0.05, unit: "x", group: "Motion" },
+  { type: "slider", key: "warpStrength", label: "Warp strength", min: 0, max: 2.5, step: 0.05, group: "Motion" },
+  { type: "slider", key: "noiseScale", label: "Noise scale", min: 0.5, max: 6, step: 0.1, group: "Noise" },
+  { type: "slider", key: "octaves", label: "Detail", min: 1, max: 6, step: 1, group: "Noise" },
+  { type: "color", key: "backgroundColor", label: "Background", defaultColor: PIXEL_FLOW_DEFAULT_CONFIG.backgroundColor, group: "Colors" },
+  { type: "color", key: "shadowColor", label: "Shadow", defaultColor: PIXEL_FLOW_DEFAULT_CONFIG.shadowColor, group: "Colors" },
+  { type: "color", key: "primaryColor", label: "Primary", defaultColor: PIXEL_FLOW_DEFAULT_CONFIG.primaryColor, group: "Colors" },
+  { type: "color", key: "electricColor", label: "Electric", defaultColor: PIXEL_FLOW_DEFAULT_CONFIG.electricColor, group: "Colors" },
+  { type: "color", key: "secondaryColor", label: "Secondary", defaultColor: PIXEL_FLOW_DEFAULT_CONFIG.secondaryColor, group: "Colors" },
+  { type: "color", key: "highlightColor", label: "Highlight", defaultColor: PIXEL_FLOW_DEFAULT_CONFIG.highlightColor, group: "Colors" },
+  { type: "slider", key: "brightness", label: "Brightness", min: 0.4, max: 1.6, step: 0.01, group: "Rendering" },
+  { type: "slider", key: "saturation", label: "Saturation", min: 0, max: 2, step: 0.01, group: "Rendering" },
+  { type: "toggle", key: "animate", label: "Animate", group: "Behavior" },
+  { type: "toggle", key: "pauseWhenOffscreen", label: "Pause offscreen", group: "Behavior" },
+  { type: "toggle", key: "respectReducedMotion", label: "Reduced motion", group: "Behavior" },
+  { type: "slider", key: "pixelDensity", label: "Pixel density", min: 0.4, max: 2.5, step: 0.05, advanced: true },
+  { type: "slider", key: "dotSize", label: "Dot size", min: 0, max: 0.6, step: 0.01, advanced: true },
+  { type: "slider", key: "flowStrength", label: "Flow strength", min: 0, max: 2.5, step: 0.05, advanced: true },
+  { type: "slider", key: "contrast", label: "Contrast", min: 0.5, max: 2.5, step: 0.01, advanced: true },
+  { type: "slider", key: "softness", label: "Softness", min: 0, max: 1, step: 0.01, advanced: true },
+  { type: "slider", key: "quality", label: "Quality", min: 0.25, max: 1, step: 0.05, advanced: true },
+];
 
 interface PixelFlowPlaygroundStore {
   config: PixelFlowPlaygroundConfig;
@@ -234,295 +261,21 @@ export function PixelFlowPersonalizePanel() {
   const applyPreset = usePixelFlowPlaygroundStore(
     (state) => state.applyPreset,
   );
-  const resetConfig = usePixelFlowPlaygroundStore(
-    (state) => state.resetConfig,
-  );
-  const [showAdvanced, setShowAdvanced] = useState(false);
-
-  const handleChange = <K extends keyof PixelFlowPlaygroundConfig>(
-    key: K,
-    value: PixelFlowPlaygroundConfig[K],
-  ) => {
-    updateConfig({ [key]: value } as Partial<PixelFlowPlaygroundConfig>);
-  };
 
   return (
-    <div className="h-full overflow-auto [scrollbar-width:thin]">
-      <div className="space-y-6 px-4 pb-10 pt-5">
-        <header className="space-y-2">
-          <p className="text-sm leading-relaxed text-muted-foreground/90">
-            Shape the pixel grid, flow, palette, and render quality in real
-            time.
-          </p>
-        </header>
-
-        <div className="flex justify-end">
-          <button
-            type="button"
-            onClick={resetConfig}
-            className="rounded-md border border-border/40 bg-white/50 px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground transition-colors hover:text-foreground dark:bg-white/[0.03]"
-          >
-            Reset
-          </button>
-        </div>
-
-        <div className="space-y-3">
-          <PlaygroundSectionTitle>Presets</PlaygroundSectionTitle>
-          <div className="grid grid-cols-2 gap-1.5">
-            {PRESET_ORDER.map((preset) => {
-              const active = config.preset === preset;
-              return (
-                <button
-                  key={preset}
-                  type="button"
-                  onClick={() => applyPreset(preset)}
-                  className={cn(
-                    "rounded-md border px-2 py-2 font-mono text-[10px] uppercase tracking-wide transition-colors",
-                    active
-                      ? "border-foreground/25 text-foreground shadow-sm"
-                      : "border-border/40 text-muted-foreground hover:text-foreground",
-                  )}
-                >
-                  {PRESET_LABELS[preset]}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        <div className="space-y-3">
-          <PlaygroundSectionTitle>Content</PlaygroundSectionTitle>
-          <PlaygroundSlider
-            label="Width (0 = fill)"
-            min={0}
-            max={1400}
-            step={10}
-            value={config.containerWidth}
-            unit="px"
-            onChange={(value) => handleChange("containerWidth", value)}
-          />
-          <PlaygroundSlider
-            label="Height (0 = fill)"
-            min={0}
-            max={900}
-            step={10}
-            value={config.containerHeight}
-            unit="px"
-            onChange={(value) => handleChange("containerHeight", value)}
-          />
-        </div>
-
-        <div className="space-y-3">
-          <PlaygroundSectionTitle>Pixel Grid</PlaygroundSectionTitle>
-          <PlaygroundSlider
-            label="Pixel size"
-            min={1}
-            max={12}
-            step={0.5}
-            value={config.pixelSize}
-            unit="px"
-            onChange={(value) => handleChange("pixelSize", value)}
-          />
-          <PlaygroundSlider
-            label="Dithering"
-            min={0}
-            max={1}
-            step={0.01}
-            value={config.ditherStrength}
-            onChange={(value) => handleChange("ditherStrength", value)}
-          />
-          <PlaygroundSlider
-            label="Dot strength"
-            min={0}
-            max={1}
-            step={0.01}
-            value={config.dotStrength}
-            onChange={(value) => handleChange("dotStrength", value)}
-          />
-        </div>
-
-        <div className="space-y-3">
-          <PlaygroundSectionTitle>Motion</PlaygroundSectionTitle>
-          <PlaygroundSlider
-            label="Speed"
-            min={0}
-            max={2}
-            step={0.05}
-            value={config.speed}
-            unit="×"
-            onChange={(value) => handleChange("speed", value)}
-          />
-          <PlaygroundSlider
-            label="Warp strength"
-            min={0}
-            max={2.5}
-            step={0.05}
-            value={config.warpStrength}
-            onChange={(value) => handleChange("warpStrength", value)}
-          />
-        </div>
-
-        <div className="space-y-3">
-          <PlaygroundSectionTitle>Noise</PlaygroundSectionTitle>
-          <PlaygroundSlider
-            label="Noise scale"
-            min={0.5}
-            max={6}
-            step={0.1}
-            value={config.noiseScale}
-            onChange={(value) => handleChange("noiseScale", value)}
-          />
-          <PlaygroundSlider
-            label="Detail (octaves)"
-            min={1}
-            max={6}
-            step={1}
-            value={config.octaves}
-            onChange={(value) => handleChange("octaves", value)}
-          />
-        </div>
-
-        <div className="space-y-3">
-          <PlaygroundSectionTitle>Colors</PlaygroundSectionTitle>
-          <PlaygroundColorPicker
-            label="Background"
-            value={config.backgroundColor}
-            onChange={(value) =>
-              value && handleChange("backgroundColor", value)
-            }
-          />
-          <PlaygroundColorPicker
-            label="Shadow"
-            value={config.shadowColor}
-            onChange={(value) => value && handleChange("shadowColor", value)}
-          />
-          <PlaygroundColorPicker
-            label="Primary"
-            value={config.primaryColor}
-            onChange={(value) => value && handleChange("primaryColor", value)}
-          />
-          <PlaygroundColorPicker
-            label="Electric"
-            value={config.electricColor}
-            onChange={(value) => value && handleChange("electricColor", value)}
-          />
-          <PlaygroundColorPicker
-            label="Secondary"
-            value={config.secondaryColor}
-            onChange={(value) => value && handleChange("secondaryColor", value)}
-          />
-          <PlaygroundColorPicker
-            label="Highlight"
-            value={config.highlightColor}
-            onChange={(value) => value && handleChange("highlightColor", value)}
-          />
-        </div>
-
-        <div className="space-y-3">
-          <PlaygroundSectionTitle>Rendering</PlaygroundSectionTitle>
-          <PlaygroundSlider
-            label="Brightness"
-            min={0.4}
-            max={1.6}
-            step={0.01}
-            value={config.brightness}
-            onChange={(value) => handleChange("brightness", value)}
-          />
-          <PlaygroundSlider
-            label="Saturation"
-            min={0}
-            max={2}
-            step={0.01}
-            value={config.saturation}
-            onChange={(value) => handleChange("saturation", value)}
-          />
-        </div>
-
-        <div className="space-y-3">
-          <PlaygroundSectionTitle>Behavior</PlaygroundSectionTitle>
-          <PlaygroundSwitch
-            label="Animate"
-            checked={config.animate}
-            onChange={(value) => handleChange("animate", value)}
-          />
-          <PlaygroundSwitch
-            label="Pause when offscreen"
-            checked={config.pauseWhenOffscreen}
-            onChange={(value) => handleChange("pauseWhenOffscreen", value)}
-          />
-          <PlaygroundSwitch
-            label="Respect reduced motion"
-            checked={config.respectReducedMotion}
-            onChange={(value) => handleChange("respectReducedMotion", value)}
-          />
-        </div>
-
-        <div className="space-y-3">
-          <button
-            type="button"
-            onClick={() => setShowAdvanced((prev) => !prev)}
-            aria-expanded={showAdvanced}
-            className="flex w-full items-center justify-between rounded-md border border-border/70 p-2.5 text-sm text-foreground/90"
-          >
-            Advanced
-            <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-              {showAdvanced ? "Hide" : "Show"}
-            </span>
-          </button>
-          {showAdvanced && (
-            <div className="space-y-3">
-              <PlaygroundSlider
-                label="Pixel density"
-                min={0.4}
-                max={2.5}
-                step={0.05}
-                value={config.pixelDensity}
-                onChange={(value) => handleChange("pixelDensity", value)}
-              />
-              <PlaygroundSlider
-                label="Dot size"
-                min={0}
-                max={0.6}
-                step={0.01}
-                value={config.dotSize}
-                onChange={(value) => handleChange("dotSize", value)}
-              />
-              <PlaygroundSlider
-                label="Flow strength"
-                min={0}
-                max={2.5}
-                step={0.05}
-                value={config.flowStrength}
-                onChange={(value) => handleChange("flowStrength", value)}
-              />
-              <PlaygroundSlider
-                label="Contrast"
-                min={0.5}
-                max={2.5}
-                step={0.01}
-                value={config.contrast}
-                onChange={(value) => handleChange("contrast", value)}
-              />
-              <PlaygroundSlider
-                label="Softness"
-                min={0}
-                max={1}
-                step={0.01}
-                value={config.softness}
-                onChange={(value) => handleChange("softness", value)}
-              />
-              <PlaygroundSlider
-                label="Quality"
-                min={0.25}
-                max={1}
-                step={0.05}
-                value={config.quality}
-                onChange={(value) => handleChange("quality", value)}
-              />
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
+    <CustomizePanel
+      slug="pixel-flow"
+      controls={CONTROLS}
+      values={config}
+      defaults={PIXEL_FLOW_DEFAULT_CONFIG}
+      onChange={bindCustomizeUpdate(updateConfig)}
+      onReset={() => usePlaygroundStore.getState().resetPreview("pixel-flow")}
+      presets={PRESET_ORDER.map((preset) => ({
+        label: PRESET_LABELS[preset],
+        value: preset,
+      }))}
+      activePreset={config.preset}
+      onPresetChange={(preset) => applyPreset(preset as PixelFlowPresetName)}
+    />
   );
 }

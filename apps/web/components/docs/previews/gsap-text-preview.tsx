@@ -3,13 +3,8 @@
 import * as React from "react";
 import { create } from "zustand";
 import { KineticText, type KineticTextDirection } from "@workspace/ui/components/gsap-text";
-import { cn } from "@/lib/utils";
 import { configEquals, usePlaygroundStore } from "@/hooks/use-playground-store";
-import {
-  PlaygroundInput,
-  PlaygroundSectionTitle,
-  PlaygroundSlider,
-} from "@/components/playground-primitives";
+import { CustomizePanel, type CustomizeControl } from "@/components/customize-panel";
 
 // ─────────────────────────────────────────────────────────────
 // Store — canonical KineticText props, exact Framer reference
@@ -101,95 +96,50 @@ export function GSAPTextPreview() {
 // Personalize panel
 // ─────────────────────────────────────────────────────────────
 
-const DIRECTIONS: Array<{ label: string; value: KineticTextDirection }> = [
-  { label: "Up", value: "up" },
-  { label: "Down", value: "down" },
-  { label: "Both", value: "both" },
+const CONTROLS: CustomizeControl[] = [
+  { type: "text", key: "text", label: "Content", placeholder: "DAVINCIUI", maxLength: 32 },
+  { type: "slider", key: "layerCount", label: "Layers", min: 1, max: 30, step: 1 },
+  { type: "slider", key: "distance", label: "Distance", min: 40, max: 500, step: 10, unit: "px" },
+  { type: "slider", key: "duration", label: "Duration", min: 0.5, max: 12, step: 0.5, unit: "s" },
+  {
+    type: "select",
+    key: "direction",
+    label: "Direction",
+    options: [
+      { label: "Up", value: "up" },
+      { label: "Down", value: "down" },
+      { label: "Both", value: "both" },
+    ],
+  },
 ];
 
 export function GSAPTextPersonalizePanel() {
   const config = useKineticTextPlayground((s) => s.config);
   const update = useKineticTextPlayground((s) => s.updateConfig);
-  const reset = useKineticTextPlayground((s) => s.resetConfig);
+  const activePreset = PRESETS.find(
+    (p) => p.config.text === config.text && p.config.direction === config.direction,
+  )?.name;
 
   return (
-    <div className="h-full overflow-auto bg-background [scrollbar-width:thin]">
-      <div className="space-y-7 px-4 pb-10 pt-5">
-        <header className="space-y-2">
-          <p className="text-sm leading-relaxed text-muted-foreground/90">
-            Tune the kinetic text — layers, distance and duration control the overlapping motion.
-          </p>
-        </header>
-
-        <div className="flex justify-end">
-          <button
-            type="button"
-            onClick={reset}
-            className="rounded-md border border-border/40 px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground hover:text-foreground"
-          >
-            Reset
-          </button>
-        </div>
-
-        <div>
-          <PlaygroundSectionTitle>Presets</PlaygroundSectionTitle>
-          <div className="grid grid-cols-3 gap-1.5">
-            {PRESETS.map((p) => {
-              const active = p.config.text === config.text && p.config.direction === config.direction;
-              return (
-                <button
-                  key={p.name}
-                  type="button"
-                  onClick={() => update({ ...p.config })}
-                  className={cn(
-                    "rounded-md border px-2 py-2 font-mono text-[10px] uppercase tracking-wide",
-                    active ? "border-foreground/25 text-foreground shadow-sm" : "border-border/70 text-muted-foreground",
-                  )}
-                >
-                  {p.name}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        <div>
-          <PlaygroundSectionTitle>Content</PlaygroundSectionTitle>
-          <PlaygroundInput
-            value={config.text}
-            onChange={(e) => update({ text: e.target.value.slice(0, 32) || "DAVINCIUI" })}
-            placeholder="DAVINCIUI"
-          />
-        </div>
-
-        <div className="space-y-4">
-          <PlaygroundSectionTitle>Kinetic text</PlaygroundSectionTitle>
-          <PlaygroundSlider label="Layers" min={1} max={30} step={1} value={config.layerCount} onChange={(v) => update({ layerCount: v })} />
-          <PlaygroundSlider label="Distance" min={40} max={500} step={10} value={config.distance} unit="px" onChange={(v) => update({ distance: v })} />
-          <PlaygroundSlider label="Duration" min={0.5} max={12} step={0.5} value={config.duration} unit="s" onChange={(v) => update({ duration: v })} />
-        </div>
-
-        <div>
-          <PlaygroundSectionTitle>Direction</PlaygroundSectionTitle>
-          <div className="grid grid-cols-3 gap-1.5">
-            {DIRECTIONS.map((d) => (
-              <button
-                key={d.value}
-                type="button"
-                onClick={() => update({ direction: d.value })}
-                className={cn(
-                  "rounded-md border px-2 py-2 font-mono text-[10px] uppercase tracking-wide",
-                  config.direction === d.value
-                    ? "border-foreground/25 text-foreground shadow-sm"
-                    : "border-border/70 text-muted-foreground",
-                )}
-              >
-                {d.label}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
+    <CustomizePanel
+      slug="gsap-text"
+      controls={CONTROLS}
+      values={config}
+      defaults={DEFAULT_CONFIG}
+      onChange={(key, value) => {
+        if (key === "text") {
+          update({ text: String(value).slice(0, 32) || "DAVINCIUI" });
+        } else {
+          update({ [key]: value } as Partial<KineticTextPlaygroundConfig>);
+        }
+      }}
+      onReset={() => usePlaygroundStore.getState().resetPreview("gsap-text")}
+      presets={PRESETS.map((p) => ({ label: p.name, value: p.name }))}
+      activePreset={activePreset}
+      onPresetChange={(name) => {
+        const preset = PRESETS.find((p) => p.name === name);
+        if (preset) update({ ...preset.config });
+      }}
+    />
   );
 }

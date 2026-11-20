@@ -72,6 +72,18 @@ export const CONTENTFUL_PREVIEW_SLUGS = new Set([
   "interactive-media-accordion",
   "cms-scroll-gallery",
   "stacked-scroll-gallery",
+  "circular-gallery",
+  "arcwave-carousel",
+  "streamline-carousel",
+  "depth-carousel-3d",
+  "curve-wall",
+  "crumpled-paper-reveal",
+  "tilt-flip-polaroid",
+  "liquid-reveal-button",
+  "glass-scene-dock",
+  "nudge-button",
+  "team-slide-reveal",
+  "fanned-deck",
 ]);
 
 function absoluteAssetUrl(url: string) {

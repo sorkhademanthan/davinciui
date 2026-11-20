@@ -34,11 +34,12 @@ export function SiteHeader({ sidebarToggle, landingGutter }: SiteHeaderProps) {
     const [isScrolled, setIsScrolled] = React.useState(false)
 
     // Personalize entry point: a docs preview registers its playground
-    // panel in the doc store; the header offers the same drawer globally.
+    // panel in the doc store; the header jumps to the inline panel.
     const personalizeContent = useDocStore((state) => state.personalizeContent)
-    const personalizeOpen = useDocStore((state) => state.personalizeOpen)
-    const setPersonalizeOpen = useDocStore((state) => state.setPersonalizeOpen)
     const hasPersonalize = personalizeContent != null
+    const scrollToPersonalize = React.useCallback(() => {
+        document.getElementById("controls")?.scrollIntoView({ behavior: "smooth", block: "start" })
+    }, [])
 
     React.useEffect(() => {
         setMobileNavOpen(false)
@@ -156,7 +157,6 @@ export function SiteHeader({ sidebarToggle, landingGutter }: SiteHeaderProps) {
         { href: "/design-system", label: "Design System", active: isDesignSystemActive },
         { href: "/blocks", label: "Blocks", active: pathname.startsWith("/blocks") || pathname.startsWith("/experience/blocks") },
         { href: "/docs/mcp", label: "MCP", active: pathname.startsWith("/docs/mcp") },
-        { href: "/sponsors", label: "Sponsors", active: pathname === "/sponsors" },
     ] as const
 
     return (
@@ -244,14 +244,10 @@ export function SiteHeader({ sidebarToggle, landingGutter }: SiteHeaderProps) {
                                 <div className="hidden h-4 w-px bg-foreground/15 dark:bg-foreground/20 sm:block" />
                                 <button
                                     type="button"
-                                    onClick={() => setPersonalizeOpen(!personalizeOpen)}
-                                    aria-label="Personalize"
-                                    title="Personalize"
-                                    aria-expanded={personalizeOpen}
-                                    className={cn(
-                                        "hidden h-10 w-10 items-center justify-center rounded-lg border border-transparent transition-shadow hover:bg-accent sm:inline-flex",
-                                        personalizeOpen && "bg-accent"
-                                    )}
+                                    onClick={scrollToPersonalize}
+                                    aria-label="Customize"
+                                    title="Customize"
+                                    className="hidden h-10 w-10 items-center justify-center rounded-lg border border-transparent transition-shadow hover:bg-accent sm:inline-flex"
                                 >
                                     <SlidersHorizontal className="size-4 opacity-80" />
                                 </button>
@@ -306,17 +302,16 @@ export function SiteHeader({ sidebarToggle, landingGutter }: SiteHeaderProps) {
                             <span>Appearance</span>
                             <ThemeToggle className="h-11 w-11" />
                         </div>
-                        {hasPersonalize && (
+                            {hasPersonalize && (
                             <button
                                 type="button"
                                 onClick={() => {
                                     setMobileNavOpen(false)
-                                    setPersonalizeOpen(true)
+                                    scrollToPersonalize()
                                 }}
-                                aria-expanded={personalizeOpen}
                                 className="flex items-center justify-between rounded-lg px-3 py-2 text-base"
                             >
-                                <span>Personalize</span>
+                                <span>Customize</span>
                                 <SlidersHorizontal className="size-4 opacity-60" />
                             </button>
                         )}

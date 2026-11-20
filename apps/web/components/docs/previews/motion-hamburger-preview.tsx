@@ -4,14 +4,13 @@ import * as React from "react";
 import { create } from "zustand";
 import { useTheme } from "next-themes";
 import { MotionHamburger } from "@workspace/ui/components/motion/motion-hamburger";
-import {
-  PlaygroundColorPicker,
-  PlaygroundSectionTitle,
-  PlaygroundSlider,
-  PlaygroundSwitch,
-} from "@/components/playground-primitives";
 import { cn } from "@/lib/utils";
 import { configEquals, usePlaygroundStore } from "@/hooks/use-playground-store";
+import {
+  CustomizePanel,
+  bindCustomizeUpdate,
+  type CustomizeControl,
+} from "@/components/customize-panel";
 
 type MotionHamburgerConfig = {
   startOpen: boolean;
@@ -36,6 +35,18 @@ const DEFAULT_CONFIG: MotionHamburgerConfig = {
   ringPadding: 6,
   hoverGrowth: 1.05,
 };
+
+const CONTROLS: CustomizeControl[] = [
+  { type: "toggle", key: "startOpen", label: "Start open", group: "State" },
+  { type: "slider", key: "size", label: "Size", min: 24, max: 240, step: 1, unit: "px", group: "Icon" },
+  { type: "slider", key: "thickness", label: "Line thickness", min: 1, max: 8, step: 0.1, group: "Icon" },
+  { type: "color", key: "color", label: "Icon color", defaultColor: "#FFFFFF", group: "Icon" },
+  { type: "toggle", key: "showRing", label: "Show ring", group: "Ring" },
+  { type: "color", key: "ringColor", label: "Ring color", defaultColor: "#FFFFFF", group: "Ring" },
+  { type: "slider", key: "ringThickness", label: "Ring thickness", min: 0.5, max: 8, step: 0.1, group: "Ring" },
+  { type: "slider", key: "ringPadding", label: "Ring padding", min: 0, max: 32, step: 1, unit: "px", group: "Ring" },
+  { type: "slider", key: "hoverGrowth", label: "Hover growth", min: 1, max: 1.3, step: 0.01, group: "Hover" },
+];
 
 const useMotionHamburgerStore = create<{
   config: MotionHamburgerConfig;
@@ -139,107 +150,15 @@ export function MotionHamburgerPreview() {
 export function MotionHamburgerPersonalizePanel() {
   const config = useMotionHamburgerStore((state) => state.config);
   const update = useMotionHamburgerStore((state) => state.update);
-  const reset = useMotionHamburgerStore((state) => state.reset);
 
   return (
-    <div className="h-full overflow-auto bg-background [scrollbar-width:thin]">
-      <div className="space-y-7 px-4 pb-12 pt-5">
-        <header className="space-y-2">
-          <p className="text-sm leading-relaxed text-muted-foreground/90">
-            Tune the icon size, stroke, ring, and hover feel.
-          </p>
-        </header>
-
-        <div className="flex justify-end">
-          <button
-            type="button"
-            onClick={reset}
-            className="rounded-md border border-border/60 px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            Reset
-          </button>
-        </div>
-
-        <section className="space-y-3">
-          <PlaygroundSectionTitle>State</PlaygroundSectionTitle>
-          <PlaygroundSwitch
-            label="Start open"
-            checked={config.startOpen}
-            onChange={(startOpen) => update({ startOpen })}
-          />
-        </section>
-
-        <section className="space-y-3">
-          <PlaygroundSectionTitle>Icon</PlaygroundSectionTitle>
-          <PlaygroundSlider
-            label="Size"
-            value={config.size}
-            min={24}
-            max={240}
-            step={1}
-            unit="px"
-            onChange={(size) => update({ size })}
-          />
-          <PlaygroundSlider
-            label="Line Thickness"
-            value={config.thickness}
-            min={1}
-            max={8}
-            step={0.1}
-            onChange={(thickness) => update({ thickness })}
-          />
-          <PlaygroundColorPicker
-            label="Icon Color"
-            value={config.color}
-            defaultColor="#FFFFFF"
-            onChange={(color) => update({ color })}
-          />
-        </section>
-
-        <section className="space-y-3">
-          <PlaygroundSectionTitle>Ring</PlaygroundSectionTitle>
-          <PlaygroundSwitch
-            label="Show Ring"
-            checked={config.showRing}
-            onChange={(showRing) => update({ showRing })}
-          />
-          <PlaygroundColorPicker
-            label="Ring Color"
-            value={config.ringColor}
-            defaultColor="#FFFFFF"
-            onChange={(ringColor) => update({ ringColor })}
-          />
-          <PlaygroundSlider
-            label="Ring Thickness"
-            value={config.ringThickness}
-            min={0.5}
-            max={8}
-            step={0.1}
-            onChange={(ringThickness) => update({ ringThickness })}
-          />
-          <PlaygroundSlider
-            label="Ring Padding"
-            value={config.ringPadding}
-            min={0}
-            max={32}
-            step={1}
-            unit="px"
-            onChange={(ringPadding) => update({ ringPadding })}
-          />
-        </section>
-
-        <section className="space-y-3">
-          <PlaygroundSectionTitle>Hover</PlaygroundSectionTitle>
-          <PlaygroundSlider
-            label="Hover Growth"
-            value={config.hoverGrowth}
-            min={1}
-            max={1.3}
-            step={0.01}
-            onChange={(hoverGrowth) => update({ hoverGrowth })}
-          />
-        </section>
-      </div>
-    </div>
+    <CustomizePanel
+      slug="motion-hamburger"
+      controls={CONTROLS}
+      values={config}
+      defaults={DEFAULT_CONFIG}
+      onChange={bindCustomizeUpdate(update)}
+      onReset={() => usePlaygroundStore.getState().resetPreview("motion-hamburger")}
+    />
   );
 }

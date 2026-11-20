@@ -5,12 +5,10 @@ import { create } from "zustand";
 import { TextVideoMask } from "@workspace/ui/components/text-video-mask";
 import { configEquals, usePlaygroundStore } from "@/hooks/use-playground-store";
 import {
-  PlaygroundColorPicker,
-  PlaygroundInput,
-  PlaygroundSectionTitle,
-  PlaygroundSlider,
-} from "@/components/playground-primitives";
-import { cn } from "@/lib/utils";
+  CustomizePanel,
+  bindCustomizeUpdate,
+  type CustomizeControl,
+} from "@/components/customize-panel";
 
 export const TEXT_VIDEO_MASK_SAMPLE_VIDEO =
   "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4";
@@ -36,6 +34,15 @@ const DEFAULT_CONFIG: TextVideoMaskConfig = {
 };
 
 const VIDEO_FIT_OPTIONS: VideoFitOption[] = ["cover", "contain", "fill"];
+
+const CONTROLS: CustomizeControl[] = [
+  { type: "text", key: "text", label: "Message", placeholder: "DAVINCI.", maxLength: 24, group: "Content" },
+  { type: "select", key: "videoFit", label: "Video fit", options: VIDEO_FIT_OPTIONS.map((option) => ({ label: option.charAt(0).toUpperCase() + option.slice(1), value: option })), group: "Video" },
+  { type: "slider", key: "positionX", label: "Position X", min: 0, max: 100, step: 1, unit: "%", group: "Video position" },
+  { type: "slider", key: "positionY", label: "Position Y", min: 0, max: 100, step: 1, unit: "%", group: "Video position" },
+  { type: "color", key: "backgroundColor", label: "Background", defaultColor: DEFAULT_CONFIG.backgroundColor, group: "Colors" },
+  { type: "color", key: "fallbackColor", label: "Fallback text", defaultColor: DEFAULT_CONFIG.fallbackColor, group: "Colors" },
+];
 
 interface TextVideoMaskStore {
   config: TextVideoMaskConfig;
@@ -123,100 +130,24 @@ export function TextVideoMaskPlayground() {
 export function TextVideoMaskPersonalizePanel() {
   const config = useTextVideoMaskStore((state) => state.config);
   const updateConfig = useTextVideoMaskStore((state) => state.updateConfig);
-  const resetConfig = useTextVideoMaskStore((state) => state.resetConfig);
+  const applyControlUpdate = bindCustomizeUpdate(updateConfig);
 
   return (
-    <div className="h-full overflow-auto bg-background [scrollbar-width:thin]">
-      <div className="space-y-7 px-4 pb-10 pt-5">
-        <header className="space-y-2">
-          <p className="text-sm leading-relaxed text-muted-foreground/90">
-            Set the mask text, footage fit and which area of the video shows
-            through the glyphs.
-          </p>
-        </header>
-
-        <div className="flex justify-end">
-          <button
-            type="button"
-            onClick={resetConfig}
-            className="rounded-md border border-border/40 px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground transition-colors hover:text-foreground"
-          >
-            Reset
-          </button>
-        </div>
-
-        <div>
-          <PlaygroundSectionTitle>Message</PlaygroundSectionTitle>
-          <PlaygroundInput
-            value={config.text}
-            onChange={(event) =>
-              updateConfig({
-                text: event.target.value.slice(0, 24) || "DAVINCI.",
-              })
-            }
-            placeholder="DAVINCI."
-          />
-        </div>
-
-        <div className="space-y-3">
-          <PlaygroundSectionTitle>Video Fit</PlaygroundSectionTitle>
-          <div className="grid grid-cols-3 gap-1.5">
-            {VIDEO_FIT_OPTIONS.map((option) => (
-              <button
-                key={option}
-                type="button"
-                onClick={() => updateConfig({ videoFit: option })}
-                className={cn(
-                  "rounded-md border px-2 py-2 text-xs font-semibold capitalize transition-colors",
-                  config.videoFit === option
-                    ? "border-foreground/60 bg-foreground text-background"
-                    : "border-border/70 text-muted-foreground hover:text-foreground",
-                )}
-              >
-                {option}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="space-y-4">
-          <PlaygroundSectionTitle>Video Position</PlaygroundSectionTitle>
-          <PlaygroundSlider
-            label="Position X"
-            min={0}
-            max={100}
-            step={1}
-            value={config.positionX}
-            unit="%"
-            onChange={(positionX) => updateConfig({ positionX })}
-          />
-          <PlaygroundSlider
-            label="Position Y"
-            min={0}
-            max={100}
-            step={1}
-            value={config.positionY}
-            unit="%"
-            onChange={(positionY) => updateConfig({ positionY })}
-          />
-        </div>
-
-        <div className="space-y-3">
-          <PlaygroundSectionTitle>Colors</PlaygroundSectionTitle>
-          <PlaygroundColorPicker
-            label="Background"
-            value={config.backgroundColor}
-            onChange={(backgroundColor) => updateConfig({ backgroundColor })}
-            defaultColor="#000000"
-          />
-          <PlaygroundColorPicker
-            label="Fallback text"
-            value={config.fallbackColor}
-            onChange={(fallbackColor) => updateConfig({ fallbackColor })}
-            defaultColor="#FFFFFF"
-          />
-        </div>
-      </div>
-    </div>
+    <CustomizePanel
+      slug="text-video-mask"
+      controls={CONTROLS}
+      values={config}
+      defaults={DEFAULT_CONFIG}
+      onChange={(key, value) => {
+        if (key === "text") {
+          updateConfig({ text: String(value) || "DAVINCI." });
+        } else {
+          applyControlUpdate(key, value);
+        }
+      }}
+      onReset={() =>
+        usePlaygroundStore.getState().resetPreview("text-video-mask")
+      }
+    />
   );
 }

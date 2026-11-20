@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useState, useMemo } from "react";
+import { Suspense, useEffect, useState, useMemo, type ReactNode } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Search, ArrowUpRight } from "lucide-react";
@@ -13,6 +13,7 @@ import {
 } from "@/components/docs/previews/basic-component-card-slugs";
 import { components, sortByFeatured, getFeaturedRank } from "@/registry";
 import { BASIC_GROUPS, BASIC_SUBS } from "@/lib/component-groups";
+import { useInViewport } from "@/hooks/use-in-viewport";
 import { cn } from "@/lib/utils";
 
 const BASIC_SLUGS: Record<string, string[]> = BASIC_GROUPS;
@@ -100,48 +101,68 @@ function GalleryCardMedia({
   className: string;
 }) {
   const cms = useContentfulPreviewSource(slug);
+  const sources = getPreviewSources(previewVideo);
+  const { ref, inView } = useInViewport({ rootMargin: "160px 0px" });
+  let media: ReactNode = null;
+
   if (cms) {
-    return (
+    if (inView) {
+      media = (
+        <video
+          key={cms.src}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          className="absolute inset-0 size-full object-cover"
+          aria-hidden="true"
+        >
+          <source src={cms.src} type="video/mp4" />
+        </video>
+      );
+    }
+  } else if (sources && inView) {
+    media = (
       <video
-        key={cms.src}
         autoPlay
         muted
         loop
         playsInline
         preload="metadata"
-        className={className}
-        aria-hidden="true"
+        className="absolute inset-0 size-full object-cover"
       >
-        <source src={cms.src} type="video/mp4" />
-      </video>
-    );
-  }
-
-  const sources = getPreviewSources(previewVideo);
-  if (sources) {
-    return (
-      <video autoPlay muted loop playsInline preload="metadata" className={className}>
         <source src={sources.webm} type="video/webm" />
         <source src={sources.mp4} type="video/mp4" />
       </video>
     );
+  } else if (previewImage) {
+    media = (
+      <img
+        src={previewImage}
+        alt={title}
+        className="absolute inset-0 size-full object-cover"
+        loading="lazy"
+        decoding="async"
+      />
+    );
+  } else if (hasLiveCardPreview(slug) && inView) {
+    media = <ComponentCardLivePreview slug={slug} />;
   }
-  if (previewImage) {
-    return <img src={previewImage} alt={title} className={className} />;
-  }
-  if (hasLiveCardPreview(slug)) {
-    return <ComponentCardLivePreview slug={slug} />;
-  }
-  return (
-    <div
-      className={cn(
-        "absolute inset-0 flex items-center justify-center bg-gradient-to-br from-zinc-900/[0.04] via-transparent to-transparent dark:from-white/[0.04]",
-        className.includes("aspect-video") ? "" : "",
-      )}
-    >
-      <div className="flex size-10 items-center justify-center rounded-xl bg-zinc-900 text-xs font-mono text-white shadow-sm dark:bg-white dark:text-zinc-900">
-        {title.slice(0, 2).toUpperCase()}
+
+  if (!media) {
+    media = (
+      <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-zinc-900/[0.04] via-transparent to-transparent dark:from-white/[0.04]">
+        <div className="flex size-10 items-center justify-center rounded-xl bg-zinc-900 text-xs font-mono text-white shadow-sm dark:bg-white dark:text-zinc-900">
+          {title.slice(0, 2).toUpperCase()}
+        </div>
       </div>
+    );
+  }
+
+  return (
+    <div ref={ref} className={cn(className, "overflow-hidden")}>
+      {media}
     </div>
   );
 }
@@ -386,7 +407,10 @@ function ComponentsGallery() {
 
   // Slugs hidden from the gallery grid. The components themselves (docs,
   // registry, source) stay intact — they just don't get a card here.
-  const HIDDEN_SLUGS = useMemo(() => new Set(["liquid-chrome"]), []);
+  const HIDDEN_SLUGS = useMemo(
+    () => new Set(["liquid-chrome", "animated-pill-button", "hover-transition"]),
+    [],
+  );
 
   const filtered = useMemo(() => {
     const matches = all.filter((c) => {

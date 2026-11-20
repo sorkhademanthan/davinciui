@@ -1,8 +1,6 @@
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import { ArcwaveCarouselPreview } from "@/components/docs/previews/arcwave-carousel-preview";
-import { arcwaveCarouselDemoItems } from "@/components/docs/previews/arcwave-carousel-items";
 import { readComponentSource } from "@/lib/source-code";
-import { ArcwaveCarousel } from "@workspace/ui/components/arcwave-carousel";
 
 const defaultCode = `import { ArcwaveCarousel } from "@/components/ui/arcwave-carousel"
 
@@ -88,80 +86,7 @@ export async function ArcwaveCarouselDocs() {
       installSourceFilename="components/ui/arcwave-carousel.tsx"
       usageCode={usageCode}
       fullWidthPreview
-      examples={[
-        {
-          title: "Step autoplay with always-on captions",
-          preview: (
-            <div className="relative h-[420px] w-full overflow-hidden rounded-xl bg-[#0a0a0a] dark:bg-black [--aw-stage:#0a0a0a] dark:[--aw-stage:#000]">
-              <ArcwaveCarousel
-                slides={arcwaveCarouselDemoItems}
-                background="var(--aw-stage, #0a0a0a)"
-                cardSizeMode="fillHeight"
-                heightPercent={78}
-                captionMode="always"
-                autoplay
-                autoplayMode="step"
-                stepInterval={2.4}
-                cornerRadius={8}
-                className="h-full min-h-0"
-              />
-            </div>
-          ),
-          code: `import { ArcwaveCarousel } from "@/components/ui/arcwave-carousel"
-
-<div className="h-[420px] w-full bg-[#0a0a0a] dark:bg-black">
-  <ArcwaveCarousel
-    slides={slides}
-    background="#0a0a0a"
-    cardSizeMode="fillHeight"
-    heightPercent={78}
-    captionMode="always"
-    autoplay
-    autoplayMode="step"
-    stepInterval={2.4}
-    cornerRadius={8}
-    className="h-full"
-  />
-</div>`,
-        },
-        {
-          title: "Snapped interaction, no autoplay",
-          preview: (
-            <div className="relative h-[420px] w-full overflow-hidden rounded-xl bg-[#0a0a0a] dark:bg-black [--aw-stage:#0a0a0a] dark:[--aw-stage:#000]">
-              <ArcwaveCarousel
-                slides={arcwaveCarouselDemoItems.slice(0, 8)}
-                background="var(--aw-stage, #0a0a0a)"
-                cardSizeMode="fillHeight"
-                heightPercent={70}
-                snap
-                autoplay={false}
-                captionMode="center"
-                gap={10}
-                cornerRadius={12}
-                sideBlur={3}
-                className="h-full min-h-0"
-              />
-            </div>
-          ),
-          code: `import { ArcwaveCarousel } from "@/components/ui/arcwave-carousel"
-
-<div className="h-[420px] w-full bg-[#0a0a0a] dark:bg-black">
-  <ArcwaveCarousel
-    slides={slides}
-    background="#0a0a0a"
-    cardSizeMode="fillHeight"
-    heightPercent={70}
-    snap
-    autoplay={false}
-    captionMode="center"
-    gap={10}
-    cornerRadius={12}
-    sideBlur={3}
-    className="h-full"
-  />
-</div>`,
-        },
-      ]}
+      examples={[]}
       props={[
         {
           name: "slides",

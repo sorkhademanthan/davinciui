@@ -66,9 +66,10 @@ interface SectionProps {
   className?: string
   /** h2 for top-level sections (bordered, shadcn docs style), h3 for examples. */
   level?: 2 | 3
+  hideFromToc?: boolean
 }
 
-export function Section({ title, children, id, step, className, level = 2 }: SectionProps) {
+export function Section({ title, children, id, step, className, level = 2, hideFromToc }: SectionProps) {
   const sectionId = id || title.toLowerCase().replace(/\s+/g, "-")
 
   if (level === 3) {
@@ -77,6 +78,7 @@ export function Section({ title, children, id, step, className, level = 2 }: Sec
         className={cn("scroll-mt-20", className)}
         id={sectionId}
         data-section-title={title}
+        data-toc-ignore={hideFromToc ? "" : undefined}
       >
         <h3 className="group flex scroll-m-20 items-center gap-2 text-lg font-semibold tracking-tight">
           {title}
@@ -101,6 +103,7 @@ export function Section({ title, children, id, step, className, level = 2 }: Sec
       className={cn("scroll-mt-20", className)}
       id={sectionId}
       data-section-title={title}
+      data-toc-ignore={hideFromToc ? "" : undefined}
     >
       {/* shadcn docs h2: semibold tracking-tight with bottom border + hover anchor */}
       <div className="border-b pb-2">

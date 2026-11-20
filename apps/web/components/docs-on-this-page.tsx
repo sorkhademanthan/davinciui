@@ -18,6 +18,7 @@ function collectSections(main: HTMLElement): TocItem[] {
 
   const seen = new Set<string>()
   return candidates.flatMap((candidate) => {
+    if (candidate.matches("[data-toc-ignore]")) return []
     if (candidate.matches("h2")) {
       // A Section already supplies its own title. Ignore headings inside
       // examples and only use the leading heading of a semantic section.
@@ -31,8 +32,6 @@ function collectSections(main: HTMLElement): TocItem[] {
     const target = candidate.matches("h2") ? candidate.closest("section") || candidate : candidate
     const id = target.id || candidate.id || slugify(title)
     if (!id || seen.has(id)) return []
-    if (!target.id) target.id = id
-    target.classList.add("scroll-mt-24")
     seen.add(id)
     return [{ id, title, depth: candidate.querySelector("h2, h3")?.tagName === "H3" ? 3 : 2, element: target }]
   })
@@ -85,7 +84,8 @@ export function DocsOnThisPage() {
       }
       let current = nextItems[0]?.id || ""
       for (const item of nextItems) {
-        if (item.element.getBoundingClientRect().top <= effThreshold) current = item.id
+        const top = document.getElementById(item.id)?.getBoundingClientRect().top
+        if (top !== undefined && top <= effThreshold) current = item.id
         else break
       }
       // At the absolute bottom the final section often sits below even the
@@ -153,7 +153,7 @@ export function DocsOnThisPage() {
     selectedId.current = item.id
     setActiveId(item.id)
     window.history.pushState(null, "", `#${item.id}`)
-    item.element.scrollIntoView({
+    document.getElementById(item.id)?.scrollIntoView({
       behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
       block: "start",
     })

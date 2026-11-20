@@ -3,13 +3,12 @@
 import { useEffect } from "react";
 import { create } from "zustand";
 import { TextMorph } from "@workspace/ui/components/text-morph";
-import { cn } from "@/lib/utils";
 import { configEquals, usePlaygroundStore } from "@/hooks/use-playground-store";
 import {
-  PlaygroundInput,
-  PlaygroundSectionTitle,
-  PlaygroundSlider,
-} from "@/components/playground-primitives";
+  CustomizePanel,
+  bindCustomizeUpdate,
+  type CustomizeControl,
+} from "@/components/customize-panel";
 
 interface TextMorphPlaygroundConfig {
   words: string[];
@@ -28,6 +27,12 @@ const PRESETS = [
   { name: "Metrics", words: ["1.2K", "8.4K", "25K"] },
   { name: "Pricing", words: ["$29", "$49", "$99"] },
 ] as const;
+
+const CONTROLS: CustomizeControl[] = [
+  { type: "text", key: "words", label: "Values", placeholder: "DAVINCIUI, COMPONENTS", group: "Content" },
+  { type: "slider", key: "interval", label: "Rest interval", min: 800, max: 5000, step: 100, unit: "ms", group: "Timing" },
+  { type: "slider", key: "morphDuration", label: "Morph duration", min: 280, max: 1200, step: 20, unit: "ms", group: "Timing" },
+];
 
 interface TextMorphPlaygroundStore {
   config: TextMorphPlaygroundConfig;
@@ -81,93 +86,44 @@ export function TextMorphPlayground() {
 export function TextMorphPersonalizePanel() {
   const config = useTextMorphPlayground((state) => state.config);
   const updateConfig = useTextMorphPlayground((state) => state.updateConfig);
-  const resetConfig = useTextMorphPlayground((state) => state.resetConfig);
+  const applyControlUpdate = bindCustomizeUpdate(updateConfig);
+  const values = { ...config, words: config.words.join(", ") };
+  const defaults = {
+    ...DEFAULT_CONFIG,
+    words: DEFAULT_CONFIG.words.join(", "),
+  };
+  const activePreset =
+    PRESETS.find((preset) => preset.words.join("|") === config.words.join("|"))
+      ?.name ?? "Custom";
 
   return (
-    <div className="h-full overflow-auto bg-background [scrollbar-width:thin]">
-      <div className="space-y-7 px-4 pb-10 pt-5">
-        <header className="space-y-2">
-          <p className="text-sm leading-relaxed text-muted-foreground/90">
-            Choose the content and timing. Typography comes from the surrounding
-            interface.
-          </p>
-        </header>
-
-        <div className="flex justify-end">
-          <button
-            type="button"
-            onClick={resetConfig}
-            className="rounded-md border border-border/40 px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground transition-colors hover:text-foreground"
-          >
-            Reset
-          </button>
-        </div>
-
-        <div>
-          <PlaygroundSectionTitle>Presets</PlaygroundSectionTitle>
-          <div className="grid grid-cols-3 gap-1.5">
-            {PRESETS.map((preset) => {
-              const active = preset.words.join("|") === config.words.join("|");
-              return (
-                <button
-                  key={preset.name}
-                  type="button"
-                  onClick={() => updateConfig({ words: [...preset.words] })}
-                  className={cn(
-                    "rounded-md border px-2 py-2 font-mono text-[10px] uppercase tracking-wide transition-colors",
-                    active
-                      ? "border-foreground/25 text-foreground shadow-sm"
-                      : "border-border/70 text-muted-foreground",
-                  )}
-                >
-                  {preset.name}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        <div>
-          <PlaygroundSectionTitle>Values</PlaygroundSectionTitle>
-          <PlaygroundInput
-            value={config.words.join(", ")}
-            onChange={(event) => {
-              const words = event.target.value
-                .split(",")
-                .map((word) => word.trim())
-                .filter(Boolean)
-                .slice(0, 6);
-              updateConfig({ words: words.length > 0 ? words : [""] });
-            }}
-            placeholder="DAVINCIUI, COMPONENTS"
-          />
-          <p className="mt-2 text-[11px] leading-5 text-muted-foreground">
-            Separate up to six values with commas.
-          </p>
-        </div>
-
-        <div className="space-y-3">
-          <PlaygroundSectionTitle>Timing</PlaygroundSectionTitle>
-          <PlaygroundSlider
-            label="Rest interval"
-            min={800}
-            max={5000}
-            step={100}
-            value={config.interval}
-            unit="ms"
-            onChange={(interval) => updateConfig({ interval })}
-          />
-          <PlaygroundSlider
-            label="Morph duration"
-            min={280}
-            max={1200}
-            step={20}
-            value={config.morphDuration}
-            unit="ms"
-            onChange={(morphDuration) => updateConfig({ morphDuration })}
-          />
-        </div>
-      </div>
-    </div>
+    <CustomizePanel
+      slug="text-morph"
+      controls={CONTROLS}
+      values={values}
+      defaults={defaults}
+      onChange={(key, value) => {
+        if (key === "words") {
+          const words = String(value)
+            .split(",")
+            .map((word) => word.trim())
+            .filter(Boolean)
+            .slice(0, 6);
+          updateConfig({ words: words.length > 0 ? words : [""] });
+        } else {
+          applyControlUpdate(key, value);
+        }
+      }}
+      onReset={() => usePlaygroundStore.getState().resetPreview("text-morph")}
+      presets={PRESETS.map((preset) => ({
+        label: preset.name,
+        value: preset.name,
+      }))}
+      activePreset={activePreset}
+      onPresetChange={(name) => {
+        const preset = PRESETS.find((candidate) => candidate.name === name);
+        if (preset) updateConfig({ words: [...preset.words] });
+      }}
+    />
   );
 }

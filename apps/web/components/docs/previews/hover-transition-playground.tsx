@@ -11,11 +11,10 @@ import {
 } from "@workspace/ui/components/hover-transition";
 import { configEquals, usePlaygroundStore } from "@/hooks/use-playground-store";
 import {
-  PlaygroundColorPicker,
-  PlaygroundSectionTitle,
-  PlaygroundSlider,
-} from "@/components/playground-primitives";
-import { cn } from "@/lib/utils";
+  CustomizePanel,
+  bindCustomizeUpdate,
+  type CustomizeControl,
+} from "@/components/customize-panel";
 
 const PEOPLE = [
   {
@@ -86,6 +85,17 @@ const EASINGS = {
 } as const;
 
 type EasingName = keyof typeof EASINGS;
+
+const optionLabel = (value: string) =>
+  value.replace(/-/g, " ").replace(/^./, (char) => char.toUpperCase());
+
+const CONTROLS: CustomizeControl[] = [
+  { type: "color", key: "color", label: "Hover color", defaultColor: "#dfff5f", group: "Card" },
+  { type: "select", key: "effect", label: "Effect", options: hoverTransitionEffects.map((effect) => ({ label: optionLabel(effect), value: effect })), group: "Card" },
+  { type: "select", key: "direction", label: "Direction", options: hoverTransitionDirections.map((direction) => ({ label: optionLabel(direction), value: direction })), group: "Card" },
+  { type: "slider", key: "duration", label: "Duration", min: 0.15, max: 1.8, step: 0.05, unit: "s", group: "Timing" },
+  { type: "select", key: "easing", label: "Easing", options: Object.keys(EASINGS).map((easing) => ({ label: optionLabel(easing), value: easing })), group: "Timing" },
+];
 
 interface CardConfig {
   effect: HoverTransitionEffect;
@@ -342,169 +352,79 @@ export function HoverTransitionPlayground() {
   );
 }
 
-function OptionGrid<T extends string>({
-  value,
-  options,
-  onChange,
-  columns = 2,
-}: {
-  value: T;
-  options: readonly T[];
-  onChange: (value: T) => void;
-  columns?: 2 | 3;
-}) {
-  return (
-    <div
-      className={cn(
-        "grid gap-1.5",
-        columns === 3 ? "grid-cols-3" : "grid-cols-2",
-      )}
-    >
-      {options.map((option) => (
-        <button
-          key={option}
-          type="button"
-          onClick={() => onChange(option)}
-          className={cn(
-            "rounded-md border px-2 py-2 text-[11px] font-medium capitalize transition-colors",
-            value === option
-              ? "border-foreground bg-foreground text-background"
-              : "border-border/70 text-muted-foreground hover:text-foreground",
-          )}
-        >
-          {option.replace("-", " ")}
-        </button>
-      ))}
-    </div>
-  );
-}
-
 export function HoverTransitionPersonalizePanel() {
   const config = useHoverTransitionStore((state) => state.config);
   const selectCard = useHoverTransitionStore((state) => state.selectCard);
   const updateCard = useHoverTransitionStore((state) => state.updateCard);
   const updateTiming = useHoverTransitionStore((state) => state.updateTiming);
-  const resetConfig = useHoverTransitionStore((state) => state.resetConfig);
-  const selectedPerson = PEOPLE.find(
-    (person) => person.id === config.selectedCard,
-  )!;
-  const selectedCard = config.cards[config.selectedCard];
+  const card = config.cards[config.selectedCard];
+  const values = {
+    ...config,
+    color: card.color,
+    effect: card.effect,
+    direction: card.direction,
+  };
+  const defaults = {
+    ...DEFAULT_CONFIG,
+    color: DEFAULT_CONFIG.cards[DEFAULT_CONFIG.selectedCard].color,
+    effect: DEFAULT_CONFIG.cards[DEFAULT_CONFIG.selectedCard].effect,
+    direction: DEFAULT_CONFIG.cards[DEFAULT_CONFIG.selectedCard].direction,
+  };
+
+  const update = (updates: Partial<{
+    color: string;
+    effect: HoverTransitionEffect;
+    direction: HoverTransitionDirection;
+    duration: number;
+    easing: EasingName;
+  }>) => {
+    const cardUpdates: Partial<CardConfig> = {};
+    if (updates.color !== undefined) {
+      cardUpdates.color = updates.color;
+    }
+    if (updates.effect !== undefined) {
+      cardUpdates.effect = updates.effect;
+    }
+    if (updates.direction !== undefined) {
+      cardUpdates.direction = updates.direction;
+    }
+    if (Object.keys(cardUpdates).length > 0) {
+      updateCard(config.selectedCard, cardUpdates);
+    }
+
+    const timingUpdates: Partial<
+      Pick<HoverTransitionConfig, "duration" | "easing">
+    > = {};
+    if (updates.duration !== undefined) {
+      timingUpdates.duration = updates.duration;
+    }
+    if (updates.easing !== undefined) {
+      timingUpdates.easing = updates.easing;
+    }
+    if (Object.keys(timingUpdates).length > 0) {
+      updateTiming(timingUpdates);
+    }
+  };
 
   return (
-    <div className="h-full overflow-auto [scrollbar-width:thin]">
-      <div className="space-y-6 px-4 pb-10 pt-5">
-        <header className="space-y-2">
-          <p className="text-sm leading-relaxed text-muted-foreground/90">
-            Select a card, then shape its animation and hover color
-            independently.
-          </p>
-        </header>
-
-        <div className="flex justify-end">
-          <button
-            type="button"
-            onClick={resetConfig}
-            className="rounded-md border border-border/40 bg-white/50 px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground transition-colors hover:text-foreground dark:bg-white/[0.03]"
-          >
-            Reset
-          </button>
-        </div>
-
-        <section>
-          <PlaygroundSectionTitle>Card</PlaygroundSectionTitle>
-          <div className="grid grid-cols-2 gap-1.5">
-            {PEOPLE.map((person) => {
-              const card = config.cards[person.id];
-              const selected = config.selectedCard === person.id;
-              return (
-                <button
-                  key={person.id}
-                  type="button"
-                  onClick={() => selectCard(person.id)}
-                  className={cn(
-                    "flex min-w-0 items-center gap-2 rounded-md border p-2 text-left transition-colors",
-                    selected
-                      ? "border-foreground bg-foreground text-background"
-                      : "border-border/70 text-foreground hover:border-foreground/40",
-                  )}
-                >
-                  <span
-                    className="size-3 shrink-0 rounded-full border border-black/10"
-                    style={{ backgroundColor: card.color }}
-                  />
-                  <span className="min-w-0">
-                    <span className="block truncate text-[11px] font-semibold">
-                      {person.name}
-                    </span>
-                    <span
-                      className={cn(
-                        "block truncate font-mono text-[9px] uppercase",
-                        selected
-                          ? "text-background/60"
-                          : "text-muted-foreground",
-                      )}
-                    >
-                      {card.effect}
-                    </span>
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </section>
-
-        <section>
-          <PlaygroundSectionTitle>
-            {selectedPerson.name} · Hover color
-          </PlaygroundSectionTitle>
-          <PlaygroundColorPicker
-            label="Background"
-            value={selectedCard.color}
-            defaultColor="#dfff5f"
-            onChange={(color) => updateCard(config.selectedCard, { color })}
-          />
-        </section>
-
-        <section>
-          <PlaygroundSectionTitle>Effect</PlaygroundSectionTitle>
-          <OptionGrid
-            value={selectedCard.effect}
-            options={hoverTransitionEffects}
-            onChange={(effect) => updateCard(config.selectedCard, { effect })}
-          />
-        </section>
-
-        <section>
-          <PlaygroundSectionTitle>Direction</PlaygroundSectionTitle>
-          <OptionGrid
-            value={selectedCard.direction}
-            options={hoverTransitionDirections}
-            columns={3}
-            onChange={(direction) =>
-              updateCard(config.selectedCard, { direction })
-            }
-          />
-        </section>
-
-        <section className="space-y-3">
-          <PlaygroundSectionTitle>Timing</PlaygroundSectionTitle>
-          <PlaygroundSlider
-            label="Duration"
-            min={0.15}
-            max={1.8}
-            step={0.05}
-            value={config.duration}
-            unit="s"
-            onChange={(duration) => updateTiming({ duration })}
-          />
-          <OptionGrid
-            value={config.easing}
-            options={Object.keys(EASINGS) as EasingName[]}
-            columns={3}
-            onChange={(easing) => updateTiming({ easing })}
-          />
-        </section>
-      </div>
-    </div>
+    <CustomizePanel
+      slug="hover-transition"
+      controls={CONTROLS}
+      values={values}
+      defaults={defaults}
+      onChange={bindCustomizeUpdate(update)}
+      onReset={() => usePlaygroundStore.getState().resetPreview("hover-transition")}
+      presets={PEOPLE.map((person) => ({
+        label: person.name,
+        value: person.id,
+      }))}
+      activePreset={config.selectedCard}
+      onPresetChange={(value) => {
+        const person = PEOPLE.find((item) => item.id === value);
+        if (person) {
+          selectCard(person.id);
+        }
+      }}
+    />
   );
 }

@@ -196,5 +196,53 @@ export const CONTENTFUL_PREVIEW_MEDIA: HomePreviewOverrides = {
   "wavy-flow-carousel": {
     "light": "https://videos.ctfassets.net/70s3wjhkhwgo/3uu3nS87ha75wnFlb1yV2P/5b124bd35145c59fff4b09740a58fa22/wavy-flow-carousel-light.mp4",
     "dark": "https://videos.ctfassets.net/70s3wjhkhwgo/4cedW7GSXPdMLS5IWjHVcg/e37447894e1dc31d7ba6b6070e488c8a/wavy-flow-carousel-dark.mp4"
+  },
+  "arcwave-carousel": {
+    "light": "https://videos.ctfassets.net/70s3wjhkhwgo/3xfyeMdxATqsh3G2OFmBI8/a7c85214264ffb5f529d05ff2eced61e/Arcwave_Carousel_Light_.mp4",
+    "dark": "https://videos.ctfassets.net/70s3wjhkhwgo/5nCoJ6lzHBHdUZcACvhIiM/e52d627cba9baee29f424ad9819cdce5/Arcwave_Carousel_Dark_.mp4"
+  },
+  "circular-gallery": {
+    "light": "https://videos.ctfassets.net/70s3wjhkhwgo/2ZI2wGdIx3N62CyuptkMHd/9c12557af27b0adb10d69eaab4dd96ef/Circular_Gallery_Light_.mp4",
+    "dark": "https://videos.ctfassets.net/70s3wjhkhwgo/1YcWzQRBBIu6CQKUXQj9HK/b6e1cbbc5e82ce4bb81988d91b4b49ec/Circular_Gallery_Dark_.mp4"
+  },
+  "crumpled-paper-reveal": {
+    "light": "https://videos.ctfassets.net/70s3wjhkhwgo/eux1so5cMFAAFZFsIprn6/7d562a1fca15d84aed7c0acb566a1c74/Crumpled_Paper_Reveal_Light_.mp4",
+    "dark": "https://videos.ctfassets.net/70s3wjhkhwgo/QuiS17BZNk3fTtIWovb9t/976c1a7bab8063bf93fcf49910483cb3/Crumpled_Paper_Reveal_Dark_.mp4"
+  },
+  "curve-wall": {
+    "light": "https://videos.ctfassets.net/70s3wjhkhwgo/4E3tr5l1VWr2EEuCEJ0Oab/b0ccb3e5e71d9304d9cc13296f61eef4/Curve_Wall_Light_.mp4",
+    "dark": "https://videos.ctfassets.net/70s3wjhkhwgo/11EZMjjmZ6NVIEOMn3MOGl/3734f0a1647bedd949043ab4fddad0bd/Curve_Wall_Dark_.mp4"
+  },
+  "depth-carousel-3d": {
+    "light": "https://videos.ctfassets.net/70s3wjhkhwgo/5UbmQB7QQVp1290Q4qGxXm/2c2bd1421f590ae7121659f3175e67fc/Depth_Carousel_3D_Light_.mp4",
+    "dark": "https://videos.ctfassets.net/70s3wjhkhwgo/3rtWAInTPlp81pNYhavrBb/743f4cb8cab17cb58eb3d95693c41c09/Depth_Carousel_3D_Dark_.mp4"
+  },
+  "fanned-deck": {
+    "light": "https://videos.ctfassets.net/70s3wjhkhwgo/17sxAR6yux4hH8KBKZZ457/7b5a17c73141602565f9737e580a4dfa/Fanned_Deck_Light_.mp4",
+    "dark": "https://videos.ctfassets.net/70s3wjhkhwgo/4ztBD2NQ9ZWiQBXyKRP5oE/4fceba6038b098a475e6ffccc8d26fe7/Fanned_Deck_Dark_.mp4"
+  },
+  "glass-scene-dock": {
+    "light": "https://videos.ctfassets.net/70s3wjhkhwgo/6XlvbEqs7P1lAqxHq2p5fy/c8694723840558c398b078c25b79c9cb/Glass_Scene_Dock_Light_.mp4",
+    "dark": "https://videos.ctfassets.net/70s3wjhkhwgo/9MTdrwGiijNZhZPJRHChi/62baf6417d9361aa11ea8f99f3fda9e2/Glass_Scene_Dock_Dark_.mp4"
+  },
+  "liquid-reveal-button": {
+    "light": "https://videos.ctfassets.net/70s3wjhkhwgo/2TcGuPBD4l3Tvg3vwEaU5R/af3b4fdb949ca8db96d7461876b5b69f/Liquid_Reveal_Button_Light_.mp4",
+    "dark": "https://videos.ctfassets.net/70s3wjhkhwgo/1DJHi6NfmQTNBLJAuIPH5Y/f7684e302c75a8310ea41d019822ef2f/Liquid_Reveal_Button_Dark_.mp4"
+  },
+  "nudge-button": {
+    "light": "https://videos.ctfassets.net/70s3wjhkhwgo/66H6PM9heb7uTyMBEBIcct/a6ba9fa33a9448ec545dac214e0db441/Nudge_Button_Light_.mp4",
+    "dark": "https://videos.ctfassets.net/70s3wjhkhwgo/VPbCPdR0IHq0vifw5L6Gj/5305697b93dec5cb10c4eff29809f0e2/Nudge_Button_Dark_.mp4"
+  },
+  "streamline-carousel": {
+    "light": "https://videos.ctfassets.net/70s3wjhkhwgo/40Ss05N6cfcW1ZS2Y6pDNY/527948e107bc11c3c142fd06ba00f11f/Streamline_Carousel_Light_.mp4",
+    "dark": "https://videos.ctfassets.net/70s3wjhkhwgo/2sAZtr3f5SnccnLwA2VagL/dcaac76a6fdb6f00a5adbbe5a22f798a/Streamline_Carousel_Dark_.mp4"
+  },
+  "team-slide-reveal": {
+    "light": "https://videos.ctfassets.net/70s3wjhkhwgo/47ldriyZQWEtHIoTQnZCsa/430f0cda1e5b6accb64e7ab10e242a08/Team_Slide_Reveal_Light_.mp4",
+    "dark": "https://videos.ctfassets.net/70s3wjhkhwgo/7wmFCWaQISfYgngoXAqEUY/67bfecc59325348a9d761b3e7bb46080/Team_Slide_Reveal_Dark_.mp4"
+  },
+  "tilt-flip-polaroid": {
+    "light": "https://videos.ctfassets.net/70s3wjhkhwgo/12B8GxwK1SbU6R9zHeGyFu/c5e51be1d825c20bcbe34380f64218c8/Tilt_Flip_Polaroid_Light_.mp4",
+    "dark": "https://videos.ctfassets.net/70s3wjhkhwgo/6XgKZEhfWdMr4V4hA4cCL0/dd7cf481ebb55295e15af2463e8ce544/Tilt_Flip_Polaroid_Dark_.mp4"
   }
 };

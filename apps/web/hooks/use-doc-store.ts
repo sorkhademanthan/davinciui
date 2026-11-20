@@ -6,16 +6,12 @@ interface DocStore {
   setActiveVariantIndex: (index: number) => void
   /**
    * Personalize bridge: the docs preview registers its per-component
-   * playground panel here so surfaces outside the preview (e.g. the site
-   * header) can offer the same Personalize entry point.
+   * playground panel here so the site header can jump to the inline panel.
    */
   personalizeContent: React.ReactNode | null
   personalizeContentId: string | null
   registerPersonalizeContent: (id: string, content: React.ReactNode) => void
   clearPersonalizeContent: (id: string) => void
-  /** Global open state for the Personalize drawer. */
-  personalizeOpen: boolean
-  setPersonalizeOpen: (open: boolean) => void
 }
 
 export const useDocStore = create<DocStore>((set) => ({
@@ -28,9 +24,7 @@ export const useDocStore = create<DocStore>((set) => ({
   clearPersonalizeContent: (id) =>
     set((state) =>
       state.personalizeContentId === id
-        ? { personalizeContentId: null, personalizeContent: null, personalizeOpen: false }
+        ? { personalizeContentId: null, personalizeContent: null }
         : state
     ),
-  personalizeOpen: false,
-  setPersonalizeOpen: (open) => set({ personalizeOpen: open }),
 }))

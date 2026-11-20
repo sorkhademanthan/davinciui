@@ -4,11 +4,7 @@ import * as React from "react";
 import { create } from "zustand";
 import { Bookshelf, type BookItem } from "@workspace/ui/components/bookshelf";
 import { configEquals, usePlaygroundStore } from "@/hooks/use-playground-store";
-import {
-  PlaygroundSectionTitle,
-  PlaygroundSlider,
-  PlaygroundSwitch,
-} from "@/components/playground-primitives";
+import { CustomizePanel, bindCustomizeUpdate, type CustomizeControl } from "@/components/customize-panel";
 
 const DEMO_BOOKS = [
   {
@@ -208,92 +204,27 @@ export function BookshelfPreview() {
   return <BookshelfPlayground />;
 }
 
+const CONTROLS: CustomizeControl[] = [
+  { type: "slider", key: "bookHeight", label: "Book height", min: 200, max: 480, step: 10, unit: "px" },
+  { type: "slider", key: "gap", label: "Gap", min: 8, max: 40, step: 2, unit: "px" },
+  { type: "slider", key: "perspective", label: "Perspective", min: 600, max: 1800, step: 50, unit: "px" },
+  { type: "slider", key: "transitionDuration", label: "Transition duration", min: 0.4, max: 2.5, step: 0.05, unit: "s" },
+  { type: "slider", key: "autoplayInterval", label: "Autoplay interval", min: 2, max: 10, step: 0.5, unit: "s" },
+  { type: "toggle", key: "autoplay", label: "Autoplay" },
+];
+
 export function BookshelfPersonalizePanel() {
   const config = useBookshelfPlayground((s) => s.config);
   const update = useBookshelfPlayground((s) => s.updateConfig);
-  const reset = useBookshelfPlayground((s) => s.resetConfig);
 
   return (
-    <div className="h-full overflow-auto bg-background [scrollbar-width:thin]">
-      <div className="space-y-7 px-4 pb-10 pt-5">
-        <header className="space-y-2">
-          <p className="text-sm leading-relaxed text-muted-foreground/90">
-            Tune the shelf geometry, perspective, and autoplay timing.
-          </p>
-        </header>
-
-        <div className="flex justify-end">
-          <button
-            type="button"
-            onClick={reset}
-            className="rounded-md border border-border/40 bg-white/50 px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground hover:text-foreground dark:bg-white/[0.03]"
-          >
-            Reset
-          </button>
-        </div>
-
-        <div className="space-y-4">
-          <PlaygroundSectionTitle>Geometry</PlaygroundSectionTitle>
-          <PlaygroundSlider
-            label="Book height"
-            min={200}
-            max={480}
-            step={10}
-            value={config.bookHeight}
-            unit="px"
-            onChange={(v) => update({ bookHeight: v })}
-          />
-          <PlaygroundSlider
-            label="Gap"
-            min={8}
-            max={40}
-            step={2}
-            value={config.gap}
-            unit="px"
-            onChange={(v) => update({ gap: v })}
-          />
-          <PlaygroundSlider
-            label="Perspective"
-            min={600}
-            max={1800}
-            step={50}
-            value={config.perspective}
-            unit="px"
-            onChange={(v) => update({ perspective: v })}
-          />
-        </div>
-
-        <div className="space-y-4">
-          <PlaygroundSectionTitle>Timing</PlaygroundSectionTitle>
-          <PlaygroundSlider
-            label="Transition duration"
-            min={0.4}
-            max={2.5}
-            step={0.05}
-            value={config.transitionDuration}
-            unit="s"
-            onChange={(v) => update({ transitionDuration: v })}
-          />
-          <PlaygroundSlider
-            label="Autoplay interval"
-            min={2}
-            max={10}
-            step={0.5}
-            value={config.autoplayInterval}
-            unit="s"
-            onChange={(v) => update({ autoplayInterval: v })}
-          />
-        </div>
-
-        <div className="space-y-3">
-          <PlaygroundSectionTitle>Behavior</PlaygroundSectionTitle>
-          <PlaygroundSwitch
-            label="Autoplay"
-            checked={config.autoplay}
-            onChange={(autoplay) => update({ autoplay })}
-          />
-        </div>
-      </div>
-    </div>
+    <CustomizePanel
+      slug="bookshelf"
+      controls={CONTROLS}
+      values={config}
+      defaults={DEFAULT_CONFIG}
+      onChange={bindCustomizeUpdate(update)}
+      onReset={() => usePlaygroundStore.getState().resetPreview("bookshelf")}
+    />
   );
 }

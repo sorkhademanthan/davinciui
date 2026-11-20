@@ -5,12 +5,7 @@ import { useTheme } from "next-themes";
 import { create } from "zustand";
 import { EncryptedText } from "@workspace/ui/components/encrypted-text";
 import { configEquals, usePlaygroundStore } from "@/hooks/use-playground-store";
-import {
-  PlaygroundColorPicker,
-  PlaygroundInput,
-  PlaygroundSectionTitle,
-  PlaygroundSlider,
-} from "@/components/playground-primitives";
+import { CustomizePanel, type CustomizeControl } from "@/components/customize-panel";
 
 interface EncryptedTextConfig {
   text: string;
@@ -101,91 +96,36 @@ export function EncryptedTextPlayground() {
   );
 }
 
+const CONTROLS: CustomizeControl[] = [
+  { type: "text", key: "text", label: "Message", placeholder: "DAVINCIUI", maxLength: 18 },
+  { type: "slider", key: "scrambleDuration", label: "Encrypted phase", min: 100, max: 1600, step: 20, unit: "ms" },
+  { type: "slider", key: "revealDuration", label: "Decryption", min: 300, max: 2600, step: 20, unit: "ms" },
+  { type: "slider", key: "holdDuration", label: "Readable hold", min: 300, max: 3200, step: 50, unit: "ms" },
+  { type: "color", key: "encryptedColor", label: "Encrypted", defaultColor: "#5f845c" },
+  { type: "color", key: "revealedColor", label: "Decrypted", defaultColor: "#f5f5f4" },
+];
+
 export function EncryptedTextPersonalizePanel() {
   const config = useEncryptedTextStore((state) => state.config);
   const updateConfig = useEncryptedTextStore((state) => state.updateConfig);
-  const resetConfig = useEncryptedTextStore((state) => state.resetConfig);
 
   return (
-    <div className="h-full overflow-auto bg-background [scrollbar-width:thin]">
-      <div className="space-y-7 px-4 pb-10 pt-5">
-        <header className="space-y-2">
-          <p className="text-sm leading-relaxed text-muted-foreground/90">
-            Set the resolved message, cipher timing and two text states.
-          </p>
-        </header>
-
-        <div className="flex justify-end">
-          <button
-            type="button"
-            onClick={resetConfig}
-            className="rounded-md border border-border/40 px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground transition-colors hover:text-foreground"
-          >
-            Reset
-          </button>
-        </div>
-
-        <div>
-          <PlaygroundSectionTitle>Message</PlaygroundSectionTitle>
-          <PlaygroundInput
-            value={config.text}
-            onChange={(event) =>
-              updateConfig({
-                text:
-                  event.target.value.slice(0, 18).toUpperCase() || "DAVINCIUI",
-              })
-            }
-            placeholder="DAVINCIUI"
-          />
-        </div>
-
-        <div className="space-y-4">
-          <PlaygroundSectionTitle>Timing</PlaygroundSectionTitle>
-          <PlaygroundSlider
-            label="Encrypted phase"
-            min={100}
-            max={1600}
-            step={20}
-            value={config.scrambleDuration}
-            unit="ms"
-            onChange={(scrambleDuration) => updateConfig({ scrambleDuration })}
-          />
-          <PlaygroundSlider
-            label="Decryption"
-            min={300}
-            max={2600}
-            step={20}
-            value={config.revealDuration}
-            unit="ms"
-            onChange={(revealDuration) => updateConfig({ revealDuration })}
-          />
-          <PlaygroundSlider
-            label="Readable hold"
-            min={300}
-            max={3200}
-            step={50}
-            value={config.holdDuration}
-            unit="ms"
-            onChange={(holdDuration) => updateConfig({ holdDuration })}
-          />
-        </div>
-
-        <div className="space-y-3">
-          <PlaygroundSectionTitle>Colors</PlaygroundSectionTitle>
-          <PlaygroundColorPicker
-            label="Encrypted"
-            value={config.encryptedColor}
-            onChange={(encryptedColor) => updateConfig({ encryptedColor })}
-            defaultColor="#5f845c"
-          />
-          <PlaygroundColorPicker
-            label="Decrypted"
-            value={config.revealedColor}
-            onChange={(revealedColor) => updateConfig({ revealedColor })}
-            defaultColor="#f5f5f4"
-          />
-        </div>
-      </div>
-    </div>
+    <CustomizePanel
+      slug="encrypted-text"
+      controls={CONTROLS}
+      values={config}
+      defaults={DEFAULT_CONFIG}
+      onChange={(key, value) => {
+        if (key === "text") {
+          updateConfig({
+            text:
+              String(value).slice(0, 18).toUpperCase() || "DAVINCIUI",
+          });
+        } else {
+          updateConfig({ [key]: value } as Partial<EncryptedTextConfig>);
+        }
+      }}
+      onReset={() => usePlaygroundStore.getState().resetPreview("encrypted-text")}
+    />
   );
 }

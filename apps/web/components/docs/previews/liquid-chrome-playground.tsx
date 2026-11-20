@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { LiquidChrome } from "@workspace/ui/components/liquid-chrome";
-import { cn } from "@/lib/utils";
 import {
   LIQUID_CHROME_DEFAULT_CONFIG,
   type LiquidChromeConfig,
@@ -10,10 +9,10 @@ import {
   usePlaygroundStore,
 } from "@/hooks/use-playground-store";
 import {
-  PlaygroundSectionTitle,
-  PlaygroundSlider,
-  PlaygroundColorPicker,
-} from "@/components/playground-primitives";
+  CustomizePanel,
+  bindCustomizeUpdate,
+  type CustomizeControl,
+} from "@/components/customize-panel";
 
 const PRESETS: Array<{ name: string; config: LiquidChromeConfig }> = [
   {
@@ -44,6 +43,12 @@ const PRESETS: Array<{ name: string; config: LiquidChromeConfig }> = [
       amplitude: 1.2,
     },
   },
+];
+
+const CONTROLS: CustomizeControl[] = [
+  { type: "color", key: "baseColor", label: "Base color", group: "Palette" },
+  { type: "slider", key: "speed", label: "Speed", min: 0.1, max: 5, step: 0.1, unit: "x", group: "Motion" },
+  { type: "slider", key: "amplitude", label: "Distortion amplitude", min: 0.1, max: 3, step: 0.1, group: "Motion" },
 ];
 
 function hexToRgbArray(hex: string): [number, number, number] {
@@ -110,12 +115,6 @@ export function LiquidChromePersonalizePanel() {
   const setActivePreset = usePlaygroundStore((state) => state.setActiveLiquidChromePreset);
   const updateConfig = usePlaygroundStore((state) => state.updateLiquidChromeConfig);
   const resetPreview = usePlaygroundStore((state) => state.resetLiquidChromePreview);
-  const resetConfig = usePlaygroundStore((state) => state.resetLiquidChromeConfig);
-
-  const selectedPresetConfig = useMemo(
-    () => PRESETS.find((preset) => preset.name === activePreset)?.config,
-    [activePreset],
-  );
 
   const handleChange = (key: keyof LiquidChromeConfig, value: string | number) => {
     updateConfig({ [key]: value } as Partial<LiquidChromeConfig>);
@@ -141,93 +140,29 @@ export function LiquidChromePersonalizePanel() {
     resetPreview();
   };
 
+  const update = (updates: Partial<LiquidChromeConfig>) => {
+    if (updates.baseColor !== undefined) {
+      handleChange("baseColor", updates.baseColor);
+    }
+    if (updates.speed !== undefined) {
+      handleChange("speed", updates.speed);
+    }
+    if (updates.amplitude !== undefined) {
+      handleChange("amplitude", updates.amplitude);
+    }
+  };
+
   return (
-    <div className="h-full overflow-auto bg-[#f3f4f6] dark:bg-background [scrollbar-width:thin]">
-      <div className="space-y-6 px-4 pb-10 pt-5">
-        <header className="space-y-2">
-          <p className="text-sm leading-relaxed text-muted-foreground/90">
-            Shape your premium liquid shader with custom colors, speed, and distortion.
-          </p>
-        </header>
-
-        <div className="flex items-center justify-between">
-          <div className="text-sm text-muted-foreground/90">
-            Current preset: <span className="font-mono text-foreground">{activePreset}</span>
-          </div>
-          <button
-            type="button"
-            onClick={resetConfig}
-            className="rounded-md border border-border/40 bg-white/50 px-3 py-1.5 text-[10px] font-mono uppercase tracking-widest text-muted-foreground transition-colors hover:text-foreground dark:bg-white/[0.03]"
-          >
-            Reset
-          </button>
-        </div>
-
-        <div>
-          <PlaygroundSectionTitle>Presets</PlaygroundSectionTitle>
-          <div className="grid grid-cols-4 gap-1.5">
-            {PRESETS.map((preset) => {
-              const isActive =
-                activePreset === preset.name ||
-                (activePreset !== "Custom" && selectedPresetConfig && preset.name === activePreset);
-
-              return (
-                <button
-                  key={preset.name}
-                  type="button"
-                  onClick={() => handlePresetChange(preset.name)}
-                  className={cn(
-                    "rounded-md border p-1.5 text-center transition-colors",
-                    isActive
-                      ? "border-zinc-500/70 bg-zinc-100 dark:border-zinc-500/80 dark:bg-zinc-900/70"
-                      : "border-border/70 bg-transparent",
-                  )}
-                >
-                  <div
-                    className="mb-1.5 h-4 rounded-sm border border-white/20"
-                    style={{
-                      background: preset.config.baseColor,
-                    }}
-                  />
-                  <span className="block truncate text-[10px] font-mono uppercase tracking-widest text-foreground/90">
-                    {preset.name}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        <div>
-          <PlaygroundSectionTitle>Palette</PlaygroundSectionTitle>
-          <div className="grid grid-cols-1 gap-2.5">
-            <PlaygroundColorPicker label="Base Color" value={config.baseColor} onChange={(v) => handleChange("baseColor", v)} />
-          </div>
-        </div>
-
-        <div>
-          <PlaygroundSectionTitle>Motion & Mechanics</PlaygroundSectionTitle>
-          <div className="grid grid-cols-1 gap-5">
-            <PlaygroundSlider
-              label="Speed"
-              min={0.1}
-              max={5}
-              step={0.1}
-              value={config.speed}
-              onChange={(v) => handleChange("speed", v)}
-              unit="x"
-            />
-            <PlaygroundSlider
-              label="Distortion Amplitude"
-              min={0.1}
-              max={3}
-              step={0.1}
-              value={config.amplitude}
-              onChange={(v) => handleChange("amplitude", v)}
-            />
-          </div>
-        </div>
-      </div>
-    </div>
+    <CustomizePanel
+      slug="liquid-chrome"
+      controls={CONTROLS}
+      values={config}
+      defaults={LIQUID_CHROME_DEFAULT_CONFIG}
+      onChange={bindCustomizeUpdate(update)}
+      onReset={() => usePlaygroundStore.getState().resetPreview("liquid-chrome")}
+      presets={PRESETS.map((preset) => ({ label: preset.name, value: preset.name }))}
+      activePreset={activePreset}
+      onPresetChange={handlePresetChange}
+    />
   );
 }

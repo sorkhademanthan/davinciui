@@ -5,12 +5,7 @@ import { useTheme } from "next-themes";
 import { create } from "zustand";
 import { configEquals, usePlaygroundStore } from "@/hooks/use-playground-store";
 import { AmbientAudioToggle } from "@workspace/ui/components/ambient-audio-toggle";
-import {
-  PlaygroundColorPicker,
-  PlaygroundSectionTitle,
-  PlaygroundSlider,
-  PlaygroundSwitch,
-} from "@/components/playground-primitives";
+import { CustomizePanel, type CustomizeControl } from "@/components/customize-panel";
 
 type AmbientAudioToggleConfig = {
   visualizer: "wave" | "bars";
@@ -208,6 +203,54 @@ export function AmbientAudioTogglePreview() {
   );
 }
 
+const CONTROLS: CustomizeControl[] = [
+  { type: "slider", key: "volume", label: "Volume", min: 0, max: 100, step: 5, unit: "%" },
+  { type: "toggle", key: "loop", label: "Loop track" },
+  {
+    type: "select",
+    key: "visualizer",
+    label: "Visualizer",
+    options: [
+      { label: "Wave", value: "wave" },
+      { label: "Bars", value: "bars" },
+    ],
+  },
+  { type: "slider", key: "barCount", label: "Bar count", min: 4, max: 80, step: 1 },
+  { type: "slider", key: "waveformWidth", label: "Width", min: 24, max: 400, step: 1, unit: "px" },
+  { type: "slider", key: "waveformHeight", label: "Height", min: 12, max: 120, step: 1, unit: "px" },
+  { type: "slider", key: "lineWeight", label: "Line weight", min: 0.5, max: 12, step: 0.5, unit: "px" },
+  {
+    type: "select",
+    key: "lineCap",
+    label: "Line cap",
+    options: [
+      { label: "Round caps", value: "round" },
+      { label: "Square caps", value: "square" },
+    ],
+  },
+  { type: "color", key: "activeColor", label: "Active waveform" },
+  { type: "color", key: "inactiveColor", label: "Inactive waveform" },
+  { type: "color", key: "playingColor", label: "Playing label" },
+  { type: "color", key: "pausedColor", label: "Paused label" },
+  { type: "slider", key: "animationSpeed", label: "Speed", min: 0.25, max: 4, step: 0.05 },
+  { type: "slider", key: "intensity", label: "Intensity", min: 0, max: 2, step: 0.05 },
+  { type: "slider", key: "pausedAmount", label: "Paused amount", min: 0, max: 1, step: 0.01 },
+  { type: "slider", key: "transition", label: "Transition", min: 0, max: 2, step: 0.05, unit: "s" },
+  { type: "toggle", key: "hideLabel", label: "Hide label" },
+  {
+    type: "select",
+    key: "labelPosition",
+    label: "Position",
+    options: [
+      { label: "Left", value: "left" },
+      { label: "Right", value: "right" },
+      { label: "Above", value: "above" },
+      { label: "Below", value: "below" },
+    ],
+  },
+  { type: "slider", key: "labelGap", label: "Gap", min: 0, max: 40, step: 1, unit: "px" },
+];
+
 export function AmbientAudioTogglePersonalizePanel() {
   const config = useAmbientAudioToggleStore((state) => state.config);
   const touchedColors = useAmbientAudioToggleStore(
@@ -215,7 +258,6 @@ export function AmbientAudioTogglePersonalizePanel() {
   );
   const update = useAmbientAudioToggleStore((state) => state.update);
   const updateColor = useAmbientAudioToggleStore((state) => state.updateColor);
-  const reset = useAmbientAudioToggleStore((state) => state.reset);
   const { resolvedTheme } = useTheme();
   const themeDefaults =
     resolvedTheme === "light" ? LIGHT_COLOR_DEFAULTS : DARK_COLOR_DEFAULTS;
@@ -234,218 +276,35 @@ export function AmbientAudioTogglePersonalizePanel() {
       : themeDefaults.pausedColor,
   };
 
+  const controls = CONTROLS.map((control) =>
+    control.type === "color"
+      ? {
+          ...control,
+          defaultColor:
+            themeDefaults[control.key as AmbientAudioColorKey],
+        }
+      : control,
+  );
+
   return (
-    <div className="h-full overflow-auto bg-background [scrollbar-width:thin]">
-      <div className="space-y-7 px-4 pb-12 pt-5">
-        <header className="space-y-2">
-          <p className="text-sm leading-relaxed text-muted-foreground/90">
-            Tune the sound, waveform, and playback label.
-          </p>
-        </header>
-
-        <div className="flex justify-end">
-          <button
-            type="button"
-            onClick={reset}
-            className="rounded-md border border-border/60 px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            Reset
-          </button>
-        </div>
-
-        <section className="space-y-3">
-          <PlaygroundSectionTitle>Playback</PlaygroundSectionTitle>
-          <PlaygroundSlider
-            label="Volume"
-            min={0}
-            max={100}
-            step={5}
-            unit="%"
-            value={config.volume}
-            onChange={(volume) => update({ volume })}
-          />
-          <PlaygroundSwitch
-            label="Loop track"
-            checked={config.loop}
-            onChange={(loop) => update({ loop })}
-          />
-        </section>
-
-        <section className="space-y-3">
-          <PlaygroundSectionTitle>Visualizer</PlaygroundSectionTitle>
-          <div className="grid grid-cols-2 gap-2">
-            {(["wave", "bars"] as const).map((visualizer) => (
-              <button
-                key={visualizer}
-                type="button"
-                aria-pressed={config.visualizer === visualizer}
-                onClick={() => update({ visualizer })}
-                className="min-h-10 rounded-md border border-border/70 px-3 text-sm capitalize text-foreground transition-colors aria-pressed:border-foreground aria-pressed:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              >
-                {visualizer}
-              </button>
-            ))}
-          </div>
-          {config.visualizer === "bars" && (
-            <PlaygroundSlider
-              label="Bar count"
-              min={4}
-              max={80}
-              step={1}
-              value={config.barCount}
-              onChange={(barCount) => update({ barCount })}
-            />
-          )}
-          <PlaygroundSlider
-            label="Width"
-            min={24}
-            max={400}
-            step={1}
-            unit="px"
-            value={config.waveformWidth}
-            onChange={(waveformWidth) => update({ waveformWidth })}
-          />
-          <PlaygroundSlider
-            label="Height"
-            min={12}
-            max={120}
-            step={1}
-            unit="px"
-            value={config.waveformHeight}
-            onChange={(waveformHeight) => update({ waveformHeight })}
-          />
-          <PlaygroundSlider
-            label="Line weight"
-            min={0.5}
-            max={12}
-            step={0.5}
-            unit="px"
-            value={config.lineWeight}
-            onChange={(lineWeight) => update({ lineWeight })}
-          />
-          <div className="grid grid-cols-2 gap-2">
-            {(["round", "square"] as const).map((lineCap) => (
-              <button
-                key={lineCap}
-                type="button"
-                aria-pressed={config.lineCap === lineCap}
-                onClick={() => update({ lineCap })}
-                className="min-h-10 rounded-md border border-border/70 px-3 text-sm capitalize text-foreground transition-colors aria-pressed:border-foreground aria-pressed:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              >
-                {lineCap} caps
-              </button>
-            ))}
-          </div>
-        </section>
-
-        <section className="space-y-3">
-          <PlaygroundSectionTitle>Color</PlaygroundSectionTitle>
-          <PlaygroundColorPicker
-            label="Active waveform"
-            value={visibleColors.activeColor}
-            onChange={(activeColor) => updateColor("activeColor", activeColor)}
-            defaultColor={themeDefaults.activeColor}
-          />
-          <PlaygroundColorPicker
-            label="Inactive waveform"
-            value={visibleColors.inactiveColor}
-            onChange={(inactiveColor) =>
-              updateColor("inactiveColor", inactiveColor)
-            }
-            defaultColor={themeDefaults.inactiveColor}
-          />
-          <PlaygroundColorPicker
-            label="Playing label"
-            value={visibleColors.playingColor}
-            onChange={(playingColor) =>
-              updateColor("playingColor", playingColor)
-            }
-            defaultColor={themeDefaults.playingColor}
-          />
-          <PlaygroundColorPicker
-            label="Paused label"
-            value={visibleColors.pausedColor}
-            onChange={(pausedColor) => updateColor("pausedColor", pausedColor)}
-            defaultColor={themeDefaults.pausedColor}
-          />
-        </section>
-
-        <section className="space-y-3">
-          <PlaygroundSectionTitle>Animation</PlaygroundSectionTitle>
-          <PlaygroundSlider
-            label="Speed"
-            min={0.25}
-            max={4}
-            step={0.05}
-            value={config.animationSpeed}
-            onChange={(animationSpeed) => update({ animationSpeed })}
-          />
-          <PlaygroundSlider
-            label="Intensity"
-            min={0}
-            max={2}
-            step={0.05}
-            value={config.intensity}
-            onChange={(intensity) => update({ intensity })}
-          />
-          <PlaygroundSlider
-            label="Paused amount"
-            min={0}
-            max={1}
-            step={0.01}
-            value={config.pausedAmount}
-            onChange={(pausedAmount) => update({ pausedAmount })}
-          />
-          <PlaygroundSlider
-            label="Transition"
-            min={0}
-            max={2}
-            step={0.05}
-            unit="s"
-            value={config.transition}
-            onChange={(transition) => update({ transition })}
-          />
-        </section>
-
-        <section className="space-y-3">
-          <PlaygroundSectionTitle>Label</PlaygroundSectionTitle>
-          <PlaygroundSwitch
-            label="Hide label"
-            checked={config.hideLabel}
-            onChange={(hideLabel) => update({ hideLabel })}
-          />
-          <label className="block space-y-1.5 text-xs font-semibold text-foreground/90">
-            Position
-            <select
-              value={config.labelPosition}
-              onChange={(event) =>
-                update({
-                  labelPosition: event.target
-                    .value as AmbientAudioToggleConfig["labelPosition"],
-                })
-              }
-              className="h-10 w-full rounded-md border border-border/70 bg-background px-3 text-sm font-normal text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            >
-              {(["left", "right", "above", "below"] as const).map(
-                (position) => (
-                  <option key={position} value={position}>
-                    {position}
-                  </option>
-                ),
-              )}
-            </select>
-          </label>
-          <PlaygroundSlider
-            label="Gap"
-            min={0}
-            max={40}
-            step={1}
-            unit="px"
-            value={config.labelGap}
-            onChange={(labelGap) => update({ labelGap })}
-          />
-        </section>
-      </div>
-    </div>
+    <CustomizePanel
+      slug="ambient-audio-toggle"
+      controls={controls}
+      values={{ ...config, ...visibleColors }}
+      defaults={{ ...DEFAULT_CONFIG, ...themeDefaults }}
+      onChange={(key, value) => {
+        if (
+          key === "activeColor" ||
+          key === "inactiveColor" ||
+          key === "playingColor" ||
+          key === "pausedColor"
+        ) {
+          updateColor(key as AmbientAudioColorKey, value as string);
+        } else {
+          update({ [key]: value } as Partial<AmbientAudioToggleConfig>);
+        }
+      }}
+      onReset={() => usePlaygroundStore.getState().resetPreview("ambient-audio-toggle")}
+    />
   );
 }

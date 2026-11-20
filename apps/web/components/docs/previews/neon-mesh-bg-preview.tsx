@@ -6,11 +6,10 @@ import { NeonMeshBG } from "@workspace/ui/components/neon-mesh-bg";
 import { create } from "zustand";
 import { configEquals, usePlaygroundStore } from "@/hooks/use-playground-store";
 import {
-  PlaygroundColorPicker,
-  PlaygroundSectionTitle,
-  PlaygroundSlider,
-  PlaygroundSwitch,
-} from "@/components/playground-primitives";
+  CustomizePanel,
+  bindCustomizeUpdate,
+  type CustomizeControl,
+} from "@/components/customize-panel";
 
 type NeonMeshBGConfig = {
   scale: number;
@@ -43,6 +42,22 @@ const DEFAULT_CONFIG: NeonMeshBGConfig = {
   secondaryColor: "#873491",
   highlightColor: "#eed5f2",
 };
+
+const CONTROLS: CustomizeControl[] = [
+  { type: "slider", key: "scale", label: "Scale", min: 0.4, max: 3.5, step: 0.05, group: "Mesh" },
+  { type: "slider", key: "warp", label: "Warp", min: 0, max: 2.5, step: 0.05, group: "Mesh" },
+  { type: "slider", key: "contrast", label: "Contrast", min: 0.5, max: 3, step: 0.05, group: "Mesh" },
+  { type: "slider", key: "gridSize", label: "Grid size", min: 2, max: 10, step: 0.5, group: "Pixel grid" },
+  { type: "slider", key: "gridStrength", label: "Grid strength", min: 0, max: 1, step: 0.01, group: "Pixel grid" },
+  { type: "slider", key: "glowStrength", label: "Glow strength", min: 0, max: 2, step: 0.05, group: "Glow" },
+  { type: "slider", key: "glowSpread", label: "Glow spread", min: 0, max: 1, step: 0.01, group: "Glow" },
+  { type: "slider", key: "speed", label: "Speed", min: 0, max: 2, step: 0.01, group: "Motion" },
+  { type: "toggle", key: "animate", label: "Animate", group: "Motion" },
+  { type: "color", key: "backgroundColor", label: "Background", group: "Colors" },
+  { type: "color", key: "primaryColor", label: "Primary", group: "Colors" },
+  { type: "color", key: "secondaryColor", label: "Secondary", group: "Colors" },
+  { type: "color", key: "highlightColor", label: "Highlight", group: "Colors" },
+];
 
 const useNeonMeshBGStore = create<{
   config: NeonMeshBGConfig;
@@ -110,136 +125,15 @@ export function NeonMeshBGPreview() {
 export function NeonMeshBGPersonalizePanel() {
   const config = useNeonMeshBGStore((state) => state.config);
   const update = useNeonMeshBGStore((state) => state.update);
-  const reset = useNeonMeshBGStore((state) => state.reset);
 
   return (
-    <div className="h-full overflow-auto bg-background [scrollbar-width:thin]">
-      <div className="space-y-7 px-4 pb-12 pt-5">
-        <header className="space-y-2">
-          <p className="text-sm leading-relaxed text-muted-foreground/90">
-            Tune the neon mesh density, pixel matrix, glow, and drift speed.
-          </p>
-        </header>
-
-        <div className="flex justify-end">
-          <button
-            type="button"
-            onClick={reset}
-            className="rounded-md border border-border/60 px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            Reset
-          </button>
-        </div>
-
-        <section className="space-y-3">
-          <PlaygroundSectionTitle>Mesh</PlaygroundSectionTitle>
-          <PlaygroundSlider
-            label="Scale"
-            min={0.4}
-            max={3.5}
-            step={0.05}
-            value={config.scale}
-            onChange={(scale) => update({ scale })}
-          />
-          <PlaygroundSlider
-            label="Warp"
-            min={0}
-            max={2.5}
-            step={0.05}
-            value={config.warp}
-            onChange={(warp) => update({ warp })}
-          />
-          <PlaygroundSlider
-            label="Contrast"
-            min={0.5}
-            max={3}
-            step={0.05}
-            value={config.contrast}
-            onChange={(contrast) => update({ contrast })}
-          />
-        </section>
-
-        <section className="space-y-3">
-          <PlaygroundSectionTitle>Pixel grid</PlaygroundSectionTitle>
-          <PlaygroundSlider
-            label="Grid size"
-            min={2}
-            max={10}
-            step={0.5}
-            value={config.gridSize}
-            onChange={(gridSize) => update({ gridSize })}
-          />
-          <PlaygroundSlider
-            label="Grid strength"
-            min={0}
-            max={1}
-            step={0.01}
-            value={config.gridStrength}
-            onChange={(gridStrength) => update({ gridStrength })}
-          />
-        </section>
-
-        <section className="space-y-3">
-          <PlaygroundSectionTitle>Glow</PlaygroundSectionTitle>
-          <PlaygroundSlider
-            label="Glow strength"
-            min={0}
-            max={2}
-            step={0.05}
-            value={config.glowStrength}
-            onChange={(glowStrength) => update({ glowStrength })}
-          />
-          <PlaygroundSlider
-            label="Glow spread"
-            min={0}
-            max={1}
-            step={0.01}
-            value={config.glowSpread}
-            onChange={(glowSpread) => update({ glowSpread })}
-          />
-        </section>
-
-        <section className="space-y-3">
-          <PlaygroundSectionTitle>Motion</PlaygroundSectionTitle>
-          <PlaygroundSlider
-            label="Speed"
-            min={0}
-            max={2}
-            step={0.01}
-            value={config.speed}
-            onChange={(speed) => update({ speed })}
-          />
-          <PlaygroundSwitch
-            label="Animate"
-            checked={config.animate}
-            onChange={(animate) => update({ animate })}
-          />
-        </section>
-
-        <section className="space-y-3">
-          <PlaygroundSectionTitle>Colors</PlaygroundSectionTitle>
-          <PlaygroundColorPicker
-            label="Background"
-            value={config.backgroundColor}
-            onChange={(backgroundColor) => update({ backgroundColor })}
-          />
-          <PlaygroundColorPicker
-            label="Primary"
-            value={config.primaryColor}
-            onChange={(primaryColor) => update({ primaryColor })}
-          />
-          <PlaygroundColorPicker
-            label="Secondary"
-            value={config.secondaryColor}
-            onChange={(secondaryColor) => update({ secondaryColor })}
-          />
-          <PlaygroundColorPicker
-            label="Highlight"
-            value={config.highlightColor}
-            onChange={(highlightColor) => update({ highlightColor })}
-          />
-        </section>
-      </div>
-    </div>
+    <CustomizePanel
+      slug="neon-mesh-bg"
+      controls={CONTROLS}
+      values={config}
+      defaults={DEFAULT_CONFIG}
+      onChange={bindCustomizeUpdate(update)}
+      onReset={() => usePlaygroundStore.getState().resetPreview("neon-mesh-bg")}
+    />
   );
 }

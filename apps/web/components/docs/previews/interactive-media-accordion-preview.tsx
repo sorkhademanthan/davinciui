@@ -6,12 +6,12 @@ import {
   InteractiveMediaAccordion,
   type InteractiveMediaAccordionTrigger,
 } from "@workspace/ui/components/interactive-media-accordion";
-import { cn } from "@/lib/utils";
 import { configEquals, usePlaygroundStore } from "@/hooks/use-playground-store";
 import {
-  PlaygroundSectionTitle,
-  PlaygroundSlider,
-} from "@/components/playground-primitives";
+  CustomizePanel,
+  bindCustomizeUpdate,
+  type CustomizeControl,
+} from "@/components/customize-panel";
 
 interface InteractiveMediaAccordionConfig {
   trigger: InteractiveMediaAccordionTrigger;
@@ -36,6 +36,28 @@ const DEFAULT_CONFIG: InteractiveMediaAccordionConfig = {
   scrollStep: 800,
   autoPlay: false,
 };
+
+const CONTROLS: CustomizeControl[] = [
+  {
+    type: "select",
+    key: "trigger",
+    label: "Trigger",
+    options: [
+      { label: "Scroll", value: "scroll" },
+      { label: "Hover", value: "hover" },
+      { label: "Click", value: "click" },
+    ],
+    group: "Interaction",
+  },
+  { type: "toggle", key: "autoPlay", label: "Auto play", group: "Interaction" },
+  { type: "slider", key: "height", label: "Height", min: 320, max: 640, step: 8, unit: "px", group: "Layout" },
+  { type: "slider", key: "gap", label: "Gap", min: 4, max: 28, step: 1, unit: "px", group: "Layout" },
+  { type: "slider", key: "collapsedWidth", label: "Collapsed width", min: 72, max: 200, step: 2, unit: "px", group: "Layout" },
+  { type: "slider", key: "radius", label: "Corner radius", min: 16, max: 80, step: 1, unit: "px", group: "Layout" },
+  { type: "slider", key: "titleSize", label: "Title size", min: 24, max: 56, step: 1, unit: "px", group: "Layout" },
+  { type: "slider", key: "duration", label: "Duration", min: 200, max: 1200, step: 25, unit: "ms", group: "Motion" },
+  { type: "slider", key: "scrollStep", label: "Scroll distance", min: 400, max: 1200, step: 40, unit: "px", group: "Motion" },
+];
 
 interface InteractiveMediaAccordionStore {
   config: InteractiveMediaAccordionConfig;
@@ -89,7 +111,7 @@ export function InteractiveMediaAccordionPlayground() {
   }, [config]);
 
   return (
-    <div className="h-full w-full overflow-y-auto overscroll-contain bg-black px-4 py-10">
+    <div className="h-full w-full overflow-y-auto overscroll-contain bg-white px-4 py-10 dark:bg-black">
       <InteractiveMediaAccordion
         trigger={config.trigger}
         height={config.height}
@@ -110,80 +132,15 @@ export function InteractiveMediaAccordionPlayground() {
 export function InteractiveMediaAccordionPersonalizePanel() {
   const config = useInteractiveMediaAccordionStore((state) => state.config);
   const update = useInteractiveMediaAccordionStore((state) => state.update);
-  const reset = useInteractiveMediaAccordionStore((state) => state.reset);
 
   return (
-    <div className="h-full overflow-auto bg-background [scrollbar-width:thin]">
-      <div className="space-y-7 px-4 pb-10 pt-5">
-        <header className="space-y-2">
-          <p className="text-sm leading-relaxed text-muted-foreground/90">
-            Shape the accordion geometry, text scale, and motion response.
-          </p>
-        </header>
-
-        <div className="flex justify-end">
-          <button
-            type="button"
-            onClick={reset}
-            className="rounded-md border border-border/40 px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground transition-colors hover:text-foreground"
-          >
-            Reset
-          </button>
-        </div>
-
-        <div className="space-y-4">
-          <PlaygroundSectionTitle>Interaction</PlaygroundSectionTitle>
-          <div className="grid grid-cols-3 gap-1.5">
-            {(["scroll", "hover", "click"] as const).map((trigger) => (
-              <button
-                key={trigger}
-                type="button"
-                onClick={() => update({ trigger })}
-                className={cn(
-                  "rounded-md border px-3 py-2 text-xs font-semibold capitalize transition-colors",
-                  config.trigger === trigger
-                    ? "border-foreground/60 bg-foreground text-background"
-                    : "border-border/70 text-muted-foreground hover:text-foreground",
-                )}
-              >
-                {trigger}
-              </button>
-            ))}
-          </div>
-          <div className="grid grid-cols-2 gap-1.5">
-            {([false, true] as const).map((autoPlay) => (
-              <button
-                key={String(autoPlay)}
-                type="button"
-                onClick={() => update({ autoPlay })}
-                className={cn(
-                  "rounded-md border px-3 py-2 text-xs font-semibold transition-colors",
-                  config.autoPlay === autoPlay
-                    ? "border-foreground/60 bg-foreground text-background"
-                    : "border-border/70 text-muted-foreground hover:text-foreground",
-                )}
-              >
-                {autoPlay ? "Auto play on" : "Auto play off"}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="space-y-4">
-          <PlaygroundSectionTitle>Layout</PlaygroundSectionTitle>
-          <PlaygroundSlider label="Height" min={320} max={640} step={8} value={config.height} unit="px" onChange={(height) => update({ height })} />
-          <PlaygroundSlider label="Gap" min={4} max={28} step={1} value={config.gap} unit="px" onChange={(gap) => update({ gap })} />
-          <PlaygroundSlider label="Collapsed width" min={72} max={200} step={2} value={config.collapsedWidth} unit="px" onChange={(collapsedWidth) => update({ collapsedWidth })} />
-          <PlaygroundSlider label="Corner radius" min={16} max={80} step={1} value={config.radius} unit="px" onChange={(radius) => update({ radius })} />
-          <PlaygroundSlider label="Title size" min={24} max={56} step={1} value={config.titleSize} unit="px" onChange={(titleSize) => update({ titleSize })} />
-        </div>
-
-        <div className="space-y-4">
-          <PlaygroundSectionTitle>Motion</PlaygroundSectionTitle>
-          <PlaygroundSlider label="Duration" min={200} max={1200} step={25} value={config.duration} unit="ms" onChange={(duration) => update({ duration })} />
-          <PlaygroundSlider label="Scroll distance" min={400} max={1200} step={40} value={config.scrollStep} unit="px" onChange={(scrollStep) => update({ scrollStep })} />
-        </div>
-      </div>
-    </div>
+    <CustomizePanel
+      slug="interactive-media-accordion"
+      controls={CONTROLS}
+      values={config}
+      defaults={DEFAULT_CONFIG}
+      onChange={bindCustomizeUpdate(update)}
+      onReset={() => usePlaygroundStore.getState().resetPreview("interactive-media-accordion")}
+    />
   );
 }

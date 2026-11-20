@@ -5,10 +5,10 @@ import { InkFlow } from "@workspace/ui/components/ink-flow";
 import { create } from "zustand";
 import { configEquals, usePlaygroundStore } from "@/hooks/use-playground-store";
 import {
-  PlaygroundColorPicker,
-  PlaygroundSectionTitle,
-  PlaygroundSlider,
-} from "@/components/playground-primitives";
+  CustomizePanel,
+  bindCustomizeUpdate,
+  type CustomizeControl,
+} from "@/components/customize-panel";
 
 type InkFlowConfig = {
   speed: number;
@@ -31,6 +31,17 @@ const DEFAULT_CONFIG: InkFlowConfig = {
   deepInkColor: "#3C2FAA",
   accentColor: "#F5AED9",
 };
+
+const CONTROLS: CustomizeControl[] = [
+  { type: "slider", key: "speed", label: "Speed", min: 0, max: 2, step: 0.01, group: "Flow" },
+  { type: "slider", key: "scale", label: "Ink scale", min: 0.4, max: 3, step: 0.05, group: "Flow" },
+  { type: "slider", key: "saturation", label: "Saturation", min: 0, max: 2, step: 0.05, group: "Flow" },
+  { type: "slider", key: "contrast", label: "Contrast", min: 0.5, max: 2, step: 0.05, group: "Flow" },
+  { type: "color", key: "paperColor", label: "Paper", defaultColor: DEFAULT_CONFIG.paperColor, group: "Palette" },
+  { type: "color", key: "softInkColor", label: "Soft ink", defaultColor: DEFAULT_CONFIG.softInkColor, group: "Palette" },
+  { type: "color", key: "deepInkColor", label: "Deep ink", defaultColor: DEFAULT_CONFIG.deepInkColor, group: "Palette" },
+  { type: "color", key: "accentColor", label: "Accent", defaultColor: DEFAULT_CONFIG.accentColor, group: "Palette" },
+];
 
 const useInkFlowStore = create<{
   config: InkFlowConfig;
@@ -94,45 +105,15 @@ export function InkFlowPreview() {
 export function InkFlowPersonalizePanel() {
   const config = useInkFlowStore((state) => state.config);
   const update = useInkFlowStore((state) => state.update);
-  const reset = useInkFlowStore((state) => state.reset);
 
   return (
-    <div className="h-full overflow-auto bg-background [scrollbar-width:thin]">
-      <div className="space-y-7 px-4 pb-12 pt-5">
-        <header className="space-y-2">
-          <p className="text-sm leading-relaxed text-muted-foreground/90">
-            Shape the pigment scale, pace, and editorial palette.
-          </p>
-        </header>
-
-        <div className="flex justify-end">
-          <button
-            type="button"
-            onClick={reset}
-            className="rounded-md border border-border/60 px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            Reset
-          </button>
-        </div>
-
-        <section className="space-y-3">
-          <PlaygroundSectionTitle>Flow</PlaygroundSectionTitle>
-          <PlaygroundSlider label="Flow speed" min={0} max={2} step={0.01} value={config.speed} onChange={(speed) => update({ speed })} />
-          <PlaygroundSlider label="Ink scale" min={0.4} max={3} step={0.05} value={config.scale} onChange={(scale) => update({ scale })} />
-          <PlaygroundSlider label="Saturation" min={0} max={2} step={0.05} value={config.saturation} onChange={(saturation) => update({ saturation })} />
-          <PlaygroundSlider label="Contrast" min={0.5} max={2} step={0.05} value={config.contrast} onChange={(contrast) => update({ contrast })} />
-        </section>
-
-        <section>
-          <PlaygroundSectionTitle>Palette</PlaygroundSectionTitle>
-          <div className="space-y-2">
-            <PlaygroundColorPicker label="Paper" value={config.paperColor} onChange={(paperColor) => update({ paperColor })} defaultColor={DEFAULT_CONFIG.paperColor} />
-            <PlaygroundColorPicker label="Soft ink" value={config.softInkColor} onChange={(softInkColor) => update({ softInkColor })} defaultColor={DEFAULT_CONFIG.softInkColor} />
-            <PlaygroundColorPicker label="Deep ink" value={config.deepInkColor} onChange={(deepInkColor) => update({ deepInkColor })} defaultColor={DEFAULT_CONFIG.deepInkColor} />
-            <PlaygroundColorPicker label="Accent vein" value={config.accentColor} onChange={(accentColor) => update({ accentColor })} defaultColor={DEFAULT_CONFIG.accentColor} />
-          </div>
-        </section>
-      </div>
-    </div>
+    <CustomizePanel
+      slug="ink-flow"
+      controls={CONTROLS}
+      values={config}
+      defaults={DEFAULT_CONFIG}
+      onChange={bindCustomizeUpdate(update)}
+      onReset={() => usePlaygroundStore.getState().resetPreview("ink-flow")}
+    />
   );
 }

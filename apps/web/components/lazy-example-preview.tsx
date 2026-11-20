@@ -14,11 +14,9 @@ import { DocsPreviewWrapper } from "@/components/docs-preview-wrapper";
  */
 export function LazyExamplePreview({
   unstyledPreview,
-  personalizeContent,
   children,
 }: {
   unstyledPreview?: boolean;
-  personalizeContent?: React.ReactNode;
   children: React.ReactNode;
 }) {
   const { ref, inView } = useInViewport({ rootMargin: "300px 0px" });
@@ -31,7 +29,6 @@ export function LazyExamplePreview({
       {inView ? (
         <DocsPreviewWrapper
           unstyledPreview={unstyledPreview}
-          personalizeContent={personalizeContent}
           hideDefaultVariant
           variants={[]}
         >
