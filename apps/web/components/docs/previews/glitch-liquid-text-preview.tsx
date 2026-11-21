@@ -9,14 +9,15 @@ export function GlitchLiquidTextPreview() {
 
   return (
     <GlitchLiquidText
-      text={"DAVINCIUI\nCOMPONENTS"}
+      text="DAVINCIUI"
       fontFamily="Anton"
-      fontSize={180}
-      lineHeight={0.95}
+      fontSize={250}
+      lineHeight={1.2}
       distortionStrength={0.42}
-      liquidStrength={1.1}
-      backgroundColor={isDark ? "#141414" : "#f8fafc"}
-      textColor={isDark ? "#f5f5f5" : "#18181b"}
+      liquidStrength={1}
+      starburstStrength={0.28}
+      backgroundColor={isDark ? "#080808" : "#f8fafc"}
+      textColor={isDark ? "#ffffff" : "#18181b"}
       className="h-full w-full"
     />
   );

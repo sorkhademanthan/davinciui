@@ -3,16 +3,22 @@
 import { Suspense, useEffect, useState, useMemo, type ReactNode } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Search, ArrowUpRight } from "lucide-react";
+import { Search, ArrowUpRight, Play } from "lucide-react";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { ComponentCardLivePreview } from "@/components/component-card-live-preview";
-import { useContentfulPreviewSource } from "@/components/landing/video-preview-media";
+import {
+  useContentfulPreviewSource,
+  usePreviewMedia,
+} from "@/components/landing/video-preview-media";
+import { homePreviewMedia } from "@/lib/home-preview-media";
 import {
   isBasicPreviewSlug,
   type BasicPreviewSlug,
 } from "@/components/docs/previews/basic-component-card-slugs";
 import { components, sortByFeatured, getFeaturedRank } from "@/registry";
 import { BASIC_GROUPS, BASIC_SUBS } from "@/lib/component-groups";
+import { TEXT_ANIMATION_ORDER } from "@/lib/text-animation-slugs";
+import { useHydratedReducedMotion } from "@/hooks/use-hydrated-reduced-motion";
 import { useInViewport } from "@/hooks/use-in-viewport";
 import { cn } from "@/lib/utils";
 
@@ -57,21 +63,6 @@ const BASIC_SUBS_ALL: readonly string[] = BASIC_SUBS;
 // Featured-first order for the Text Animations gallery.
 // Mirrors the global FEATURED_SLUGS relative order so the shuffled
 // mix stays consistent across All + Text tabs.
-const TEXT_ANIMATION_ORDER = [
-  "gsap-text",
-  "text-video-mask",
-  "curved-inline-type",
-  "shake-text",
-  "rolling-text",
-  "media-text-hover",
-  "random-text-reveal",
-  "text-morph",
-  "text-reveal",
-  "shader-text",
-  "fluid-particle-text",
-  "encrypted-text",
-  "glitch-liquid-text",
-] as const;
 const TEXT_ANIMATION_RANK = new Map<string, number>(
   TEXT_ANIMATION_ORDER.map((slug, index) => [slug, index]),
 );
@@ -91,49 +82,92 @@ function GalleryCardMedia({
   title,
   previewVideo,
   previewImage,
+  play,
+  onActivate,
   className,
 }: {
   slug: string;
   title: string;
   previewVideo?: string;
   previewImage?: string;
+  play: boolean;
+  onActivate?: () => void;
   className: string;
 }) {
   const cms = useContentfulPreviewSource(slug);
+  const { theme, overrides } = usePreviewMedia();
+  const reduceMotion = useHydratedReducedMotion();
   const sources = getPreviewSources(previewVideo);
   const { ref, inView } = useInViewport({ rootMargin: "160px 0px" });
+  const hasVideo = Boolean(cms || sources);
+  const poster = hasVideo
+    ? homePreviewMedia(slug, theme, overrides).poster
+    : undefined;
+  const shouldPlay = play && inView && !reduceMotion;
+  const [posterFailed, setPosterFailed] = useState(false);
   let media: ReactNode = null;
 
-  if (cms) {
-    if (inView) {
-      media = (
-        <video
-          key={cms.src}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          className="absolute inset-0 size-full object-cover"
-          aria-hidden="true"
-        >
-          <source src={cms.src} type="video/mp4" />
-        </video>
-      );
-    }
-  } else if (sources && inView) {
+  useEffect(() => {
+    setPosterFailed(false);
+  }, [poster]);
+
+  if (hasVideo) {
+    // Poster-first: the video is not requested until the card is hovered,
+    // focused, or tapped, so idle cards cost a poster instead of a video.
     media = (
-      <video
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="metadata"
-        className="absolute inset-0 size-full object-cover"
-      >
-        <source src={sources.webm} type="video/webm" />
-        <source src={sources.mp4} type="video/mp4" />
-      </video>
+      <>
+        <div className="absolute inset-0 bg-gradient-to-br from-zinc-900/[0.06] via-transparent to-transparent dark:from-white/[0.06]" />
+        {poster && !posterFailed ? (
+          <img
+            src={poster}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 size-full object-cover"
+            loading="lazy"
+            decoding="async"
+            onError={() => setPosterFailed(true)}
+          />
+        ) : null}
+        {shouldPlay ? (
+          <video
+            key={cms?.src ?? sources?.mp4}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="none"
+            poster={poster}
+            className="absolute inset-0 size-full object-cover"
+            aria-hidden="true"
+          >
+            {cms ? (
+              <source src={cms.src} type="video/mp4" />
+            ) : (
+              <>
+                <source src={sources!.webm} type="video/webm" />
+                <source src={sources!.mp4} type="video/mp4" />
+              </>
+            )}
+          </video>
+        ) : null}
+        {!shouldPlay && !reduceMotion && onActivate ? (
+          <span
+            role="button"
+            aria-hidden="true"
+            tabIndex={-1}
+            onClick={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              onActivate();
+            }}
+            className="absolute inset-0 z-10 hidden cursor-pointer items-center justify-center [@media(hover:none)]:flex"
+          >
+            <span className="flex size-12 items-center justify-center rounded-full bg-black/55 text-white shadow-lg backdrop-blur-sm">
+              <Play className="size-5 fill-current" aria-hidden="true" />
+            </span>
+          </span>
+        ) : null}
+      </>
     );
   } else if (previewImage) {
     media = (
@@ -376,6 +410,7 @@ function ComponentsGallery() {
   const [activeSub, setActiveSub] = useState<BasicSub>(
     () => validSub(searchParams.get("sub")) ?? "All",
   );
+  const [activeSlug, setActiveSlug] = useState<string | null>(null);
 
   // Keep the active tabs in the URL so browser-back, reloads and shared
   // links restore the exact filtered view.
@@ -534,6 +569,8 @@ function ComponentsGallery() {
                     title={c.title}
                     previewVideo={c.previewVideo}
                     previewImage={c.previewImage}
+                    play={activeSlug === c.slug}
+                    onActivate={() => setActiveSlug(c.slug)}
                     className="absolute inset-0 h-full w-full object-cover"
                   />
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
@@ -560,6 +597,25 @@ function ComponentsGallery() {
               key={c.slug}
               href={`/experience/components/${c.slug}`}
               className={cardClassName}
+              onPointerEnter={(event) => {
+                if (event.pointerType === "mouse") setActiveSlug(c.slug);
+              }}
+              onPointerLeave={(event) => {
+                if (event.pointerType !== "mouse") return;
+                setActiveSlug((current) =>
+                  current === c.slug ? null : current,
+                );
+              }}
+              onFocus={(event) => {
+                if (event.currentTarget.matches(":focus-visible")) {
+                  setActiveSlug(c.slug);
+                }
+              }}
+              onBlur={() =>
+                setActiveSlug((current) =>
+                  current === c.slug ? null : current,
+                )
+              }
             >
               {cardContent}
             </Link>

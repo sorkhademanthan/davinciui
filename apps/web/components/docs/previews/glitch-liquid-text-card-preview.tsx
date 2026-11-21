@@ -23,16 +23,17 @@ export function GlitchLiquidTextCardPreview() {
   return (
     <div ref={hostRef} className="absolute inset-0 overflow-hidden">
       <GlitchLiquidText
-        text={"DAVINCIUI\nCOMPONENTS"}
+        text="DAVINCIUI"
         fontSize={48}
-        fontWeight={800}
-        lineHeight={0.95}
-        backgroundColor={isDark ? "#09090b" : "#fafafa"}
-        textColor={isDark ? "#f4f4f5" : "#18181b"}
+        fontWeight={400}
+        lineHeight={1.2}
+        backgroundColor={isDark ? "#080808" : "#fafafa"}
+        textColor={isDark ? "#ffffff" : "#18181b"}
         cursorEnabled
         distortionStrength={0.42}
-        liquidStrength={1.1}
-        glitchStrength={0.3}
+        liquidStrength={1}
+        starburstStrength={0.28}
+        glitchStrength={0.08}
         grainStrength={0.012}
         interactive
         autoAnimate

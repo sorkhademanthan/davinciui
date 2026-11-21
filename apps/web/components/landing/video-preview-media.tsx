@@ -138,13 +138,20 @@ export function VideoPreviewMedia({
   const [live, setLive] = React.useState(false);
   const [failed, setFailed] = React.useState(false);
   const [playing, setPlaying] = React.useState(false);
+  const [hovered, setHovered] = React.useState(false);
   const videoRef = React.useRef<HTMLVideoElement | null>(null);
 
   const media = homePreviewMedia(slug, theme, overrides);
   const source = media.sources[0];
   const poster = withMediaVersion(media.poster);
   const showVideo =
-    mounted && inView && !reduceMotion && !live && !failed && Boolean(source);
+    mounted &&
+    inView &&
+    hovered &&
+    !reduceMotion &&
+    !live &&
+    !failed &&
+    Boolean(source);
 
   React.useEffect(() => {
     setFailed(false);
@@ -166,6 +173,19 @@ export function VideoPreviewMedia({
     <div
       ref={ref}
       className={`relative w-full overflow-hidden rounded-[14px] bg-zinc-50 shadow-[inset_0_0_0_1px_rgba(0,0,0,0.045)] dark:bg-background dark:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.055)] ${heightClass ?? "h-[240px] sm:h-[260px]"}`}
+      onPointerEnter={(event) => {
+        if (event.pointerType === "mouse") setHovered(true);
+      }}
+      onPointerLeave={() => setHovered(false)}
+      onFocus={(event) => {
+        if (
+          event.target instanceof HTMLElement &&
+          event.target.matches(":focus-visible")
+        ) {
+          setHovered(true);
+        }
+      }}
+      onBlur={() => setHovered(false)}
     >
       <div className="absolute inset-0 transition-transform duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:scale-[1.03]">
         {live ? (

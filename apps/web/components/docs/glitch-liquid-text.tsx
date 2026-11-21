@@ -11,25 +11,27 @@ import { MousePointer } from "lucide-react";
 const usageCode = `import { GlitchLiquidText } from "@/components/ui/glitch-liquid-text"
 
 <GlitchLiquidText
-  text={"DAVINCIUI\\nCOMPONENTS"}
+  text="DAVINCIUI"
   fontFamily="Anton"
-  fontSize={180}
-  lineHeight={0.95}
-  backgroundColor="#141414"
-  textColor="#f5f5f5"
+  fontSize={250}
+  lineHeight={1.2}
+  backgroundColor="#080808"
+  textColor="#ffffff"
   distortionStrength={0.42}
-  liquidStrength={1.1}
+  liquidStrength={1}
+  starburstStrength={0.28}
   className="h-[560px] w-full"
 />`;
 
 const defaultCode = `import { GlitchLiquidText } from "@/components/ui/glitch-liquid-text"
 
 <GlitchLiquidText
-  text={"DAVINCIUI\\nCOMPONENTS"}
-  fontSize={180}
-  lineHeight={0.95}
+  text="DAVINCIUI"
+  fontSize={250}
+  lineHeight={1.2}
   distortionStrength={0.42}
-  liquidStrength={1.1}
+  liquidStrength={1}
+  starburstStrength={0.28}
   className="h-[560px] w-full"
 />`;
 
@@ -37,7 +39,7 @@ function HoverHint() {
   return (
     <span className="pointer-events-none absolute bottom-5 left-0 right-0 flex items-center justify-center gap-1.5 text-xs font-medium text-muted-foreground/60 select-none">
       <MousePointer className="w-3 h-3" />
-      Move your cursor across the type — velocity drags the membrane
+      Move across the type — the distortion stays local to the cursor
     </span>
   );
 }
@@ -51,7 +53,7 @@ export async function GlitchLiquidTextDocs() {
     <DocsPageLayout
       hideExamples
       title="Glitch Liquid Text"
-      description="GPU-rendered interactive typography printed on a thin liquid membrane. The cursor stretches glyphs with viscous fluid distortion, velocity-driven smear, localized RGB channel separation, subtle glitch slices, and cinematic light rays — while untouched type stays razor sharp."
+      description="GPU-rendered interactive typography on a dark liquid membrane. The cursor pulls a localized starburst, wave, and pinch through nearby glyphs, with velocity smear and edge-localized RGB separation — while untouched type stays crisp and readable."
       preview={
         <div className="relative h-full min-h-[560px] w-full p-6 sm:p-10">
           <GlitchLiquidTextPlayground />
@@ -131,7 +133,7 @@ export async function GlitchLiquidTextDocs() {
         {
           name: "text",
           type: "string",
-          default: '"DAVINCIUI\\nCOMPONENTS"',
+          default: '"DAVINCIUI"',
           description:
             "Text rendered into the GPU texture. Supports multiline via \\n.",
         },
@@ -145,8 +147,9 @@ export async function GlitchLiquidTextDocs() {
         {
           name: "fontSize",
           type: "number",
-          default: "220",
-          description: "Base type size in CSS px before contain-fit scaling.",
+          default: "250",
+          description:
+            "Base type size in CSS px before responsive fit scaling.",
         },
         {
           name: "fontWeight",
@@ -157,7 +160,7 @@ export async function GlitchLiquidTextDocs() {
         {
           name: "lineHeight",
           type: "number",
-          default: "0.95",
+          default: "1.2",
           description: "Line-height multiplier for multiline text.",
         },
         {
@@ -169,13 +172,13 @@ export async function GlitchLiquidTextDocs() {
         {
           name: "textColor",
           type: "string",
-          default: '"#f5f5f5"',
+          default: '"#ffffff"',
           description: "Glyph color applied in the shader composite.",
         },
         {
           name: "backgroundColor",
           type: "string",
-          default: '"#141414"',
+          default: '"#080808"',
           description: "Canvas clear color and shader background.",
         },
         {
@@ -187,7 +190,7 @@ export async function GlitchLiquidTextDocs() {
         {
           name: "distortionRadius",
           type: "number",
-          default: "0.18",
+          default: "0.2",
           description: "Interaction field radius in UV units.",
         },
         {
@@ -199,7 +202,7 @@ export async function GlitchLiquidTextDocs() {
         {
           name: "noiseStrength",
           type: "number",
-          default: "0.07",
+          default: "0.03",
           description:
             "Amplitude of the animated FBM ripple inside disturbed areas.",
         },
@@ -218,22 +221,42 @@ export async function GlitchLiquidTextDocs() {
         {
           name: "chromaticAberration",
           type: "number",
-          default: "0.012",
+          default: "0.014",
           description: "Peak RGB channel separation at distorted edges.",
         },
         {
           name: "glitchStrength",
           type: "number",
-          default: "0.4",
+          default: "0.08",
           description:
             "Intensity of sparse horizontal glitch slices (secondary effect).",
         },
         {
           name: "liquidStrength",
           type: "number",
-          default: "1.1",
+          default: "1",
           description:
             "Tangential swirl component — higher feels more fluid, less lens-like.",
+        },
+        {
+          name: "starburstStrength",
+          type: "number",
+          default: "0.28",
+          description:
+            "High-frequency radial rays that flicker through the cursor field.",
+        },
+        {
+          name: "waveStrength",
+          type: "number",
+          default: "0.22",
+          description: "Concentric ripple that rolls outward from the pointer.",
+        },
+        {
+          name: "pinchStrength",
+          type: "number",
+          default: "0.22",
+          description:
+            "Inward pull near the pointer center for a lens-like pinch.",
         },
         {
           name: "velocityInfluence",
@@ -245,14 +268,14 @@ export async function GlitchLiquidTextDocs() {
         {
           name: "lightIntensity",
           type: "number",
-          default: "0.35",
+          default: "0.14",
           description:
             "Directional light-ray bloom gathered from disturbed glyph edges.",
         },
         {
           name: "grainStrength",
           type: "number",
-          default: "0.025",
+          default: "0.016",
           description: "Fine monochromatic cinematic grain.",
         },
         {
@@ -285,14 +308,14 @@ export async function GlitchLiquidTextDocs() {
         {
           name: "autoAnimate",
           type: "boolean",
-          default: "true",
+          default: "false",
           description:
             "Low-energy wandering pointer keeps the membrane alive at idle.",
         },
         {
           name: "fit",
-          type: '"contain" | "cover" | "fixed"',
-          default: '"contain"',
+          type: '"responsive" | "contain" | "cover" | "fixed"',
+          default: '"responsive"',
           description: "How the text texture maps into the container.",
         },
         {

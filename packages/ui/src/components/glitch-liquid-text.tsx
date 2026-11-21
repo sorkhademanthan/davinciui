@@ -11,11 +11,13 @@ import {
 /* Types                                                               */
 /* ------------------------------------------------------------------ */
 
-export type GlitchLiquidTextFit = "contain" | "cover" | "fixed";
+export type GlitchLiquidTextFit = "responsive" | "contain" | "cover" | "fixed";
 export type GlitchLiquidTextAs = "h1" | "h2" | "h3" | "p" | "div" | "span";
 
-export interface GlitchLiquidTextProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, "children"> {
+export interface GlitchLiquidTextProps extends Omit<
+  React.HTMLAttributes<HTMLDivElement>,
+  "children"
+> {
   text?: string;
   fontFamily?: string;
   fontSize?: number;
@@ -39,6 +41,10 @@ export interface GlitchLiquidTextProps
 
   liquidStrength?: number;
   velocityInfluence?: number;
+
+  starburstStrength?: number;
+  waveStrength?: number;
+  pinchStrength?: number;
 
   lightIntensity?: number;
   grainStrength?: number;
@@ -106,6 +112,9 @@ uniform float uChromaticAberration;
 uniform float uGlitchStrength;
 uniform float uLiquidStrength;
 uniform float uVelocityInfluence;
+uniform float uStarburstStrength;
+uniform float uWaveStrength;
+uniform float uPinchStrength;
 uniform float uLightIntensity;
 uniform float uGrain;
 uniform float uIdleLevel;
@@ -176,7 +185,19 @@ void main() {
   vec2 tang = vec2(-dirN.y, dirN.x);
   float swirl = (n2 - 0.5) * 2.0;
 
+  float angle = atan(rel.y, rel.x);
+  float swirlAngle = angle + dist * (1.2 + n1 * 0.7);
+  float rays = sin(swirlAngle * 15.0 - uTime * 1.5 + n2 * 0.7);
+  float wave = sin(dist * 32.0 - uTime * 2.1 + n2 * 6.2831853);
+
+  vec2 burstDir = normalize(rel + (vec2(n1, n2) - 0.5) * 0.06 + vec2(0.0001));
+  vec2 twistDir = vec2(-burstDir.y, burstDir.x);
+  burstDir = normalize(mix(burstDir, twistDir, 0.25 + n1 * 0.1));
+
   vec2 liquid = dirN * (0.60 + 0.55 * n1) + tang * swirl * uLiquidStrength;
+  vec2 starburst = burstDir * (rays * uStarburstStrength * r * 0.42 * influence);
+  vec2 waveDisp = dirN * (wave * uWaveStrength * r * 0.22 * influence);
+  vec2 pinch = -dirN * (uPinchStrength * r * 0.35 * influence);
 
   vec2 smearDir = speed > 0.0001 ? uVel / speed : vec2(0.0);
   float smearMag = min(speed * uVelocityInfluence, 0.016);
@@ -187,6 +208,9 @@ void main() {
   // effect stays tasteful across container sizes.
   vec2 dispAspect =
     liquid * (uDistortionStrength * r * 0.6 * influence) +
+    starburst +
+    waveDisp +
+    pinch +
     smear * influence +
     (vec2(n1 - 0.5, n2 - 0.5)) * (uNoiseStrength * r * 0.8 * influence);
 
@@ -194,7 +218,7 @@ void main() {
 
   // Clamp peak displacement so fast flicks smear instead of tearing holes.
   float dLen = length(dispAspect);
-  float dMax = r * 0.55;
+  float dMax = r * 0.65;
   if (dLen > dMax) dispAspect *= dMax / max(dLen, 0.0001);
 
   // Idle drift: a whisper (~a pixel) of the hover intensity so untouched
@@ -221,8 +245,8 @@ void main() {
 
   /* ---- 4. chromatic aberration (edge-localized) --------------------- */
   vec2 chromaDir = length(disp) > 0.00001 ? disp / length(disp) : vec2(1.0 / aspect, 0.0);
-  float chromaEnergy = clamp(localDistort * 0.5 + speed * 0.35, 0.0, 1.0);
-  float chromaMag = uChromaticAberration * influence * chromaEnergy * 0.35;
+  float chromaEnergy = clamp(localDistort * 0.65 + speed * 0.45, 0.0, 1.0);
+  float chromaMag = uChromaticAberration * influence * (0.25 + chromaEnergy * 0.75);
   chromaMag += 0.00012 * uIdleLevel * (0.5 + 0.5 * sin(uTime * 1.7 + vUv.y * 40.0));
   vec2 chromaOff = chromaDir * chromaMag;
 
@@ -244,6 +268,8 @@ void main() {
     float edge = clamp(cg * (1.0 - cg) * 4.0, 0.0, 1.0);
     float rayGate = edge * (0.2 + 0.8 * influence) + acc * influence * 0.2;
     col += uTextColor * acc * rayGate * uLightIntensity;
+    float glow = exp(-dist * 5.5) * influence * uLightIntensity * 0.10;
+    col += uTextColor * glow * (0.25 + 0.75 * cg);
   }
 
   /* ---- 6. grain + faint vignette ------------------------------------ */
@@ -303,7 +329,15 @@ function renderTextCanvas(opts: {
   letterSpacing: number;
   scale: number;
 }): TextTextureResult | null {
-  const { text, fontFamily, fontSize, fontWeight, lineHeight, letterSpacing, scale } = opts;
+  const {
+    text,
+    fontFamily,
+    fontSize,
+    fontWeight,
+    lineHeight,
+    letterSpacing,
+    scale,
+  } = opts;
   const lines = text.split("\n");
   const stack = `${fontFamily}, Impact, "Arial Black", sans-serif`;
   const font = `${fontWeight} ${fontSize}px ${stack}`;
@@ -320,7 +354,8 @@ function renderTextCanvas(opts: {
     const widths = chars.map((ch) => measure.measureText(ch).width);
     charWidths.push(widths);
     const w =
-      widths.reduce((a, b) => a + b, 0) + Math.max(0, chars.length - 1) * letterSpacing;
+      widths.reduce((a, b) => a + b, 0) +
+      Math.max(0, chars.length - 1) * letterSpacing;
     lineWidths.push(w);
     contentW = Math.max(contentW, w);
   });
@@ -328,7 +363,7 @@ function renderTextCanvas(opts: {
   if (contentW < 1 || contentH < 1) return null;
 
   const padX = fontSize * 0.25;
-  const padY = fontSize * 0.30;
+  const padY = fontSize * 0.3;
   const w = Math.ceil(contentW + padX * 2);
   const h = Math.ceil(contentH + padY * 2);
   // Clamp the raster scale so giant hero type never exceeds GPU limits.
@@ -371,6 +406,9 @@ interface EngineSettings {
   glitchStrength: number;
   liquidStrength: number;
   velocityInfluence: number;
+  starburstStrength: number;
+  waveStrength: number;
+  pinchStrength: number;
   lightIntensity: number;
   grainStrength: number;
   textColor: string;
@@ -385,40 +423,44 @@ interface EngineSettings {
 /* ------------------------------------------------------------------ */
 
 export function GlitchLiquidText({
-  text = "DAVINCIUI\nCOMPONENTS",
+  text = "DAVINCIUI",
   fontFamily = "Anton",
-  fontSize = 220,
+  fontSize = 250,
   fontWeight = 400,
-  lineHeight = 0.95,
+  lineHeight = 1.2,
   letterSpacing = 0,
 
-  textColor = "#f5f5f5",
-  backgroundColor = "#141414",
+  textColor = "#ffffff",
+  backgroundColor = "#080808",
 
   distortionStrength = 0.42,
-  distortionRadius = 0.18,
+  distortionRadius = 0.2,
   distortionDecay = 3,
 
-  noiseStrength = 0.07,
+  noiseStrength = 0.03,
   noiseScale = 2.4,
   noiseSpeed = 0.35,
 
-  chromaticAberration = 0.012,
-  glitchStrength = 0.4,
+  chromaticAberration = 0.014,
+  glitchStrength = 0.08,
 
-  liquidStrength = 1.1,
+  liquidStrength = 1,
   velocityInfluence = 0.05,
 
-  lightIntensity = 0.35,
-  grainStrength = 0.025,
+  starburstStrength = 0.28,
+  waveStrength = 0.22,
+  pinchStrength = 0.22,
+
+  lightIntensity = 0.14,
+  grainStrength = 0.016,
 
   cursorEnabled = true,
   cursorSize = 48,
   cursorColor = "#ffffff",
 
   interactive = true,
-  autoAnimate = true,
-  fit = "contain",
+  autoAnimate = false,
+  fit = "responsive",
 
   as = "div",
   ariaLabel,
@@ -445,6 +487,9 @@ export function GlitchLiquidText({
     glitchStrength,
     liquidStrength,
     velocityInfluence,
+    starburstStrength,
+    waveStrength,
+    pinchStrength,
     lightIntensity,
     grainStrength,
     textColor,
@@ -464,6 +509,9 @@ export function GlitchLiquidText({
     glitchStrength,
     liquidStrength,
     velocityInfluence,
+    starburstStrength,
+    waveStrength,
+    pinchStrength,
     lightIntensity,
     grainStrength,
     textColor,
@@ -473,8 +521,22 @@ export function GlitchLiquidText({
     fit,
   };
 
-  const typeRef = useRef({ text, fontFamily, fontSize, fontWeight, lineHeight, letterSpacing });
-  typeRef.current = { text, fontFamily, fontSize, fontWeight, lineHeight, letterSpacing };
+  const typeRef = useRef({
+    text,
+    fontFamily,
+    fontSize,
+    fontWeight,
+    lineHeight,
+    letterSpacing,
+  });
+  typeRef.current = {
+    text,
+    fontFamily,
+    fontSize,
+    fontWeight,
+    lineHeight,
+    letterSpacing,
+  };
 
   const cursorStyleRef = useRef({ cursorEnabled, cursorSize, cursorColor });
   cursorStyleRef.current = { cursorEnabled, cursorSize, cursorColor };
@@ -548,7 +610,8 @@ export function GlitchLiquidText({
       contextValid: false,
     };
 
-    const uniforms: Record<string, WebGLUniformLocation | null | undefined> = {};
+    const uniforms: Record<string, WebGLUniformLocation | null | undefined> =
+      {};
 
     function compileShader(type: number, source: string): WebGLShader | null {
       if (!gl) return null;
@@ -578,6 +641,12 @@ export function GlitchLiquidText({
       } else if (s.fit === "fixed") {
         dw = tw / hostW;
         dh = th / hostH;
+      } else if (s.fit === "responsive") {
+        const targetW = hostW < 640 ? 0.86 : 0.66;
+        const targetH = hostH < 420 ? 0.72 : 0.82;
+        const k = Math.min((hostW * targetW) / tw, (hostH * targetH) / th);
+        dw = (tw * k) / hostW;
+        dh = (th * k) / hostH;
       } else {
         const k = Math.min((hostW * 0.88) / tw, (hostH * 0.88) / th);
         dw = (tw * k) / hostW;
@@ -613,8 +682,15 @@ export function GlitchLiquidText({
       if (!result) return;
 
       const s = settingsRef.current;
-      if (s.fit === "contain") {
-        const need = Math.min((hostW * 0.88) / result.w, (hostH * 0.88) / result.h);
+      if (s.fit === "contain" || s.fit === "responsive") {
+        const targetW =
+          s.fit === "responsive" ? (hostW < 640 ? 0.86 : 0.66) : 0.88;
+        const targetH =
+          s.fit === "responsive" ? (hostH < 420 ? 0.72 : 0.82) : 0.88;
+        const need = Math.min(
+          (hostW * targetW) / result.w,
+          (hostH * targetH) / result.h,
+        );
         if (need > 1.05 && dpr < 2) {
           const boost = Math.min(need, 2 / dpr);
           const retry = renderTextCanvas({
@@ -641,7 +717,14 @@ export function GlitchLiquidText({
       gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
       // No mipmaps: text textures are rarely power-of-two and WebGL1
       // disallows NPOT mipmapping. LINEAR keeps edges smooth.
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, result.canvas);
+      gl.texImage2D(
+        gl.TEXTURE_2D,
+        0,
+        gl.RGBA,
+        gl.RGBA,
+        gl.UNSIGNED_BYTE,
+        result.canvas,
+      );
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
       gl.bindTexture(gl.TEXTURE_2D, null);
       S.texW = result.w;
@@ -781,9 +864,15 @@ export function GlitchLiquidText({
       gl.uniform2f(U("uVel"), S.velX, S.velY);
       gl.uniform1f(U("uPresence"), S.presence);
       gl.uniform1f(U("uTime"), S.time);
-      gl.uniform1f(U("uDistortionStrength"), s.distortionStrength * motionScale);
+      gl.uniform1f(
+        U("uDistortionStrength"),
+        s.distortionStrength * motionScale,
+      );
       gl.uniform1f(U("uDistortionRadius"), s.distortionRadius);
-      gl.uniform1f(U("uNoiseStrength"), s.noiseStrength * motionScale * coarseScale);
+      gl.uniform1f(
+        U("uNoiseStrength"),
+        s.noiseStrength * motionScale * coarseScale,
+      );
       gl.uniform1f(U("uNoiseScale"), s.noiseScale);
       // Calm the noise evolution while touching: hover motion should be
       // pure pointer flow, not crawling interference.
@@ -798,12 +887,15 @@ export function GlitchLiquidText({
       gl.uniform1f(U("uGlitchStrength"), reduced ? 0 : s.glitchStrength);
       gl.uniform1f(U("uLiquidStrength"), s.liquidStrength);
       gl.uniform1f(U("uVelocityInfluence"), s.velocityInfluence);
-      gl.uniform1f(U("uLightIntensity"), s.lightIntensity * (reduced ? 0.4 : 1));
-      gl.uniform1f(U("uGrain"), s.grainStrength);
+      gl.uniform1f(U("uStarburstStrength"), s.starburstStrength * motionScale);
+      gl.uniform1f(U("uWaveStrength"), s.waveStrength * motionScale);
+      gl.uniform1f(U("uPinchStrength"), s.pinchStrength * motionScale);
       gl.uniform1f(
-        U("uIdleLevel"),
-        reduced ? 0 : s.autoAnimate || s.interactive ? 1 : 0.4,
+        U("uLightIntensity"),
+        s.lightIntensity * (reduced ? 0.4 : 1),
       );
+      gl.uniform1f(U("uGrain"), s.grainStrength);
+      gl.uniform1f(U("uIdleLevel"), reduced || !s.autoAnimate ? 0 : 1);
       gl.uniform3f(U("uTextColor"), fg[0], fg[1], fg[2]);
       gl.uniform3f(U("uBackground"), bg[0], bg[1], bg[2]);
 
@@ -872,15 +964,45 @@ export function GlitchLiquidText({
       kick();
     }
 
-    function onPointerLeave() {
+    function onPointerDown(e: PointerEvent) {
+      const s = settingsRef.current;
+      if (!s.interactive) return;
+      S.hovering = true;
+      S.hasPointer = true;
+      S.presenceTarget = 1;
+      S.isMouse = e.pointerType === "mouse";
+      setPointerFromEvent(e);
+      if (!S.isMouse) {
+        S.mouseX = S.flowX = S.targetX;
+        S.mouseY = S.flowY = S.targetY;
+        S.hist.length = 0;
+        S.hist.push({ x: S.targetX, y: S.targetY, t: performance.now() });
+      }
+      kick();
+    }
+
+    function releasePointer() {
       S.hovering = false;
       // Release the pointer so the membrane relaxes; autoAnimate may
       // take over with its low-energy wander if enabled.
       S.hasPointer = false;
-      S.presenceTarget = settingsRef.current.autoAnimate && !S.reducedMotion ? 0.22 : 0;
+      S.presenceTarget =
+        settingsRef.current.autoAnimate && !S.reducedMotion ? 0.22 : 0;
       S.cursorVisible = false;
       if (cursorRef.current) cursorRef.current.style.opacity = "0";
       host!.style.cursor = "";
+    }
+
+    function onPointerLeave() {
+      releasePointer();
+    }
+
+    function onPointerUp(e: PointerEvent) {
+      if (e.pointerType !== "mouse") releasePointer();
+    }
+
+    function onPointerCancel(e: PointerEvent) {
+      if (e.pointerType !== "mouse") releasePointer();
     }
 
     /* ---- init -------------------------------------------------------- */
@@ -953,6 +1075,9 @@ export function GlitchLiquidText({
           "uGlitchStrength",
           "uLiquidStrength",
           "uVelocityInfluence",
+          "uStarburstStrength",
+          "uWaveStrength",
+          "uPinchStrength",
           "uLightIntensity",
           "uGrain",
           "uIdleLevel",
@@ -1037,7 +1162,9 @@ export function GlitchLiquidText({
       const loadSpec: Array<Promise<unknown>> = [];
       try {
         loadSpec.push(
-          document.fonts.load(`${t.fontWeight} ${t.fontSize}px "${t.fontFamily}"`),
+          document.fonts.load(
+            `${t.fontWeight} ${t.fontSize}px "${t.fontFamily}"`,
+          ),
         );
       } catch {
         /* font load API may reject for unknown families — fonts.ready covers it */
@@ -1103,6 +1230,9 @@ export function GlitchLiquidText({
 
     host.addEventListener("pointerenter", onPointerEnter);
     host.addEventListener("pointermove", onPointerMove);
+    host.addEventListener("pointerdown", onPointerDown);
+    host.addEventListener("pointerup", onPointerUp);
+    host.addEventListener("pointercancel", onPointerCancel);
     host.addEventListener("pointerleave", onPointerLeave);
 
     S.lastT = performance.now();
@@ -1118,11 +1248,15 @@ export function GlitchLiquidText({
           reduceMotionQuery.removeEventListener("change", onReduceMotionChange);
         }
       }
-      if (onContextLost) canvas.removeEventListener("webglcontextlost", onContextLost);
+      if (onContextLost)
+        canvas.removeEventListener("webglcontextlost", onContextLost);
       if (onContextRestored)
         canvas.removeEventListener("webglcontextrestored", onContextRestored);
       host.removeEventListener("pointerenter", onPointerEnter);
       host.removeEventListener("pointermove", onPointerMove);
+      host.removeEventListener("pointerdown", onPointerDown);
+      host.removeEventListener("pointerup", onPointerUp);
+      host.removeEventListener("pointercancel", onPointerCancel);
       host.removeEventListener("pointerleave", onPointerLeave);
       resizeObserver?.disconnect();
       intersectionObserver?.disconnect();
@@ -1153,7 +1287,7 @@ export function GlitchLiquidText({
         style={{
           color: textColor,
           fontFamily: `${fontFamily}, Impact, "Arial Black", sans-serif`,
-          fontSize: "clamp(72px, 12vw, 180px)",
+          fontSize: `min(${fontSize}px, 72vw)`,
           fontWeight,
           lineHeight,
           letterSpacing,
@@ -1170,8 +1304,18 @@ export function GlitchLiquidText({
     <WebGLErrorBoundary fallback={fallback}>
       <div
         ref={hostRef}
-        className={cn("glitch-liquid-text relative h-[560px] w-full overflow-hidden", className)}
-        style={{ position: "relative", overflow: "hidden", width: "100%", background: backgroundColor, ...style }}
+        className={cn(
+          "glitch-liquid-text relative h-[560px] w-full overflow-hidden",
+          className,
+        )}
+        style={{
+          position: "relative",
+          overflow: "hidden",
+          width: "100%",
+          background: backgroundColor,
+          touchAction: interactive ? "none" : "auto",
+          ...style,
+        }}
         {...props}
       >
         {/* Measurement / accessibility node only — never the visual text. */}

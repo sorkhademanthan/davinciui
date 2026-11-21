@@ -1,7 +1,173 @@
 "use client";
 
+import { useTheme } from "next-themes";
 import { GlitchLiquidText } from "@workspace/ui/components/glitch-liquid-text";
 import { createComponentPlayground } from "@/components/docs/previews/generic-playground";
+
+const GLITCH_PLAYGROUND_DEFAULTS = {
+  text: "DAVINCIUI",
+  fontFamily: "Anton",
+  fontSize: 250,
+  lineHeight: 1.2,
+  textColor: "#ffffff",
+  backgroundColor: "#080808",
+  distortionStrength: 0.42,
+  distortionRadius: 0.2,
+  distortionDecay: 3,
+  liquidStrength: 1,
+  starburstStrength: 0.28,
+  waveStrength: 0.22,
+  pinchStrength: 0.22,
+  chromaticAberration: 0.014,
+  glitchStrength: 0.08,
+  noiseStrength: 0.03,
+  noiseSpeed: 0.35,
+  lightIntensity: 0.14,
+  grainStrength: 0.016,
+  autoAnimate: false,
+  interactive: true,
+};
+
+function isDefaultValue(
+  key: keyof typeof GLITCH_PLAYGROUND_DEFAULTS,
+  value: unknown,
+) {
+  return value === GLITCH_PLAYGROUND_DEFAULTS[key];
+}
+
+function GlitchLiquidTextStage({
+  config,
+  renderVersion,
+}: {
+  config: Record<string, unknown>;
+  renderVersion: number;
+}) {
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
+
+  const text =
+    typeof config.text === "string"
+      ? config.text
+      : GLITCH_PLAYGROUND_DEFAULTS.text;
+  const fontFamily =
+    typeof config.fontFamily === "string"
+      ? config.fontFamily
+      : GLITCH_PLAYGROUND_DEFAULTS.fontFamily;
+  const fontSize =
+    typeof config.fontSize === "number"
+      ? config.fontSize
+      : GLITCH_PLAYGROUND_DEFAULTS.fontSize;
+  const lineHeight =
+    typeof config.lineHeight === "number"
+      ? config.lineHeight
+      : GLITCH_PLAYGROUND_DEFAULTS.lineHeight;
+  const textColor = isDefaultValue("textColor", config.textColor)
+    ? isDark
+      ? "#ffffff"
+      : "#18181b"
+    : String(config.textColor ?? GLITCH_PLAYGROUND_DEFAULTS.textColor);
+  const backgroundColor = isDefaultValue(
+    "backgroundColor",
+    config.backgroundColor,
+  )
+    ? isDark
+      ? "#080808"
+      : "#f8fafc"
+    : String(
+        config.backgroundColor ?? GLITCH_PLAYGROUND_DEFAULTS.backgroundColor,
+      );
+  const distortionStrength =
+    typeof config.distortionStrength === "number"
+      ? config.distortionStrength
+      : GLITCH_PLAYGROUND_DEFAULTS.distortionStrength;
+  const distortionRadius =
+    typeof config.distortionRadius === "number"
+      ? config.distortionRadius
+      : GLITCH_PLAYGROUND_DEFAULTS.distortionRadius;
+  const distortionDecay =
+    typeof config.distortionDecay === "number"
+      ? config.distortionDecay
+      : GLITCH_PLAYGROUND_DEFAULTS.distortionDecay;
+  const liquidStrength =
+    typeof config.liquidStrength === "number"
+      ? config.liquidStrength
+      : GLITCH_PLAYGROUND_DEFAULTS.liquidStrength;
+  const starburstStrength =
+    typeof config.starburstStrength === "number"
+      ? config.starburstStrength
+      : GLITCH_PLAYGROUND_DEFAULTS.starburstStrength;
+  const waveStrength =
+    typeof config.waveStrength === "number"
+      ? config.waveStrength
+      : GLITCH_PLAYGROUND_DEFAULTS.waveStrength;
+  const pinchStrength =
+    typeof config.pinchStrength === "number"
+      ? config.pinchStrength
+      : GLITCH_PLAYGROUND_DEFAULTS.pinchStrength;
+  const chromaticAberration =
+    typeof config.chromaticAberration === "number"
+      ? config.chromaticAberration
+      : GLITCH_PLAYGROUND_DEFAULTS.chromaticAberration;
+  const glitchStrength =
+    typeof config.glitchStrength === "number"
+      ? config.glitchStrength
+      : GLITCH_PLAYGROUND_DEFAULTS.glitchStrength;
+  const noiseStrength =
+    typeof config.noiseStrength === "number"
+      ? config.noiseStrength
+      : GLITCH_PLAYGROUND_DEFAULTS.noiseStrength;
+  const noiseSpeed =
+    typeof config.noiseSpeed === "number"
+      ? config.noiseSpeed
+      : GLITCH_PLAYGROUND_DEFAULTS.noiseSpeed;
+  const lightIntensity =
+    typeof config.lightIntensity === "number"
+      ? config.lightIntensity
+      : GLITCH_PLAYGROUND_DEFAULTS.lightIntensity;
+  const grainStrength =
+    typeof config.grainStrength === "number"
+      ? config.grainStrength
+      : GLITCH_PLAYGROUND_DEFAULTS.grainStrength;
+  const autoAnimate =
+    typeof config.autoAnimate === "boolean"
+      ? config.autoAnimate
+      : GLITCH_PLAYGROUND_DEFAULTS.autoAnimate;
+  const interactive =
+    typeof config.interactive === "boolean"
+      ? config.interactive
+      : GLITCH_PLAYGROUND_DEFAULTS.interactive;
+
+  return (
+    <GlitchLiquidText
+      key={renderVersion}
+      text={text}
+      fontFamily={fontFamily}
+      fontSize={fontSize}
+      lineHeight={lineHeight}
+      textColor={textColor}
+      backgroundColor={backgroundColor}
+      distortionStrength={distortionStrength}
+      distortionRadius={distortionRadius}
+      distortionDecay={distortionDecay}
+      liquidStrength={liquidStrength}
+      starburstStrength={starburstStrength}
+      waveStrength={waveStrength}
+      pinchStrength={pinchStrength}
+      chromaticAberration={chromaticAberration}
+      glitchStrength={glitchStrength}
+      noiseStrength={noiseStrength}
+      noiseSpeed={noiseSpeed}
+      lightIntensity={lightIntensity}
+      grainStrength={grainStrength}
+      interactive={interactive}
+      autoAnimate={autoAnimate}
+      fit="responsive"
+      cursorEnabled
+      cursorSize={48}
+      cursorColor="#ffffff"
+    />
+  );
+}
 
 export const {
   Preview: GlitchLiquidTextPlayground,
@@ -11,32 +177,35 @@ export const {
   component: GlitchLiquidText as React.ComponentType<Record<string, unknown>>,
   componentName: "GlitchLiquidText",
   defaults: {
-    text: "DAVINCIUI\nCOMPONENTS",
+    text: "DAVINCIUI",
     fontFamily: "Anton",
-    fontSize: 180,
-    lineHeight: 0.95,
-    textColor: "#f5f5f5",
-    backgroundColor: "#141414",
+    fontSize: 250,
+    lineHeight: 1.2,
+    textColor: "#ffffff",
+    backgroundColor: "#080808",
     distortionStrength: 0.42,
-    distortionRadius: 0.18,
+    distortionRadius: 0.2,
     distortionDecay: 3,
-    liquidStrength: 1.1,
-    chromaticAberration: 0.012,
-    glitchStrength: 0.4,
-    noiseStrength: 0.07,
+    liquidStrength: 1,
+    starburstStrength: 0.28,
+    waveStrength: 0.22,
+    pinchStrength: 0.22,
+    chromaticAberration: 0.014,
+    glitchStrength: 0.08,
+    noiseStrength: 0.03,
     noiseSpeed: 0.35,
-    lightIntensity: 0.35,
-    grainStrength: 0.025,
+    lightIntensity: 0.14,
+    grainStrength: 0.016,
     cursorColor: "#ffffff",
     cursorSize: 48,
-    autoAnimate: true,
+    autoAnimate: false,
   },
   fields: [
     {
       key: "text",
       label: "Text",
       type: "textarea",
-      placeholder: "DAVINCIUI\\nCOMPONENTS",
+      placeholder: "DAVINCIUI",
       section: "Content",
     },
     {
@@ -102,6 +271,33 @@ export const {
       section: "Distortion",
     },
     {
+      key: "starburstStrength",
+      label: "Starburst",
+      type: "slider",
+      min: 0,
+      max: 1.5,
+      step: 0.01,
+      section: "Distortion",
+    },
+    {
+      key: "waveStrength",
+      label: "Wave",
+      type: "slider",
+      min: 0,
+      max: 1.5,
+      step: 0.01,
+      section: "Distortion",
+    },
+    {
+      key: "pinchStrength",
+      label: "Pinch",
+      type: "slider",
+      min: 0,
+      max: 1.5,
+      step: 0.01,
+      section: "Distortion",
+    },
+    {
       key: "chromaticAberration",
       label: "Chromatic Split",
       type: "slider",
@@ -162,8 +358,14 @@ export const {
       section: "Finish",
     },
   ],
+  render: (config, renderVersion) => (
+    <GlitchLiquidTextStage
+      config={config as Record<string, unknown>}
+      renderVersion={renderVersion}
+    />
+  ),
   elementClassName: "h-full w-full",
-  stageClassName: "bg-[#141414]",
+  stageClassName: "bg-background",
   intro:
-    "Tune the liquid membrane, chromatic glitch, and grain. Move your cursor across the type to deform it.",
+    "Move across the type to pull a localized starburst, wave, and chromatic split through the letters. Leave it alone and the type stays crisp.",
 });
