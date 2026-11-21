@@ -23,6 +23,18 @@
 
 ## Last work sessions (context from commit history)
 
+3. (2026-11-21) DialKit reference wired into the app (dialkit 2.2.1) — implemented; verified.
+   - Goal: implement the DialKit reference ("Mount one DialRoot and use useDialKit…") where the app's dialogs for input are — all dialog-input surfaces now read/write DialKit-controlled values, and the reference quick-start is a real component.
+   - Changes:
+     - `apps/web/app/layout.tsx`: mounted one `<DialRoot productionEnabled />` (user asked to keep the editor visible in production) + `import "dialkit/styles.css"`.
+     - `apps/web/components/dialkit-reference.tsx` (new): reference quick-start `DialkitCard` — `useDialKit("Card", { radius: [24, 0, 64], color: "#a78bfa" })`, styles `borderRadius`/`background` from values; rendered on `/design-system/new` (the app's dialog-for-input flow).
+     - `apps/web/components/docs/previews/dialog-preview.tsx`: `DialogStickyFooterPreview` ("Edit profile" — the dialog for input, with its 8 Input fields) now binds its fields through `useDialKitController("Edit profile", stickyFooterFieldConfig)` — app Inputs read `values[key]` and write via `setValue(key, …)`, so typing flows into the dialkit panel and panel edits flow back.
+     - `apps/web/package.json`: added `dialkit: ^2.2.1`; `pnpm install` linked it into `apps/web/node_modules` and updated `pnpm-lock.yaml` (root `package.json` also carries dialkit/motion from earlier, pre-existing working-tree changes).
+   - Verification:
+     - `apps/web` `npx tsc --noEmit`: no errors in changed files; only 2 pre-existing errors remain in `packages/ui/src/components/scroll-media-expand.tsx:348,578` (from the uncommitted poster-first rollout diff, not touched by this work).
+     - `eslint` clean on all changed files; Prettier clean on `dialkit-reference.tsx` (3.7 reformats of other touched files' pre-existing lines were reverted — kept diffs minimal).
+     - `pnpm build` fails only on those pre-existing `scroll-media-expand.tsx` type errors (unrelated); webpack/turbopop compile succeeded.
+
 1. `9d8c4a3` **feat: new component preview changes** (Manthan, 2026-11-20)
    - Added `apps/web/components/customize-panel.tsx` (~784 lines) and migrated ~25 playground previews from the old `PersonalizeController`/`PersonalizeDrawer` to inline `CustomizePanel`.
    - Deleted `apps/web/components/personalize-controller.tsx` and `personalize-drawer.tsx`.
@@ -34,6 +46,32 @@
    - No dangling imports found for the removed components.
 
 ## Active task
+
+- **Visual sitemap page + Shoogle/shadcn registry verification (2026-11-22) — COMPLETE; uncommitted.**
+  - Goal: a tree sitemap of the site (categories → components) and to get the library into shoogle.dev.
+  - Built `apps/web/app/sitemap/page.tsx` (`/sitemap`): server-rendered tree with hero stats, sticky category index, site-pages tree, and per-category `<details>` trees linking all 145 documented component pages (`/docs/components/<slug>`). Added `Sitemap` link in `components/footer.tsx` and `/sitemap` to `app/sitemap.ts`. Added `"focus-carousel": "Visual Effects"` to `lib/docs-content/categories.ts` (fixes its grouping + one `validate:docs` category error).
+  - Shoogle finding: shoogle.dev has **no submission API/token**. It indexes the official shadcn registry directory (`https://ui.shadcn.com/r/registries.json`). Listing = PR to `shadcn-ui/ui` `apps/v4/registry/directory.json`.
+  - Verified: `https://davinciui.com/r/registry.json` → 200, 164 unique items, no `content` in index files; **all 164 item URLs** → 200, valid JSON, valid `registry-item` types, `files[].content` present. Local vs live registry identical. Directory entry `@davinciui` matches the shadcn zod schema (name/homepage/url/description/author/logo, no extras) and has no duplicate namespace.
+  - Submission already exists: sibling clone `../ui` branch `feat/registry-add-davinciui` (commit `714f616c7`, pushed to `fork`) has **open PR shadcn-ui/ui#12799** — `MERGEABLE`, `BLOCKED` pending review; only failing check is Vercel "Authorization required to deploy" (fork permission, not code). Not merged yet, so `registries.json` (593 entries) does not include `@davinciui`; Shoogle will index after merge.
+  - Verification: `apps/web npx tsc --noEmit` only the pre-existing `orbit-spiral-gallery.tsx` three.js errors; ESLint clean on changed files; Playwright on `:3000` `/sitemap` → 200, 16 categories, 145 component links, `/sitemap.xml` still 200 (148 locs), 0 console errors, no horizontal overflow at 390/768/1440.
+  - Handoff records: rewrote `docs/SHADCN_REGISTRY_INDEX_SUBMISSION.md` (current status, Shoogle mechanics, entry, next-step checklist, troubleshooting) and added `scripts/verify-registry-urls.mjs` + `pnpm verify:registry` (checks index + all 164 item URLs; currently PASS 164/164).
+
+- **DialKit integration (2026-11-22) — COMPLETE / runtime-verified; uncommitted.**
+  - Goal: mount one `DialRoot` and bind the app's dialog-for-input surfaces to DialKit.
+  - Implemented: `apps/web/app/layout.tsx` mounts `<DialRoot productionEnabled />` and imports `dialkit/styles.css`; `apps/web/components/dialkit-reference.tsx` `DialkitCard` uses `useDialKit("Card", …)` and renders on `/design-system/new`; `apps/web/components/docs/previews/dialog-preview.tsx` `DialogStickyFooterPreview` binds 8 text fields via `useDialKitController("Edit profile", …)`; `dialkit@^2.2.1` in `apps/web/package.json` (lock updated).
+  - Verification (2026-11-22): Playwright on `:3000` — panel mounts, reference card renders, dialog opens from the `Sticky Footer` variant, 8 fields default `Value 1..8`; two-way sync confirmed (dialog → panel `QA-SYNC-123`, panel → dialog `FROM-PANEL-456`); zero console errors. `apps/web npx tsc --noEmit` clean after fixing the 2 pre-existing `scroll-media-expand.tsx` errors; DialKit files ESLint clean.
+  - Committed as `9ce2acb` (2026-11-22). Full `next build` still blocked by unrelated pre-existing type errors (see below).
+
+- **Fluid Particle Text → pixel-accurate reference implementation/QA (2026-11-21) — changes applied; QA/build/typecheck passed; repo validators still failing.**
+  - Goal: align `FluidParticleText` demo/preview with the supplied reference: text `INK`, Archivo Narrow 700, white background, black text, solid at rest, liquid around cursor; add bright displaced-particle highlights and correct WebGL intensity rendering.
+  - Changes:
+    - `packages/ui/src/components/fluid-particle-text.tsx`: added `intensity`, `renderScratch`, `locHighlight`, `locIntensity`; shaders now use `varying` for intensity; upload interleaves positions/intensity; intensity set from displacement; rest snap resets intensity.
+    - `apps/web/app/demo/fluid-particle-text/page.tsx`: switched to `preset="showcase"`, `text="INK"`.
+    - `apps/web/components/docs/fluid-particle-text.tsx`: default code/prop defaults updated to Archivo Narrow/700 and solid `INK`.
+    - `apps/web/components/docs/previews/fluid-particle-text-preview.tsx`, `...-card-preview.tsx`, `...-playground.tsx`: switched primary demos to static white/black solid `INK` / reference physics.
+  - Verification:
+    - `npx tsc --noEmit` clean; changed-file ESLint clean; Prettier clean; `pnpm build` successful; `node tmp/verify/fluid-particle-text.mjs` browser QA passed (WebGL `webgl`, 87,608 particles, Archivo Narrow loaded, white bg, no overflow/console errors).
+    - `pnpm validate:docs` still fails with known 11 errors; `pnpm validate:registry` still fails with known 1 error.
 
 - **Glitch Liquid Text → Studio Lumio reference (2026-11-21) — implementation QA passed; final visual polish pending.**
   - Goal: make `GlitchLiquidText` match the Studio Lumio reference behavior: localized cursor-driven liquid distortion, starburst/wave/pinch deformation, dynamic RGB split, crisp clean text before interaction, optional custom cursor, touch/responsive support, docs/registry/live-preview integration.
@@ -101,19 +139,22 @@ Run these before claiming the repo is green.
 - `apps/web/public/r/registry.json` is missing `preloader-pro-v1` from `items[]`, although `apps/web/public/r/preloader-pro-v1.json` exists.
 - Likely fix: regenerate with `pnpm registry:blocks` (see `scripts/build-blocks-registry.js`) or add the item manually.
 
-### 3. `tsc --noEmit` false failure (local only)
+### 3. `next build` type errors (pre-existing, unrelated to DialKit)
 
-- `apps/web/.next/types/validator.ts` referenced deleted demo routes `demo/cms-scroll-gallery` and `demo/editorial-image-stack`.
-- This is stale Next.js cache, not source. Delete `apps/web/.next` (or run a fresh build) before typechecking.
-- A clean re-run was started on 2026-11-21 but aborted by the user; re-run to confirm zero errors.
+- `apps/web npx tsc --noEmit` is now **clean** (2026-11-22) after fixing the 2 `scroll-media-expand.tsx` errors (`overlay.style.tabIndex` → `overlay.tabIndex`; `cfg.playFontSize` → `playFontSize`).
+- `next build` (Turbopack, Next 16.0.10) now fails later on unrelated pre-existing errors:
+  - Fixed: `apps/web/app/blocks/[category]/[name]/page.tsx` inferred-type portability — added explicit `Promise<ReactElement>` return type.
+  - **Open:** `packages/ui/src/components/orbit-spiral-gallery.tsx:297` — three.js `Mesh` type mismatch (`meshes.current[index] = node`), likely duplicate `three` type versions.
+- Re-run `cd apps/web && npx next build` to see the next blocker.
 
 ## Suggested next steps (pick one, then update this file)
 
 1. Run final human visual polish on `GlitchLiquidText` hover after the first-pass retune.
 2. Fix `validate:docs` failures (registry entries + focus-carousel category/notes/legacy props).
 3. Regenerate registry to fix `validate:registry` (`preloader-pro-v1`).
-4. Confirm clean typecheck after removing `apps/web/.next`.
-5. Continue the `docs/preview-scalability-checklist.md` A1+ items (all unchecked; large planned effort).
+4. ~~Commit the verified DialKit changes~~ — done (`9ce2acb`).
+5. Continue fixing the unrelated `next build` type errors (orbit-spiral-gallery three.js types) if a green build is required.
+6. Continue the `docs/preview-scalability-checklist.md` A1+ items (all unchecked; large planned effort).
 
 ## Useful commands
 
@@ -137,3 +178,4 @@ pnpm build
 - (2026-11-21) Glitch Liquid Text Studio Lumio implementation QA passed: clean/no-overflow/no-console-error runs and tuned hover defaults completed.
 - (2026-11-21) Confirmed clean working tree, no dangling references to the 6 removed components.
 - (2026-11-21) Confirmed customize-panel migration artifacts and no broken imports for deleted `personalize-controller`/`personalize-drawer`.
+- (2026-11-21) Added the `@davinciui` registry entry to the sibling shadcn clone (`../ui/apps/v4/registry/directory.json`), appended at the bottom like the `@componentry` reference PR (#9757). Entry: homepage `https://davinciui.com`, url `https://davinciui.com/r/{name}.json`, author `Manthan Sorkhade`, and a traced inline SVG of the real leaf logo (`var(--foreground)`). `/r/registries.json` is a dynamic route in this shadcn version, so no generated artifact needed. Validated JSON against the directory schema manually (594 entries, no duplicates; the only pre-existing oddity is `@awwwardedui` with logo `" "`). Change is uncommitted in `../ui`.

@@ -51,6 +51,7 @@ export const docsCategoryBySlug: Record<string, string> = {
   field: "Forms",
   "fill-preloader": "Preloaders",
   "fluid-particle-text": "Text Animations",
+  "focus-carousel": "Visual Effects",
   form: "Forms",
   "geometric-preloader": "Preloaders",
   "geometric-trail-cursor": "Cursor Effects",

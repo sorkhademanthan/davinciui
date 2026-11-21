@@ -49,6 +49,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.5,
     },
+    {
+      url: absoluteUrl("/sitemap"),
+      lastModified: currentDate,
+      changeFrequency: "monthly",
+      priority: 0.4,
+    },
   ];
 
   // Only slugs with dedicated docs pages are indexed — the rest redirect

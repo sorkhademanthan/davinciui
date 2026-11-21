@@ -202,6 +202,7 @@ export function Footer() {
           <div className="flex flex-wrap items-center justify-between gap-x-8 gap-y-4 border-t border-zinc-950/10 py-6 text-xs text-zinc-600 dark:border-white/10 dark:text-zinc-500 sm:text-sm">
             <p>© {new Date().getFullYear()} DavinciUI · <span className="rounded-full border border-zinc-950/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-widest dark:border-white/15">v0.1.0</span> · Crafted by <a href="https://www.manthansorkhade.in/" target="_blank" rel="noopener noreferrer" className="underline decoration-zinc-400/60 underline-offset-4 transition-colors hover:text-zinc-950 dark:hover:text-white">Manthan Sorkhade</a></p>
             <div className="flex items-center gap-5 sm:gap-7">
+              <Link href="/sitemap" prefetch={false} className="transition-colors hover:text-zinc-950 dark:hover:text-white">Sitemap</Link>
               <Link href="/privacy-policy" prefetch={false} className="transition-colors hover:text-zinc-950 dark:hover:text-white">Privacy</Link>
               <Link href="/terms-of-service" prefetch={false} className="transition-colors hover:text-zinc-950 dark:hover:text-white">Terms</Link>
               <button type="button" onClick={scrollToTop} className="group inline-flex items-center gap-1.5 font-medium text-zinc-950 transition-colors hover:text-[#4f46e5] focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6366f1] dark:text-zinc-100 dark:hover:text-white">
