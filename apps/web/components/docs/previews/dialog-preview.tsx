@@ -13,6 +13,7 @@ import {
 } from "@workspace/ui/components/dialog";
 import { Input } from "@workspace/ui/components/input";
 import { Label } from "@workspace/ui/components/label";
+import { useDialKitController } from "dialkit";
 import { X } from "lucide-react";
 
 export function DialogPreview() {
@@ -83,7 +84,31 @@ export function DialogNoClosePreview() {
   );
 }
 
+const stickyFooterFieldKeys = [
+  "field1",
+  "field2",
+  "field3",
+  "field4",
+  "field5",
+  "field6",
+  "field7",
+  "field8",
+] as const;
+
+const stickyFooterFieldConfig = {
+  field1: { type: "text" as const, default: "Value 1" },
+  field2: { type: "text" as const, default: "Value 2" },
+  field3: { type: "text" as const, default: "Value 3" },
+  field4: { type: "text" as const, default: "Value 4" },
+  field5: { type: "text" as const, default: "Value 5" },
+  field6: { type: "text" as const, default: "Value 6" },
+  field7: { type: "text" as const, default: "Value 7" },
+  field8: { type: "text" as const, default: "Value 8" },
+};
+
 export function DialogStickyFooterPreview() {
+  const { values, setValue } = useDialKitController("Edit profile", stickyFooterFieldConfig);
+
   return (
     <div className="flex h-full w-full items-center justify-center p-8">
       <Dialog>
@@ -96,10 +121,15 @@ export function DialogStickyFooterPreview() {
             <DialogDescription>Keep actions visible while the content scrolls.</DialogDescription>
           </DialogHeader>
           <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="grid gap-2">
+            {stickyFooterFieldKeys.map((key, i) => (
+              <div key={key} className="grid gap-2">
                 <Label htmlFor={`field-${i}`}>Field {i + 1}</Label>
-                <Input id={`field-${i}`} placeholder={`Value ${i + 1}`} />
+                <Input
+                  id={`field-${i}`}
+                  value={values[key]}
+                  onChange={(event) => setValue(key, event.target.value)}
+                  placeholder={`Value ${i + 1}`}
+                />
               </div>
             ))}
           </div>

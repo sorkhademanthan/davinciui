@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { type FormEvent, useId, useMemo, useState } from "react";
+import { DialkitCard } from "@/components/dialkit-reference";
 import {
   buildDirectCreateInput,
   type DirectCreateStarterId,
@@ -174,6 +175,10 @@ export function CreateDesignSystem() {
             </p>
           </div>
         </header>
+
+        <div className="mt-8 flex justify-center">
+          <DialkitCard />
+        </div>
 
         <form
           onSubmit={createSystem}

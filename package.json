@@ -38,7 +38,9 @@
   },
   "dependencies": {
     "contentful-management": "^12.21.0",
-    "dotenv": "^18.0.10"
+    "dialkit": "^2.2.1",
+    "dotenv": "^18.0.10",
+    "motion": "^14.14.0"
   },
   "workspaces": [
     "apps/*",
