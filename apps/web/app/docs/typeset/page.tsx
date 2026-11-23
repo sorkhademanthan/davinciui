@@ -49,10 +49,10 @@ const scale = [
 
 export default function TypesetPage() {
   return (
-    <div className="w-full max-w-3xl px-4 py-6 sm:px-6 md:py-8 lg:px-8 lg:py-10">
+    <div className="w-full max-w-[648px] py-6 md:py-8 lg:px-0 lg:py-10">
       <div className="space-y-4">
-        <p className="text-sm font-medium text-muted-foreground">Docs</p>
-        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+        <p className="docs-eyebrow">Docs</p>
+        <h1 className="text-[36px] font-medium leading-[1.15] tracking-tight">
           Typeset
         </h1>
         <p className="text-[15px] leading-7 text-muted-foreground">
@@ -66,7 +66,7 @@ export default function TypesetPage() {
 
       <div className="mt-10 space-y-10">
         <section>
-          <h2 className="scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight">
+          <h2 className="scroll-m-20 text-2xl font-medium tracking-tight mt-12 mb-4">
             Install
           </h2>
           <div className="mt-6 space-y-4">
@@ -114,7 +114,7 @@ export default function TypesetPage() {
         </section>
 
         <section>
-          <h2 className="scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight">
+          <h2 className="scroll-m-20 text-2xl font-medium tracking-tight mt-12 mb-4">
             Three controls
           </h2>
           <div className="mt-6 space-y-4">
@@ -144,7 +144,7 @@ export default function TypesetPage() {
         </section>
 
         <section>
-          <h2 className="scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight">
+          <h2 className="scroll-m-20 text-2xl font-medium tracking-tight mt-12 mb-4">
             Tables, opt-outs, and streaming
           </h2>
           <ul className="mt-6 list-disc space-y-1 pl-5 text-[15px] leading-7">
@@ -155,7 +155,7 @@ export default function TypesetPage() {
         </section>
 
         <section>
-          <h2 className="scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight">
+          <h2 className="scroll-m-20 text-2xl font-medium tracking-tight mt-12 mb-4">
             Specimens
           </h2>
           <p className="mt-6 text-[15px] leading-7 text-muted-foreground">
@@ -172,7 +172,7 @@ export default function TypesetPage() {
           </p>
         </section>
         <section>
-          <h2 className="scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight">
+          <h2 className="scroll-m-20 text-2xl font-medium tracking-tight mt-12 mb-4">
             Headings
           </h2>
           <div className="mt-6 space-y-8">
@@ -191,7 +191,7 @@ export default function TypesetPage() {
         </section>
 
         <section>
-          <h2 className="scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight">
+          <h2 className="scroll-m-20 text-2xl font-medium tracking-tight mt-12 mb-4">
             Body
           </h2>
           <div className="mt-6 space-y-6">
@@ -238,7 +238,7 @@ export default function TypesetPage() {
         </section>
 
         <section>
-          <h2 className="scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight">
+          <h2 className="scroll-m-20 text-2xl font-medium tracking-tight mt-12 mb-4">
             Blockquote + list
           </h2>
           <blockquote className="mt-6 border-l-2 border-border pl-6 italic text-muted-foreground">
@@ -253,7 +253,7 @@ export default function TypesetPage() {
         </section>
 
         <section>
-          <h2 className="scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight">
+          <h2 className="scroll-m-20 text-2xl font-medium tracking-tight mt-12 mb-4">
             Usage guidance
           </h2>
           <ul className="mt-6 list-disc space-y-1 pl-5 text-[15px] leading-7">
@@ -265,7 +265,7 @@ export default function TypesetPage() {
         </section>
 
         <section>
-          <h2 className="scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight">
+          <h2 className="scroll-m-20 text-2xl font-medium tracking-tight mt-12 mb-4">
             Accessibility and readability
           </h2>
           <ul className="mt-6 list-disc space-y-1 pl-5 text-[15px] leading-7">
