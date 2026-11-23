@@ -14,7 +14,7 @@ function collectSections(main: HTMLElement): TocItem[] {
   const componentPage = main.querySelector("[data-docs-layout]")
   const candidates = componentPage
     ? Array.from(componentPage.querySelectorAll<HTMLElement>("article [data-section-title]"))
-    : Array.from(main.querySelectorAll<HTMLElement>("[data-section-title], h2"))
+    : Array.from(main.querySelectorAll<HTMLElement>("[data-section-title], h2, h3"))
 
   const seen = new Set<string>()
   return candidates.flatMap((candidate) => {
@@ -33,11 +33,17 @@ function collectSections(main: HTMLElement): TocItem[] {
     const id = target.id || candidate.id || slugify(title)
     if (!id || seen.has(id)) return []
     seen.add(id)
-    return [{ id, title, depth: candidate.querySelector("h2, h3")?.tagName === "H3" ? 3 : 2, element: target }]
+    const heading = candidate.matches("h2, h3") ? candidate : candidate.querySelector("h2, h3")
+    return [{ id, title, depth: heading?.tagName === "H3" ? 3 : 2, element: target }]
   })
 }
 
-export function DocsOnThisPage() {
+export function DocsOnThisPage({
+  variant = "default",
+}: {
+  variant?: "default" | "docs" | "mobile"
+} = {}) {
+  const docsVariant = variant === "docs"
   const pathname = usePathname()
   const [items, setItems] = useState<TocItem[]>([])
   const [activeId, setActiveId] = useState("")
@@ -161,11 +167,49 @@ export function DocsOnThisPage() {
 
   if (items.length === 0) return null
 
+  if (variant === "mobile") {
+    return (
+      <details className="mb-6 rounded-xl border border-border bg-muted/30 px-4 py-3 text-sm xl:hidden">
+        <summary className="cursor-pointer font-medium text-foreground">
+          On this page
+        </summary>
+        <ul className="mt-3 space-y-2">
+          {items.map((item) => (
+            <li key={item.id} className={item.depth === 3 ? "pl-4" : undefined}>
+              <a
+                href={`#${item.id}`}
+                onClick={(event) => scrollToSection(event, item)}
+                className={
+                  activeId === item.id
+                    ? "font-medium text-primary"
+                    : "text-muted-foreground"
+                }
+              >
+                {item.title}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </details>
+    )
+  }
+
   return (
-    <nav aria-label="On this page" className="w-full px-7 py-9">
-      <p className="mb-3 px-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">On this page</p>
-      <ul ref={listRef} className="relative border-l border-border/70 text-sm">
-        {indicator && (
+    <nav aria-label="On this page" className={docsVariant ? "w-full" : "w-full px-7 py-9"}>
+      <p
+        className={
+          docsVariant
+            ? "mb-3 text-sm font-medium text-muted-foreground"
+            : "mb-3 px-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground"
+        }
+      >
+        On this page
+      </p>
+      <ul
+        ref={listRef}
+        className={docsVariant ? "flex flex-col" : "relative border-l border-border/70 text-sm"}
+      >
+        {!docsVariant && indicator && (
           <span
             aria-hidden="true"
             className="pointer-events-none absolute -left-px w-px bg-foreground transition-[height,transform] duration-300 ease-out motion-reduce:transition-none"
@@ -181,11 +225,21 @@ export function DocsOnThisPage() {
               href={`#${item.id}`}
               aria-current={activeId === item.id ? "location" : undefined}
               onClick={(event) => scrollToSection(event, item)}
-              className={cn(
-                "mr-3 block rounded-r-md py-2 pr-3 text-muted-foreground transition-colors duration-200 ease-out hover:bg-muted/50 hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring",
-                item.depth === 3 ? "pl-6" : "pl-3",
-                activeId === item.id && "bg-muted/60 font-medium text-foreground",
-              )}
+              className={
+                docsVariant
+                  ? cn(
+                      "block py-1.5 text-sm leading-5 transition-colors",
+                      item.depth === 3 ? "pl-4" : "pl-0",
+                      activeId === item.id
+                        ? "font-medium text-primary"
+                        : "text-muted-foreground hover:text-foreground",
+                    )
+                  : cn(
+                      "mr-3 block rounded-r-md py-2 pr-3 text-muted-foreground transition-colors duration-200 ease-out hover:bg-muted/50 hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring",
+                      item.depth === 3 ? "pl-6" : "pl-3",
+                      activeId === item.id && "bg-muted/60 font-medium text-foreground",
+                    )
+              }
             >
               {item.title}
             </a>
