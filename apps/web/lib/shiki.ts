@@ -4,13 +4,14 @@ import {
   type BundledLanguage,
   type BundledTheme,
 } from "shiki";
+import { dvDark, dvLight } from "@/lib/code-themes";
 
 // Singleton pattern - cache the highlighter instance
 let highlighterPromise: Promise<Highlighter> | null = null;
 
 // Pre-load only the languages we actually use
-const LANGS: BundledLanguage[] = ["tsx", "typescript", "bash", "json"];
-const THEMES: BundledTheme[] = ["github-light", "github-dark", "dark-plus"];
+const LANGS: BundledLanguage[] = ["tsx", "typescript", "bash", "json", "js", "jsx", "css", "html", "shell", "mdx", "diff"];
+const THEMES = [dvLight, dvDark];
 
 /**
  * Get or create a cached Shiki highlighter instance.
@@ -42,12 +43,12 @@ export async function highlightCode(
   code: string,
   lang: BundledLanguage = "tsx",
   options: {
-    lightTheme?: BundledTheme;
-    darkTheme?: BundledTheme;
+    lightTheme?: BundledTheme | typeof dvLight;
+    darkTheme?: BundledTheme | typeof dvDark;
   } = {},
 ): Promise<string> {
-  const lightTheme = options.lightTheme ?? "github-light";
-  const darkTheme = options.darkTheme ?? "github-dark";
+  const lightTheme = options.lightTheme ?? dvLight;
+  const darkTheme = options.darkTheme ?? dvDark;
   const cacheKey = `${lang}:${lightTheme}:${darkTheme}:${code}`;
 
   const cached = htmlCache.get(cacheKey);
@@ -60,18 +61,16 @@ export async function highlightCode(
   const html = highlighter.codeToHtml(code.trim(), {
     lang,
     themes: {
-      light: lightTheme,
-      dark: darkTheme,
+      light: lightTheme as never,
+      dark: darkTheme as never,
     },
+    defaultColor: false,
     transformers: [
       {
-        name: "line-numbers",
-        code(node) {
-          if (!node.properties.class) node.properties.class = "";
-          node.properties.class += " grid counter-reset-line";
-        },
+        name: "line-classes",
         line(node, line) {
-          node.properties["data-line"] = line;
+          this.addClassToHast(node, "line")
+          node.properties["data-line"] = line
         },
       },
     ],
