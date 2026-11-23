@@ -126,7 +126,7 @@ export function DocsCustomizationSection({
     (customization.slots?.length ?? 0) > 0;
 
   return (
-    <Section title="Customization" className={sectionClass} id="customization">
+    <Section title="Theming" className={sectionClass} id="customization">
       <div className="space-y-4">
         {customization.note ? (
           <p className="max-w-3xl text-sm leading-6 text-muted-foreground">

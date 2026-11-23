@@ -14,7 +14,7 @@ import { ComponentDetailShell } from "@/components/component-detail-shell"
 export function DocsShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const isMcpPage = pathname.startsWith("/docs/mcp")
-  const isComponentPage = pathname.startsWith("/docs/components/")
+  const isComponentPage = pathname.startsWith("/experience/components/")
 
   if (isMcpPage) {
     return <div className="flex-1">{children}</div>

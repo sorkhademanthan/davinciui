@@ -78,16 +78,16 @@ export function NavigationMenuPreview() {
             <NavigationMenuTrigger>Components</NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="grid w-[400px] gap-2 p-2 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-                <ListItem href="/docs/components/alert" title="Alert">
+                <ListItem href="/experience/components/alert" title="Alert">
                   Displays a callout for user attention.
                 </ListItem>
-                <ListItem href="/docs/components/dialog" title="Dialog">
+                <ListItem href="/experience/components/dialog" title="Dialog">
                   A window overlaid on the primary window.
                 </ListItem>
-                <ListItem href="/docs/components/navigation-menu" title="Navigation Menu">
+                <ListItem href="/experience/components/navigation-menu" title="Navigation Menu">
                   A collection of links for navigating websites.
                 </ListItem>
-                <ListItem href="/docs/components/tabs" title="Tabs">
+                <ListItem href="/experience/components/tabs" title="Tabs">
                   A set of layered sections of content.
                 </ListItem>
               </ul>
@@ -134,10 +134,10 @@ export function NavigationMenuWithIconPreview() {
             </NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="grid w-[280px] gap-1 p-2">
-                <ListItem href="/docs/components/button" title="Button">
+                <ListItem href="/experience/components/button" title="Button">
                   Displays a button.
                 </ListItem>
-                <ListItem href="/docs/components/input" title="Input">
+                <ListItem href="/experience/components/input" title="Input">
                   A text input field.
                 </ListItem>
               </ul>
@@ -172,7 +172,7 @@ export function NavigationMenuLinkPreview() {
           </NavigationMenuItem>
           <NavigationMenuItem>
             <NavigationMenuLink
-              render={<Link href="/docs/components/navigation-menu" />}
+              render={<Link href="/experience/components/navigation-menu" />}
               onClick={preventNav}
               className={navigationMenuTriggerStyle()}
             >
@@ -208,7 +208,7 @@ export function NavigationMenuRtlPreview() {
             <NavigationMenuTrigger>المكونات</NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="grid w-[240px] gap-1 p-2">
-                <ListItem href="/docs/components/button" title="زر">
+                <ListItem href="/experience/components/button" title="زر">
                   عرض زر.
                 </ListItem>
               </ul>
@@ -410,7 +410,7 @@ export function NavigationMenuActivePreview() {
           </NavigationMenuItem>
 
           <NavigationMenuItem>
-            <NavigationMenuLink href="/docs/components/navigation-menu" onClick={preventNav} active className={navigationMenuTriggerStyle()}>
+            <NavigationMenuLink href="/experience/components/navigation-menu" onClick={preventNav} active className={navigationMenuTriggerStyle()}>
               Navigation Menu
             </NavigationMenuLink>
           </NavigationMenuItem>

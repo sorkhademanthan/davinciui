@@ -100,7 +100,7 @@ export async function NavigationMenuDocs() {
         {
           title: "Active Link",
           preview: <NavigationMenuActivePreview />,
-          code: `<NavigationMenuLink href="/docs/components/navigation-menu" active className={navigationMenuTriggerStyle()}>\n  Navigation Menu\n</NavigationMenuLink>`,
+          code: `<NavigationMenuLink href="/experience/components/navigation-menu" active className={navigationMenuTriggerStyle()}>\n  Navigation Menu\n</NavigationMenuLink>`,
         },
         {
           title: "With Icon",

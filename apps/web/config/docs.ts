@@ -17,13 +17,15 @@ type NavGroup = {
 // Dark mode lives inside Theming. Components at /docs/components + /docs/components/[slug]
 
 const sections: NavGroup = {
-  title: "Getting Started",
+  title: "Getting started",
   items: [
     { title: "Introduction", href: "/docs" },
     { title: "Components", href: "/docs/components" },
     { title: "Installation", href: "/docs/installation" },
+    { title: "Quickstart", href: "/docs/quickstart" },
     { title: "Configuration", href: "/docs/configuration" },
     { title: "Theming", href: "/docs/theming" },
+    { title: "Dark mode", href: "/docs/dark-mode" },
     { title: "CLI", href: "/docs/cli" },
     { title: "Typeset", href: "/docs/typeset" },
     { title: "Skills", href: "/docs/skills" },
@@ -62,7 +64,7 @@ function componentCategoryGroups(): NavGroup[] {
   const items = docsComponentCategories().flatMap((category) => {
     const links = sortByFeatured(
       Object.values(components).filter((c) => c.category === category || c.extraCategories?.includes(category as ComponentCategory)),
-    ).map((c) => ({ title: c.title, href: `/docs/components/${c.slug}` }));
+    ).map((c) => ({ title: c.title, href: `/experience/components/${c.slug}` }));
     const anchor = `/docs/components#${category.toLowerCase().replace(/\s+/g, "-")}`;
     return links.length > 0 ? [{ title: category, href: anchor, items: links } satisfies NavItem] : [];
   });
@@ -85,12 +87,41 @@ const foundations: NavGroup = {
   ],
 };
 
+const guides: NavGroup = {
+  title: "Guides",
+  items: [
+    { title: "Next.js", href: "/docs/guides/nextjs" },
+    { title: "Vite", href: "/docs/guides/vite" },
+    { title: "Remix", href: "/docs/guides/remix" },
+    { title: "Forms", href: "/docs/guides/forms" },
+    { title: "Accessibility", href: "/docs/guides/accessibility" },
+    { title: "Migrating", href: "/docs/guides/migrating" },
+    { title: "Contributing", href: "/docs/guides/contributing" },
+  ],
+};
+
 const mcp: NavGroup = {
   title: "MCP",
   items: [{ title: "Setup", href: "/docs/mcp" }],
 };
 
-const navGroups: NavGroup[] = [sections, ...componentCategoryGroups(), foundations, mcp];
+export type DocsTabId = "documentation" | "components" | "guides";
+export type DocsNavGroup = NavGroup;
+
+/** Sidebar tree for each top-level docs tab. */
+export function getDocsNavForTab(tab: DocsTabId): NavGroup[] {
+  if (tab === "components") return componentCategoryGroups();
+  if (tab === "guides") return [guides];
+  return [sections, foundations, mcp];
+}
+
+const navGroups: NavGroup[] = [
+  sections,
+  ...componentCategoryGroups(),
+  foundations,
+  guides,
+  mcp,
+];
 
 export function getLlmsText(): string {
   const baseUrl = "https://davinciui.com";
