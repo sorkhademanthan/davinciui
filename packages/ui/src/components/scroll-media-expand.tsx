@@ -29,14 +29,23 @@ export interface ScrollMediaExpandProps {
   initialWidth?: number;
   /** Rest-state pill height (px). Defaults to a responsive clamp. */
   initialHeight?: number;
-  /** Height of the tall scroll track driving the scrub. @default "300vh" */
+  /** Height of the tall scroll track driving the scrub. @default "400vh" */
   sectionHeight?: string | number;
-  /** Height of the pinned viewport (any CSS length). @default "100svh" */
+  /** Height of the pinned viewport (any CSS length). @default "100vh" */
   viewportHeight?: string;
-  /** Corner radius (px) of the rest-state pill. @default 999 */
+  /** Corner radius (px) of the rest-state pill. @default 50 */
   startRadius?: number;
   /** Corner radius (px) at fullscreen. @default 0 */
   endRadius?: number;
+  startWidth?: number;
+  startHeight?: number;
+  fontSize?: number;
+  playFontSize?: number;
+  labelWidth?: number;
+  gap?: number;
+  textColor?: string;
+  onPlay?: () => void;
+  radiusLagSeconds?: number;
   /** Show the center CTA overlay. @default true */
   showOverlay?: boolean;
   /** Show a minimal scroll cue at rest that fades once scrolling begins. @default true */
@@ -67,25 +76,15 @@ export interface ScrollMediaExpandProps {
 const DEFAULT_SRC =
   "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=2400&q=85";
 
-/* Phase boundaries (normalized progress 0 → 1). Width leads, height follows,
-   radius decays slightly delayed, CTA arrives once the card is readable,
-   labels dissolve only after leaving the frame. */
-const WIDTH_IN: readonly [number, number] = [0.08, 0.72];
-const HEIGHT_IN: readonly [number, number] = [0.3, 0.86];
-const RADIUS_IN: readonly [number, number] = [0.06, 0.34];
-const RADIUS_OUT: readonly [number, number] = [0.74, 1];
-const INNER_IN: readonly [number, number] = [0.08, 0.8];
-const OVERLAY_IN: readonly [number, number] = [0.4, 0.56];
-const LABEL_FADE: readonly [number, number] = [0.66, 0.82];
-const HINT_OUT: readonly [number, number] = [0, 0.08];
+const RADIUS_LAG_SECONDS = 0.29;
+const PLAY_START = 0.48;
+const PLAY_RISE_END = 0.62;
+const PLAY_FALL_END = 1;
+const PLAY_HIDDEN_OFFSET = 60;
 
 function clamp(n: number, min: number, max: number) {
   if (!Number.isFinite(n)) return min;
   return Math.min(max, Math.max(min, n));
-}
-
-function lerp(a: number, b: number, t: number) {
-  return a + (b - a) * t;
 }
 
 /** Smoothstep 0 → 1 across [start, end]. Eased, deterministic, reversible. */
@@ -127,10 +126,19 @@ export function ScrollMediaExpand({
   objectFit = "cover",
   initialWidth,
   initialHeight,
-  sectionHeight = "300vh",
-  viewportHeight = "100svh",
-  startRadius = 999,
+  sectionHeight = "400vh",
+  viewportHeight = "100vh",
+  startRadius = 50,
   endRadius = 0,
+  startWidth,
+  startHeight,
+  fontSize = 40,
+  playFontSize = 42,
+  labelWidth = 160,
+  gap = 16,
+  textColor = "#000",
+  onPlay,
+  radiusLagSeconds = 0.29,
   showOverlay = true,
   showScrollHint = false,
   smoothing = 0,
@@ -148,16 +156,20 @@ export function ScrollMediaExpand({
   const innerRef = useRef<HTMLDivElement>(null);
   const labelLeftRef = useRef<HTMLSpanElement>(null);
   const labelRightRef = useRef<HTMLSpanElement>(null);
-  const overlayRef = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<HTMLAnchorElement>(null);
   const scrimRef = useRef<HTMLDivElement>(null);
   const hintRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const radiusRef = useRef(50);
+  const lastTimeRef = useRef(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const isPlayingRef = useRef(false);
 
   // Imperative animation state — never in React state, scrolling never rerenders.
   const targetRef = useRef(0);
   const renderedRef = useRef(0);
   const inViewRef = useRef(true);
-  const metricsRef = useRef({ stageW: 0, stageH: 0, initialW: 0, initialH: 0 });
+  const metricsRef = useRef({ stageW: 0, stageH: 0, startW: 0, startH: 0 });
   const firstFrameRef = useRef(true);
 
   const [reducedMotion, setReducedMotion] = useState(false);
@@ -165,10 +177,22 @@ export function ScrollMediaExpand({
   const isVideo = isVideoSrc(src, mediaType);
   const motionActive = enabled && !reducedMotion;
 
+  useEffect(() => {
+    isPlayingRef.current = isPlaying;
+  }, [isPlaying]);
+
   /* Live config for the rAF loop (prop changes apply without resubscribing). */
   const configRef = useRef({
-    initialWidth,
-    initialHeight,
+    startWidth,
+    startHeight,
+    fontSize,
+    playFontSize,
+    labelWidth,
+    gap,
+    textColor,
+    background,
+    onPlay,
+    radiusLagSeconds,
     startRadius,
     endRadius,
     objectFit,
@@ -176,8 +200,16 @@ export function ScrollMediaExpand({
     showOverlay,
   });
   configRef.current = {
-    initialWidth,
-    initialHeight,
+    startWidth,
+    startHeight,
+    fontSize,
+    playFontSize,
+    labelWidth,
+    gap,
+    textColor,
+    background,
+    onPlay,
+    radiusLagSeconds,
     startRadius,
     endRadius,
     objectFit,
@@ -203,20 +235,12 @@ export function ScrollMediaExpand({
     const measure = () => {
       const stageW = stage.clientWidth || window.innerWidth || 1;
       const stageH = stage.clientHeight || window.innerHeight || 1;
-      const mobile = stageW < 640;
+      const mobile = stageW < 810;
       const cfg = configRef.current;
-      // Match the reference's visible cinematic aperture: a deliberate,
-      // readable capsule rather than a tiny decorative dash.
-      const initialW =
-        cfg.initialWidth ??
-        (mobile
-          ? clamp(stageW * 0.22, 90, 140)
-          : clamp(stageW * 0.14, 150, 220));
-      const initialH =
-        cfg.initialHeight ??
-        (mobile ? clamp(stageW * 0.05, 22, 32) : clamp(stageW * 0.026, 28, 42));
-      metricsRef.current = { stageW, stageH, initialW, initialH };
-      renderFrame(renderedRef.current);
+      const startW = cfg.startWidth ?? (mobile ? stageW * 0.34 : stageW * 0.15);
+      const startH = cfg.startHeight ?? stageH * 0.05;
+      metricsRef.current = { stageW, stageH, startW, startH };
+      renderFrame(renderedRef.current, performance.now());
     };
 
     measure();
@@ -266,87 +290,67 @@ export function ScrollMediaExpand({
 
   /* Imperative render: the entire visual state derives from one progress value,
      so render(progress) is complete and reversing scroll reverses everything. */
-  function renderFrame(progress: number) {
+  function renderFrame(progress: number, now = performance.now()) {
     const media = mediaRef.current;
     const inner = innerRef.current;
     if (!media || !inner) return;
-    const { stageW, stageH, initialW, initialH } = metricsRef.current;
+    const { stageW, stageH } = metricsRef.current;
     if (stageW <= 0 || stageH <= 0) return;
     const cfg = configRef.current;
     const p = clamp(progress, 0, 1);
 
-    // Width leads, height follows, and the pill radius settles into a subtle
-    // card radius before resolving to the fullscreen radius near the end.
-    // Smootherstep gives every phase a cinematic glide with no visible seams.
-    const widthP = smootherstep(WIDTH_IN[0], WIDTH_IN[1], p);
-    const heightP = smootherstep(HEIGHT_IN[0], HEIGHT_IN[1], p);
-    const radiusP = smootherstep(RADIUS_IN[0], RADIUS_IN[1], p);
-    const innerP = smootherstep(INNER_IN[0], INNER_IN[1], p);
-
-    // One continuous media element: pill → wide capsule → card → viewport.
-    const w = lerp(initialW, stageW, widthP);
-    const h = lerp(initialH, stageH, heightP);
-    const readableRadius = Math.max(cfg.endRadius, stageW < 640 ? 12 : 16);
-    const radius = lerp(
-      lerp(cfg.startRadius, readableRadius, radiusP),
-      cfg.endRadius,
-      smootherstep(RADIUS_OUT[0], RADIUS_OUT[1], p),
-    );
+    const w = stageW * (0.15 + 0.85 * p);
+    const h = stageH * (0.05 + 0.95 * p);
+    const targetRadius = cfg.startRadius + (cfg.endRadius - cfg.startRadius) * p;
+    const radius = reducedMotion
+      ? targetRadius
+      : radiusRef.current + (targetRadius - radiusRef.current) * (1 - Math.exp(-(now - lastTimeRef.current) / Math.max(cfg.radiusLagSeconds, 0.0001)));
+    radiusRef.current = radius;
+    lastTimeRef.current = now;
+    const appliedRadius = Math.abs(targetRadius - radius) < 0.05 ? targetRadius : radius;
     media.style.width = `${w.toFixed(2)}px`;
     media.style.height = `${h.toFixed(2)}px`;
-    media.style.borderRadius = `${radius.toFixed(2)}px`;
+    media.style.borderRadius = `${appliedRadius.toFixed(2)}px`;
+    inner.style.transform = "none";
 
-    // Keep the media covering the entire aperture from the very first frame.
-    // A scale settle adds depth without translating the image out of the
-    // shallow rest-state pill and exposing its background.
-    const innerScale = lerp(1.12, 1, innerP);
-    inner.style.transform = `scale(${innerScale.toFixed(4)})`;
-
-    // Labels stay glued to the media edges: offset = half width + gap, so the
-    // expansion physically pushes them outward toward the viewport edges.
-    // They dissolve with a whisper of blur only once pushed off-frame.
-    const gap = stageW < 640 ? 10 : 16;
+    const gap = cfg.gap ?? (stageW < 810 ? 12 : 16);
     const offset = w / 2 + gap;
-    const labelFadeP = smoothstep(LABEL_FADE[0], LABEL_FADE[1], p);
-    const labelOpacity = 1 - labelFadeP;
-    const labelBlur = 2.5 * labelFadeP;
     const labelLeft = labelLeftRef.current;
     if (labelLeft) {
       labelLeft.style.transform = `translate(calc(-100% - ${offset.toFixed(2)}px), -50%)`;
-      labelLeft.style.opacity = labelOpacity.toFixed(3);
-      labelLeft.style.filter =
-        labelBlur <= 0.01 ? "blur(0px)" : `blur(${labelBlur.toFixed(2)}px)`;
+      labelLeft.style.opacity = "1";
+      labelLeft.style.filter = "blur(0px)";
     }
     const labelRight = labelRightRef.current;
     if (labelRight) {
       labelRight.style.transform = `translate(${offset.toFixed(2)}px, -50%)`;
-      labelRight.style.opacity = labelOpacity.toFixed(3);
-      labelRight.style.filter =
-        labelBlur <= 0.01 ? "blur(0px)" : `blur(${labelBlur.toFixed(2)}px)`;
+      labelRight.style.opacity = "1";
+      labelRight.style.filter = "blur(0px)";
     }
 
-    // Center CTA arrives only once the media is a readable card, over a
-    // soft radial scrim so it stays legible on bright imagery.
     const overlay = overlayRef.current;
     const scrim = scrimRef.current;
-    const overlayP = smootherstep(OVERLAY_IN[0], OVERLAY_IN[1], p);
+    const rise = clamp((p - PLAY_START) / (PLAY_RISE_END - PLAY_START), 0, 1);
+    const fall = 1 - clamp((p - PLAY_RISE_END) / (PLAY_FALL_END - PLAY_RISE_END), 0, 1);
+    const overlayOpacity = Math.min(rise, fall);
+    const overlayY = PLAY_HIDDEN_OFFSET * (1 - rise);
+    const effectiveOverlayOpacity = isPlaying ? 0 : overlayOpacity;
     if (scrim && cfg.showOverlay) {
-      scrim.style.opacity = (0.9 * overlayP).toFixed(3);
-      scrim.style.visibility = overlayP <= 0 ? "hidden" : "visible";
+      scrim.style.opacity = (0.9 * effectiveOverlayOpacity).toFixed(3);
+      scrim.style.visibility = effectiveOverlayOpacity <= 0 ? "hidden" : "visible";
     }
     if (overlay && cfg.showOverlay) {
-      const o = overlayP;
-      overlay.style.opacity = o.toFixed(3);
-      overlay.style.transform = `translate(-50%, calc(-50% + ${(8 * (1 - o)).toFixed(2)}px)) scale(${(0.96 + 0.04 * o).toFixed(3)})`;
-      overlay.style.filter =
-        o >= 1 ? "blur(0px)" : `blur(${(4 * (1 - o)).toFixed(2)}px)`;
-      overlay.style.visibility = o <= 0 ? "hidden" : "visible";
+      overlay.style.opacity = effectiveOverlayOpacity.toFixed(3);
+      overlay.style.transform = `translate(-50%, calc(-50% + ${overlayY.toFixed(2)}px)) scale(${(0.96 + 0.04 * effectiveOverlayOpacity).toFixed(3)})`;
+      overlay.style.pointerEvents = effectiveOverlayOpacity < 0.2 ? "none" : "auto";
+      overlay.style.visibility = effectiveOverlayOpacity < 0.2 ? "hidden" : "visible";
+      overlay.setAttribute("aria-hidden", String(effectiveOverlayOpacity < 0.2));
+      overlay.tabIndex = 0;
     }
 
-    // Rest-state scroll cue dissolves the moment scrolling begins.
     const hint = hintRef.current;
     if (hint) {
-      const hO = 1 - smoothstep(HINT_OUT[0], HINT_OUT[1], p);
+      const hO = 1 - smoothstep(0, 0.08, p);
       hint.style.opacity = hO.toFixed(3);
       hint.style.visibility = hO <= 0 ? "hidden" : "visible";
     }
@@ -357,6 +361,20 @@ export function ScrollMediaExpand({
       if (stage) stage.style.opacity = "";
     }
   }
+
+  const handleOverlayClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    if (isPlaying) {
+      setIsPlaying(false);
+      return;
+    }
+    setIsPlaying(true);
+    if (isVideo) {
+      void videoRef.current?.play().catch(() => {});
+    } else {
+      onPlay?.();
+    }
+  };
 
   /* Read normalized scroll progress from the track position. */
   useEffect(() => {
@@ -373,13 +391,6 @@ export function ScrollMediaExpand({
         const y = -track.getBoundingClientRect().top;
         targetRef.current = clamp(y / scrollable, 0, 1);
       }
-      // Direct scrub: the timeline IS the scroll position — no lag, no settle.
-      if (smoothFactor <= 0) {
-        renderedRef.current = targetRef.current;
-        if (inViewRef.current || !pauseWhenOffscreen) {
-          renderFrame(renderedRef.current);
-        }
-      }
     };
 
     updateTarget();
@@ -391,11 +402,9 @@ export function ScrollMediaExpand({
     };
   }, [motionActive, smoothFactor, pauseWhenOffscreen, sectionHeight]);
 
-  /* rAF loop only when smoothing is requested; otherwise scroll writes directly. */
+  /* One rAF loop drives scroll progress, radius lag, and the CTA tent. */
   useEffect(() => {
-    if (!motionActive || smoothFactor <= 0) return;
-    firstFrameRef.current = true;
-    renderFrame(targetRef.current);
+    if (!motionActive) return;
     let raf = 0;
 
     const tick = () => {
@@ -406,16 +415,20 @@ export function ScrollMediaExpand({
       }
       const target = targetRef.current;
       let rendered = renderedRef.current;
-      rendered += (target - rendered) * smoothFactor;
-      if (Math.abs(target - rendered) < 0.0004) rendered = target;
+      if (smoothFactor > 0) {
+        rendered += (target - rendered) * smoothFactor;
+        if (Math.abs(target - rendered) < 0.0004) rendered = target;
+      } else {
+        rendered = target;
+      }
       renderedRef.current = rendered;
-      renderFrame(rendered);
+      renderFrame(rendered, performance.now());
       raf = requestAnimationFrame(tick);
     };
 
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [motionActive, smoothFactor, pauseWhenOffscreen]);
+  }, [motionActive, pauseWhenOffscreen, smoothFactor]);
 
   /* ------------------------- fallbacks / edge cases ------------------------ */
 
@@ -492,7 +505,7 @@ export function ScrollMediaExpand({
         ref={stageRef}
         data-testid="scroll-media-expand-stage"
         className="sticky top-0 flex w-full items-center justify-center overflow-hidden"
-        style={{ height: viewportHeight, background, opacity: 0 }}
+        style={{ height: viewportHeight, background, opacity: 0, padding: "0 20px" }}
       >
         {/* The single continuous media window — geometry morphs with progress. */}
         <div
@@ -548,21 +561,25 @@ export function ScrollMediaExpand({
 
           {/* Center CTA — glass pill revealed once the media is readable. */}
           {showOverlay ? (
-            <div
+            <a
               ref={overlayRef}
+              href="#"
+              onClick={handleOverlayClick}
               aria-hidden="true"
-              className="absolute left-1/2 top-1/2 z-10"
-              style={{ opacity: 0, visibility: "hidden" }}
+              tabIndex={0}
+              className="absolute left-1/2 top-1/2 z-10 flex items-center gap-2.5 rounded-full bg-black/35 py-1.5 pl-1.5 pr-4 ring-1 ring-white/25 backdrop-blur-md"
+              style={{ opacity: 0, visibility: "hidden", minHeight: "44px" }}
             >
-              <div className="flex items-center gap-2.5 rounded-full bg-black/35 py-1.5 pl-1.5 pr-4 ring-1 ring-white/25 backdrop-blur-md">
-                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white">
-                  <Play className="h-3 w-3 fill-zinc-950 text-zinc-950" />
-                </span>
-                <span className="whitespace-nowrap text-[13px] font-medium tracking-wide text-white">
-                  {overlayText}
-                </span>
-              </div>
-            </div>
+              <span className="flex h-[38px] w-[38px] items-center justify-center rounded-full bg-black/55">
+                <Play className="h-3 w-3 fill-white text-black" />
+              </span>
+              <span
+                className="whitespace-nowrap text-center"
+                style={{ fontSize: playFontSize }}
+              >
+                {overlayText}
+              </span>
+            </a>
           ) : null}
         </div>
 

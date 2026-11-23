@@ -294,14 +294,14 @@ function OrbitScene({
         <mesh
           key={`${item.src}-${index}`}
           ref={(node) => {
-            meshes.current[index] = node;
+            meshes.current[index] = node as unknown as Mesh;
           }}
           frustumCulled={false}
         >
           <planeGeometry args={[1, 1, 48, 2]} />
           <shaderMaterial
             ref={(node) => {
-              materials.current[index] = node;
+              materials.current[index] = node as unknown as ShaderMaterial;
             }}
             uniforms={uniforms[index]}
             vertexShader={vertexShader}

@@ -113,8 +113,8 @@ export const FLUID_PARTICLE_GAPS: Record<FluidParticleQuality, number> = {
 };
 
 export const FLUID_PARTICLE_DEFAULTS = {
-  fontFamily: `"Arial Black", "Helvetica Neue", Helvetica, sans-serif`,
-  fontWeight: 900,
+  fontFamily: `"Archivo Narrow", "Arial Narrow", sans-serif`,
+  fontWeight: 700,
   fontStyle: "normal",
   fontSize: 160,
   letterSpacing: 0,
@@ -307,29 +307,38 @@ function hexToRgba(hex: string): [number, number, number, number] {
 
 const VERT_SRC = `
 attribute vec2 a_pos;
+attribute float a_intensity;
 uniform vec2 u_res;
 uniform float u_px;
+varying float v_intensity;
 void main() {
   vec2 c = vec2(a_pos.x / u_res.x * 2.0 - 1.0, 1.0 - a_pos.y / u_res.y * 2.0);
   gl_Position = vec4(c, 0.0, 1.0);
   gl_PointSize = u_px;
+  v_intensity = a_intensity;
 }`;
 
 const FRAG_SQUARE_SRC = `
 precision mediump float;
 uniform vec4 u_color;
+uniform vec4 u_highlight;
+varying float v_intensity;
 void main() {
-  gl_FragColor = u_color;
+  vec4 col = mix(u_color, u_highlight, v_intensity);
+  gl_FragColor = col;
 }`;
 
 const FRAG_CIRCLE_SRC = `
 precision mediump float;
 uniform vec4 u_color;
+uniform vec4 u_highlight;
+varying float v_intensity;
 void main() {
   float d = length(gl_PointCoord - vec2(0.5));
   float a = 1.0 - smoothstep(0.32, 0.5, d);
   if (a < 0.02) discard;
-  gl_FragColor = vec4(u_color.rgb, u_color.a * a);
+  vec4 col = mix(u_color, u_highlight, v_intensity);
+  gl_FragColor = vec4(col.rgb, col.a * a);
 }`;
 
 function compileShader(gl: WebGLRenderingContext, type: number, src: string) {
@@ -553,6 +562,8 @@ export function FluidParticleText(props: FluidParticleTextProps) {
     const home = new Float32Array(cap * 2);
     const pos = new Float32Array(cap * 2);
     const rpos = new Float32Array(cap * 2);
+    const intensity = new Float32Array(cap);
+    const renderScratch = new Float32Array(cap * 3);
     const vel = new Float32Array(cap * 2);
     const velSnap = new Float32Array(cap * 2);
     const nbrL = new Int32Array(cap).fill(-1);
@@ -606,6 +617,8 @@ export function FluidParticleText(props: FluidParticleTextProps) {
     let locRes: WebGLUniformLocation | null = null;
     let locPx: WebGLUniformLocation | null = null;
     let locColor: WebGLUniformLocation | null = null;
+    let locHighlight: WebGLUniformLocation | null = null;
+    let locIntensity: number | null = null;
     let programShape: FluidParticleShape | null = null;
     let contextLost = false;
     let useFallback2d = false;
@@ -923,7 +936,10 @@ export function FluidParticleText(props: FluidParticleTextProps) {
       locRes = gl.getUniformLocation(prog, "u_res");
       locPx = gl.getUniformLocation(prog, "u_px");
       locColor = gl.getUniformLocation(prog, "u_color");
+      locHighlight = gl.getUniformLocation(prog, "u_highlight");
+      locIntensity = gl.getAttribLocation(prog, "a_intensity");
       programShape = propsRef.current.particleShape;
+      if (locHighlight) gl.uniform4f(locHighlight, 1, 1, 1, 1);
       gl.disable(gl.BLEND);
       return true;
     }
@@ -937,13 +953,20 @@ export function FluidParticleText(props: FluidParticleTextProps) {
       gl.clear(gl.COLOR_BUFFER_BIT);
       gl.useProgram(prog);
       gl.bindBuffer(gl.ARRAY_BUFFER, posBuf);
+      for (let i = 0; i < count; i++) {
+        renderScratch[i * 3] = rpos[i * 2]!;
+        renderScratch[i * 3 + 1] = rpos[i * 2 + 1]!;
+        renderScratch[i * 3 + 2] = intensity[i]!;
+      }
       gl.bufferData(
         gl.ARRAY_BUFFER,
-        rpos.subarray(0, count * 2),
+        renderScratch.subarray(0, count * 3),
         gl.DYNAMIC_DRAW,
       );
       gl.enableVertexAttribArray(locPos);
-      gl.vertexAttribPointer(locPos, 2, gl.FLOAT, false, 0, 0);
+      gl.vertexAttribPointer(locPos, 2, gl.FLOAT, false, 12, 0);
+      gl.enableVertexAttribArray(locIntensity!);
+      gl.vertexAttribPointer(locIntensity!, 1, gl.FLOAT, false, 12, 8);
       gl.uniform2f(locRes, devW, devH);
       const solidPointSize =
         acceptedGap * (p.particleShape === "square" ? 1.7 : 1.5);
@@ -956,6 +979,7 @@ export function FluidParticleText(props: FluidParticleTextProps) {
         gl.disable(gl.BLEND);
       }
       gl.uniform4f(locColor, fg[0], fg[1], fg[2], fg[3]);
+      if (locHighlight) gl.uniform4f(locHighlight, 1, 1, 1, 1);
       gl.drawArrays(gl.POINTS, 0, count);
     }
 
@@ -1080,8 +1104,7 @@ export function FluidParticleText(props: FluidParticleTextProps) {
                 qy = ay;
               } else {
                 let t =
-                  ((x - ax) * sp.segDX[s]! +
-                    (y - ay) * sp.segDY[s]!) *
+                  ((x - ax) * sp.segDX[s]! + (y - ay) * sp.segDY[s]!) *
                   sp.segInvLen2[s]!;
                 t = t < 0 ? 0 : t > 1 ? 1 : t;
                 qx = ax + sp.segDX[s]! * t;
@@ -1131,10 +1154,7 @@ export function FluidParticleText(props: FluidParticleTextProps) {
                 if (dist > 0.5) {
                   const gaussian2 = gaussian * gaussian;
                   const coreInfl =
-                    gaussian2 *
-                    gaussian2 *
-                    gaussian *
-                    sp.segW[best]!;
+                    gaussian2 * gaussian2 * gaussian * sp.segW[best]!;
                   const pa =
                     sp.pressure * sp.segPressureMul[best]! * infl +
                     sp.corePressure * coreInfl;
@@ -1168,8 +1188,7 @@ export function FluidParticleText(props: FluidParticleTextProps) {
                   const infl = Math.exp(-d2 / sp.twoSigmaSq);
                   const core = Math.exp(-d2 / sp.coreTwoSigmaSq);
                   const pa =
-                    sp.pressure * 0.55 * infl +
-                    sp.corePressure * 0.85 * core;
+                    sp.pressure * 0.55 * infl + sp.corePressure * 0.85 * core;
                   vx += (pdx / dist) * pa * sp.h;
                   vy += (pdy / dist) * pa * sp.h;
                 }
@@ -1284,6 +1303,7 @@ export function FluidParticleText(props: FluidParticleTextProps) {
         const ox = x - hx;
         const oy = y - hy;
         const od = Math.sqrt(ox * ox + oy * oy);
+        intensity[i] = sp.maxD > 0 ? Math.min(1, od / sp.maxD) : 0;
         if (od > sp.maxD) {
           const f = sp.maxD / od;
           x = hx + ox * f;
@@ -1356,11 +1376,7 @@ export function FluidParticleText(props: FluidParticleTextProps) {
 
     function prepareSegmentMotion(index: number, vx: number, vy: number) {
       const speed = Math.sqrt(vx * vx + vy * vy);
-      const speed01 = clamp(
-        speed / (POINTER_REFERENCE_SPEED * dpr),
-        0,
-        1,
-      );
+      const speed01 = clamp(speed / (POINTER_REFERENCE_SPEED * dpr), 0, 1);
       segAdvMul[index] =
         (0.7 + 1.1 * speed01) * (ADVECTION_SAT / (ADVECTION_SAT + speed));
       segPressureMul[index] = 0.8 + 0.2 * speed01;
@@ -1387,6 +1403,7 @@ export function FluidParticleText(props: FluidParticleTextProps) {
       rpos.set(home.subarray(0, n2), 0);
       vel.fill(0, 0, n2);
       velSnap.fill(0, 0, n2);
+      intensity.fill(0, 0, count);
       uploadAndDraw();
     }
 
