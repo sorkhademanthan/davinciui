@@ -20,7 +20,7 @@ export default function FluidParticleTextDemoPage() {
     >
       <FluidParticleText
         preset="showcase"
-        text="FLOW"
+        text="INK"
         fontFamily={archivoNarrow.style.fontFamily}
         className="h-full w-full"
         style={{ height: "100%", minHeight: "100vh" }}

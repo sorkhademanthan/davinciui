@@ -253,40 +253,6 @@ import {FocusCarousel, type FocusCarouselItem} from "@/components/ui/focus-carou
         },
       ]}
       customizationNote={mechanicNote}
-      accessibilityNote={
-        <p>
-          The root is a{" "}
-          <code className="rounded bg-muted px-1 py-0.5 text-[12px] text-foreground">
-            region
-          </code>{" "}
-          with{" "}
-          <code className="rounded bg-muted px-1 py-0.5 text-[12px] text-foreground">
-            aria-roledescription=&quot;carousel&quot;
-          </code>
-          . Cards are buttons whose accessible names combine title and subtitle;
-          the active card carries{" "}
-          <code className="rounded bg-muted px-1 py-0.5 text-[12px] text-foreground">
-            aria-current
-          </code>
-          . Looping clones are hidden from assistive technology and removed from
-          the tab order. Left/Right arrows move one card, Home/End jump to the
-          ends, and the toggle is a radiogroup with arrow-key selection. A
-          polite live region announces the active title.
-        </p>
-      }
-      motionNote={
-        <p>
-          Navigation runs on a single motion value, so React never re-renders
-          per frame. Only transform, filter, and opacity animate. The caption
-          fades out in 120ms, then the title and subtitle enter through overflow
-          masks, with the subtitle trailing by 60ms. Reduced motion swaps travel
-          for a crossfade. Cards use{" "}
-          <code className="rounded bg-muted px-1 py-0.5 text-[12px] text-foreground">
-            will-change
-          </code>{" "}
-          only while near the active slot.
-        </p>
-      }
       constraintsNote={
         <p>
           The reference viewport is 1455×749 CSS px. Below 700px container

@@ -19,9 +19,9 @@ export const Demo = () => {
         <FluidParticleText
             preset="showcase"
             text="INK"
-            padding={0.16}
-            outline
-            strokeWidth={2.25}
+            padding={0.08}
+            outline={false}
+            strokeWidth={0}
             fillOpacity={1}
             className="h-full w-full"
         />
@@ -129,14 +129,14 @@ export async function FluidParticleTextDocs() {
           {
             name: "fontFamily",
             type: "string",
-            default: '"Arial Black", ...',
+            default: '"Archivo Narrow", ...',
             description:
               "Font used for rasterization. The component waits for it via document.fonts before sampling.",
           },
           {
             name: "fontWeight",
             type: "number | string",
-            default: "900",
+            default: "700",
             description: "Weight used for rasterization.",
           },
           {

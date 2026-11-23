@@ -1,22 +1,19 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { useTheme } from "next-themes";
 import { FluidParticleText } from "@workspace/ui/components/fluid-particle-text";
 import { useAmbientInnerDrive } from "./use-ambient-inner-drive";
 
 /**
  * Self-playing card thumbnail for Fluid Particle Text.
- * Same tuning as the docs-side preview (showcase preset, roomy padding,
- * bold stroke) with a slow, narrow ambient sweep so the type mostly rests
+ * Same tuning as the docs-side preview (reference404 preset, roomy padding,
+ * solid ink) with a slow, narrow ambient sweep so the type mostly rests
  * solid and only breathes liquid around the drifting pointer — calm, not
  * churned. Real user input takes over momentarily.
  */
 export function FluidParticleTextCardPreview() {
   const hostRef = useRef<HTMLDivElement>(null);
   const dotRef = useRef<HTMLDivElement>(null);
-  const { resolvedTheme } = useTheme();
-  const isDark = resolvedTheme === "dark";
 
   useAmbientInnerDrive(hostRef, {
     phase: 1.4,
@@ -53,14 +50,15 @@ export function FluidParticleTextCardPreview() {
       <FluidParticleText
         preset="showcase"
         text="INK"
-        padding={0.16}
-        color={isDark ? "#f4f4f5" : "#18181b"}
-        background={isDark ? "#09090b" : "#fafafa"}
+        padding={0.08}
+        color="#000000"
+        background="#ffffff"
         maxParticles={40000}
         maxDpr={1}
-        outline
-        strokeWidth={2.25}
+        outline={false}
+        strokeWidth={0}
         fillOpacity={1}
+        strokeOpacity={0}
         className="h-full w-full"
       />
       {/* Virtual-cursor ring — follows the ambient driver + real hover */}
@@ -70,7 +68,8 @@ export function FluidParticleTextCardPreview() {
         className="pointer-events-none absolute left-0 top-0 z-10 size-2.5 rounded-full opacity-0 mix-blend-difference transition-opacity duration-300"
         style={{
           background: "rgba(255,255,255,0.9)",
-          boxShadow: "0 0 0 3px rgba(255,255,255,0.25), 0 0 14px rgba(255,255,255,0.6)",
+          boxShadow:
+            "0 0 0 3px rgba(255,255,255,0.25), 0 0 14px rgba(255,255,255,0.6)",
         }}
       />
     </div>

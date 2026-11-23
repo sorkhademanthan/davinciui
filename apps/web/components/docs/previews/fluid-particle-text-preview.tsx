@@ -1,6 +1,5 @@
 "use client";
 
-import { useTheme } from "next-themes";
 import { FluidParticleText } from "@workspace/ui/components/fluid-particle-text";
 
 interface FluidParticleTextPreviewProps {
@@ -10,20 +9,18 @@ interface FluidParticleTextPreviewProps {
 export function FluidParticleTextPreview({
   fontFamily,
 }: FluidParticleTextPreviewProps) {
-  const { resolvedTheme } = useTheme();
-  const isDark = resolvedTheme === "dark";
-
   return (
     <FluidParticleText
       preset="showcase"
       text="INK"
       fontFamily={fontFamily}
       padding={0.16}
-      color={isDark ? "#f4f4f5" : "#18181b"}
-      background={isDark ? "#09090b" : "#fafafa"}
-      outline
-      strokeWidth={2.25}
+      color="#000000"
+      background="#ffffff"
+      outline={false}
+      strokeWidth={0}
       fillOpacity={1}
+      strokeOpacity={0}
       className="h-full w-full"
     />
   );

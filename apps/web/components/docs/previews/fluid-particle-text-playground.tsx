@@ -15,10 +15,10 @@ export const {
   defaults: {
     text: "INK",
     preset: "showcase",
-    color: "#f4f4f5",
-    background: "#09090b",
-    outline: true,
-    strokeWidth: 2.25,
+    color: "#000000",
+    background: "#ffffff",
+    outline: false,
+    strokeWidth: 0,
     fillOpacity: 1,
     particleSize: 1.35,
     particleShape: "square",
@@ -30,7 +30,13 @@ export const {
     damping: 4.6,
   },
   fields: [
-    { key: "text", label: "Text", type: "text", maxLength: 24, section: "Content" },
+    {
+      key: "text",
+      label: "Text",
+      type: "text",
+      maxLength: 24,
+      section: "Content",
+    },
     {
       key: "preset",
       label: "Physics Preset",
@@ -137,9 +143,9 @@ export const {
       section: "Physics",
     },
   ],
-  fixedProps: { padding: 0.16 },
+  fixedProps: { padding: 0.08 },
   elementClassName: "h-full w-full",
-  stageClassName: "bg-[#09090b]",
+  stageClassName: "bg-white",
   codeExtras: "  padding={0.16}",
   intro:
     "Personalize the particle type, ink, and physics. Move across the preview to displace the field.",
