@@ -89,7 +89,7 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
 // Loading skeleton for docs page — shadcn single-column rhythm
 function DocsPageSkeleton() {
     return (
-        <div className="mx-auto w-full max-w-[1200px] px-4 py-6 sm:px-6 md:py-8 lg:px-8 lg:py-10">
+        <div className="mx-auto w-full max-w-[1200px] py-6 md:py-8 lg:px-8 lg:py-10">
             <div className="max-w-3xl animate-pulse space-y-8">
                 <div className="space-y-3">
                     <div className="h-9 w-2/3 rounded-md bg-muted" />

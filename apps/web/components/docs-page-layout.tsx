@@ -151,10 +151,14 @@ export async function DocsPageLayout({
     typeof constraintsNote === "string"
       ? [constraintsNote]
       : content?.constraints;
-  const resolvedRelated =
+  const resolvedRelated = (
     relatedLinks.length > 0
       ? relatedLinks
-      : (content?.related ?? getRelatedComponents(installPackageName));
+      : (content?.related ?? getRelatedComponents(installPackageName))
+  ).map((link) => ({
+    ...link,
+    href: link.href.replace("/docs/components/", "/experience/components/"),
+  }));
 
   const pageMarkdown = buildDocsPageMarkdown({
     title,

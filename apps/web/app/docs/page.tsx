@@ -57,10 +57,10 @@ function getCount(category: string) {
 
 export default function DocsPage() {
   return (
-    <div className="w-full max-w-3xl px-4 py-6 sm:px-6 md:py-8 lg:px-8 lg:py-10">
+    <div className="w-full max-w-[648px] pb-6 md:pb-8 lg:pb-10">
       <div className="space-y-4">
-        <p className="text-sm font-medium text-muted-foreground">Docs</p>
-        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+        <p className="docs-eyebrow">Docs</p>
+        <h1 className="text-[36px] font-medium leading-[1.15] tracking-tight">
           Introduction
         </h1>
         <p className="max-w-2xl text-[15px] leading-7 text-muted-foreground">
@@ -276,13 +276,6 @@ export default function Page() {
           </div>
         </div>
 
-        <p className="text-xs text-muted-foreground">
-          Press{" "}
-          <kbd className="rounded border bg-muted px-1.5 py-0.5 font-mono text-[11px]">
-            ⌘K
-          </kbd>{" "}
-          to search anything.
-        </p>
       </div>
     </div>
   );

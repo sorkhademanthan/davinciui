@@ -1,7 +1,6 @@
 "use client"
 
 import Link from "next/link"
-import { usePathname } from "next/navigation"
 import { ArrowLeft, ArrowRight } from "lucide-react"
 
 import type { PaginationItem } from "@/lib/component-pagination"
@@ -13,10 +12,8 @@ const paginationDisabledClass =
   "inline-flex size-8 items-center justify-center rounded-md border border-input/50 bg-background text-muted-foreground/40"
 
 /**
- * Previous/next component stepping that stays in the visitor's section:
- * Docs pages paginate within /docs, Experience pages within /experience —
- * no unexpected shell switching. Items resolve server-side; only the
- * prefix rewrite needs the client pathname.
+ * Previous/next component stepping. All component pages live in the
+ * Experience shell, so pagination always stays within /experience/components.
  */
 export function ComponentPagination({
   previous,
@@ -25,14 +22,8 @@ export function ComponentPagination({
   previous?: PaginationItem
   next?: PaginationItem
 }) {
-  const pathname = usePathname()
-  const base = pathname.startsWith("/experience/")
-    ? "/experience/components"
-    : "/docs/components"
   const toHref = (href: string) =>
-    base !== "/docs/components"
-      ? href.replace("/docs/components/", `${base}/`)
-      : href
+    href.replace("/docs/components/", "/experience/components/")
 
   if (!previous && !next) return null
 
