@@ -39,6 +39,19 @@ const nextConfig = {
   // Hides the floating "N" dev badge (bottom-left). Dev-only setting —
   // production builds never render it. Needs a dev-server restart.
   devIndicators: false,
+  outputFileTracingIncludes: {
+    "/docs/[...slug]": ["./content/docs/**/*.mdx"],
+    "/llms.txt": ["./content/docs/**/*.mdx"],
+    "/llms-full.txt": ["./content/docs/**/*.mdx"],
+  },
+  async rewrites() {
+    return [
+      {
+        source: "/docs/:slug(.*).md",
+        destination: "/api/docs-markdown/:slug",
+      },
+    ]
+  },
   async headers() {
     const mediaCache = "public, max-age=604800, stale-while-revalidate=86400";
     return [
@@ -64,7 +77,6 @@ const nextConfig = {
     return [
       { source: "/experience", destination: "/experience/components", permanent: true },
       { source: "/docs/components-json", destination: "/docs/configuration", permanent: true },
-      { source: "/docs/dark-mode", destination: "/docs/theming", permanent: true },
       { source: "/docs/monorepo", destination: "/docs/installation", permanent: true },
       { source: "/experience/components/pixel-drift", destination: "/experience/components/pixel-flow", permanent: true },
       { source: "/experience/components/paper-ink-background", destination: "/experience/components/ink-flow", permanent: true },

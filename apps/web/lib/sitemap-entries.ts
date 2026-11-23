@@ -1,12 +1,20 @@
-import { MetadataRoute } from "next";
 import { components } from "@/registry";
+import { docsConfig } from "@/config/docs";
 import { getDocsSlugs } from "@/components/docs/lazy-registry";
+import { getDocSlugs } from "@/lib/docs-mdx";
 import { absoluteUrl } from "@/lib/site";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export type SitemapEntry = {
+  url: string;
+  lastModified: Date;
+  changeFrequency: "weekly" | "monthly";
+  priority: number;
+};
+
+export function getSitemapEntries(): SitemapEntry[] {
   const currentDate = new Date();
 
-  const staticPages: MetadataRoute.Sitemap = [
+  const staticPages: SitemapEntry[] = [
     {
       url: absoluteUrl(),
       lastModified: currentDate,
@@ -60,7 +68,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Only slugs with dedicated docs pages are indexed — the rest redirect
   // to the live gallery, so they must never appear as thin indexed pages.
   const documented = new Set(getDocsSlugs());
-  const componentSitemap: MetadataRoute.Sitemap = Object.keys(components)
+  const componentSitemap: SitemapEntry[] = Object.keys(components)
     .filter((slug) => documented.has(slug))
     .map((slug) => ({
       url: absoluteUrl(`/docs/components/${slug}`),
@@ -69,5 +77,32 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     }));
 
-  return [...staticPages, ...componentSitemap];
+  // Documentation pages come from the same nav config that drives the
+  // sidebar, plus every MDX page under content/docs.
+  const docPaths = new Set<string>();
+  const collect = (items: { href: string; items?: unknown }[]) => {
+    for (const item of items) {
+      if (item.href.startsWith("/docs") && !item.href.includes("#")) {
+        docPaths.add(item.href);
+      }
+      if (Array.isArray(item.items)) collect(item.items as typeof items);
+    }
+  };
+  for (const group of docsConfig.nav) collect(group.items);
+  for (const slug of getDocSlugs()) docPaths.add(`/docs/${slug.join("/")}`);
+
+  const docsSitemap: SitemapEntry[] = [...docPaths]
+    .filter((path) => !documented.has(path.replace("/docs/components/", "")))
+    .map((path) => ({
+      url: absoluteUrl(path),
+      lastModified: currentDate,
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    }));
+
+  return [
+    ...staticPages,
+    ...docsSitemap,
+    ...componentSitemap,
+  ].filter((entry, index, all) => all.findIndex((candidate) => candidate.url === entry.url) === index);
 }
