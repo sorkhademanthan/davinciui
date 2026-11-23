@@ -10,10 +10,10 @@ export const metadata: Metadata = {
 
 export default function ConfigurationPage() {
   return (
-    <div className="w-full max-w-3xl px-4 py-6 sm:px-6 md:py-8 lg:px-8 lg:py-10">
+    <div className="w-full max-w-[648px] py-6 md:py-8 lg:px-0 lg:py-10">
       <div className="space-y-4">
-        <p className="text-sm font-medium text-muted-foreground">Docs</p>
-        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">Configuration</h1>
+        <p className="docs-eyebrow">Docs</p>
+        <h1 className="text-[36px] font-medium leading-[1.15] tracking-tight">Configuration</h1>
         <p className="max-w-2xl text-[15px] leading-7 text-muted-foreground">
           The CLI reads a single file —{" "}
           <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs">components.json</code> at

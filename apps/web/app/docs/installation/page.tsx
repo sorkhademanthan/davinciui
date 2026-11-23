@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { DocsSnippet } from "@/components/docs-snippet";
+import { Step, Steps } from "@/components/mdx/mdx-components";
 import { Section, InfoBox } from "@/components/component-layout";
 
 export const metadata: Metadata = {
@@ -11,10 +12,10 @@ export const metadata: Metadata = {
 
 export default function InstallationPage() {
   return (
-    <div className="w-full max-w-3xl px-4 py-6 sm:px-6 md:py-8 lg:px-8 lg:py-10">
+    <div className="w-full max-w-[648px] py-6 md:py-8 lg:px-0 lg:py-10">
       <div className="space-y-4">
-        <p className="text-sm font-medium text-muted-foreground">Docs</p>
-        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+        <p className="docs-eyebrow">Docs</p>
+        <h1 className="text-[36px] font-medium leading-[1.15] tracking-tight">
           Installation
         </h1>
         <p className="max-w-2xl text-[15px] leading-7 text-muted-foreground">
@@ -26,6 +27,30 @@ export default function InstallationPage() {
       </div>
 
       <div className="mt-10 space-y-10">
+        <Section title="Install in four steps" id="install-in-four-steps">
+          <Steps>
+            <Step title="Prepare the project">
+              Make sure React, Tailwind CSS v4, and the shadcn CLI are available.
+            </Step>
+            <Step title="Register the namespace">
+              Add <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs">@davinciui</code>{" "}
+              to <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs">components.json</code>.
+            </Step>
+            <Step title="Add a component">
+              Run the CLI command for the component you want to use.
+            </Step>
+            <Step title="Import and render">
+              Import the installed file like any other local component.
+            </Step>
+          </Steps>
+          <InfoBox type="tip">
+            Already using shadcn? Skip the project setup and go straight to{" "}
+            <Link href="/docs/quickstart" className="underline underline-offset-4">
+              Quickstart
+            </Link>.
+          </InfoBox>
+        </Section>
+
         <Section title="Prerequisites" id="prerequisites">
           <ul className="list-disc space-y-1 pl-5 text-sm leading-6 text-muted-foreground">
             <li>Node.js 18 or later.</li>
