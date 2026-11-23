@@ -1179,6 +1179,41 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "marker",
     addedAt: "2026-09-07",
   },
+  "ambient-audio-toggle": {
+    title: "Ambient Audio Toggle",
+    description:
+      "A visitor-controlled background music toggle with animated wave and bar visualizers, persistent playback, and keyboard-accessible controls.",
+    category: "Sound",
+    slug: "ambient-audio-toggle",
+  },
+  "interaction-sound-kit": {
+    title: "Interaction Sound Kit",
+    description:
+      "Subtle generated interface sounds for trash, drop, confirm, and warning actions, with a mute control.",
+    category: "Sound",
+    slug: "interaction-sound-kit",
+  },
+  "keyboard-command-sounds": {
+    title: "Keyboard Command Sounds",
+    description:
+      "Optional keypress and command feedback with an on/off toggle, live status, and a try-it input.",
+    category: "Sound",
+    slug: "keyboard-command-sounds",
+  },
+  "upload-sound-status": {
+    title: "Upload Sound Status",
+    description:
+      "Sound-backed upload progress with speed, ETA, cancel, and completion feedback.",
+    category: "Sound",
+    slug: "upload-sound-status",
+  },
+  "voice-recorder": {
+    title: "Voice Recorder",
+    description:
+      "Browser microphone capture with a live waveform, duration cap, and playback preview.",
+    category: "Sound",
+    slug: "voice-recorder",
+  },
 };
 
 export function getComponent(slug: string) {
