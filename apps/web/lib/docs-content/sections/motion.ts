@@ -103,6 +103,8 @@ export const motion: Record<string, string> = {
     "Framer Motion animates the blue fill via scaleY and slides the overlay up on exit using a fixed cubic-bezier ease. duration, completionHold and exitDuration set timing; useReducedMotion caps progress at 400ms and exit at 250ms while keeping the same sequence.",
   "fluid-particle-text":
     "Particles advect along the cursor path and spring home, tuned by pointerFollow, advectionStrength, pressureStrength, shearStrength, homeStrength, trailLifetime and trailLength. prefers-reduced-motion is detected via matchMedia; when it matches, the canvas shows the resting glyph and the simulation loop does not run.",
+  "focus-carousel":
+    "Navigation runs on a single motion value, so React never re-renders per frame. Only transform, filter, and opacity animate. The caption fades out in 120ms, then the title and subtitle enter through overflow masks, with the subtitle trailing by 60ms. Reduced motion swaps travel for a crossfade. Cards use will-change only while near the active slot.",
   form: "Static composition primitive with no animation, transitions or timing props. It does not check prefers-reduced-motion because it has no motion to reduce.",
   "geometric-preloader":
     "Nine nested squares counter-rotate continuously while a staged progress value ignites them, then the overlay exits through an eased diamond clip-path. duration, holdDuration and exitDuration control timing. prefers-reduced-motion shortens each phase, replaces the clip-path reveal with a fade, and disables square rotation through CSS.",

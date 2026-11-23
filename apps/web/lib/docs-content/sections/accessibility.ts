@@ -103,6 +103,8 @@ export const accessibility: Record<string, string> = {
     "The overlay exposes role=progressbar with aria-label Page loading and aria-valuenow updated as progress changes. The visible percentage counter and fill are aria-hidden, scroll is locked, and there is no keyboard dismiss or skip control.",
   "fluid-particle-text":
     "The container exposes role=img with aria-label defaulting to the text, while the canvas is aria-hidden. Pointer movement drives the effect and touch is ignored; there is no focusable control or keyboard alternative, so the deformation is purely decorative.",
+  "focus-carousel":
+    "The root is a region with aria-roledescription='carousel'. Cards are buttons whose accessible names combine title and subtitle; the active card carries aria-current. Looping clones are hidden from assistive technology and removed from the tab order. Left/Right arrows move one card, Home/End jump to the ends, and the toggle is a radiogroup with arrow-key selection. A polite live region announces the active title.",
   form: "FieldContext generates stable ids and auto-wires labels via htmlFor, plus aria-invalid and aria-describedby on the control. FormMessage renders role=alert with an icon, so errors are announced; behavior otherwise relies on native form and input semantics.",
   "geometric-preloader":
     "The overlay is a role=progressbar labelled Page loading, with aria-valuenow updated in 25 percent milestones; decorative squares and the counter are aria-hidden. Page scroll is locked during the sequence, and there is no keyboard dismissal or skip action.",

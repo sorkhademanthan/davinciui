@@ -12,6 +12,12 @@ export const customization = {
   button: {
     customization: {
       note: "Use the variant and size props for the built-in styles, then layer layout or color classes through className. The button renders a single data-slot hook for targeted overrides.",
+      cssVars: [
+        { name: "--primary", default: "var(--primary)", description: "Background and border of the solid variant." },
+        { name: "--primary-foreground", default: "var(--primary-foreground)", description: "Label color on the solid variant." },
+        { name: "--radius", default: "var(--radius)", description: "Corner radius inherited from the theme." },
+        { name: "--ring", default: "var(--ring)", description: "Color of the visible focus ring." },
+      ],
       slots: ['[data-slot="button"]'],
     },
   },
@@ -34,6 +40,12 @@ export const customization = {
   dialog: {
     customization: {
       note: "Each dialog part renders a data-slot hook, so the overlay, positioner, and content can be themed independently. Use the size prop for the built-in content widths and className for one-off layout.",
+      cssVars: [
+        { name: "--background", default: "var(--background)", description: "Dialog surface background." },
+        { name: "--foreground", default: "var(--foreground)", description: "Primary text color inside the dialog." },
+        { name: "--border", default: "var(--border)", description: "Border color for the content and footer." },
+        { name: "--ring", default: "var(--ring)", description: "Focus ring color for interactive controls." },
+      ],
       slots: [
         '[data-slot="dialog"]',
         '[data-slot="dialog-trigger"]',
@@ -48,6 +60,18 @@ export const customization = {
         '[data-slot="dialog-footer"]',
         '[data-slot="dialog-title"]',
         '[data-slot="dialog-description"]',
+      ],
+    },
+  },
+  input: {
+    customization: {
+      note: "Input inherits color, border, and focus styling from the theme tokens. Pass className to adjust layout without overriding the shared field styles.",
+      cssVars: [
+        { name: "--background", default: "var(--background)", description: "Field background." },
+        { name: "--foreground", default: "var(--foreground)", description: "Entered text color." },
+        { name: "--border", default: "var(--border)", description: "Field border color." },
+        { name: "--ring", default: "var(--ring)", description: "Focus ring color." },
+        { name: "--muted-foreground", default: "var(--muted-foreground)", description: "Placeholder text color." },
       ],
     },
   },
@@ -83,6 +107,12 @@ export const customization = {
   tabs: {
     customization: {
       note: "Tabs renders hooks for the root, list, trigger, and content. Restyle those slots globally or pass className to the individual parts.",
+      cssVars: [
+        { name: "--muted", default: "var(--muted)", description: "Background of the inactive tab list." },
+        { name: "--muted-foreground", default: "var(--muted-foreground)", description: "Label color of inactive tabs." },
+        { name: "--foreground", default: "var(--foreground)", description: "Label color of the active tab." },
+        { name: "--ring", default: "var(--ring)", description: "Focus ring color for tab triggers." },
+      ],
       slots: [
         '[data-slot="tabs"]',
         '[data-slot="tabs-list"]',
