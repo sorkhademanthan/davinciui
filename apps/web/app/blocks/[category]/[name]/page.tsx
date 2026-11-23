@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { ReactElement } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
@@ -43,7 +44,7 @@ export default async function BlockDetailPage({
   params,
 }: {
   params: Promise<{ category: string; name: string }>;
-}) {
+}): Promise<ReactElement> {
   const { category, name } = await params;
   const block = getAllBlocks().find(
     (item) => item.name === name && item.categories.includes(category),

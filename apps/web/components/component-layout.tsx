@@ -8,6 +8,7 @@ interface ComponentLayoutProps {
   badge?: string
   date?: string
   action?: React.ReactNode
+  eyebrow?: string
 }
 
 export function ComponentLayout({
@@ -17,9 +18,10 @@ export function ComponentLayout({
   badge,
   date,
   action,
+  eyebrow,
 }: ComponentLayoutProps) {
   return (
-    <div className="w-full max-w-3xl space-y-10 px-4 py-6 sm:px-6 md:py-8 lg:px-8 lg:py-10">
+    <div className="w-full max-w-[648px] space-y-10 py-6 md:py-8 lg:py-10">
       <header className="space-y-4">
         {/* Optional badge and date row */}
         {(badge || date) && (
@@ -39,9 +41,12 @@ export function ComponentLayout({
 
         {/* Title and Action */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-          <h1 className="scroll-m-20 text-3xl font-semibold tracking-tight sm:text-4xl">
-            {title}
-          </h1>
+          <div className="min-w-0 space-y-2">
+            {eyebrow ? <p className="docs-eyebrow">{eyebrow}</p> : null}
+            <h1 className="scroll-m-20 text-[36px] font-medium leading-[1.15] tracking-tight">
+              {title}
+            </h1>
+          </div>
           {action && <div className="shrink-0 pt-1">{action}</div>}
         </div>
 
@@ -105,28 +110,19 @@ export function Section({ title, children, id, step, className, level = 2, hideF
       data-section-title={title}
       data-toc-ignore={hideFromToc ? "" : undefined}
     >
-      {/* shadcn docs h2: semibold tracking-tight with bottom border + hover anchor */}
-      <div className="border-b pb-2">
-        <div className="flex items-center gap-3">
-          {step !== undefined && (
-            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-foreground text-xs font-medium text-background">
-              {step}
-            </div>
-          )}
-          <h2 className="group flex scroll-m-20 items-center gap-2 text-2xl font-semibold tracking-tight">
-            {title}
-            <a
-              href={`#${sectionId}`}
-              aria-label={`Link to ${title}`}
-              className="text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100"
-            >
-              #
-            </a>
-          </h2>
-        </div>
-      </div>
+      {/* Docs h2: medium weight, generous top margin, no divider rule, hover anchor. */}
+      <h2 className="group flex scroll-m-20 items-center gap-2 text-2xl font-medium tracking-tight mt-12 mb-4">
+        {title}
+        <a
+          href={`#${sectionId}`}
+          aria-label={`Link to ${title}`}
+          className="text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100"
+        >
+          #
+        </a>
+      </h2>
 
-      <div className={cn("mt-4 space-y-6", step !== undefined && "pl-12")}>
+      <div className={cn("space-y-6", step !== undefined && "pl-12")}>
         {children}
       </div>
     </div>
