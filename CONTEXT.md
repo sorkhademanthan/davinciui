@@ -16,10 +16,22 @@
 
 - Project: DavinciUI monorepo (Next.js app `apps/web`, component lib `packages/ui`, registry in `apps/web/registry/index.ts` + `apps/web/public/r/*`).
 - Branch: `main`
-- HEAD: `3f50629` — `refactor: remove SegmentedImageCarousel component and related code; ...` (2026-11-20)
-- Working tree: **has uncommitted changes** from the all-video poster-first rollout (see Active task) plus untracked `CONTEXT.md` and new poster assets.
+- HEAD: `b8400e1` — `feat: add visual sitemap and registry verification` (2026-11-22)
+- Working tree: **has uncommitted changes** — the docs-site rebuild (see Active task) plus the earlier fluid-particle-text/scroll-media/blocks fixes and untracked `CONTEXT.md`/poster assets.
 - Package manager: pnpm (`packageManager: pnpm@10.4.1`); repo also has a stale `bun.lock`.
 - Local artifacts: `tmp/` is gitignored (preview screenshots/logs); `.next/` gitignored.
+
+## Active task
+
+- **Stash `/experience/components/spiral-media-gallery` prod-parity changes (2026-11-23) — DONE.**
+  - Goal: the page's own files (`app/experience/components/**`, `components/docs/spiral-media-gallery.tsx`, `packages/ui/.../spiral-media-gallery.tsx`) were **unchanged**; every diff vs `https://davinciui.vercel.app/experience/components/spiral-media-gallery` came from shared files touched by the uncommitted docs rebuild. User asked to find and stash exactly those.
+  - Diffed live HTML vs `http://localhost:3000/...` (artifacts in `/var/folders/00/qlfsv8yj6yzg5p6jz3pffxvh0000gn/T/opencode/smg/`) and mapped each visible delta to a source file.
+  - Stashed 9 files (stash `stash@{0}`, msg `wip: revert /experience/components/spiral-media-gallery to prod parity`):
+    `apps/web/components/{docs-page-layout,page-context-menu,docs-props-table,docs-preview-wrapper,docs-code-panel,package-manager-command,theme-toggle}.tsx`, `apps/web/app/layout.tsx`, `apps/web/components/providers.tsx`.
+    Covered: `Components` eyebrow + 36px h1 + container padding + desc order + removed prev/next pagination; `Copy page` button; 4-column props table; viewport/RTL/StackBlitz preview toolbar; rounded-16 code panel + Ask AI tab; shiki install command; theme-toggle icon/label; default theme `dark` → `system`.
+  - Deliberately **not** stashed (no effect on this page): `docs-structured-content.tsx` (`Customization`→`Theming` never renders here), `command-menu.tsx` (client-only), `app/docs/docs.css` (only imported by `app/docs/layout.tsx`, so `.docs-*` rules never load on `/experience/*`), and the rest of the docs rebuild (57 changes remain).
+  - Verified: `npx tsc --noEmit -p apps/web` → EXIT 0; re-diffed text content → only remaining delta is `<title>` placement, which is a dev-server artifact (the untouched `/sitemap` route also has no `<title>` in `<head>` on dev).
+  - Restore with: `git stash pop stash@{0}` (or `git stash apply`).
 
 ## Last work sessions (context from commit history)
 
@@ -45,9 +57,42 @@
    - Also removed `apps/web/components/cookie-consent.tsx`.
    - No dangling imports found for the removed components.
 
-## Active task
+- **Docs site rebuild — prompt-fidelity pass (2026-11-22, session 3) — IN PROGRESS / finishing QA.**
+  - Goal (from pasted fix prompt): make `https://davinciui.vercel.app/docs` match `https://docs.archil.com/getting-started/` (regions: header, sidebar, TOC, article, links, code blocks, callouts, bottom elements, typography, responsive; acceptance: within 2px; final report = changed list + values not matched within 2px + invented tokens).
+  - Session 3 work completed (this session):
+    - `apps/web/app/docs/docs.css` (untracked new file from prior rebuild): added `--docs-link-underline: var(--docs-brand)`; appended `.docs-article` typography block (h1 36px/500 lh 1.15, h2 24px/500 mt 48mb 16, h3/h4, lists, inline code, blockquote, hr, img, table, th/td); appended shiki code-figure rules (light bg #faf9f7 / dark #0f0f11, radius 16, pre padding 16px 20px, fs 14/lh 24); `.docs-article .docs-callout`/`.docs-prose .docs-callout` margin; `.docs-eyebrow` (incl. `.docs-article` variant) now fw 500 size 13 color var(--docs-brand); `.docs-lead` variants updated.
+    - `apps/web/components/docs-page-layout.tsx`: added `docs-article` to `<article>`; header now eyebrow + h1 (`text-[36px] font-medium leading-[1.15] tracking-tight`) with PageContextMenu (Copy page) in title row right (removed ComponentPagination + `resolveComponentPagination` + `pagination`); added optional `eyebrow?: string` prop + `resolvedEyebrow` (eyebrow ?? (installPackageName && getComponent(...) ? "Components" : "Getting started")); added `import { getComponent } from "@/registry"`.
+    - `apps/web/components/component-layout.tsx`: `eyebrow?: string` prop; h1 wrapper `min-w-0 space-y-2` with `<p className="docs-eyebrow">`; Section h2 now direct h2 (`group flex scroll-m-20 items-center gap-2 text-2xl font-medium tracking-tight mt-12 mb-4`) no border-b wrapper; content div `cn("space-y-6", step && "pl-12")`; container `w-full max-w-[648px] space-y-10 py-6 md:py-8 lg:py-10`.
+    - `apps/web/components/docs-chrome/docs-header.tsx`: added GitHub Star pill in row-1 right (hidden sm:inline-flex; h-9; border; rounded-full; fs text-sm; fw 500; muted-foreground; hover foreground; inner Github size-4 + Star span + sr-only; href https://github.com/sorkhademanthan/davinciui).
+    - `apps/web/components/docs-chrome/docs-sidebar.tsx`: SidebarLink `flex h-8 items-center gap-2 rounded-[10px] px-2 text-[15px] transition-colors duration-150`, active `bg-primary/6 font-medium text-primary hover:bg-primary/6`; children similar; group heading `mb-2 px-2 py-2 text-sm font-medium text-muted-foreground`; nav `flex flex-col gap-6 py-6 pl-6 pr-4 pb-12`.
+    - `apps/web/components/docs-code-panel.tsx`: rewritten clean — container `docs-code-panel not-prose ... rounded-[16px]`; tablist `relative flex items-center gap-1`; tab `docs-code-tab ... px-2 py-0.5 text-sm`, active/inactive bg-transparent, `data-state={isSelected?"active":"inactive"}`; Ask AI button (`docs-code-ask`, Sparkles size-3.5, aria-label/title "Ask AI about this code", onClick openAsk).
+    - `apps/web/components/package-manager-command.tsx`: rewritten — re-exports PACKAGE_MANAGERS/usePackageManager/PackageManager from `@/hooks/use-package-manager`; `HighlightedCommand` removed; effect POSTs `/api/docs/source {code, lang:"bash"}` → `html`; renders shiki div via dangerouslySetInnerHTML with `docs-shell-code [&_.shiki]:!bg-transparent [&_pre]:!bg-transparent` when html else fallback pre.
+    - Standalone docs pages + ComponentLayout container: `w-full max-w-3xl px-4 py-6 sm:px-6 md:py-8 lg:px-8 lg:py-10` → `w-full max-w-[648px] py-6 md:py-8 lg:py-10` (apps/web/app/docs/{page,configuration,changelog,installation,cli,theming,registry,skills,typeset,components}/page.tsx + component-layout.tsx); h1 `text-3xl font-semibold tracking-tight sm:text-4xl` → `text-[36px] font-medium leading-[1.15] tracking-tight` (10 files); eyebrow `text-sm font-medium text-muted-foreground">Docs</p>` → `<p className="docs-eyebrow">Docs</p>` (10 files); docs/components/page.tsx `max-w-3xl space-y-4`→`max-w-[648px] space-y-4`, `mt-10 max-w-3xl`→`mt-10 max-w-[648px]`; typeset h2 `scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight` → `scroll-m-20 text-2xl font-medium tracking-tight mt-12 mb-4` (9).
+    - Prettier: `npx prettier --write` on 5 files reformatted heavily (no prettier config; defaults) → reverted via `git checkout --` those files and re-applied edits via python; keep formatting unchanged going forward.
+  - Verification this session:
+    - `npx tsc --noEmit -p apps/web` → EXIT=0 clean; ESLint (`apps/web/node_modules/.bin/eslint`) clean on changed files (`--max-warnings 0`) → EXIT OK.
+    - `pnpm validate:docs` → ALL PASS (145 pages); `pnpm validate:registry` → OK (169 items).
+    - `pnpm exec next build` (from apps/web) → GREEN.
+    - Playwright QA: /docs,/docs/installation,/docs/components,/docs/components/button,/docs/theming @1465/1100/390 × light/dark → `documentElement.scrollWidth - clientWidth === 0` everywhere (no horizontal overflow); Star pill found+visible; code panel tabs (bun/npm/pnpm/yarn data-state) + 2 Ask AI buttons + 5 shiki blocks (github-light/github-dark) on /docs/components/button; /api/docs/source bash → shiki html 200.
+    - Known: persistent client `pageerror: Unexpected token '}'` on ALL routes incl. `/` (pre-existing? not caused by this session's edits — no landing files touched; possibly stale dev cache) — to investigate.
+  - Remaining: final QA (TOC, callouts, bottom elements, typography, responsive at 1280/1024/390 light+dark), final report (changed list, unmatched within 2px, invented tokens).
 
-- **Visual sitemap page + Shoogle/shadcn registry verification (2026-11-22) — COMPLETE; uncommitted.**
+- **Docs site rebuild — prompt-fidelity pass (2026-11-22, session 2) — COMPLETE; all checks green; uncommitted.**
+  - Goal: finish the rebuild against the full "DavinciUI Docs: Build Prompt" (18 sections). The full prompt was recovered from the earlier opencode session and stored at `/var/folders/00/qlfsv8yj6yzg5p6jz3pffxvh0000gn/T/opencode/docs-prompt.txt`.
+  - Implemented this session: brand-colored active tab/sidebar/TOC/eyebrow and tab underline; eyebrow title-case; chevron accordion + reduced-motion CSS; mobile full-width floating Ask; 4-column props table (Prop/Type/Default/Description); standard feedback/prev-next/footer for component pages (removed `DocsPageFooter` early return); compact in-page TOC dropdown mounted centrally in `DocsChrome` for every docs page; MDX CodeGroup PM persistence (shared `use-package-manager` hook) + "Ask AI about this code" sparkle actions; streaming `/api/ask` + client reader with source links; ⌘K Headings group (curated `lib/docs-headings.ts`), recent searches in localStorage, match highlighting; preview toolbar viewport-width/RTL/StackBlitz controls; canonical + per-page OG (`/api/docs-og?title=…`) for MDX pages; sitemap now includes nav + MDX docs pages; `.md` fallback for TSX docs pages; first-visit `prefers-color-scheme` default + mode-aware theme icon; `main#main-content` skip target; manual-install fallback; theming playground with live token editor + CSS export; per-component CSS var tables for Button/Input/Dialog/Tabs; Introduction sections ("You can use…", Common tasks, Features, At a glance, Compatibility) + two-tab CodeGroup; Installation `<Steps>` + tip callout.
+  - Decisions/deviations: component pages intentionally keep their wide showcase canvas (not 648px article) and redirect undocumented slugs to the gallery (not "Coming soon" stubs); `lastUpdated` is supported in MDX frontmatter but not fabricated for pages without real dates; OG images for MDX pages use a query-driven route (a file-convention OG image inside `app/docs/[...slug]` crashes Turbopack because a catch-all must be the last path segment); theming playground lives at `components/theming-playground.tsx` (not under `components/docs/`, which the docs validator scans as component pages).
+  - Verified: `apps/web npx tsc --noEmit` clean; targeted ESLint clean on every changed file; `pnpm validate:docs` clean (145 pages); `pnpm validate:registry` clean (169 items); `npx next build` green; Playwright QA 11/11 at `tmp/docs-final-qa.cjs` with screenshots in `tmp/docs-final/` (1465px + 390px, light/dark, 48+48 header, 288 sidebar, 648 article, 293 TOC, 0 overflow, ⌘K/⌘I/copy menu/preview controls/markdown+OG endpoints all pass, 0 console errors).
+  - `pnpm --filter web lint` still fails on 48 pre-existing warnings in unrelated files (none in files touched this session).
+
+- **Docs site rebuild (Mintlify/Archil-style) at `/docs` (2026-11-22) — implementation complete; `next build` green; uncommitted.**
+  - Goal: replace the docs shell in place with a Mintlify-style chrome (two-row header, 288px sidebar, 648px article, 293px TOC, floating Ask), MDX starter pages, `.md`/`llms.txt` endpoints, assistant/feedback stubs, and a working copy-page menu; keep the 145 TSX component pages.
+  - Implemented: `app/docs/layout.tsx` → `DocsChrome`; `docs.css` tokens/prose/MDX; `docs-header`/`docs-sidebar`/`docs-mobile-nav`/`floating-ask`/`docs-page-footer`/`ask-assistant`/`ask-store`/`docs-tabs`; `docs-on-this-page` docs variant; `config/docs.ts` nav; MDX route `app/docs/[...slug]/page.tsx` with `next-mdx-remote`, `rehype-pretty-code` (dual theme), `rehype-slug`, `rehype-autolink-headings`; `components/mdx/*`; `lib/docs-mdx.ts`; 10 content files under `content/docs/`; `/api/ask`, `/api/docs/feedback`, `/api/docs-markdown/[...slug]`, `/llms.txt`, `/llms-full.txt`; `PageContextMenu` on MDX pages.
+  - Fixed during QA: closed assistant/drawer overflow (`hidden`), mobile logo truncation, inline-code block bug (`figure[data-rehype-pretty-code-figure]` scoping), fixed-panel height (`backdrop-blur` containing block — moved panels outside `<header>`), card underlines, mobile article padding 24px (chrome `px-6`; removed inner `px-4` from `/docs`, standalone docs pages, `DocsPageLayout`, `ComponentLayout`, skeleton).
+  - Sitemap/build: moved XML sitemap from `app/sitemap.ts` to `app/sitemap.xml/route.ts` + `lib/sitemap-entries.ts` (fixes `/sitemap` page vs metadata conflict; `/sitemap` page stays, `/sitemap.xml` returns 148 URLs); cast two `orbit-spiral-gallery.tsx` refs (`as unknown as Mesh/ShaderMaterial`) for duplicate `@types/three`; **`npx next build` passes**.
+  - Verification: `tsc --noEmit` clean; ESLint clean on docs changed files; Playwright 390px h1 x=24 on `/docs`, `/docs/quickstart`, `/docs/components`, `/docs/components/button`, `/docs/foundations/colors`; no horizontal overflow; `/sitemap.xml` 200 `application/xml`; copy button/menu verified.
+  - Remaining: `validate:docs` 9 errors (5 missing registry entries, `focus-carousel` notes/legacy prop), `validate:registry` 1 (`preloader-pro-v1`); commit the docs work (not yet requested).
+
+- **Visual sitemap page + Shoogle/shadcn registry verification (2026-11-22) — COMPLETE; committed as `b8400e1`.**
   - Goal: a tree sitemap of the site (categories → components) and to get the library into shoogle.dev.
   - Built `apps/web/app/sitemap/page.tsx` (`/sitemap`): server-rendered tree with hero stats, sticky category index, site-pages tree, and per-category `<details>` trees linking all 145 documented component pages (`/docs/components/<slug>`). Added `Sitemap` link in `components/footer.tsx` and `/sitemap` to `app/sitemap.ts`. Added `"focus-carousel": "Visual Effects"` to `lib/docs-content/categories.ts` (fixes its grouping + one `validate:docs` category error).
   - Shoogle finding: shoogle.dev has **no submission API/token**. It indexes the official shadcn registry directory (`https://ui.shadcn.com/r/registries.json`). Listing = PR to `shadcn-ui/ui` `apps/v4/registry/directory.json`.
@@ -124,37 +169,28 @@
 
 Run these before claiming the repo is green.
 
-### 1. `pnpm validate:docs` — 11 errors
+### 1. `pnpm validate:docs` — green (2026-11-22)
 
-- `apps/web/registry/index.ts` is missing 5 documented slugs (140 entries vs 145 docs pages):
-  `ambient-audio-toggle`, `interaction-sound-kit`, `keyboard-command-sounds`, `upload-sound-status`, `voice-recorder`.
-  Their docs pages and `apps/web/public/r/<slug>.json` files exist; only the index metadata is missing.
-- `apps/web/lib/docs-content/categories.ts` is missing `focus-carousel`.
-- `apps/web/lib/docs-content/sections/accessibility.ts` is missing `focus-carousel`.
-- `apps/web/lib/docs-content/sections/motion.ts` is missing `focus-carousel`.
-- `apps/web/components/docs/focus-carousel.tsx:256,277` still passes legacy `accessibilityNote` / `motionNote` props (validator forbids these; notes must move to the content modules).
+- All 145 pages pass. The previously missing registry entries (`ambient-audio-toggle`, `interaction-sound-kit`, `keyboard-command-sounds`, `upload-sound-status`, `voice-recorder`) and `focus-carousel` notes were fixed in the uncommitted docs work (`apps/web/registry/index.ts`, `apps/web/lib/docs-content/sections/{accessibility,motion}.ts`, `apps/web/components/docs/focus-carousel.tsx`).
 
-### 2. `pnpm validate:registry` — 1 error
+### 2. `pnpm validate:registry` — green (2026-11-22)
 
-- `apps/web/public/r/registry.json` is missing `preloader-pro-v1` from `items[]`, although `apps/web/public/r/preloader-pro-v1.json` exists.
-- Likely fix: regenerate with `pnpm registry:blocks` (see `scripts/build-blocks-registry.js`) or add the item manually.
+- 169 items validated, 145 documented slugs checked. `preloader-pro-v1` was added to `apps/web/public/r/registry.json` items and the validator allowlist.
 
-### 3. `next build` type errors (pre-existing, unrelated to DialKit)
+### 3. `next build` — green (2026-11-22)
 
-- `apps/web npx tsc --noEmit` is now **clean** (2026-11-22) after fixing the 2 `scroll-media-expand.tsx` errors (`overlay.style.tabIndex` → `overlay.tabIndex`; `cfg.playFontSize` → `playFontSize`).
-- `next build` (Turbopack, Next 16.0.10) now fails later on unrelated pre-existing errors:
-  - Fixed: `apps/web/app/blocks/[category]/[name]/page.tsx` inferred-type portability — added explicit `Promise<ReactElement>` return type.
-  - **Open:** `packages/ui/src/components/orbit-spiral-gallery.tsx:297` — three.js `Mesh` type mismatch (`meshes.current[index] = node`), likely duplicate `three` type versions.
-- Re-run `cd apps/web && npx next build` to see the next blocker.
+- `npx next build` passes (Turbopack, Next 16.0.10); route table includes `/docs/[...slug]`, `/llms.txt`, `/llms-full.txt`, `/sitemap`, `/sitemap.xml`.
+- Fixes: `scroll-media-expand.tsx` (`overlay.tabIndex`, `playFontSize`), `blocks/[category]/[name]/page.tsx` explicit return type, `orbit-spiral-gallery.tsx` ref casts for duplicate `@types/three`, and the `/sitemap` page vs `app/sitemap.ts` metadata conflict (XML moved to `app/sitemap.xml/route.ts` + `lib/sitemap-entries.ts`).
 
 ## Suggested next steps (pick one, then update this file)
 
-1. Run final human visual polish on `GlitchLiquidText` hover after the first-pass retune.
-2. Fix `validate:docs` failures (registry entries + focus-carousel category/notes/legacy props).
-3. Regenerate registry to fix `validate:registry` (`preloader-pro-v1`).
+1. Review/commit the docs-site rebuild (uncommitted); all validators, `next build`, and Playwright QA are green.
+2. ~~Fix `validate:docs` failures~~ — done (2026-11-22).
+3. ~~Fix `validate:registry`~~ — done (2026-11-22).
 4. ~~Commit the verified DialKit changes~~ — done (`9ce2acb`).
-5. Continue fixing the unrelated `next build` type errors (orbit-spiral-gallery three.js types) if a green build is required.
+5. ~~Fix the `next build` type errors~~ — done; `next build` is green (2026-11-22).
 6. Continue the `docs/preview-scalability-checklist.md` A1+ items (all unchecked; large planned effort).
+7. Optional fidelity follow-ups: generate props tables from TS types, add "Last updated" from a real source, per-component OG theme tokens, Lighthouse run.
 
 ## Useful commands
 
@@ -175,6 +211,8 @@ pnpm build
 
 ## Completed / verified
 
+- (2026-11-22) Docs-site rebuild implemented and verified: MDX pages, `.md`/`llms` endpoints, assistant/feedback stubs, copy menu, mobile 24px padding; `next build` green; `/sitemap.xml` 148 URLs.
+- (2026-11-22) Prompt-fidelity pass implemented and verified: brand active states, 4-column props tables, standard footer on component pages, central mobile TOC dropdown, streaming assistant, search headings/recents/highlighting, PM persistence + AI code actions, preview toolbar controls, per-page MDX OG/canonical, theming playground, starter-content sections; `tsc`, targeted ESLint, both validators, `next build`, and Playwright 11/11 all green.
 - (2026-11-21) Glitch Liquid Text Studio Lumio implementation QA passed: clean/no-overflow/no-console-error runs and tuned hover defaults completed.
 - (2026-11-21) Confirmed clean working tree, no dangling references to the 6 removed components.
 - (2026-11-21) Confirmed customize-panel migration artifacts and no broken imports for deleted `personalize-controller`/`personalize-drawer`.
