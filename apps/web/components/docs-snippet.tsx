@@ -1,8 +1,8 @@
 "use client"
 
 import * as React from "react"
+import { Check, Copy, Sparkles } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { CopyButton } from "@/components/copy-button"
 
 interface DocsSnippetProps {
   code: string
@@ -18,32 +18,36 @@ interface DocsSnippetProps {
  */
 export function DocsSnippet({
   code,
-  variant = "dark",
   className,
 }: DocsSnippetProps) {
   const text = React.useMemo(() => code.trim(), [code])
+  const [copied, setCopied] = React.useState(false)
+  async function copy() {
+    try {
+      await navigator.clipboard.writeText(text)
+      setCopied(true)
+      window.setTimeout(() => setCopied(false), 1500)
+    } catch {
+      // Clipboard access can be blocked; leave the label unchanged.
+    }
+  }
+  function askAI() {
+    window.dispatchEvent(new CustomEvent("dv:ask-ai", { detail: { prompt: `Explain this code:\n\n${text}` } }))
+  }
 
   return (
-    <div
-      data-code-block
-      className={cn(
-        "relative overflow-hidden rounded-lg border text-sm",
-        variant === "dark"
-          ? "border-zinc-800 bg-zinc-950"
-          : "border-border bg-muted/40",
-        className
-      )}
-    >
-      <CopyButton code={text} />
-      <pre className="overflow-x-auto p-4 pr-12">
-        <code
-          className={cn(
-            "font-mono text-[13px] leading-6 whitespace-pre",
-            variant === "dark" ? "text-zinc-100" : "text-foreground"
-          )}
-        >
-          {text}
-        </code>
+    <div data-code-block className={cn("dv-code docs-code-block", className)}>
+      <div className="dv-code-actions docs-code-actions">
+        <button type="button" className="dv-code-btn docs-copy" onClick={copy} aria-label={copied ? "Copied" : "Copy code"}>
+          {copied ? <Check size={16} /> : <Copy size={16} />}
+        </button>
+        <button type="button" className="dv-code-btn" onClick={askAI} aria-label="Ask AI about this code">
+          <Sparkles size={16} />
+        </button>
+        <span className="sr-only" aria-live="polite">{copied ? "Copied to clipboard" : ""}</span>
+      </div>
+      <pre>
+        <code>{text}</code>
       </pre>
     </div>
   )

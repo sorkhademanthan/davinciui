@@ -51,7 +51,7 @@ export function PackageManagerCommand({
     >
       <div {...wrapperProps}>
         <div ref={contentRef}>
-          <pre className="max-h-96 overflow-x-auto overflow-y-auto whitespace-pre rounded-b-md bg-background p-4 font-mono text-sm leading-5 no-scrollbar">
+          <pre className="max-h-96 overflow-x-auto overflow-y-auto whitespace-pre rounded-b-md bg-transparent p-4 font-mono text-sm leading-5 no-scrollbar">
             <HighlightedCommand command={command} />
           </pre>
         </div>
