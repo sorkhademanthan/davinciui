@@ -188,8 +188,8 @@ export function SiteHeader({ sidebarToggle, landingGutter }: SiteHeaderProps) {
                         href="/"
                         className="group inline-flex h-10 items-center gap-2 rounded-md px-1 transition-colors duration-200 hover:bg-muted/60 dark:hover:bg-muted/40"
                     >
-                        <DavinciUILogo className="size-7 shrink-0 transition-opacity group-hover:opacity-80" />
-                        <span className="text-[18px] font-bold font-display tracking-tight text-zinc-900 dark:text-white">DAVINCIUI</span>
+                        <DavinciUILogo className="size-8 shrink-0 transition-opacity group-hover:opacity-80" />
+                        <span className="translate-y-[2px] text-xl font-semibold tracking-tight text-foreground">DAVINCIUI</span>
                     </Link>
                     <nav className="hidden items-center gap-0.5 text-[15px] font-normal lg:flex">
                         {navItems.map((item) => (

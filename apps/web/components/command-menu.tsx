@@ -14,6 +14,7 @@ import {
   CornerDownLeft,
   FileText,
   Github,
+  Hash,
   Search,
 } from "lucide-react"
 
@@ -36,6 +37,7 @@ import {
 import { Kbd, KbdGroup } from "@workspace/ui/components/kbd"
 import { docsConfig } from "@/config/docs"
 import { navigation } from "@/config/navigation"
+import { docsHeadings } from "@/lib/docs-headings"
 
 interface CommandMenuItem {
   value: string
@@ -153,6 +155,36 @@ function createItem(
   }
 }
 
+const HEADINGS_GROUP: CommandMenuGroup = {
+  value: "Headings",
+  items: docsHeadings.map((heading) =>
+    createItem("Headings", {
+      title: heading.title,
+      subtitle: heading.page,
+      href: heading.href,
+      icon: <Hash />,
+    }),
+  ),
+}
+
+const RECENTS_KEY = "davinciui:recent-searches"
+
+function Highlight({ text, query }: { text: string; query: string }) {
+  const needle = query.trim()
+  if (!needle) return <>{text}</>
+  const index = text.toLowerCase().indexOf(needle.toLowerCase())
+  if (index === -1) return <>{text}</>
+  return (
+    <>
+      {text.slice(0, index)}
+      <mark className="bg-primary/20 text-foreground">
+        {text.slice(index, index + needle.length)}
+      </mark>
+      {text.slice(index + needle.length)}
+    </>
+  )
+}
+
 const commandGroups: CommandMenuGroup[] = [
   {
     value: "Pages",
@@ -229,6 +261,7 @@ const commandGroups: CommandMenuGroup[] = [
       }),
     ),
   },
+  HEADINGS_GROUP,
   {
     value: "Docs Components",
     items: allComponentItems.map((item) =>
@@ -284,14 +317,47 @@ export function CommandMenu({ trigger }: { trigger?: React.ReactElement }) {
     getSharedOpenSnapshot,
     () => false,
   )
+  const [query, setQuery] = React.useState("")
+  const [recentTitles, setRecentTitles] = React.useState<string[]>([])
 
   React.useEffect(() => {
     ensureSharedShortcut()
   }, [])
 
+  React.useEffect(() => {
+    try {
+      const stored = JSON.parse(window.localStorage.getItem(RECENTS_KEY) ?? "[]")
+      if (Array.isArray(stored)) {
+        setRecentTitles(stored.filter((value): value is string => typeof value === "string").slice(0, 5))
+      }
+    } catch {
+      // Recent searches are optional.
+    }
+  }, [])
+
+  const groups = React.useMemo(() => {
+    const allItems = commandGroups.flatMap((group) => group.items)
+    const recentItems = recentTitles
+      .map((title) => allItems.find((item) => item.title === title))
+      .filter((item): item is CommandMenuItem => Boolean(item))
+    if (recentItems.length === 0) return commandGroups
+    return [
+      { value: "Recent searches", items: recentItems } satisfies CommandMenuGroup,
+      ...commandGroups,
+    ]
+  }, [recentTitles])
+
   const handleItemClick = React.useCallback(
     (item: CommandMenuItem) => {
       setSharedOpen(false)
+
+      const next = [item.title, ...recentTitles.filter((title) => title !== item.title)].slice(0, 5)
+      setRecentTitles(next)
+      try {
+        window.localStorage.setItem(RECENTS_KEY, JSON.stringify(next))
+      } catch {
+        // Recent searches are optional.
+      }
 
       if (item.theme) {
         setTheme(item.theme)
@@ -307,7 +373,7 @@ export function CommandMenu({ trigger }: { trigger?: React.ReactElement }) {
 
       router.push(item.href)
     },
-    [router, setTheme],
+    [recentTitles, router, setTheme],
   )
 
   return (
@@ -338,8 +404,12 @@ export function CommandMenu({ trigger }: { trigger?: React.ReactElement }) {
       )}
 
       <CommandDialogPopup>
-        <Command items={commandGroups}>
-          <CommandInput placeholder="Search pages and components..." aria-label="Search documentation" />
+        <Command items={groups}>
+          <CommandInput
+            placeholder="Search pages, components, and headings..."
+            aria-label="Search documentation"
+            onInput={(event) => setQuery(event.currentTarget.value)}
+          />
           <CommandPanel>
             <CommandEmpty>No results found.</CommandEmpty>
             <CommandList>
@@ -359,7 +429,7 @@ export function CommandMenu({ trigger }: { trigger?: React.ReactElement }) {
                             {item.icon}
                           </span>
                           <span className="flex-1 flex items-center gap-2">
-                            <span>{item.title}</span>
+                            <Highlight text={item.title} query={query} />
                             {item.subtitle && <span className="text-xs text-muted-foreground hidden sm:inline">· {item.subtitle}</span>}
                           </span>
                           {(item.value.startsWith("design system") || item.value.startsWith("components")) && (
