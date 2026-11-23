@@ -1,0 +1,49 @@
+---
+title: Vite
+description: Add DavinciUI to a React app built with Vite, TypeScript, and Tailwind CSS v4.
+eyebrow: Guides
+---
+
+Vite serves the app without a Node runtime, so the shadcn CLI only needs the path aliases and Tailwind entry point to be configured.
+
+## Path aliases
+
+The CLI writes files to the alias in `components.json`. Match it in `tsconfig.json` and `vite.config.ts`.
+
+```json title="tsconfig.json"
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": { "@/*": ["./src/*"] }
+  }
+}
+```
+
+```ts title="vite.config.ts"
+import path from "node:path"
+import react from "@vitejs/plugin-react"
+import { defineConfig } from "vite"
+
+export default defineConfig({
+  plugins: [react()],
+  resolve: { alias: { "@": path.resolve(__dirname, "./src") } },
+})
+```
+
+## Add the registry
+
+```json title="components.json"
+{
+  "registries": {
+    "@davinciui": "https://davinciui.com/r/{name}.json"
+  }
+}
+```
+
+<Callout type="tip" title="Tailwind v4">
+  Import Tailwind in your global stylesheet with `@import "tailwindcss";` and keep the DavinciUI token block in the same file.
+</Callout>
+
+## Client-only motion
+
+Vite has no server components, so every copied file runs in the browser. Components that animate on mount are ready to use; guard browser APIs behind effects if you also use SSR.

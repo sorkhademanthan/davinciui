@@ -1,0 +1,64 @@
+---
+title: Forms
+description: Controlled inputs, validation states, and animated feedback with DavinciUI.
+eyebrow: Guides
+---
+
+Form components are controlled by default: pass `value` and `onChange`, then keep validation state next to the field.
+
+## A controlled field
+
+```tsx title="components/profile-form.tsx"
+"use client"
+
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+
+export function ProfileForm() {
+  const [name, setName] = useState("")
+  const [error, setError] = useState<string | null>(null)
+
+  function submit(event: React.FormEvent) {
+    event.preventDefault()
+    if (!name.trim()) {
+      setError("Name is required")
+      return
+    }
+    setError(null)
+  }
+
+  return (
+    <form onSubmit={submit} className="space-y-3">
+      <Input
+        value={name}
+        onChange={(event) => setName(event.target.value)}
+        aria-invalid={Boolean(error)}
+        aria-describedby={error ? "name-error" : undefined}
+      />
+      {error ? <p id="name-error">{error}</p> : null}
+      <Button type="submit">Save</Button>
+    </form>
+  )
+}
+```
+
+## Validation states
+
+<Callout type="note">
+  Use `aria-invalid` and `aria-describedby` together so screen readers announce the error and the field state.
+</Callout>
+
+## Animated feedback
+
+<Steps>
+  <Step title="Keep state local">
+    Hold the field value and error next to the form, not in a global store.
+  </Step>
+  <Step title="Animate the message">
+    Wrap the error in a motion component and animate height and opacity.
+  </Step>
+  <Step title="Respect reduced motion">
+    Disable the animation when `prefers-reduced-motion` is set.
+  </Step>
+</Steps>

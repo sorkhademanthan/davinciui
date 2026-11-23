@@ -1,0 +1,95 @@
+---
+title: Dark mode
+description: Connect DavinciUI's semantic tokens to next-themes and keep every component legible in light and dark.
+eyebrow: Getting started
+---
+
+DavinciUI uses the same semantic CSS variables as shadcn. Dark mode is a class on the `<html>` element; components do not ship separate dark styles.
+
+## How the token switch works
+
+The `:root` block defines light values and the `.dark` block overrides them. Every component reads tokens such as `--background`, `--foreground`, and `--border`, so changing the class updates the whole page.
+
+<Callout type="info" title="One source of truth">
+  Do not hard-code colors in component overrides. Change the token instead so both modes stay consistent.
+</Callout>
+
+## Add a theme provider
+
+<Tabs>
+  <Tab title="App Router">
+    ```tsx title="app/providers.tsx"
+    "use client"
+
+    import { ThemeProvider } from "next-themes"
+
+    export function Providers({ children }: { children: React.ReactNode }) {
+      return (
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          {children}
+        </ThemeProvider>
+      )
+    }
+    ```
+  </Tab>
+  <Tab title="Root layout">
+    ```tsx title="app/layout.tsx"
+    import { Providers } from "./providers"
+
+    export default function RootLayout({
+      children,
+    }: {
+      children: React.ReactNode
+    }) {
+      return (
+        <html lang="en" suppressHydrationWarning>
+          <body>
+            <Providers>{children}</Providers>
+          </body>
+        </html>
+      )
+    }
+    ```
+  </Tab>
+</Tabs>
+
+## Add a toggle
+
+```tsx title="components/theme-toggle.tsx"
+"use client"
+
+import { Moon, Sun } from "lucide-react"
+import { useTheme } from "next-themes"
+
+export function ThemeToggle() {
+  const { resolvedTheme, setTheme } = useTheme()
+
+  return (
+    <button
+      type="button"
+      aria-label="Toggle theme"
+      onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+    >
+      {resolvedTheme === "dark" ? <Sun /> : <Moon />}
+    </button>
+  )
+}
+```
+
+## Tune the palette
+
+<Steps>
+  <Step title="Edit the tokens">
+    Update the `:root` and `.dark` blocks in `app/globals.css`.
+  </Step>
+  <Step title="Keep contrast">
+    Check body text, muted text, and borders against the new background before shipping.
+  </Step>
+  <Step title="Verify both modes">
+    Toggle the theme on every component page. Pay attention to code blocks and disabled states.
+  </Step>
+</Steps>
+
+<Callout type="warning" title="Avoid a flash of the wrong theme">
+  Pass `suppressHydrationWarning` to `<html>` so next-themes can set the class before React hydrates.
+</Callout>

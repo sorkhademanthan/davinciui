@@ -1,0 +1,48 @@
+---
+title: Accessibility
+description: Keyboard focus, labels, reduced motion, and contrast checks for DavinciUI components.
+eyebrow: Guides
+---
+
+Accessibility is part of the component source, not an add-on. The defaults aim for keyboard reachability, visible focus, and motion that can be turned off.
+
+## Keyboard support
+
+<Cards>
+  <Card title="Focus order" description="Interactive elements follow DOM order; avoid positive tabindex values." />
+  <Card title="Visible focus" description="Use focus-visible rings instead of removing outlines." />
+  <Card title="Escape" description="Dialogs and popovers close on Escape and restore focus to the trigger." />
+</Cards>
+
+## Reduced motion
+
+```css title="app/globals.css"
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+```
+
+<Callout type="tip" title="Test with a keyboard">
+  Tab through every example. If you cannot reach a control or see where focus is, fix it before shipping.
+</Callout>
+
+## Labels and contrast
+
+<Steps>
+  <Step title="Label every input">
+    Use a visible `<label>` or `aria-label`; placeholders are not labels.
+  </Step>
+  <Step title="Check contrast">
+    Body text should meet 4.5:1; large text and UI borders need 3:1.
+  </Step>
+  <Step title="Announce errors">
+    Connect messages with `aria-describedby` and set `aria-invalid`.
+  </Step>
+</Steps>

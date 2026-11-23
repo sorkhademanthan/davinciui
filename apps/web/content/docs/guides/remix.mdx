@@ -1,0 +1,45 @@
+---
+title: Remix
+description: Use DavinciUI route modules with Remix, including client-only motion and path aliases.
+eyebrow: Guides
+---
+
+Remix renders route modules on the server and hydrates them in the browser. DavinciUI components follow the same model: markup is server-safe, and interactions start after hydration.
+
+## Configure aliases
+
+<Steps>
+  <Step title="Set the alias">
+    Add `@/*` to `tsconfig.json` and `vite.config.ts` if you use the Vite plugin.
+  </Step>
+  <Step title="Add the registry">
+    Add `@davinciui` to `components.json`.
+  </Step>
+  <Step title="Install a component">
+    Run the shadcn add command from the project root.
+  </Step>
+</Steps>
+
+```json title="components.json"
+{
+  "registries": {
+    "@davinciui": "https://davinciui.com/r/{name}.json"
+  }
+}
+```
+
+## Client boundaries
+
+Import interactive components inside a route module. If a component reads `window` during render, wrap it in a client-only boundary.
+
+```tsx title="app/routes/_index.tsx"
+import { Button } from "@/components/ui/button"
+
+export default function Index() {
+  return <Button>Open menu</Button>
+}
+```
+
+<Callout type="warning" title="Hydration">
+  Do not branch on `typeof window` during render. Use `useEffect` or a mounted flag so the server and client markup match.
+</Callout>

@@ -1,0 +1,41 @@
+---
+title: Migrating
+description: Move from a runtime component package to DavinciUI's copied source.
+eyebrow: Guides
+---
+
+If you previously installed a component library as a package, the migration is mostly mechanical: replace the import, copy the source, and delete the runtime dependency.
+
+## Before you start
+
+<Callout type="warning" title="Commit first">
+  Create a branch and commit the current state. The migration touches imports across many files.
+</Callout>
+
+## Steps
+
+<Steps>
+  <Step title="Inventory imports">
+    Search for the old package name and list every file that imports a component.
+  </Step>
+  <Step title="Add the component">
+    Run `npx shadcn@latest add @davinciui/<name>` for each component you use.
+  </Step>
+  <Step title="Update imports">
+    Point imports at `@/components/ui/<name>`.
+  </Step>
+  <Step title="Remove the package">
+    Delete the old dependency once the build passes.
+  </Step>
+</Steps>
+
+## Import mapping
+
+| Old | New |
+| --- | --- |
+| `import { Button } from "old-ui"` | `import { Button } from "@/components/ui/button"` |
+| `import { Card } from "old-ui"` | `import { Card } from "@/components/ui/card"` |
+
+## Keep your overrides
+
+Copied files are yours. Re-apply local changes after the CLI writes a new version, and review the diff before committing.

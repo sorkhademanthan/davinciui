@@ -1,0 +1,93 @@
+---
+title: Quickstart
+description: Install the shadcn CLI, add the @davinciui registry, and render your first component in about five minutes.
+eyebrow: Getting started
+---
+
+This quickstart takes an existing React project with Tailwind CSS to a rendered DavinciUI component. If you are starting from scratch, follow the [shadcn installation guide](https://ui.shadcn.com/docs/installation) first so you have a `components.json` file.
+
+## Before you begin
+
+- Node.js 20 or newer.
+- A React 19 project with Tailwind CSS v4.
+- A `components.json` file created by the shadcn CLI.
+
+<Callout type="tip" title="No runtime package">
+  DavinciUI is distributed through the shadcn registry. The CLI copies component source into your project, so there is no package to upgrade later.
+</Callout>
+
+## Add the registry
+
+Open `components.json` and add the `@davinciui` namespace under `registries`:
+
+```json title="components.json"
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "new-york",
+  "rsc": true,
+  "tsx": true,
+  "tailwind": {
+    "config": "",
+    "css": "app/globals.css",
+    "baseColor": "neutral",
+    "cssVariables": true
+  },
+  "aliases": {
+    "components": "@/components",
+    "utils": "@/lib/utils",
+    "ui": "@/components/ui",
+    "lib": "@/lib",
+    "hooks": "@/hooks"
+  },
+  "registries": {
+    "@davinciui": "https://davinciui.com/r/{name}.json"
+  }
+}
+```
+
+<Callout type="note">
+  If your project already has a `registries` object, add the `@davinciui` key to it instead of replacing the object.
+</Callout>
+
+## Add a component
+
+<Steps>
+  <Step title="Install the component">
+    ```bash
+    npx shadcn@latest add @davinciui/button
+    ```
+  </Step>
+  <Step title="Check the files">
+    The CLI writes the component to `components/ui/button.tsx` and installs any missing dependencies.
+  </Step>
+  <Step title="Render it">
+    ```tsx title="app/page.tsx"
+    import { Button } from "@/components/ui/button"
+
+    export default function Page() {
+      return <Button>Ship it</Button>
+    }
+    ```
+  </Step>
+</Steps>
+
+## Where to go next
+
+<Cards>
+  <Card title="Browse components" href="/docs/components" description="Previews, install commands, source, and props for every component." />
+  <Card title="Configure aliases" href="/docs/configuration" description="Point the registry at your components, utils, and styles paths." />
+  <Card title="Theme tokens" href="/docs/theming" description="Customize the CSS variables that every component reads." />
+  <Card title="Dark mode" href="/docs/dark-mode" description="Wire the token set to a theme provider." />
+</Cards>
+
+<Accordion>
+  <AccordionItem title="Do I need to install a runtime package?">
+    No. The registry copies source files into your project. There is no `@davinciui/react` dependency.
+  </AccordionItem>
+  <AccordionItem title="Can I edit the copied component?">
+    Yes. The files are ordinary React and Tailwind source. Change them like any other file in your app.
+  </AccordionItem>
+  <AccordionItem title="How do I update a component?">
+    Run the add command again. Review the diff before committing so local edits are not overwritten.
+  </AccordionItem>
+</Accordion>

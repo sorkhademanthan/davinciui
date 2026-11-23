@@ -1,0 +1,51 @@
+---
+title: Next.js
+description: Use DavinciUI with the App Router, server components, and the shadcn CLI.
+eyebrow: Guides
+---
+
+DavinciUI works in both the App Router and the Pages Router. The App Router is the default in new Next.js projects, and most components are server-safe until you interact with them.
+
+## Configure the CLI
+
+Add the registry to `components.json` at the project root:
+
+```json title="components.json"
+{
+  "registries": {
+    "@davinciui": "https://davinciui.com/r/{name}.json"
+  }
+}
+```
+
+<Callout type="note" title="Path aliases">
+  Keep the `@/*` alias in `tsconfig.json`. The CLI uses it to decide where copied files land.
+</Callout>
+
+## Server and client boundaries
+
+Components that use state, effects, or browser APIs include `"use client"` in their copied source. Import them from a client component, or let Next.js create the boundary for you.
+
+```tsx title="app/page.tsx"
+import { Button } from "@/components/ui/button"
+
+export default function Page() {
+  return <Button>Server-rendered button</Button>
+}
+```
+
+## Motion and hydration
+
+Animated components run after hydration. Avoid rendering them inside a server component that expects static HTML only; wrap the interactive part in a client component.
+
+<Steps>
+  <Step title="Add the component">
+    Run the CLI add command from the project root.
+  </Step>
+  <Step title="Check the directive">
+    Open the copied file and confirm whether it starts with `"use client"`.
+  </Step>
+  <Step title="Verify the build">
+    Run `next build` and check for hydration warnings.
+  </Step>
+</Steps>

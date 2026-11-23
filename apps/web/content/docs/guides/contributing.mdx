@@ -1,0 +1,45 @@
+---
+title: Contributing
+description: Registry layout, preview requirements, and the checks to run before opening a pull request.
+eyebrow: Guides
+---
+
+DavinciUI is a monorepo: components live in `packages/ui`, the site and registry live in `apps/web`, and every component has a preview and a docs page.
+
+## Repository map
+
+<Cards>
+  <Card title="packages/ui" description="Component source and shared styles." />
+  <Card title="apps/web/components/docs" description="Previews and docs pages for each component." />
+  <Card title="apps/web/registry" description="Component metadata used by the docs and the registry generator." />
+  <Card title="apps/web/public/r" description="Generated registry JSON served to the shadcn CLI." />
+</Cards>
+
+## Before opening a pull request
+
+<Steps>
+  <Step title="Add the component">
+    Place the source in `packages/ui/src/components` and export it from the package entry point.
+  </Step>
+  <Step title="Register it">
+    Add metadata to `apps/web/registry/index.ts` and regenerate the registry JSON.
+  </Step>
+  <Step title="Add a preview">
+    Create the docs preview and page so the component appears in the gallery.
+  </Step>
+  <Step title="Run the checks">
+    ```bash
+    pnpm validate:docs
+    pnpm validate:registry
+    pnpm --filter web typecheck
+    ```
+  </Step>
+</Steps>
+
+<Callout type="note" title="Preview quality">
+  A preview should show the component at rest and on interaction. Avoid placeholder gradients when the component has a real default.
+</Callout>
+
+## Commit style
+
+Use conventional commits (`feat:`, `fix:`, `docs:`) and keep the diff focused on one change.
