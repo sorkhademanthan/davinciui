@@ -1,14 +1,36 @@
-import { getLlmsText } from "@/config/docs";
+import { getAllDocs } from "@/lib/docs-mdx"
+import { components } from "@/registry"
 
-export const dynamic = "force-dynamic";
+export const dynamic = "force-static"
 
 export function GET() {
-  // Regenerated on every request from nav groups + registry source,
-  // so Foundations, MCP and new components never go stale.
-  return new Response(getLlmsText(), {
-    headers: {
-      "Content-Type": "text/plain",
-      "Cache-Control": "public, max-age=3600",
-    },
-  });
+  const docs = getAllDocs()
+  const componentList = Object.entries(components).sort(([a], [b]) =>
+    a.localeCompare(b),
+  )
+
+  const lines = [
+    "# DavinciUI",
+    "",
+    "> Animated React components distributed through the shadcn registry. Copy-paste source, Tailwind CSS, and Framer Motion.",
+    "",
+    "## Documentation",
+    "",
+    ...docs.map(
+      (doc) =>
+        `- [${doc.frontmatter.title}](https://davinciui.com/docs/${doc.slug.join("/")}): ${doc.frontmatter.description ?? ""}`,
+    ),
+    "",
+    "## Components",
+    "",
+    ...componentList.map(
+      ([slug, component]) =>
+        `- [${component.title}](https://davinciui.com/docs/components/${slug}): ${component.description}`,
+    ),
+    "",
+  ]
+
+  return new Response(lines.join("\n"), {
+    headers: { "Content-Type": "text/plain; charset=utf-8" },
+  })
 }
