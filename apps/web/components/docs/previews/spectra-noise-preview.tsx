@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 
 import { SpectraNoise } from "@workspace/ui/components/spectra-noise";
+import type { SpectraNoisePresetName } from "@workspace/ui/components/spectra-noise";
 import { create } from "zustand";
 import { configEquals, usePlaygroundStore } from "@/hooks/use-playground-store";
 import {
@@ -12,6 +13,7 @@ import {
 } from "@/components/customize-panel";
 
 type SpectraNoiseConfig = {
+  preset: SpectraNoisePresetName;
   hueShift: number;
   noiseIntensity: number;
   scanlineDensity: number;
@@ -28,6 +30,7 @@ type SpectraNoiseConfig = {
 };
 
 const DEFAULT_CONFIG: SpectraNoiseConfig = {
+  preset: "default",
   hueShift: 0,
   noiseIntensity: 0.35,
   scanlineDensity: 1.5,
@@ -43,7 +46,16 @@ const DEFAULT_CONFIG: SpectraNoiseConfig = {
   effectIntensity: 1,
 };
 
+const SPECTRA_NOISE_PRESETS: Record<string, Partial<SpectraNoiseConfig>> = {
+  default: { backgroundColor: "#03090b", glowColor: "#127c74", highlightColor: "#c5f58a" },
+  emerald: { backgroundColor: "#020a06", glowColor: "#10b981", highlightColor: "#a7f3d0" },
+  violet: { backgroundColor: "#0a0512", glowColor: "#7c3aed", highlightColor: "#ddd6fe" },
+  sunset: { backgroundColor: "#1a0a0a", glowColor: "#f97316", highlightColor: "#fde68a" },
+  mono: { backgroundColor: "#050505", glowColor: "#737373", highlightColor: "#e5e5e5" },
+};
+
 const CONTROLS: CustomizeControl[] = [
+  { type: "select", key: "preset", label: "Preset", options: Object.keys(SPECTRA_NOISE_PRESETS).map((p) => ({ label: p, value: p })), group: "Preset" },
   { type: "color", key: "glowColor", label: "Glow", defaultColor: DEFAULT_CONFIG.glowColor, group: "Color" },
   { type: "color", key: "highlightColor", label: "Highlight", defaultColor: DEFAULT_CONFIG.highlightColor, group: "Color" },
   { type: "color", key: "backgroundColor", label: "Background", defaultColor: DEFAULT_CONFIG.backgroundColor, group: "Color" },
@@ -63,10 +75,15 @@ const useSpectraNoiseStore = create<{
   config: SpectraNoiseConfig;
   update: (next: Partial<SpectraNoiseConfig>) => void;
   reset: () => void;
+  applyPreset: (preset: string) => void;
 }>((set) => ({
   config: DEFAULT_CONFIG,
   update: (next) => set((state) => ({ config: { ...state.config, ...next } })),
   reset: () => set({ config: DEFAULT_CONFIG }),
+  applyPreset: (preset) =>
+    set((state) => ({
+      config: { ...state.config, preset: preset as SpectraNoisePresetName, ...(SPECTRA_NOISE_PRESETS[preset] ?? {}) },
+    })),
 }));
 
 function generateCode(config: SpectraNoiseConfig) {
@@ -82,6 +99,7 @@ function generateCode(config: SpectraNoiseConfig) {
   resolutionScale={${config.resolutionScale}}
   paused={${config.paused}}
   seed={${config.seed}}
+  preset=${JSON.stringify(config.preset)}
   backgroundColor=${JSON.stringify(config.backgroundColor)}
   glowColor=${JSON.stringify(config.glowColor)}
   highlightColor=${JSON.stringify(config.highlightColor)}
@@ -135,6 +153,9 @@ export function SpectraNoisePersonalizePanel() {
       defaults={DEFAULT_CONFIG}
       onChange={bindCustomizeUpdate(update)}
       onReset={() => usePlaygroundStore.getState().resetPreview("spectra-noise")}
+      presets={Object.keys(SPECTRA_NOISE_PRESETS).map((preset) => ({ label: preset.charAt(0).toUpperCase() + preset.slice(1), value: preset }))}
+      activePreset={config.preset}
+      onPresetChange={(preset) => useSpectraNoiseStore.getState().applyPreset(preset)}
     />
   );
 }

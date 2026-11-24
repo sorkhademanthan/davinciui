@@ -45,6 +45,14 @@ const DEFAULT_CONFIG: SunlightEffectConfig = {
   offsetY: 0,
 };
 
+const SUNLIGHT_EFFECT_PRESETS: Record<string, Partial<SunlightEffectConfig>> = {
+  default: { colors: ["#55ffad", "#27ffc6", "#d4ff58", "#f4ffd2", "#00df9d"], backgroundColor: "#020b07", bloomColor: "#6dff94" },
+  sunset: { colors: ["#ff7a59", "#ffb347", "#ffd166", "#ffe8a3", "#ff5e5b"], backgroundColor: "#12060a", bloomColor: "#ff9f68" },
+  ocean: { colors: ["#5eead4", "#38bdf8", "#93c5fd", "#e0f2fe", "#22d3ee"], backgroundColor: "#020b14", bloomColor: "#7dd3fc" },
+  violet: { colors: ["#c4b5fd", "#a78bfa", "#8b5cf6", "#ddd6fe", "#7c3aed"], backgroundColor: "#0a0512", bloomColor: "#a78bfa" },
+  mono: { colors: ["#e5e5e5", "#d4d4d4", "#a3a3a3", "#737373", "#525252"], backgroundColor: "#050505", bloomColor: "#d4d4d4" },
+};
+
 const CONTROLS: CustomizeControl[] = [
   ...DEFAULT_CONFIG.colors.map((color, index) => ({
     type: "color" as const,
@@ -73,6 +81,7 @@ const useSunlightEffectStore = create<{
   update: (next: Partial<SunlightEffectConfig>) => void;
   setColor: (index: number, color: string) => void;
   reset: () => void;
+  applyPreset: (preset: string) => void;
 }>((set) => ({
   config: DEFAULT_CONFIG,
   update: (next) => set((state) => ({ config: { ...state.config, ...next } })),
@@ -83,6 +92,8 @@ const useSunlightEffectStore = create<{
       return { config: { ...state.config, colors } };
     }),
   reset: () => set({ config: DEFAULT_CONFIG }),
+  applyPreset: (preset) =>
+    set((state) => ({ config: { ...state.config, ...(SUNLIGHT_EFFECT_PRESETS[preset] ?? {}) } })),
 }));
 
 function generateCode(config: SunlightEffectConfig) {
@@ -171,6 +182,8 @@ export function SunlightEffectPersonalizePanel() {
           applyControlUpdate(key, value);
         }
       }}
+      presets={Object.keys(SUNLIGHT_EFFECT_PRESETS).map((preset) => ({ label: preset.charAt(0).toUpperCase() + preset.slice(1), value: preset }))}
+      onPresetChange={(preset) => useSunlightEffectStore.getState().applyPreset(preset)}
       onReset={() =>
         usePlaygroundStore.getState().resetPreview("sunlight-effect")
       }
