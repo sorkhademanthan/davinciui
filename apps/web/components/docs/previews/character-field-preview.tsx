@@ -55,10 +55,19 @@ const CHARACTER_FIELD_DEFAULT_CONFIG: CharacterFieldPlaygroundConfig = {
   smoothFade: true,
 };
 
+const CHARACTER_FIELD_PRESETS: Record<string, Partial<CharacterFieldPlaygroundConfig>> = {
+  default: { backgroundColor: "#060a09", characterColor: "#1d3a34", highlightColor: "#8fc0b5" },
+  matrix: { backgroundColor: "#020a04", characterColor: "#1f7a3d", highlightColor: "#7cff9a" },
+  terminal: { backgroundColor: "#0a0a0a", characterColor: "#2f7d32", highlightColor: "#81c784" },
+  amber: { backgroundColor: "#0a0602", characterColor: "#7a5a1f", highlightColor: "#ffc107" },
+  mono: { backgroundColor: "#0a0a0a", characterColor: "#525252", highlightColor: "#e5e5e5" },
+};
+
 interface CharacterFieldPlaygroundStore {
   config: CharacterFieldPlaygroundConfig;
   updateConfig: (updates: Partial<CharacterFieldPlaygroundConfig>) => void;
   resetConfig: () => void;
+  applyPreset: (preset: string) => void;
 }
 
 const useCharacterFieldPlaygroundStore = create<CharacterFieldPlaygroundStore>(
@@ -69,6 +78,10 @@ const useCharacterFieldPlaygroundStore = create<CharacterFieldPlaygroundStore>(
         config: { ...state.config, ...updates },
       })),
     resetConfig: () => set({ config: CHARACTER_FIELD_DEFAULT_CONFIG }),
+    applyPreset: (preset) =>
+      set((state) => ({
+        config: { ...state.config, ...(CHARACTER_FIELD_PRESETS[preset] ?? {}) },
+      })),
   }),
 );
 
@@ -198,6 +211,8 @@ export function CharacterFieldPersonalizePanel() {
       defaults={CHARACTER_FIELD_DEFAULT_CONFIG}
       onChange={bindCustomizeUpdate(updateConfig)}
       onReset={() => usePlaygroundStore.getState().resetPreview("character-field")}
+      presets={Object.keys(CHARACTER_FIELD_PRESETS).map((preset) => ({ label: preset.charAt(0).toUpperCase() + preset.slice(1), value: preset }))}
+      onPresetChange={(preset) => useCharacterFieldPlaygroundStore.getState().applyPreset(preset)}
     />
   );
 }

@@ -138,34 +138,37 @@ function GlitchLiquidTextStage({
       : GLITCH_PLAYGROUND_DEFAULTS.interactive;
 
   return (
-    <GlitchLiquidText
-      key={renderVersion}
-      text={text}
-      fontFamily={fontFamily}
-      fontSize={fontSize}
-      lineHeight={lineHeight}
-      textColor={textColor}
-      backgroundColor={backgroundColor}
-      distortionStrength={distortionStrength}
-      distortionRadius={distortionRadius}
-      distortionDecay={distortionDecay}
-      liquidStrength={liquidStrength}
-      starburstStrength={starburstStrength}
-      waveStrength={waveStrength}
-      pinchStrength={pinchStrength}
-      chromaticAberration={chromaticAberration}
-      glitchStrength={glitchStrength}
-      noiseStrength={noiseStrength}
-      noiseSpeed={noiseSpeed}
-      lightIntensity={lightIntensity}
-      grainStrength={grainStrength}
-      interactive={interactive}
-      autoAnimate={autoAnimate}
-      fit="responsive"
-      cursorEnabled
-      cursorSize={48}
-      cursorColor="#ffffff"
-    />
+    <div className="flex h-full w-full items-center justify-center">
+      <GlitchLiquidText
+        key={renderVersion}
+        className="h-full w-full min-h-[560px]"
+        text={text}
+        fontFamily={fontFamily}
+        fontSize={fontSize}
+        lineHeight={lineHeight}
+        textColor={textColor}
+        backgroundColor={backgroundColor}
+        distortionStrength={distortionStrength}
+        distortionRadius={distortionRadius}
+        distortionDecay={distortionDecay}
+        liquidStrength={liquidStrength}
+        starburstStrength={starburstStrength}
+        waveStrength={waveStrength}
+        pinchStrength={pinchStrength}
+        chromaticAberration={chromaticAberration}
+        glitchStrength={glitchStrength}
+        noiseStrength={noiseStrength}
+        noiseSpeed={noiseSpeed}
+        lightIntensity={lightIntensity}
+        grainStrength={grainStrength}
+        interactive={interactive}
+        autoAnimate={autoAnimate}
+        fit="responsive"
+        cursorEnabled
+        cursorSize={48}
+        cursorColor="#ffffff"
+      />
+    </div>
   );
 }
 

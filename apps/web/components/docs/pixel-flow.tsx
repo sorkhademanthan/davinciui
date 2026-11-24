@@ -2,10 +2,7 @@ import { PixelFlow } from "@workspace/ui/components/pixel-flow";
 
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import { LiveCodeBlock } from "@/components/live-code-block";
-import {
-  PixelFlowPersonalizePanel,
-  PixelFlowPlayground,
-} from "@/components/docs/previews/pixel-flow-preview";
+import { PixelFlowPlayground, PixelFlowPersonalizePanel } from "@/components/docs/previews/pixel-flow-preview";
 import { readComponentSource } from "@/lib/source-code";
 
 const basicUsageCode = `import { PixelFlow } from "@/components/ui/pixel-flow"
