@@ -123,10 +123,30 @@ void main() {
 }
 `;
 
+export type SoftFluidGradientPresetName =
+  | "default"
+  | "calm"
+  | "energetic"
+  | "dense"
+  | "subtle";
+
+export const SOFT_FLUID_GRADIENT_PRESETS: Record<
+  SoftFluidGradientPresetName,
+  { speed: number; density: number }
+> = {
+  default: { speed: 0.26, density: 1 },
+  calm: { speed: 0.12, density: 0.7 },
+  energetic: { speed: 0.45, density: 1.3 },
+  dense: { speed: 0.3, density: 1.8 },
+  subtle: { speed: 0.18, density: 0.5 },
+};
+
 export interface SoftFluidGradientProps extends Omit<
   React.HTMLAttributes<HTMLDivElement>,
   "children"
 > {
+  /** Animation preset. Explicit props override the preset. */
+  preset?: SoftFluidGradientPresetName;
   /** Animation rate. Set to 0 to freeze the current composition. */
   speed?: number;
   /** Wave density. Lower values create broader loops; higher values tighten them. */
@@ -136,13 +156,20 @@ export interface SoftFluidGradientProps extends Omit<
 }
 
 export function SoftFluidGradient({
-  speed = 0.26,
-  density = 1,
+  preset = "default",
+  speed: speedProp,
+  density: densityProp,
   maxDpr = 2,
   className,
   style,
   ...props
 }: SoftFluidGradientProps) {
+  const presetPalette =
+    SOFT_FLUID_GRADIENT_PRESETS[preset as SoftFluidGradientPresetName] ??
+    SOFT_FLUID_GRADIENT_PRESETS.default;
+  const speed = speedProp ?? presetPalette.speed;
+  const density = densityProp ?? presetPalette.density;
+
   const hostRef = React.useRef<HTMLDivElement | null>(null);
   const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
   const controlsRef = React.useRef<{

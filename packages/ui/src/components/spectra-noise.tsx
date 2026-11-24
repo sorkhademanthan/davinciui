@@ -164,10 +164,30 @@ function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
 }
 
+export type SpectraNoisePresetName =
+  | "default"
+  | "emerald"
+  | "violet"
+  | "sunset"
+  | "mono";
+
+export const SPECTRA_NOISE_PRESETS: Record<
+  SpectraNoisePresetName,
+  { backgroundColor: string; glowColor: string; highlightColor: string }
+> = {
+  default: { backgroundColor: "#03090b", glowColor: "#127c74", highlightColor: "#c5f58a" },
+  emerald: { backgroundColor: "#020a06", glowColor: "#10b981", highlightColor: "#a7f3d0" },
+  violet: { backgroundColor: "#0a0512", glowColor: "#7c3aed", highlightColor: "#ddd6fe" },
+  sunset: { backgroundColor: "#1a0a0a", glowColor: "#f97316", highlightColor: "#fde68a" },
+  mono: { backgroundColor: "#050505", glowColor: "#737373", highlightColor: "#e5e5e5" },
+};
+
 export interface SpectraNoiseProps extends Omit<
   React.HTMLAttributes<HTMLDivElement>,
   "children"
 > {
+  /** Color preset. Explicit color props override the preset. */
+  preset?: SpectraNoisePresetName;
   /** Base hue rotation in degrees. 0 preserves the selected colors. */
   hueShift?: number;
   /** Fine cinematic grain strength. 0 disables it. */
@@ -199,6 +219,7 @@ export interface SpectraNoiseProps extends Omit<
 }
 
 export function SpectraNoise({
+  preset = "default",
   hueShift = 0,
   noiseIntensity = 0.35,
   scanlineDensity = 1.5,
@@ -208,15 +229,22 @@ export function SpectraNoise({
   resolutionScale = 1,
   paused = false,
   seed = 7,
-  backgroundColor = DEFAULT_BACKGROUND,
-  glowColor = DEFAULT_GLOW,
-  highlightColor = DEFAULT_HIGHLIGHT,
+  backgroundColor: backgroundColorProp,
+  glowColor: glowColorProp,
+  highlightColor: highlightColorProp,
   effectIntensity = 1,
   maxDpr = 2,
   className,
   style,
   ...props
 }: SpectraNoiseProps) {
+  const presetPalette =
+    SPECTRA_NOISE_PRESETS[preset as SpectraNoisePresetName] ??
+    SPECTRA_NOISE_PRESETS.default;
+  const backgroundColor = backgroundColorProp ?? presetPalette.backgroundColor;
+  const glowColor = glowColorProp ?? presetPalette.glowColor;
+  const highlightColor = highlightColorProp ?? presetPalette.highlightColor;
+
   const hostRef = React.useRef<HTMLDivElement | null>(null);
   const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
   const controlsRef = React.useRef<{
