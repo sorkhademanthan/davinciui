@@ -182,10 +182,6 @@ const docsImportMap: Record<
     import("@/components/docs/sunlight-effect").then((m) => ({
       default: m.SunlightEffectDocs,
     })),
-  "vertical-image-marquee": () =>
-    import("@/components/docs/vertical-image-marquee").then((m) => ({
-      default: m.VerticalImageMarqueeDocs,
-    })),
   "hover-cards": () =>
     import("@/components/docs/hover-cards").then((m) => ({
       default: m.HoverCardsDocs,
@@ -193,10 +189,6 @@ const docsImportMap: Record<
   "profile-carousel": () =>
     import("@/components/docs/profile-carousel").then((m) => ({
       default: m.ProfileCarouselDocs,
-    })),
-  "services-showcase": () =>
-    import("@/components/docs/services-showcase").then((m) => ({
-      default: m.ServicesShowcaseDocs,
     })),
   "glass-scene-dock": () =>
     import("@/components/docs/glass-scene-dock").then((m) => ({
@@ -217,10 +209,6 @@ const docsImportMap: Record<
   "animated-pill-button": () =>
     import("@/components/docs/animated-pill-button").then((m) => ({
       default: m.AnimatedPillButtonDocs,
-    })),
-  "team-slide-reveal": () =>
-    import("@/components/docs/team-slide-reveal").then((m) => ({
-      default: m.TeamSlideRevealDocs,
     })),
   "ambient-audio-toggle": () =>
     import("@/components/docs/ambient-audio-toggle").then((m) => ({
@@ -257,10 +245,6 @@ const docsImportMap: Record<
   "pixel-wipe-carousel": () =>
     import("@/components/docs/pixel-wipe-carousel").then((m) => ({
       default: m.PixelWipeCarouselDocs,
-    })),
-  "burn-plus": () =>
-    import("@/components/docs/burn-plus").then((m) => ({
-      default: m.BurnPlusDocs,
     })),
   "cinematic-card-carousel": () =>
     import("@/components/docs/cinematic-card-carousel").then((m) => ({
@@ -362,10 +346,7 @@ const docsImportMap: Record<
     import("@/components/docs/random-text-reveal").then((m) => ({
       default: m.RandomTextRevealDocs,
     })),
-  "text-reveal": () =>
-    import("@/components/docs/text-reveal").then((m) => ({
-      default: m.TextRevealDocs,
-    })),
+
   "shake-text": () =>
     import("@/components/docs/shake-text").then((m) => ({
       default: m.ShakeTextDocs,

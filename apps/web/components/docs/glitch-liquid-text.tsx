@@ -6,7 +6,6 @@ import {
   GlitchLiquidTextPersonalizePanel,
 } from "@/components/docs/previews/glitch-liquid-text-playground";
 import { readComponentSource } from "@/lib/source-code";
-import { MousePointer } from "lucide-react";
 
 const usageCode = `import { GlitchLiquidText } from "@/components/ui/glitch-liquid-text"
 
@@ -35,15 +34,6 @@ const defaultCode = `import { GlitchLiquidText } from "@/components/ui/glitch-li
   className="h-[560px] w-full"
 />`;
 
-function HoverHint() {
-  return (
-    <span className="pointer-events-none absolute bottom-5 left-0 right-0 flex items-center justify-center gap-1.5 text-xs font-medium text-muted-foreground/60 select-none">
-      <MousePointer className="w-3 h-3" />
-      Move across the type — the distortion stays local to the cursor
-    </span>
-  );
-}
-
 export async function GlitchLiquidTextDocs() {
   const sourceCode =
     (await readComponentSource("glitch-liquid-text")) ||
@@ -55,9 +45,8 @@ export async function GlitchLiquidTextDocs() {
       title="Glitch Liquid Text"
       description="GPU-rendered interactive typography on a dark liquid membrane. The cursor pulls a localized starburst, wave, and pinch through nearby glyphs, with velocity smear and edge-localized RGB separation — while untouched type stays crisp and readable."
       preview={
-        <div className="relative h-full min-h-[560px] w-full p-6 sm:p-10">
-          <GlitchLiquidTextPlayground />
-          <HoverHint />
+        <div className="relative flex min-h-[560px] w-full flex-1 items-center justify-center self-stretch p-6 sm:p-10">
+          <GlitchLiquidTextPlayground className="min-h-[560px] h-full w-full" />
         </div>
       }
       personalizeContent={<GlitchLiquidTextPersonalizePanel />}

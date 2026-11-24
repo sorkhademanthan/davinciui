@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Check, Copy, Sparkles } from "lucide-react"
+import { Check, Copy } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface DocsSnippetProps {
@@ -31,18 +31,12 @@ export function DocsSnippet({
       // Clipboard access can be blocked; leave the label unchanged.
     }
   }
-  function askAI() {
-    window.dispatchEvent(new CustomEvent("dv:ask-ai", { detail: { prompt: `Explain this code:\n\n${text}` } }))
-  }
 
   return (
     <div data-code-block className={cn("dv-code docs-code-block", className)}>
       <div className="dv-code-actions docs-code-actions">
         <button type="button" className="dv-code-btn docs-copy" onClick={copy} aria-label={copied ? "Copied" : "Copy code"}>
           {copied ? <Check size={16} /> : <Copy size={16} />}
-        </button>
-        <button type="button" className="dv-code-btn" onClick={askAI} aria-label="Ask AI about this code">
-          <Sparkles size={16} />
         </button>
         <span className="sr-only" aria-live="polite">{copied ? "Copied to clipboard" : ""}</span>
       </div>
