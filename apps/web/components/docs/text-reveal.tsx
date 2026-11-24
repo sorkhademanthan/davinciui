@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import { TextReveal } from "@workspace/ui/components/text-reveal";
 import {
@@ -77,18 +76,6 @@ export async function TextRevealDocs() {
       installSourceFilename="components/ui/text-reveal.tsx"
       usageCode={defaultCode}
       fullWidthPreview
-      usageNote={
-        <p className="text-sm text-muted-foreground">
-          Compare all seven reveal combinations on the{" "}
-          <Link
-            href="/demo/text-reveal"
-            className="underline underline-offset-4 text-foreground"
-          >
-            Text Reveal test page
-          </Link>
-          .
-        </p>
-      }
       examples={[
         {
           title: "Diagonal Characters",

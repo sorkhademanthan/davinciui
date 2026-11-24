@@ -9,7 +9,7 @@ import {
   type ReactElement,
   type ReactNode,
 } from "react"
-import { Check, Copy, Sparkles } from "lucide-react"
+import { Check, Copy } from "lucide-react"
 
 import {
   PACKAGE_MANAGERS,
@@ -140,19 +140,11 @@ export function Pre({
     }
   }
 
-  function askAI() {
-    const code = ref.current?.innerText ?? ""
-    window.dispatchEvent(new CustomEvent("dv:ask-ai", { detail: { prompt: `Explain this code:\n\n${code}` } }))
-  }
-
   return (
     <div className="docs-code-block dv-code">
       <CodeActions>
         <button type="button" className="dv-code-btn docs-copy" onClick={copy} aria-label={copied ? "Copied" : "Copy code"}>
           {copied ? <Check size={16} /> : <Copy size={16} />}
-        </button>
-        <button type="button" className="dv-code-btn" onClick={askAI} aria-label="Ask AI about this code">
-          <Sparkles size={16} />
         </button>
         <span className="sr-only" aria-live="polite">{copied ? "Copied to clipboard" : ""}</span>
       </CodeActions>
