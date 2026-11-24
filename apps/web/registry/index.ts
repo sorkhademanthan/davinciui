@@ -1228,7 +1228,6 @@ export function getComponent(slug: string) {
 // to alphabetical after the featured set.
 // ─────────────────────────────────────────────────────────────
 export const FEATURED_SLUGS = [
-  "editorial-curtain-preloader",
   "spiral-media-gallery",
   "circular-gallery",
   "focus-carousel",
@@ -1276,6 +1275,7 @@ export const FEATURED_SLUGS = [
   "cinematic-panel-preloader",
   "glitch-shred-preloader",
   "editorial-card-arc-preloader",
+  "editorial-curtain-preloader",
   "masked-arc-preloader",
   "liquid-reveal-button",
   "interactive-media-accordion",
