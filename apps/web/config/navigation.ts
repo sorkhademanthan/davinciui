@@ -228,7 +228,7 @@ const experienceComponentsSection: NavSection = {
   ],
 }
 
-const categoryOrder = ["Text Animations", "Premium Components", "Hero Backgrounds", "Visual Effects", "Preloaders", "Interactions", "Cursor Effects", "Motion"] as const
+const categoryOrder = ["Text Animations", "Premium Components", "Hero Backgrounds", "Visual Effects", "Preloaders", "Interactions", "Cursor Effects"] as const
 
 function buildPremiumSections(): NavSection[] {
   return categoryOrder.map((category) => {
@@ -240,13 +240,6 @@ function buildPremiumSections(): NavSection[] {
 }
 
 const premiumSections: NavSection[] = buildPremiumSections()
-
-const motionSection: NavSection = {
-  title: "Motion",
-  items: [
-    { title: "Overview", href: "/experience/components?tab=Motion" },
-  ],
-}
 
 const scrollSection: NavSection = {
   title: "Scroll",
@@ -284,7 +277,7 @@ export const navigation = {
     label: "Components",
     href: "/experience",
     description: "Components, motion, blocks — what we build",
-    sections: [experienceGettingStartedSection, experienceComponentsSection, ...premiumSections, motionSection, scrollSection, blocksSection, templatesSection],
+    sections: [experienceGettingStartedSection, experienceComponentsSection, ...premiumSections, scrollSection, blocksSection, templatesSection],
   } satisfies TopLevelArea,
 } as const
 

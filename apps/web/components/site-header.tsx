@@ -38,7 +38,15 @@ export function SiteHeader({ sidebarToggle, landingGutter }: SiteHeaderProps) {
     const personalizeContent = useDocStore((state) => state.personalizeContent)
     const hasPersonalize = personalizeContent != null
     const scrollToPersonalize = React.useCallback(() => {
-        document.getElementById("controls")?.scrollIntoView({ behavior: "smooth", block: "start" })
+        const target = document.getElementById("controls")
+        if (!target) return
+        const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        const lenis = (window as Window & { __lenis?: { scrollTo: (target: number | string | HTMLElement, options?: { offset?: number; immediate?: boolean; force?: boolean }) => void; stop: () => void; start: () => void } }).__lenis
+        if (lenis) {
+            lenis.scrollTo(target, { offset: -88, immediate: reduceMotion, force: true })
+            return
+        }
+        target.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" })
     }, [])
 
     React.useEffect(() => {

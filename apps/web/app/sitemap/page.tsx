@@ -73,7 +73,6 @@ const PREFERRED_CATEGORY_ORDER = [
   "Preloaders",
   "Interactions",
   "Cursor Effects",
-  "Motion",
   "Actions",
   "Forms",
   "Feedback",

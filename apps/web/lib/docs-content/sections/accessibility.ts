@@ -175,7 +175,7 @@ export const accessibility: Record<string, string> = {
   "nudge-button":
     "A native button keeps Enter and Space activation; keyboard focus triggers the ring burst from center while pointer use uses the entry point. Decorative rings are aria-hidden and focus-visible draws a 2px outline.",
   "orbit-spiral-gallery":
-    "A region with aria-label wraps the WebGL canvas, and every slide alt is duplicated into an sr-only list. There are no focusable controls or keyboard paging, and auto-rotation cannot be paused from the UI.",
+    "A region with aria-label wraps the WebGL canvas, and every slide alt is duplicated into an sr-only list. The gallery supports wheel, drag, and swipe interaction; there are no focusable controls or keyboard paging, and reduced-motion disables auto-rotation while preserving manual control.",
   pagination:
     "A nav with aria-label pagination holds Button elements; the active link sets aria-current page, edge controls carry descriptive aria-labels, and the ellipsis is aria-hidden with sr-only More pages. Keyboard behavior comes from native buttons.",
   "pixel-flow":

@@ -159,10 +159,15 @@ export function DocsOnThisPage({
     selectedId.current = item.id
     setActiveId(item.id)
     window.history.pushState(null, "", `#${item.id}`)
-    document.getElementById(item.id)?.scrollIntoView({
-      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
-      block: "start",
-    })
+    const target = document.getElementById(item.id)
+    if (!target) return
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    const lenis = (window as Window & { __lenis?: { scrollTo: (target: number | string | HTMLElement, options?: { offset?: number; immediate?: boolean; force?: boolean }) => void; stop: () => void; start: () => void } }).__lenis
+    if (lenis) {
+      lenis.scrollTo(target, { offset: -120, immediate: reduceMotion, force: true })
+      return
+    }
+    target.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" })
   }
 
   if (items.length === 0) return null

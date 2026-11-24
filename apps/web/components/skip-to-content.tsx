@@ -18,6 +18,11 @@ export function SkipToContent() {
         main.setAttribute("tabindex", "-1");
       }
       main.focus({ preventScroll: true });
+      const lenis = (window as Window & { __lenis?: { scrollTo: (target: number | string | HTMLElement, options?: { offset?: number; immediate?: boolean; force?: boolean }) => void; stop: () => void; start: () => void } }).__lenis
+      if (lenis) {
+        lenis.scrollTo(main, { offset: -80, immediate: true, force: true })
+        return
+      }
       main.scrollIntoView({ block: "start" });
     },
     [],

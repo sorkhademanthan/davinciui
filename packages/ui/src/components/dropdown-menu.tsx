@@ -443,6 +443,7 @@ function DropdownMenuSubContent({ className, sideOffset = 6, alignOffset = -4, c
       >
         <MenuPrimitive.Popup
           data-slot="dropdown-menu-sub-content"
+          data-lenis-prevent
           className={cn(POPUP_SHELL, "w-auto min-w-48", className)}
           {...props}
         />

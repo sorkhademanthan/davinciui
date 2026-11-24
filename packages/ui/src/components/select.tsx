@@ -124,7 +124,7 @@ function SelectContent({
           </SelectPrimitive.ScrollUpArrow>
           <SelectPrimitive.List
             data-slot="select-list"
-            className="max-h-64 overflow-y-auto overscroll-contain p-1.5 outline-none"
+            className="max-h-64 overflow-y-auto overscroll-contain p-1.5 outline-none" data-lenis-prevent
           >
             {children}
           </SelectPrimitive.List>

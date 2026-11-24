@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { create } from "zustand";
-import { useTheme } from "next-themes";
 import {
   MediaTextHover,
   type MediaTextHoverMode,
@@ -33,15 +32,14 @@ const DEFAULT_CONFIG: MediaTextHoverConfig = {
   text: "DAVINCIUI",
   mode: "fixed",
   splitIndex: 5,
-  // 2:1 media window, height matched to the exact cap-height of the 92px
-  // Impact headline (~64px) — same proportions as the gallery card (42×21).
-  // Shared by the right-side preview and fullscreen mode.
-  mediaWidth: 128,
-  mediaHeight: 64,
-  mediaRadius: 0,
-  fontSize: 92,
-  springStiffness: 260,
-  springDamping: 30,
+  // Media window height tracks the headline text height (fontSize x lineHeight)
+  // minus trims (10px + 8px) so the revealed video sits shorter than the text.
+  mediaWidth: 225,
+  mediaHeight: 112,
+  mediaRadius: 6,
+  fontSize: 130,
+  springStiffness: 225,
+  springDamping: 50,
 };
 
 interface MediaTextHoverStore {
@@ -62,13 +60,15 @@ function generateCode(config: MediaTextHoverConfig): string {
 
 <MediaTextHover
   text=${JSON.stringify(config.text)}
-  splitIndex={${config.splitIndex}}
   mode=${JSON.stringify(config.mode)}
-  mediaSrc="/videos/brand-film.mp4"
+  splitIndex={${config.splitIndex}}
+  mediaSrc="/preview-videos/component-animations/spiral3dslider.mp4"
   mediaWidth={${config.mediaWidth}}
   mediaHeight={${config.mediaHeight}}
   mediaRadius={${config.mediaRadius}}
   fontSize={${config.fontSize}}
+  backgroundColor="var(--background)"
+  textColor="var(--foreground)"
   springStiffness={${config.springStiffness}}
   springDamping={${config.springDamping}}
 />`;
@@ -76,8 +76,6 @@ function generateCode(config: MediaTextHoverConfig): string {
 
 export function MediaTextHoverPlayground() {
   const config = useMediaTextHoverStore((state) => state.config);
-  const { resolvedTheme } = useTheme();
-  const isDark = resolvedTheme !== "light";
 
   React.useEffect(() => {
     const timeoutId = window.setTimeout(() => {
@@ -89,7 +87,7 @@ export function MediaTextHoverPlayground() {
   }, [config]);
 
   return (
-    <div className="flex h-full min-h-[440px] w-full items-center justify-center overflow-hidden bg-zinc-100 px-4 py-16 dark:bg-black lg:min-h-[520px]">
+    <div className="flex h-full min-h-[440px] w-full items-center justify-center overflow-hidden bg-background px-4 py-16 lg:min-h-[520px]">
       <MediaTextHover
         text={config.text}
         splitIndex={Math.min(config.splitIndex, config.text.length)}
@@ -98,11 +96,12 @@ export function MediaTextHoverPlayground() {
         mediaWidth={config.mediaWidth}
         mediaHeight={config.mediaHeight}
         mediaRadius={config.mediaRadius}
-        fontFamily="Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif"
+        fontFamily="Anton, 'Anton SC', Arial Narrow, sans-serif"
         fontSize={`clamp(2.75rem, ${config.fontSize / 11}vw, ${config.fontSize}px)`}
         fontWeight={400}
-        letterSpacing="-0.025em"
-        textColor={isDark ? "#ffffff" : "#18181b"}
+        letterSpacing="-0.02em"
+        backgroundColor="var(--background)"
+        textColor="var(--foreground)"
         springStiffness={config.springStiffness}
         springDamping={config.springDamping}
         className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-white/70"

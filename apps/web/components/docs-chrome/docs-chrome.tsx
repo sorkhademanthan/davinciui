@@ -16,7 +16,7 @@ export function DocsChrome({ children }: { children: ReactNode }) {
       <DocsHeader />
       <div className="docs-grid mx-auto w-full">
         <aside className="docs-sidebar sticky top-[var(--docs-chrome-h)] border-r border-border">
-          <div className="docs-scroll">
+          <div className="docs-scroll" data-lenis-prevent>
             <DocsSidebar />
           </div>
         </aside>
@@ -30,7 +30,7 @@ export function DocsChrome({ children }: { children: ReactNode }) {
         </main>
 
         <aside className="docs-toc sticky top-[var(--docs-chrome-h)] border-l border-border">
-          <div className="docs-scroll pb-8 pl-8 pr-6 pt-10">
+          <div className="docs-scroll pb-8 pl-8 pr-6 pt-10" data-lenis-prevent>
             <DocsOnThisPage variant="docs" />
           </div>
         </aside>

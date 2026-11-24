@@ -383,7 +383,7 @@ export function Combobox({
             id={listId}
             aria-multiselectable={multiple || undefined}
             onMouseDown={(e) => e.preventDefault()}
-            className="max-h-64 overflow-auto rounded-lg border bg-popover p-1 text-popover-foreground shadow-md"
+            data-lenis-prevent className="max-h-64 overflow-auto rounded-lg border bg-popover p-1 text-popover-foreground shadow-md"
           >
             {visibleSections.length === 0 && (
               <div className="px-2.5 py-6 text-center text-sm text-muted-foreground">{emptyMessage}</div>

@@ -54,7 +54,6 @@ const TOP_FILTERS = [
   "Preloaders",
   "Interactions",
   "Cursor Effects",
-  "Motion",
   "Scroll",
 ] as const;
 
@@ -464,7 +463,6 @@ function ComponentsGallery() {
       if (activeTop === "Interactions") return c.category === "Interactions" || c.extraCategories?.includes("Interactions");
       if (activeTop === "Cursor Effects")
         return c.category === "Cursor Effects" || c.extraCategories?.includes("Cursor Effects");
-      if (activeTop === "Motion") return c.category === "Motion" || c.extraCategories?.includes("Motion");
       if (activeTop === "Scroll") return SCROLL_SLUGS.has(c.slug);
       return false;
     });
@@ -632,24 +630,14 @@ function ComponentsGallery() {
               : ""}
             .
           </p>
-          {(activeTop === "Motion" || activeTop === "Scroll") && (
+          {activeTop === "Scroll" && (
             <div className="flex justify-center gap-2 text-xs">
-              {activeTop === "Motion" && (
-                <Link
-                  href="/docs/motion/components"
-                  className="px-3 py-1.5 rounded-full border bg-white hover:bg-zinc-50 dark:bg-zinc-900"
-                >
-                  Go to Motion →
-                </Link>
-              )}
-              {activeTop === "Scroll" && (
-                <Link
-                  href="/experience/components?tab=Scroll"
-                  className="px-3 py-1.5 rounded-full border bg-white hover:bg-zinc-50 dark:bg-zinc-900"
-                >
-                  Go to Scroll →
-                </Link>
-              )}
+              <Link
+                href="/experience/components?tab=Scroll"
+                className="px-3 py-1.5 rounded-full border bg-white hover:bg-zinc-50 dark:bg-zinc-900"
+              >
+                Go to Scroll →
+              </Link>
             </div>
           )}
         </div>

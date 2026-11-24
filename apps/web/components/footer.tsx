@@ -95,6 +95,11 @@ export function Footer() {
 
   const scrollToTop = () => {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    const lenis = (window as Window & { __lenis?: { scrollTo: (target: number | string | HTMLElement, options?: { offset?: number; immediate?: boolean; force?: boolean }) => void; stop: () => void; start: () => void } }).__lenis
+    if (lenis) {
+      lenis.scrollTo(0, { immediate: reduceMotion, force: true })
+      return
+    }
     window.scrollTo({ top: 0, behavior: reduceMotion ? "instant" : "smooth" })
   }
 

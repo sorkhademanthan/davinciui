@@ -23,6 +23,50 @@
 
 ## Active task
 
+- **`MediaTextHover` Framer-reference fix (2026-11-24) — DONE / runtime-verified.**
+  - Goal: make `/experience/components/media-text-hover` match `https://blue-help-056370.framer.app/`; the headline ("BRANDING") was not splitting open on hover.
+  - Root cause: media window was either `position:absolute` (out of flex flow → text never split) or had the media rendered directly with `flexGrow` hacks (media squished / spans distorted).
+  - Fix in `packages/ui/src/components/media-text-hover.tsx`: in-flow outer media window (`position:relative`, animates `width 0→mediaWidth` + `marginInline 0→mediaGap`, `overflow:hidden`) with an inner absolutely-positioned fixed `mediaWidth` wrapper (`left:50%`, `translateX(-50%) scale(mediaScale)`) so media is clipped, never squished; removed span `flexGrow` (kept `flexShrink:0`, `whiteSpace:pre`); added `backgroundColor` (default `#000000`) and `mediaGap` (default `16`) props; dynamic mode now measures real per-glyph widths (hidden `Intl.Segmenter` measure layer + `ResizeObserver`/`document.fonts.ready`) and only re-renders on boundary changes.
+  - Defaults now: `text="DAVINCIUI"`, `fontFamily="Anton, 'Anton SC', sans-serif"`, `textColor="#FFFFFF"`, `backgroundColor="#000000"`, spring `320/34`; playground headline bumped to `fontSize:104` with a `240×80` media window.
+  - Updated `apps/web/components/docs/previews/media-text-hover-preview.tsx` (`DEFAULT_CONFIG` → DAVINCIUI/fixed/splitIndex 5/240×80/r6/font 104, Anton, black stage), `media-text-hover-card-preview.tsx` (DAVINCIUI, `backgroundColor="transparent"`), docs props table (`mediaGap`, `backgroundColor`, updated defaults), and regenerated `apps/web/public/r/media-text-hover.json`.
+  - Verified: `npx tsc --noEmit -p apps/web` clean; ESLint clean (apps/web files + `packages/ui`); `pnpm validate:registry` 169 OK; `pnpm validate:docs` 145 OK; Playwright QA on `:3000` — closed `{mediaWidth:0, DAVIN|CIUI contiguous}`, hover `{open, 240px, DAVIN|CIUI}`, dynamic mode follows pointer, 0 console errors (script `tmp/mth-qa.cjs`, shot `tmp/media-text-hover-qa.png`).
+  - Not committed (user hasn't asked).
+
+- **`MediaTextHover` video bg light-mode + extra height trim (2026-11-24, resumed follow-up) — DONE / verified.**
+  - Goal: reduce media height by another 8px and make the light-mode video bg white-only (dark stays dark-only).
+  - Fixes: playground `DEFAULT_CONFIG.mediaHeight` 120 → 112; media scrim/window bg → `var(--background)` (white in light, black in dark).
+  - Verified: Playwright → media height **112**, text height **130**, scrim bg light `oklch(1 0 0)` / dark `rgb(10,10,10)`, 0 console errors.
+
+- **`MediaTextHover` media height trim (2026-11-24, resumed follow-up) — DONE / verified.**
+  - Goal: user said the media "is not looking good" and asked to reduce the height by 10 px.
+  - Fix: `apps/web/components/docs/previews/media-text-hover-preview.tsx` — `DEFAULT_CONFIG.mediaHeight` 130 → 120 (10px trim below the text height).
+  - Verified: Playwright probe → media height **120** (reduced by 10px vs text height 130), hover open ✔, 0 console errors.
+
+- **`MediaTextHover` video size vs text height + light-mode video (2026-11-24, resumed follow-up) — DONE / verified.**
+  - Goal: user reported the video was "a little bit bigger" (now that the window was sized to text height, the `mediaScale` 1.15 zoom made the rendered video ~149.5px vs text 130px) and that the video should also be themed in light mode.
+  - Fixes: inner media wrapper height → `mediaScale > 0 ? resolvedMediaHeight / mediaScale : resolvedMediaHeight` so the *rendered* video height equals the text height; light-mode video theming was already handled via theme-token defaults (`var(--background)` / `var(--foreground)`) + adaptive scrim (`color-mix(in oklab, currentColor 8%, transparent)`).
+  - Verification: Playwright height probe → text height **130** = video height **130** (closed & open), hover media width 222, 0 console errors; media wrapper box 113.04 = 130/1.15 with scale 1.15 → visual 130.
+
+- **`MediaTextHover` media-window height vs text height (2026-11-24, resumed follow-up) — DONE / verified.**
+  - Goal: user reported the revealed video renders short / very thin and asked to make the media height match the text height.
+  - Fix: `packages/ui/src/components/media-text-hover.tsx` — `mediaHeight` is now optional; when unset it derives from `fontSize × lineHeight` (`resolvedMediaHeight = mediaHeight ?? Math.max(1, Math.round(fontSizeValue * lineHeightValue))`), used for the media window height (inner fixed wrapper still `height: 100%`).
+  - `apps/web/components/docs/previews/media-text-hover-preview.tsx` — `DEFAULT_CONFIG.mediaHeight` 25 → 130 (text height at default `fontSize: 130`).
+  - Verified: Playwright height probe → text height **130** = media height **130** (closed & open), hover media width 222, 0 console errors.
+
+- **`MediaTextHover` light/dark + media-source fixes (2026-11-24, resumed follow-up) — DONE / verified.**
+  - Goal: continue the MediaTextHover rebuild QA pass; user flagged (a) the component was fetching a real video from the internet for the media and (b) light and dark mode was not working.
+  - Findings: docs examples + playground `generateCode` pointed at non-existent assets (`/videos/brand-film.mp4`, `/videos/loading-dock.mp4`, `/images/portrait-01.jpg` → all 404); working local asset is `/preview-videos/component-animations/spiral3dslider.mp4` (video) and `/images/spiral-3d-slider/prism-portrait.webp` (image).
+  - Fixes: component defaults → `backgroundColor = "var(--background)"`, `textColor = "var(--foreground)"`; media scrim → `color-mix(in oklab, currentColor 8%, transparent)`; playground stage → `bg-background` + tokens; docs examples → theme-aware `bg-background` stages, `textColor="var(--foreground)"`, working media srcs; docs props table defaults → `var(--background)` / `var(--foreground)`.
+  - Verification: `npx tsc --noEmit -p apps/web` clean; ESLint clean (web+ui); `pnpm validate:registry` OK (169); `pnpm validate:docs` ALL PASS (145); registry regenerated (`node scripts/generate-registry.js media-text-hover`); Playwright QA (experience + docs) → hover open ✔, split holds `DAVIN|CIUI`, media window ~222, 0 failed media requests, 0 console errors; light/dark probe → light `oklch(1 0 0)`/near-black text, dark `rgb(10,10,10)`/near-white text, screns `oklab(.../0.08)` both modes, 0 errors.
+  - Not committed (user hasn't asked).
+
+- **`MediaTextHover` Framer-reference fix — continuation / re-verification (2026-11-24, resumed).**
+  - Goal: resume the MediaTextHover rebuild QA pass; task was previously marked DONE.
+  - State on resume: fix + previews + registry + docs props all present & uncommitted in working tree.
+  - Re-verified this session: `npx tsc --noEmit -p apps/web` → clean; `pnpm validate:registry` → OK (169); `pnpm validate:docs` → ALL PASS (145); ESLint (apps/web + packages/ui) → clean on touched files; dev server :3000 → 200 on `/experience/components/media-text-hover` + `/docs/components/media-text-hover`; Playwright `tmp/mth-qa.cjs` → 1 root, closed `{mediaWidth:0, pieces:["DAVIN","CIUI"]}`, hover → `open`, mediaWidth ≈222→225, 0 console errors.
+  - Working-tree defaults now read: `DEFAULT_CONFIG` mediaWidth 225 / mediaHeight 25 / radius 6 / fontSize 130 / spring 225/50 (earlier "240×80 / font 104 / spring 320-34" notes superseded); component defaults: `text="DAVINCIUI"`, `fontFamily="Anton, 'Anton SC', sans-serif"`, `fontSize=130`, `mediaWidth=225`, `mediaHeight=25`, `mediaRadius=6`, `mediaGap=16`, `mediaScale=1.15`, `textColor="#FFFFFF"`, `backgroundColor="#000000"`, spring `225/50`.
+  - Not committed (user hasn't asked).
+
 - **Stash `/experience/components/spiral-media-gallery` prod-parity changes (2026-11-23) — DONE.**
   - Goal: the page's own files (`app/experience/components/**`, `components/docs/spiral-media-gallery.tsx`, `packages/ui/.../spiral-media-gallery.tsx`) were **unchanged**; every diff vs `https://davinciui.vercel.app/experience/components/spiral-media-gallery` came from shared files touched by the uncommitted docs rebuild. User asked to find and stash exactly those.
   - Diffed live HTML vs `http://localhost:3000/...` (artifacts in `/var/folders/00/qlfsv8yj6yzg5p6jz3pffxvh0000gn/T/opencode/smg/`) and mapped each visible delta to a source file.

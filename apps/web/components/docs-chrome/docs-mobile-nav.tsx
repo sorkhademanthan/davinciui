@@ -4,6 +4,7 @@ import { useEffect } from "react"
 import { X } from "lucide-react"
 
 import { cn } from "@/lib/utils"
+import { useLenisOverlayLock } from "@/components/smooth-scroll"
 
 import { DocsSidebar } from "./docs-sidebar"
 
@@ -14,6 +15,7 @@ export function DocsMobileNav({
   open: boolean
   onOpenChange: (open: boolean) => void
 }) {
+  useLenisOverlayLock(open)
   useEffect(() => {
     if (!open) return
     const onKeyDown = (event: KeyboardEvent) => {
@@ -53,7 +55,7 @@ export function DocsMobileNav({
             <X className="size-4" />
           </button>
         </div>
-        <div className="min-h-0 flex-1 overflow-y-auto">
+        <div data-lenis-prevent className="min-h-0 flex-1 overflow-y-auto">
           <DocsSidebar onNavigate={() => onOpenChange(false)} />
         </div>
       </aside>

@@ -175,7 +175,7 @@ export const motion: Record<string, string> = {
   "nudge-button":
     "Four aria-hidden rings scale outward with staggered delays on hover, press, or keyboard focus, and duration scales the 850ms base timeline. matchMedia detects prefers-reduced-motion and replaces rings with a 220ms background tint.",
   "orbit-spiral-gallery":
-    "The spiral advances via autoSpeed, follows wheel and page scroll scaled by scrollSensitivity, and eases toward its target using smoothing. matchMedia reduced motion stops auto-rotation and removes smoothing while scroll movement remains.",
+    "The spiral advances via rotationSpeed, follows wheel, drag, and swipe input scaled by scrollSensitivity, and eases toward its target using smoothing. matchMedia reduced motion stops auto-rotation and removes smoothing while user-controlled movement remains.",
   pagination:
     "Static layout primitives with no animation of their own. Only the shared Button styles provide short hover and focus color transitions, and this file implements no reduced-motion handling.",
   "pixel-flow":

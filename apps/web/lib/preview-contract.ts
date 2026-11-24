@@ -193,6 +193,14 @@ const REDUCE_MOTION_SAFE_SLUGS: ReadonlySet<string> = new Set([
   "wave-bars-loader",
 ]);
 
+/** Detail preview overrides for specific components. */
+const PREVIEW_OVERRIDES: Record<string, Partial<PreviewDefinition>> = {
+  "orbit-spiral-gallery": {
+    height: "tall",
+    stageBackground: "plain",
+  },
+};
+
 /** Interactive (non-decorative) card surfaces. */
 const NON_DECORATIVE_SLUGS: ReadonlySet<string> = new Set([
   "ambient-audio-toggle",
@@ -221,7 +229,7 @@ const CARD_BACKGROUNDS: Readonly<Record<string, string>> = {
 const DEFAULT_CARD_BACKGROUND = "bg-background";
 
 export function getPreviewDefinition(slug: string): PreviewDefinition {
-  return {
+  const base: PreviewDefinition = {
     slug,
     height: TALL_STAGE_SLUGS.has(slug)
       ? "tall"
@@ -239,6 +247,7 @@ export function getPreviewDefinition(slug: string): PreviewDefinition {
     controls: { search: true, reload: true, theme: true },
     unmountOffscreen: !KEEP_MOUNTED_SLUGS.has(slug),
   };
+  return { ...base, ...(PREVIEW_OVERRIDES[slug] ?? {}) };
 }
 
 /** Detail-shell minimum-height classes for a resolved height. */

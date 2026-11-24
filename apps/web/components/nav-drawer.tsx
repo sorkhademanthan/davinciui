@@ -62,7 +62,7 @@ export function NavDrawer({
               </button>
             </div>
             <div
-              className="flex-1 overflow-y-auto px-2 py-4"
+              data-lenis-prevent className="flex-1 overflow-y-auto px-2 py-4"
               onClick={(event) => {
                 if ((event.target as HTMLElement).closest("a")) setOpen(false)
               }}

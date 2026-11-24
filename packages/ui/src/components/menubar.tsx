@@ -73,6 +73,7 @@ function MenubarContent({
       >
         <MenuPrimitive.Popup
           data-slot="menubar-content"
+          data-lenis-prevent
           className={cn(
             "z-50 min-w-48 overflow-x-hidden overflow-y-auto rounded-lg border bg-popover p-1 text-popover-foreground shadow-md outline-none",
             "max-h-(--available-height) max-w-(--available-width)",

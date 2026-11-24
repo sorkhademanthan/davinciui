@@ -43,7 +43,7 @@ export function DesignSystemSidebarNav() {
     <div className="shrink-0 p-2.5 border-b border-sidebar-border bg-sidebar">
       <React.Suspense fallback={<SearchButton />}><CommandMenu trigger={<SearchButton />} /></React.Suspense>
     </div>
-    <div className="flex-1 overflow-y-auto px-2.5 py-3 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+    <div data-lenis-prevent className="flex-1 overflow-y-auto px-2.5 py-3 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       {sections.map((section, index) => {
         const isCollapsed = collapsed[section.title] ?? false
         const isActiveSection = section.items.some((item) => pathname === item.href && (pathname !== "/design-system/new" || item.title === "Create System"))

@@ -44,7 +44,6 @@ const PREFERRED_CATEGORY_ORDER = [
   "Preloaders",
   "Interactions",
   "Cursor Effects",
-  "Motion",
 ] as const;
 
 /** Every registry category, preferred order first, extras alphabetically. */
@@ -81,7 +80,6 @@ const foundations: NavGroup = {
     { title: "Borders", href: "/docs/foundations/borders" },
     { title: "Border Radius", href: "/docs/foundations/border-radius" },
     { title: "Shadows", href: "/docs/foundations/shadows" },
-    { title: "Motion", href: "/docs/foundations/motion" },
     { title: "Breakpoints", href: "/docs/foundations/breakpoints" },
     { title: "Icons", href: "/docs/foundations/icons" },
   ],

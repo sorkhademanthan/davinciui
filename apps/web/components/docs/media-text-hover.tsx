@@ -12,8 +12,7 @@ const defaultCode = `import { MediaTextHover } from "@/components/ui/media-text-
 
 <MediaTextHover
   text="DAVINCIUI"
-  splitIndex={5}
-  mediaSrc="/videos/brand-film.mp4"
+  mediaSrc="/preview-videos/component-animations/spiral3dslider.mp4"
   mediaWidth={300}
   mediaHeight={100}
 />`;
@@ -43,62 +42,62 @@ export async function MediaTextHoverDocs() {
         {
           title: "Dynamic split with an image",
           preview: (
-            <div className="flex min-h-[260px] items-center justify-center bg-zinc-950 px-6">
+            <div className="flex min-h-[260px] items-center justify-center bg-background px-6">
               <MediaTextHover
                 text="PORTFOLIO"
                 mode="dynamic"
-                mediaSrc="/images/portrait-01.jpg"
+                mediaSrc="/images/spiral-3d-slider/prism-portrait.webp"
                 mediaWidth={260}
                 mediaHeight={120}
                 mediaRadius={12}
                 fontSize="clamp(3rem, 9vw, 6rem)"
-                textColor="#f5f5f4"
+                textColor="var(--foreground)"
               />
             </div>
           ),
           code: `import { MediaTextHover } from "@/components/ui/media-text-hover"
 
-<div className="flex min-h-[360px] items-center justify-center bg-zinc-950 px-6">
+<div className="flex min-h-[360px] items-center justify-center bg-background px-6">
   <MediaTextHover
     text="PORTFOLIO"
     mode="dynamic"
-    mediaSrc="/images/portrait-01.jpg"
+    mediaSrc="/images/spiral-3d-slider/prism-portrait.webp"
     mediaWidth={260}
     mediaHeight={120}
     mediaRadius={12}
     fontSize="clamp(3rem, 9vw, 6rem)"
-    textColor="#f5f5f4"
+    textColor="var(--foreground)"
   />
 </div>`,
         },
         {
           title: "Fixed split with video",
           preview: (
-            <div className="flex min-h-[260px] items-center justify-center bg-zinc-950 px-6">
+            <div className="flex min-h-[260px] items-center justify-center bg-background px-6">
               <MediaTextHover
                 text="SHOWREEL"
                 splitIndex={5}
-                mediaSrc="/videos/loading-dock.mp4"
+                mediaSrc="/preview-videos/component-animations/spiral3dslider.mp4"
                 mediaWidth={200}
                 mediaHeight={90}
                 mediaRadius={8}
                 fontSize="clamp(2.5rem, 7vw, 5rem)"
-                textColor="#f5f5f4"
+                textColor="var(--foreground)"
               />
             </div>
           ),
           code: `import { MediaTextHover } from "@/components/ui/media-text-hover"
 
-<div className="flex min-h-[360px] items-center justify-center bg-zinc-950 px-6">
+<div className="flex min-h-[360px] items-center justify-center bg-background px-6">
   <MediaTextHover
     text="SHOWREEL"
     splitIndex={5}
-    mediaSrc="/videos/loading-dock.mp4"
+    mediaSrc="/preview-videos/component-animations/spiral3dslider.mp4"
     mediaWidth={200}
     mediaHeight={90}
     mediaRadius={8}
     fontSize="clamp(2.5rem, 7vw, 5rem)"
-    textColor="#f5f5f4"
+    textColor="var(--foreground)"
   />
 </div>`,
         },
@@ -146,14 +145,21 @@ export async function MediaTextHoverDocs() {
         {
           name: "mediaWidth / mediaHeight",
           type: "number",
-          default: "300 / 100",
+          default: "225 / 25",
           description: "Expanded media dimensions in pixels.",
         },
         {
           name: "mediaRadius",
           type: "number",
-          default: "0",
+          default: "6",
           description: "Media corner radius in pixels.",
+        },
+        {
+          name: "mediaGap",
+          type: "number",
+          default: "16",
+          description:
+            "Horizontal gap between the text fragments and the media window.",
         },
         {
           name: "objectFit",
@@ -164,7 +170,7 @@ export async function MediaTextHoverDocs() {
         {
           name: "fontFamily",
           type: "string",
-          default: '"Impact, Arial Narrow, sans-serif"',
+          default: '"Anton, \'Anton SC\', sans-serif"',
           description: "Display family used by both headline fragments.",
         },
         {
@@ -172,8 +178,7 @@ export async function MediaTextHoverDocs() {
           type: "number | string",
           default: "130",
           description: "Responsive strings such as clamp() are supported.",
-        },
-        {
+        },        {
           name: "fontWeight",
           type: "number | string",
           default: "400",
@@ -188,14 +193,20 @@ export async function MediaTextHoverDocs() {
         {
           name: "textColor",
           type: "string",
-          default: '"currentColor"',
+          default: '"var(--foreground)"',
+          description: "Headline color.",
+        },
+        {
+          name: "backgroundColor",
+          type: "string",
+          default: '"var(--background)"',
           description:
-            "Headline color inherited from the surrounding stage by default.",
+            'Stage background behind the headline. Use "transparent" to inherit the surrounding surface.',
         },
         {
           name: "springStiffness / springDamping",
           type: "number",
-          default: "260 / 30",
+          default: "225 / 50",
           description:
             "Spring response used to open and close the media window.",
         },

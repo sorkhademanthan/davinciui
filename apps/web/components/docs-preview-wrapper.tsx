@@ -12,6 +12,7 @@ import { useInViewport } from "@/hooks/use-in-viewport"
 import { useModalDialog } from "@/hooks/use-modal-dialog"
 import { useIsDesktop } from "@/hooks/use-is-desktop"
 import { getPreviewDefinition } from "@/lib/preview-contract"
+import { useLenis } from "@/components/smooth-scroll"
 
 const CommandMenu = React.lazy(() =>
   import("@/components/command-menu").then((mod) => ({ default: mod.CommandMenu }))
@@ -376,6 +377,7 @@ export function DocsPreviewWrapper({
 
   // Fullscreen belongs to this preview. Preserve the surrounding page's exact
   // inline styles so exiting cannot overwrite state owned by another overlay.
+  const lenis = useLenis()
   React.useEffect(() => {
     if (!isExpanded) return
 
@@ -385,12 +387,14 @@ export function DocsPreviewWrapper({
 
     if (header) header.style.display = "none"
     document.body.style.overflow = "hidden"
+    lenis?.stop()
 
     return () => {
       if (header) header.style.display = previousHeaderDisplay
       document.body.style.overflow = previousBodyOverflow
+      lenis?.start()
     }
-  }, [isExpanded])
+  }, [isExpanded, lenis])
 
   // Treat the expanded preview as a modal workspace: Escape closes it, Tab
   // remains inside it, and focus returns to the expansion trigger on exit.
@@ -568,9 +572,10 @@ export function DocsPreviewWrapper({
         effectiveScrollable
           ? "min-h-0 flex-1 flex-col items-stretch overflow-x-hidden overflow-y-auto overscroll-contain"
           : "min-h-0 flex-1 overflow-hidden",
-        !effectiveScrollable && !fullWidthPreview && "items-center justify-center"
+        !effectiveScrollable && !((resolvedActiveVariant >= 0 && variants[resolvedActiveVariant]?.fullWidth) || fullWidthPreview) && "items-center justify-center"
       )}
         data-preview-scroll-region={effectiveScrollable ? "true" : undefined}
+            data-lenis-prevent={effectiveScrollable ? true : undefined}
         role={effectiveScrollable ? "region" : undefined}
         aria-label={effectiveScrollable ? "Scrollable preview" : undefined}
         tabIndex={effectiveScrollable ? 0 : undefined}
@@ -589,8 +594,11 @@ export function DocsPreviewWrapper({
             key={key}
             className={cn(
               "w-full",
-              effectiveScrollable ? "min-h-full" : "h-full",
-              !effectiveScrollable && !fullWidthPreview && "flex items-center justify-center"
+              effectiveScrollable
+                ? "min-h-full"
+                : (resolvedActiveVariant >= 0 && variants[resolvedActiveVariant]?.fullWidth) || fullWidthPreview
+                  ? "h-full"
+                  : "h-full flex items-center justify-center"
             )}
           >
             {showPreviewContent ? (
@@ -718,7 +726,7 @@ export function DocsPreviewWrapper({
                   </div>
                 </div>
 
-                <div className="min-h-0 flex-1 overflow-auto overscroll-contain [scrollbar-color:var(--border)_transparent] [scrollbar-width:thin]">
+                <div data-lenis-prevent className="min-h-0 flex-1 overflow-auto overscroll-contain [scrollbar-color:var(--border)_transparent] [scrollbar-width:thin]">
                   {isSourceLoading && (
                     <div
                       aria-live="polite"

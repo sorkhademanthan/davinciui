@@ -648,7 +648,7 @@ export const AnimatedSidebarContent = forwardRef<HTMLDivElement, HTMLAttributes<
       {...props}
       ref={forwardedRef}
       data-slot="sidebar-content"
-      className={cn("flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto overflow-x-hidden overscroll-contain px-2 py-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden", className)}
+      data-lenis-prevent className={cn("flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto overflow-x-hidden overscroll-contain px-2 py-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden", className)}
     />
   );
 });

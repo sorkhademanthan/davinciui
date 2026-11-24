@@ -102,10 +102,11 @@ export function MediaTextHoverCardPreview() {
         mediaSrc="/preview-videos/component-animations/spiral3dslider.mp4"
         mediaWidth={42}
         mediaHeight={21}
-        fontFamily="Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif"
-        fontSize={30}
-        letterSpacing="-0.025em"
+        fontFamily="Anton, 'Anton SC', Arial Narrow, sans-serif"
+        fontSize={32}
+        letterSpacing="-0.02em"
         textColor="currentColor"
+        backgroundColor="transparent"
         tabIndex={-1}
       />
     </div>

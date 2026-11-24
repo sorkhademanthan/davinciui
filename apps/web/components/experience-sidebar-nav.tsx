@@ -79,7 +79,7 @@ export function ExperienceSidebarNav() {
         </React.Suspense>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-2.5 py-3 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div data-lenis-prevent className="flex-1 overflow-y-auto px-2.5 py-3 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {navigation.experience.sections.map((section, idx) => {
           const isCollapsed = collapsed[section.title] ?? false
           const hasNested = section.items.some((i) => i.items && i.items.length > 0)

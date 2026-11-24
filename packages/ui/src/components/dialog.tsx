@@ -151,7 +151,7 @@ function DialogContent({ className, children, showCloseButton = true, size = "md
       <DialogOverlay />
       <div
         data-slot="dialog-positioner"
-        className="pointer-events-none fixed inset-0 z-50 grid place-items-center overflow-y-auto p-4 sm:p-6"
+        data-lenis-prevent className="pointer-events-none fixed inset-0 z-50 grid place-items-center overflow-y-auto p-4 sm:p-6"
       >
         <DialogPrimitive.Popup
           data-slot="dialog-content"
@@ -194,6 +194,7 @@ function DialogBody({ className, ...props }: React.HTMLAttributes<HTMLDivElement
   return (
     <div
       data-slot="dialog-body"
+      data-lenis-prevent
       className={cn(
         "min-h-0 flex-1 overflow-y-auto overscroll-contain",
         "[scrollbar-width:thin] [scrollbar-color:var(--border)_transparent] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-border",

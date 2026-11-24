@@ -170,6 +170,7 @@ function ContextMenuContent({
         <ContextMenuPrimitive.Popup
           data-slot="context-menu-content"
           role="menu"
+          data-lenis-prevent
           className={cn(POPUP_SHELL, className)}
           {...props}
         >
@@ -466,6 +467,7 @@ function ContextMenuSubContent({
         <ContextMenuPrimitive.Popup
           data-slot="context-menu-sub-content"
           role="menu"
+          data-lenis-prevent
           className={cn(POPUP_SHELL, "min-w-48", className)}
           {...props}
         >

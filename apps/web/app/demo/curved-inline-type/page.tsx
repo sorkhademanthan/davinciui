@@ -68,7 +68,9 @@ export default function CurvedInlineTypeDemoPage() {
       const cycle = ((now - start) / durationMs) % 2;
       const p = cycle < 1 ? cycle : 2 - cycle;
       const eased = p * p * (3 - 2 * p);
-      window.scrollTo(0, eased * max);
+      const lenis = (window as Window & { __lenis?: { scrollTo: (target: number | string | HTMLElement, options?: { offset?: number; immediate?: boolean; force?: boolean }) => void; stop: () => void; start: () => void } }).__lenis
+      if (lenis) lenis.scrollTo(eased * max, { immediate: true, force: true })
+      else window.scrollTo(0, eased * max);
     };
     raf = requestAnimationFrame(tick);
 

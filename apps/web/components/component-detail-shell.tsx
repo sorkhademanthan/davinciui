@@ -54,7 +54,7 @@ export function ComponentDetailShell({
     <div className="flex-1 bg-background">
       <div className="w-full lg:grid lg:grid-cols-[220px_minmax(0,1fr)] xl:grid-cols-[220px_minmax(0,1fr)_300px]">
         <aside className="sticky top-18 hidden h-[calc(100svh-4.5rem)] shrink-0 border-r border-border/60 bg-background lg:block">
-          <div className="h-full overflow-y-auto px-2 py-6 [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-border">
+          <div data-lenis-prevent className="h-full overflow-y-auto px-2 py-6 [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-border">
             {nav}
           </div>
         </aside>
@@ -76,7 +76,7 @@ export function ComponentDetailShell({
           )}
           {children}
         </main>
-        <aside className="sticky top-18 hidden h-[calc(100svh-4.5rem)] overflow-y-auto bg-background xl:block [scrollbar-width:thin]" aria-label="Page sections">
+        <aside data-lenis-prevent className="sticky top-18 hidden h-[calc(100svh-4.5rem)] overflow-y-auto bg-background xl:block [scrollbar-width:thin]" aria-label="Page sections">
           <DocsOnThisPage />
         </aside>
       </div>
