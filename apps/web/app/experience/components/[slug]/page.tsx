@@ -8,6 +8,7 @@ import { ComponentDetailShell } from "@/components/component-detail-shell"
 import { ExperienceSidebarNav } from "@/components/experience-sidebar-nav"
 import { NavDrawer } from "@/components/nav-drawer"
 import { Suspense } from "react"
+import { isHiddenComponentSlug } from "@/lib/hidden-components"
 
 // Aliases for renamed / shortened slugs (e.g. /dropdown → /dropdown-menu)
 const SLUG_ALIASES: Record<string, string> = {
@@ -17,7 +18,8 @@ const SLUG_ALIASES: Record<string, string> = {
 export const dynamicParams = true
 export async function generateStaticParams(){ const slugs = getDocsSlugs(); return slugs.map(slug=>({slug})) }
 export async function generateMetadata({params}:{params: Promise<{slug:string}>}): Promise<Metadata>{
-  const {slug: raw}=await params; const slug = SLUG_ALIASES[raw] ?? raw; const c=getComponent(slug); if(!c) {
+  const {slug: raw}=await params; const slug = SLUG_ALIASES[raw] ?? raw; if (isHiddenComponentSlug(slug)) return { title: "Components — DavinciUI" };
+  const c=getComponent(slug); if(!c) {
     const imp=getDocsImporter(slug); if(imp) return { title: `${slug} — DavinciUI`, description: `${slug} component` };
     return {};
   } return { title: `${c.title} — Experience`, description: c.description, alternates: { canonical: absoluteUrl(`/experience/components/${slug}`) } }
@@ -29,11 +31,9 @@ export default async function Page({params}:{params: Promise<{slug:string}>}){
   const {slug}=await params;
   const alias = SLUG_ALIASES[slug];
   if (alias) redirect(`/experience/components/${alias}`);
+  if (isHiddenComponentSlug(slug)) redirect("/experience/components");
   const c=getComponent(slug); const imp=getDocsImporter(slug)
   if(imp){
-    // Same shared detail shell as Docs (grid + rails); only the left nav is
-    // section-specific. Hide the shell mobile row — DocsPageLayout renders
-    // its own section-aware row.
     return (
       <ComponentDetailShell
         nav={<ExperienceSidebarNav />}

@@ -4,6 +4,7 @@ import { components, sortByFeatured, type ComponentCategory } from "@/registry"
 import { docsComponentCategories } from "@/config/docs"
 import { DocsSnippet } from "@/components/docs-snippet"
 import { Section } from "@/components/component-layout"
+import { isHiddenComponentSlug } from "@/lib/hidden-components"
 
 export const metadata: Metadata = {
   title: "Components — DavinciUI",
@@ -84,7 +85,11 @@ export default function ComponentsIndexPage() {
       <div className="mt-10 space-y-12">
         {categoryOrder.map((category) => {
           const items = sortByFeatured(
-            Object.values(components).filter((c) => c.category === category || c.extraCategories?.includes(category as ComponentCategory)),
+            Object.values(components).filter(
+              (c) =>
+                !isHiddenComponentSlug(c.slug) &&
+                (c.category === category || c.extraCategories?.includes(category as ComponentCategory)),
+            ),
           )
           if (items.length === 0) return null
           return (

@@ -21,6 +21,7 @@ import { TEXT_ANIMATION_ORDER } from "@/lib/text-animation-slugs";
 import { useHydratedReducedMotion } from "@/hooks/use-hydrated-reduced-motion";
 import { useInViewport } from "@/hooks/use-in-viewport";
 import { cn } from "@/lib/utils";
+import { isHiddenComponentSlug } from "@/lib/hidden-components";
 
 const BASIC_SLUGS: Record<string, string[]> = BASIC_GROUPS;
 const BASIC_ALL = Object.values(BASIC_SLUGS).flat();
@@ -215,7 +216,6 @@ function hasLiveCardPreview(
   | "text-video-mask"
   | "random-text-reveal"
   | "shader-text"
-  | "text-reveal"
   | "rolling-text"
   | "character-field"
   | "curved-inline-type"
@@ -236,10 +236,8 @@ function hasLiveCardPreview(
   | "spectra-noise"
   | "noiser"
   | "sunlight-effect"
-  | "vertical-image-marquee"
   | "hover-cards"
   | "profile-carousel"
-  | "services-showcase"
   | "glass-scene-dock"
   | "lens-drift-grid"
   | "orbit-spiral-gallery"
@@ -251,10 +249,6 @@ function hasLiveCardPreview(
   | "liquid-reveal-button"
   | "animated-metric"
   | "nudge-button"
-  | "animated-pill-button"
-  | "burn-plus"
-  | "team-slide-reveal"
-  | "hover-transition"
   | "ambient-audio-toggle"
   | "interaction-sound-kit"
   | "voice-recorder"
@@ -428,14 +422,15 @@ function ComponentsGallery() {
 
   // Slugs hidden from the gallery grid. The components themselves (docs,
   // registry, source) stay intact — they just don't get a card here.
-  const HIDDEN_SLUGS = useMemo(
-    () => new Set(["liquid-chrome", "animated-pill-button", "hover-transition"]),
-    [],
-  );
+  // Categories that are no longer part of the website's component IA. Their
+  // members must not leak into the "All" tab (or search), matching the
+  // sidebar, which no longer lists these categories.
+  const HIDDEN_CATEGORIES = useMemo(() => new Set(["Motion", "Sound"]), []);
 
   const filtered = useMemo(() => {
     const matches = all.filter((c) => {
-      if (HIDDEN_SLUGS.has(c.slug)) return false;
+      if (isHiddenComponentSlug(c.slug)) return false;
+      if (HIDDEN_CATEGORIES.has(c.category)) return false;
       const matchesSearch =
         !q.trim() ||
         c.title.toLowerCase().includes(q.toLowerCase()) ||
@@ -484,7 +479,7 @@ function ComponentsGallery() {
       if (rankDiff !== 0) return rankDiff;
       return a.title.localeCompare(b.title);
     });
-  }, [q, activeTop, activeSub, all, HIDDEN_SLUGS]);
+  }, [q, activeTop, activeSub, all, HIDDEN_CATEGORIES]);
 
   const handleTopChange = (t: TopFilter) => {
     setActiveTop(t);
