@@ -18,8 +18,28 @@ const CHARACTER_SETS: Record<Exclude<CharacterFieldSet, "custom">, string> = {
     "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}<>?/|:;",
 };
 
+export type CharacterFieldPresetName =
+  | "default"
+  | "matrix"
+  | "terminal"
+  | "amber"
+  | "mono";
+
+export const CHARACTER_FIELD_PRESETS: Record<
+  CharacterFieldPresetName,
+  { backgroundColor: string; characterColor: string; highlightColor: string }
+> = {
+  default: { backgroundColor: "#060a09", characterColor: "#1d3a34", highlightColor: "#8fc0b5" },
+  matrix: { backgroundColor: "#020a04", characterColor: "#1f7a3d", highlightColor: "#7cff9a" },
+  terminal: { backgroundColor: "#0a0a0a", characterColor: "#2f7d32", highlightColor: "#81c784" },
+  amber: { backgroundColor: "#0a0602", characterColor: "#7a5a1f", highlightColor: "#ffc107" },
+  mono: { backgroundColor: "#0a0a0a", characterColor: "#525252", highlightColor: "#e5e5e5" },
+};
+
 export interface CharacterFieldProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, "children"> {
+  /** Color preset. Explicit color props override the preset. */
+  preset?: CharacterFieldPresetName;
   /** Which character pool fills the grid. */
   characterSet?: CharacterFieldSet;
   /** Custom pool used when characterSet is "custom". */
@@ -128,6 +148,7 @@ interface ResolvedSettings {
 }
 
 export function CharacterField({
+  preset = "default",
   characterSet = "mixed",
   customCharacters = "",
   fontFamily = "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace",
@@ -135,9 +156,9 @@ export function CharacterField({
   fontWeight = 400,
   characterSpacing = 2,
   lineHeight = 1.5,
-  backgroundColor = "#060a09",
-  characterColor = "#1d3a34",
-  highlightColor = "#8fc0b5",
+  backgroundColor: backgroundColorProp,
+  characterColor: characterColorProp,
+  highlightColor: highlightColorProp,
   baseOpacity = 0.6,
   brightnessVariation = 0.55,
   density = 1,
@@ -155,6 +176,13 @@ export function CharacterField({
   style,
   ...props
 }: CharacterFieldProps) {
+  const presetPalette =
+    CHARACTER_FIELD_PRESETS[preset as CharacterFieldPresetName] ??
+    CHARACTER_FIELD_PRESETS.default;
+  const backgroundColor = backgroundColorProp ?? presetPalette.backgroundColor;
+  const characterColor = characterColorProp ?? presetPalette.characterColor;
+  const highlightColor = highlightColorProp ?? presetPalette.highlightColor;
+
   const hostRef = React.useRef<HTMLDivElement | null>(null);
   const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
 

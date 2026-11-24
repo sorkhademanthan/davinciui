@@ -221,8 +221,28 @@ function hexToRgb(value: string, fallback: string): [number, number, number] {
   ];
 }
 
+export type InkFlowPresetName =
+  | "default"
+  | "mono"
+  | "ocean"
+  | "sunset"
+  | "forest";
+
+export const INK_FLOW_PRESETS: Record<
+  InkFlowPresetName,
+  { paperColor: string; softInkColor: string; deepInkColor: string; accentColor: string }
+> = {
+  default: { paperColor: "#F6EFD3", softInkColor: "#9DA5B6", deepInkColor: "#3C2FAA", accentColor: "#F5AED9" },
+  mono: { paperColor: "#f5f5f5", softInkColor: "#a3a3a3", deepInkColor: "#171717", accentColor: "#737373" },
+  ocean: { paperColor: "#eaf4f8", softInkColor: "#7fb3c8", deepInkColor: "#0b3c5d", accentColor: "#ff6f61" },
+  sunset: { paperColor: "#fff1e6", softInkColor: "#f4a261", deepInkColor: "#e76f51", accentColor: "#264653" },
+  forest: { paperColor: "#f1f8e9", softInkColor: "#81c784", deepInkColor: "#2e7d32", accentColor: "#fbc02d" },
+};
+
 export interface InkFlowProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, "children"> {
+  /** Color preset. Explicit color props override the preset. */
+  preset?: InkFlowPresetName;
   /** Rate at which the ink field evolves. Set to 0 to freeze it. */
   speed?: number;
   /** Spatial scale of the ink structures. Lower values create broader forms. */
@@ -244,19 +264,27 @@ export interface InkFlowProps
 }
 
 export function InkFlow({
+  preset = "default",
   speed = 0.22,
   scale = 1,
   saturation = 1,
   contrast = 1,
-  paperColor = DEFAULT_PAPER,
-  softInkColor = DEFAULT_SOFT_INK,
-  deepInkColor = DEFAULT_DEEP_INK,
-  accentColor = DEFAULT_ACCENT,
+  paperColor: paperColorProp,
+  softInkColor: softInkColorProp,
+  deepInkColor: deepInkColorProp,
+  accentColor: accentColorProp,
   maxDpr = 2,
   className,
   style,
   ...props
 }: InkFlowProps) {
+  const presetPalette =
+    INK_FLOW_PRESETS[preset as InkFlowPresetName] ?? INK_FLOW_PRESETS.default;
+  const paperColor = paperColorProp ?? presetPalette.paperColor;
+  const softInkColor = softInkColorProp ?? presetPalette.softInkColor;
+  const deepInkColor = deepInkColorProp ?? presetPalette.deepInkColor;
+  const accentColor = accentColorProp ?? presetPalette.accentColor;
+
   const hostRef = React.useRef<HTMLDivElement | null>(null);
   const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
   const controlsRef = React.useRef<{
