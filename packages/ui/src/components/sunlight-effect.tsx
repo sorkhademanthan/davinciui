@@ -211,10 +211,30 @@ function hexToRgb(value: string, fallback: string): [number, number, number] {
   ];
 }
 
+export type SunlightEffectPresetName =
+  | "default"
+  | "sunset"
+  | "ocean"
+  | "violet"
+  | "mono";
+
+export const SUNLIGHT_EFFECT_PRESETS: Record<
+  SunlightEffectPresetName,
+  { colors: string[]; backgroundColor: string; bloomColor: string }
+> = {
+  default: { colors: ["#55ffad", "#27ffc6", "#d4ff58", "#f4ffd2", "#00df9d"], backgroundColor: "#020b07", bloomColor: "#6dff94" },
+  sunset: { colors: ["#ff7a59", "#ffb347", "#ffd166", "#ffe8a3", "#ff5e5b"], backgroundColor: "#12060a", bloomColor: "#ff9f68" },
+  ocean: { colors: ["#5eead4", "#38bdf8", "#93c5fd", "#e0f2fe", "#22d3ee"], backgroundColor: "#020b14", bloomColor: "#7dd3fc" },
+  violet: { colors: ["#c4b5fd", "#a78bfa", "#8b5cf6", "#ddd6fe", "#7c3aed"], backgroundColor: "#0a0512", bloomColor: "#a78bfa" },
+  mono: { colors: ["#e5e5e5", "#d4d4d4", "#a3a3a3", "#737373", "#525252"], backgroundColor: "#050505", bloomColor: "#d4d4d4" },
+};
+
 export interface SunlightEffectProps extends Omit<
   React.HTMLAttributes<HTMLDivElement>,
   "children" | "color"
 > {
+  /** Color preset. Explicit color props override the preset. */
+  preset?: SunlightEffectPresetName;
   /** One to five colors distributed across the light rays. */
   colors?: string[];
   /** Color behind the burst. */
@@ -248,9 +268,10 @@ export interface SunlightEffectProps extends Omit<
 }
 
 export function SunlightEffect({
-  colors = DEFAULT_COLORS,
-  backgroundColor = DEFAULT_BACKGROUND,
-  bloomColor = DEFAULT_BLOOM,
+  preset = "default",
+  colors: colorsProp,
+  backgroundColor: backgroundColorProp,
+  bloomColor: bloomColorProp,
   bloom = 1.12,
   intensity = 1.35,
   density = 1,
@@ -267,6 +288,13 @@ export function SunlightEffect({
   style,
   ...props
 }: SunlightEffectProps) {
+  const presetPalette =
+    SUNLIGHT_EFFECT_PRESETS[preset as SunlightEffectPresetName] ??
+    SUNLIGHT_EFFECT_PRESETS.default;
+  const colors = colorsProp ?? presetPalette.colors;
+  const backgroundColor = backgroundColorProp ?? presetPalette.backgroundColor;
+  const bloomColor = bloomColorProp ?? presetPalette.bloomColor;
+
   const hostRef = React.useRef<HTMLDivElement | null>(null);
   const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
   const controlsRef = React.useRef<{
