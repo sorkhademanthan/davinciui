@@ -257,12 +257,8 @@ export const accessibility: Record<string, string> = {
   switch:
     "A native button with role switch, aria-checked, optional aria-invalid, disabled support, and a focus-visible ring. Space and Enter toggle it, but no label or description is generated, so callers must associate visible text or aria-label.",
   tabs: "Triggers are plain buttons with no tablist, tab, tabpanel, aria-selected, or arrow-key navigation. Keyboard users tab through each trigger, activate with Enter or Space, and only the active TabsContent is rendered.",
-  "team-slide-reveal":
-    "The portrait is a role=button with aria-expanded and aria-controls; Enter or Space opens, Escape closes, and focus moves to the Back button then returns. The story sheet is aria-hidden while closed.",
   "text-morph":
     "Text Morph cycles visible words on a timer and renders plain text with no live-region announcements. Treat the animation as enhancement: keep the surrounding heading meaningful on its own, and don't put the only instance of critical information inside the morph sequence.",
-  "text-reveal":
-    "A visually hidden span exposes the full text as one readable string while the animated units are aria-hidden, so screen readers do not announce split words. There is no interactive or focus behavior.",
   "text-video-mask":
     "The root exposes role=img with aria-label equal to the text, and the video and mask layers are aria-hidden. With controls enabled those native controls remain hidden from assistive tech and keyboard users.",
   textarea:

@@ -132,7 +132,6 @@ export const docsCategoryBySlug: Record<string, string> = {
   tabs: "Navigation",
   "team-slide-reveal": "Interactions",
   "text-morph": "Text Animations",
-  "text-reveal": "Text Animations",
   "text-video-mask": "Text Animations",
   textarea: "Forms",
   toast: "Feedback",
