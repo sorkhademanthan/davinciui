@@ -7,10 +7,8 @@ import {
 } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { DialRoot } from "dialkit";
 import Script from "next/script";
 import "@workspace/ui/globals.css";
-import "dialkit/styles.css";
 import { Providers } from "@/components/providers";
 import { HomePreviewMediaProvider } from "@/components/landing/video-preview-media";
 import { getHomePreviewMedia } from "@/lib/contentful";
@@ -185,7 +183,6 @@ export default async function RootLayout({
           <HomePreviewMediaProvider value={previewMedia}>
             <Providers>{children}</Providers>
           </HomePreviewMediaProvider>
-          <DialRoot productionEnabled />
         </div>
         <SpeedInsights />
         <Script

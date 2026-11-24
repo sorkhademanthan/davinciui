@@ -683,13 +683,7 @@ const ShaderText = dynamic(
   { ssr: false },
 );
 
-const TextReveal = dynamic(
-  () =>
-    import("@workspace/ui/components/text-reveal").then(
-      (module) => module.TextReveal,
-    ),
-  { ssr: false },
-);
+
 
 const RollingTextCardPreview = dynamic(
   () =>
@@ -721,7 +715,6 @@ type ComponentCardLivePreviewProps = {
     | "text-video-mask"
     | "random-text-reveal"
     | "shader-text"
-    | "text-reveal"
     | "rolling-text"
     | "character-field"
     | "curved-inline-type"
@@ -858,19 +851,6 @@ export function ComponentCardLivePreview({
           fontWeight={800}
           speed={1.2}
           className="max-w-full"
-        />
-      ) : slug === "text-reveal" ? (
-        <TextReveal
-          text="DAVINCIUI"
-          revealStyle="diagonal"
-          revealBy="characters"
-          fontFamily="inherit"
-          fontSize="clamp(1.7rem, 3vw, 2.3rem)"
-          fontWeight={800}
-          textAlign="center"
-          revealedColor={isDark ? "#f4f4f5" : "#18181b"}
-          unrevealedColor={isDark ? "#f4f4f5" : "#18181b"}
-          className="px-4"
         />
       ) : slug === "rolling-text" ? (
         <RollingTextCardPreview />

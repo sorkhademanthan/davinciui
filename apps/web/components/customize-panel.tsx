@@ -80,9 +80,11 @@ function normalizeLabel(label: string) {
   const words = cleaned.split(" ");
   const formatted = words
     .map((word) =>
-      word.length > 2 && word === word.toUpperCase()
-        ? word.charAt(0) + word.slice(1).toLowerCase()
-        : word,
+      word.length > 2 && word.length <= 4 && word === word.toUpperCase()
+        ? word
+        : word.length > 2 && word === word.toUpperCase()
+          ? word.charAt(0) + word.slice(1).toLowerCase()
+          : word,
     )
     .join(" ");
   if (!formatted) return cleaned;
@@ -143,6 +145,15 @@ function orderControls(controls: CustomizeControl[]) {
     })
     .map(({ control }) => control);
 }
+
+const tileShellClass =
+  "rounded-xl border border-border/70 bg-muted/30 text-sm text-foreground outline-none transition-colors hover:border-foreground/25 hover:bg-muted/50 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background";
+
+const tileLabelClass =
+  "min-w-0 truncate text-left text-xs font-medium text-muted-foreground";
+
+const valueChipClass =
+  "shrink-0 rounded-md border border-border bg-card px-1.5 py-0.5 font-mono text-[11px] tabular-nums text-foreground";
 
 type FloatingMenuProps = {
   open: boolean;
@@ -325,7 +336,10 @@ const SliderTile = React.memo(function SliderTile({
       aria-valuemax={max}
       aria-valuenow={current}
       aria-valuetext={formatCustomizeNumber(current, step, unit)}
-      className="group relative flex h-12 w-full cursor-ew-resize touch-none select-none items-center justify-between gap-2 overflow-hidden rounded-lg border border-border bg-card px-3 text-sm text-foreground outline-none transition-colors hover:border-foreground/20 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+      className={cn(
+        tileShellClass,
+        "group relative flex h-14 w-full cursor-ew-resize touch-none select-none flex-col justify-center gap-2 overflow-hidden px-3 py-2.5",
+      )}
       onPointerDown={(event) => {
         if (editing) return;
         event.currentTarget.setPointerCapture(event.pointerId);
@@ -343,36 +357,46 @@ const SliderTile = React.memo(function SliderTile({
       onKeyDown={onKeyDown}
       onDoubleClick={() => setEditing(true)}
     >
+      <div className="relative z-10 flex w-full items-center justify-between gap-2">
+        <span className={tileLabelClass}>{normalizeLabel(control.label)}</span>
+        {editing ? (
+          <input
+            autoFocus
+            value={draft}
+            aria-label={`${normalizeLabel(control.label)} value`}
+            className="h-6 w-20 rounded-md border border-border bg-card px-1.5 text-right font-mono text-[11px] tabular-nums text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            onPointerDown={(event) => event.stopPropagation()}
+            onChange={(event) => setDraft(event.target.value)}
+            onBlur={finishEditing}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                event.preventDefault();
+                finishEditing();
+              } else if (event.key === "Escape") {
+                setDraft(formatCustomizeNumber(latestRef.current, step, unit));
+                setEditing(false);
+              }
+            }}
+          />
+        ) : (
+          <span className={valueChipClass}>
+            {formatCustomizeNumber(current, step, unit)}
+          </span>
+        )}
+      </div>
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-y-0 left-0 bg-accent transition-[width] duration-75"
-        style={{ width: `${Math.max(0, Math.min(100, percent))}%` }}
-      />
-      <span className="relative z-10 min-w-0 truncate">{normalizeLabel(control.label)}</span>
-      {editing ? (
-        <input
-          autoFocus
-          value={draft}
-          aria-label={`${normalizeLabel(control.label)} value`}
-          className="relative z-10 h-8 w-20 rounded-md border border-border bg-background px-2 text-right text-sm tabular-nums text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          onPointerDown={(event) => event.stopPropagation()}
-          onChange={(event) => setDraft(event.target.value)}
-          onBlur={finishEditing}
-          onKeyDown={(event) => {
-            if (event.key === "Enter") {
-              event.preventDefault();
-              finishEditing();
-            } else if (event.key === "Escape") {
-              setDraft(formatCustomizeNumber(latestRef.current, step, unit));
-              setEditing(false);
-            }
-          }}
+        className="relative z-10 h-1.5 w-full rounded-full bg-foreground/15"
+      >
+        <div
+          className="absolute inset-y-0 left-0 rounded-full bg-foreground transition-[width] duration-75"
+          style={{ width: `${Math.max(0, Math.min(100, percent))}%` }}
         />
-      ) : (
-        <span className="relative z-10 shrink-0 rounded px-1 font-mono text-xs tabular-nums text-muted-foreground">
-          {formatCustomizeNumber(current, step, unit)}
-        </span>
-      )}
+        <div
+          className="absolute top-1/2 size-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-foreground bg-background shadow-sm"
+          style={{ left: `${Math.max(0, Math.min(100, percent))}%` }}
+        />
+      </div>
     </div>
   );
 });
@@ -405,16 +429,23 @@ const SelectTile = React.memo(function SelectTile({
         aria-label={label}
         aria-haspopup="listbox"
         aria-expanded={open}
-        className="flex h-12 w-full items-center justify-between gap-2 rounded-lg border border-border bg-card px-3 text-sm text-foreground outline-none transition-colors hover:border-foreground/20 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        className={cn(
+          tileShellClass,
+          "flex h-14 w-full items-center justify-between gap-1.5 px-3",
+        )}
         onClick={() => setOpen((previous) => !previous)}
       >
-        <span className="min-w-0 truncate text-left">{label}</span>
-        <span className="flex min-w-0 items-center gap-1.5 text-muted-foreground">
-          <span className="max-w-[12rem] truncate text-right">{currentLabel}</span>
+        <span className="min-w-0 flex-1 truncate text-left text-xs font-medium text-muted-foreground">
+          {label}
+        </span>
+        <span className="flex shrink-0 items-center gap-1.5">
+          <span className="max-w-[7.5rem] truncate rounded-full border border-border bg-card px-2 py-1 text-[11px] font-medium leading-none text-foreground">
+            {currentLabel}
+          </span>
           {open ? (
-            <ChevronUp className="size-3.5 shrink-0" aria-hidden="true" />
+            <ChevronUp className="size-3.5 shrink-0 text-muted-foreground" aria-hidden="true" />
           ) : (
-            <ChevronDown className="size-3.5 shrink-0" aria-hidden="true" />
+            <ChevronDown className="size-3.5 shrink-0 text-muted-foreground" aria-hidden="true" />
           )}
         </span>
       </button>
@@ -431,7 +462,12 @@ const SelectTile = React.memo(function SelectTile({
               type="button"
               role="option"
               aria-selected={option.value === currentValue}
-              className="flex h-10 w-full items-center justify-between gap-2 rounded-md px-2.5 text-left text-sm text-foreground outline-none hover:bg-accent focus-visible:bg-accent focus-visible:outline-none"
+              className={cn(
+                "flex h-9 w-full items-center justify-between gap-2 rounded-lg px-2.5 text-left text-sm outline-none transition-colors focus-visible:outline-none",
+                option.value === currentValue
+                  ? "bg-accent font-medium text-foreground"
+                  : "text-foreground hover:bg-accent focus-visible:bg-accent",
+              )}
               onClick={() => {
                 onChange(option.value);
                 setOpen(false);
@@ -439,7 +475,7 @@ const SelectTile = React.memo(function SelectTile({
             >
               <span className="truncate">{option.label}</span>
               {option.value === currentValue ? (
-                <Check className="size-3.5 shrink-0" aria-hidden="true" />
+                <Check className="size-3.5 shrink-0 text-foreground" aria-hidden="true" />
               ) : null}
             </button>
           ))}
@@ -466,10 +502,17 @@ const ColorTile = React.memo(function ColorTile({
 
   return (
     <div data-customize-tile data-customize-tile-type="color" className="relative">
-      <div className="flex h-12 w-full items-center justify-between gap-2 rounded-lg border border-border bg-card px-3 text-sm text-foreground">
-        <span className="min-w-0 truncate">{normalizeLabel(control.label)}</span>
+      <div
+        className={cn(
+          tileShellClass,
+          "flex h-14 w-full items-center justify-between gap-1.5 px-3",
+        )}
+      >
+        <span className="min-w-0 flex-1 truncate text-left text-xs font-medium text-muted-foreground">
+          {normalizeLabel(control.label)}
+        </span>
         <span className="flex shrink-0 items-center gap-2">
-          <span className="font-mono text-xs uppercase text-muted-foreground">
+          <span className="rounded-md border border-border bg-card px-1.5 py-0.5 font-mono text-[11px] uppercase tabular-nums text-foreground">
             {normalized ?? String(value ?? "")}
           </span>
           <button
@@ -477,7 +520,7 @@ const ColorTile = React.memo(function ColorTile({
             type="button"
             aria-label={`${normalizeLabel(control.label)} color picker`}
             aria-expanded={open}
-            className="size-6 rounded-md border border-border outline-none ring-offset-2 ring-offset-background focus-visible:ring-2 focus-visible:ring-ring"
+            className="size-7 rounded-lg border border-border shadow-sm outline-none ring-offset-2 ring-offset-background transition-transform hover:scale-105 focus-visible:ring-2 focus-visible:ring-ring"
             style={{ backgroundColor: normalized ?? fallback }}
             onClick={() => setOpen((previous) => !previous)}
           />
@@ -495,7 +538,7 @@ const ColorTile = React.memo(function ColorTile({
             type="color"
             aria-label={`${normalizeLabel(control.label)} color input`}
             value={normalized ?? fallback}
-            className="h-10 w-full cursor-pointer rounded-md border border-border bg-transparent p-1"
+            className="h-12 w-full cursor-pointer rounded-lg border border-border bg-transparent p-1"
             onChange={(event) => {
               const next = normalizeHexColor(event.target.value);
               if (next) {
@@ -509,7 +552,7 @@ const ColorTile = React.memo(function ColorTile({
             aria-label={`${normalizeLabel(control.label)} hex value`}
             placeholder="#000000"
             spellCheck={false}
-            className="h-9 w-full rounded-md border border-border bg-background px-2.5 font-mono text-xs text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="h-10 w-full rounded-lg border border-border bg-background px-2.5 font-mono text-xs uppercase text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
             onChange={(event) => {
               const nextDraft = event.target.value;
               setDraft(nextDraft);
@@ -546,21 +589,24 @@ const ToggleTile = React.memo(function ToggleTile({
       aria-label={normalizeLabel(control.label)}
       data-customize-tile
       data-customize-tile-type="toggle"
-      className="flex h-12 w-full items-center justify-between gap-2 rounded-lg border border-border bg-card px-3 text-sm text-foreground outline-none transition-colors hover:border-foreground/20 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+      className={cn(
+        tileShellClass,
+        "flex h-14 w-full items-center justify-between gap-2 px-3",
+      )}
       onClick={() => onChange(!checked)}
     >
-      <span className="min-w-0 truncate">{normalizeLabel(control.label)}</span>
+      <span className={tileLabelClass}>{normalizeLabel(control.label)}</span>
       <span
         aria-hidden="true"
         className={cn(
-          "relative h-6 w-10 shrink-0 rounded-full border border-border transition-colors",
-          checked ? "bg-foreground" : "bg-muted",
+          "relative h-5 w-9 shrink-0 rounded-full transition-colors",
+          checked ? "bg-foreground" : "bg-foreground/20",
         )}
       >
         <span
           className={cn(
-            "absolute top-[3px] size-[16px] rounded-full bg-background transition-transform",
-            checked ? "translate-x-[19px]" : "translate-x-[3px]",
+            "absolute left-[2px] top-[2px] size-4 rounded-full bg-background shadow-sm transition-transform",
+            checked ? "translate-x-[16px]" : "translate-x-0",
           )}
         />
       </span>
@@ -580,15 +626,18 @@ const TextTile = React.memo(function TextTile({
     <label
       data-customize-tile
       data-customize-tile-type={control.type}
-      className="flex h-12 w-full items-center justify-between gap-2 rounded-lg border border-border bg-card px-3 text-sm text-foreground focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 focus-within:ring-offset-background"
+      className={cn(
+        tileShellClass,
+        "flex h-14 w-full items-center justify-between gap-2 px-3 focus-within:border-foreground/25",
+      )}
     >
-      <span className="min-w-0 shrink-0">{normalizeLabel(control.label)}</span>
+      <span className={tileLabelClass}>{normalizeLabel(control.label)}</span>
       <input
         value={current}
         placeholder={control.type === "text" ? control.placeholder : undefined}
         maxLength={control.type === "text" ? control.maxLength : undefined}
         aria-label={normalizeLabel(control.label)}
-        className="h-8 min-w-0 flex-1 rounded-md border border-border bg-background px-2 text-right text-sm text-foreground outline-none placeholder:text-muted-foreground/60"
+        className="h-8 min-w-0 flex-1 rounded-md border border-border bg-card px-2 text-right text-sm text-foreground outline-none placeholder:text-muted-foreground/60 focus-visible:ring-2 focus-visible:ring-ring"
         onChange={(event) => onChange(event.target.value)}
       />
     </label>
@@ -739,10 +788,13 @@ export function CustomizePanel({
                 type="button"
                 aria-expanded={advancedOpen}
                 data-customize-advanced-trigger
-                className="flex h-12 w-full items-center justify-between rounded-lg border border-border bg-card px-3 text-sm text-foreground outline-none transition-colors hover:border-foreground/20 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                className={cn(
+                  tileShellClass,
+                  "flex h-14 w-full items-center justify-between gap-2 px-3",
+                )}
                 onClick={() => setAdvancedOpen((previous) => !previous)}
               >
-                <span>Advanced</span>
+                <span className="text-xs font-medium text-muted-foreground">Advanced</span>
                 {advancedOpen ? (
                   <ChevronUp className="size-4 text-muted-foreground" aria-hidden="true" />
                 ) : (
