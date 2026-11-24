@@ -142,7 +142,7 @@ const COMPACT_STAGE_SLUGS: ReadonlySet<string> = new Set([
 ]);
 
 /** Components that own internal scrolling. */
-const SCROLLABLE_SLUGS: ReadonlySet<string> = new Set(["text-reveal"]);
+const SCROLLABLE_SLUGS: ReadonlySet<string> = new Set([]);
 
 /**
  * Components whose card preview stays live under reduced motion. Basic
@@ -153,10 +153,6 @@ const REDUCE_MOTION_SAFE_SLUGS: ReadonlySet<string> = new Set([
   "ambient-audio-toggle",
   "ambient-strip",
   "animated-metric",
-  "arc-carousel",
-  "arcwave-carousel",
-  "streamline-carousel",
-  "depth-carousel-3d",
   "animated-pill-button",
   "burn-plus",
   "character-field",
@@ -198,6 +194,9 @@ const PREVIEW_OVERRIDES: Record<string, Partial<PreviewDefinition>> = {
   "orbit-spiral-gallery": {
     height: "tall",
     stageBackground: "plain",
+  },
+  "glitch-liquid-text": {
+    height: "tall",
   },
 };
 

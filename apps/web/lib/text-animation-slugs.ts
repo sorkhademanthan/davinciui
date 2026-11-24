@@ -7,7 +7,6 @@ export const TEXT_ANIMATION_ORDER = [
   "media-text-hover",
   "random-text-reveal",
   "text-morph",
-  "text-reveal",
   "shader-text",
   "fluid-particle-text",
   "encrypted-text",
