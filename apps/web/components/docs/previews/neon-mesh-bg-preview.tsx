@@ -43,6 +43,14 @@ const DEFAULT_CONFIG: NeonMeshBGConfig = {
   highlightColor: "#eed5f2",
 };
 
+const NEON_MESH_BG_PRESETS: Record<string, Partial<NeonMeshBGConfig>> = {
+  default: { backgroundColor: "#050505", primaryColor: "#40134e", secondaryColor: "#873491", highlightColor: "#eed5f2" },
+  midnight: { backgroundColor: "#020617", primaryColor: "#1e3a8a", secondaryColor: "#3b82f6", highlightColor: "#bfdbfe" },
+  ember: { backgroundColor: "#1a0a0a", primaryColor: "#7c2d12", secondaryColor: "#ea580c", highlightColor: "#fed7aa" },
+  ocean: { backgroundColor: "#020f1a", primaryColor: "#0f4c5c", secondaryColor: "#06b6d4", highlightColor: "#a5f3fc" },
+  mono: { backgroundColor: "#050505", primaryColor: "#262626", secondaryColor: "#525252", highlightColor: "#e5e5e5" },
+};
+
 const CONTROLS: CustomizeControl[] = [
   { type: "slider", key: "scale", label: "Scale", min: 0.4, max: 3.5, step: 0.05, group: "Mesh" },
   { type: "slider", key: "warp", label: "Warp", min: 0, max: 2.5, step: 0.05, group: "Mesh" },
@@ -63,10 +71,13 @@ const useNeonMeshBGStore = create<{
   config: NeonMeshBGConfig;
   update: (next: Partial<NeonMeshBGConfig>) => void;
   reset: () => void;
+  applyPreset: (preset: string) => void;
 }>((set) => ({
   config: DEFAULT_CONFIG,
   update: (next) => set((state) => ({ config: { ...state.config, ...next } })),
   reset: () => set({ config: DEFAULT_CONFIG }),
+  applyPreset: (preset) =>
+    set((state) => ({ config: { ...state.config, ...(NEON_MESH_BG_PRESETS[preset] ?? {}) } })),
 }));
 
 function generateCode(config: NeonMeshBGConfig) {
@@ -134,6 +145,9 @@ export function NeonMeshBGPersonalizePanel() {
       defaults={DEFAULT_CONFIG}
       onChange={bindCustomizeUpdate(update)}
       onReset={() => usePlaygroundStore.getState().resetPreview("neon-mesh-bg")}
+      presets={Object.keys(NEON_MESH_BG_PRESETS).map((preset) => ({ label: preset.charAt(0).toUpperCase() + preset.slice(1), value: preset }))}
+      activePreset={Object.keys(NEON_MESH_BG_PRESETS).find((p) => JSON.stringify(NEON_MESH_BG_PRESETS[p]) === JSON.stringify({ backgroundColor: config.backgroundColor, primaryColor: config.primaryColor, secondaryColor: config.secondaryColor, highlightColor: config.highlightColor })) ?? "default"}
+      onPresetChange={(preset) => useNeonMeshBGStore.getState().applyPreset(preset)}
     />
   );
 }

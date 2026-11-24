@@ -21,6 +21,14 @@ const DEFAULT_CONFIG: SoftFluidGradientConfig = {
   density: 1,
 };
 
+const SOFT_FLUID_GRADIENT_PRESETS: Record<string, Partial<SoftFluidGradientConfig>> = {
+  default: { speed: 0.26, density: 1 },
+  calm: { speed: 0.12, density: 0.7 },
+  energetic: { speed: 0.45, density: 1.3 },
+  dense: { speed: 0.3, density: 1.8 },
+  subtle: { speed: 0.18, density: 0.5 },
+};
+
 const CONTROLS: CustomizeControl[] = [
   { type: "slider", key: "speed", label: "Speed", min: 0, max: 2, step: 0.01, group: "Flow" },
   { type: "slider", key: "density", label: "Density (loops)", min: 0.35, max: 3, step: 0.05, group: "Flow" },
@@ -30,10 +38,13 @@ const useSoftFluidGradientStore = create<{
   config: SoftFluidGradientConfig;
   update: (next: Partial<SoftFluidGradientConfig>) => void;
   reset: () => void;
+  applyPreset: (preset: string) => void;
 }>((set) => ({
   config: DEFAULT_CONFIG,
   update: (next) => set((state) => ({ config: { ...state.config, ...next } })),
   reset: () => set({ config: DEFAULT_CONFIG }),
+  applyPreset: (preset) =>
+    set((state) => ({ config: { ...state.config, ...(SOFT_FLUID_GRADIENT_PRESETS[preset] ?? {}) } })),
 }));
 
 function generateCode(config: SoftFluidGradientConfig) {
@@ -89,6 +100,8 @@ export function SoftFluidGradientPersonalizePanel() {
       values={config}
       defaults={DEFAULT_CONFIG}
       onChange={bindCustomizeUpdate(update)}
+      presets={Object.keys(SOFT_FLUID_GRADIENT_PRESETS).map((preset) => ({ label: preset.charAt(0).toUpperCase() + preset.slice(1), value: preset }))}
+      onPresetChange={(preset) => useSoftFluidGradientStore.getState().applyPreset(preset)}
       onReset={() =>
         usePlaygroundStore.getState().resetPreview("soft-fluid-gradient")
       }
