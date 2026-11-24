@@ -164,7 +164,12 @@ export function DocsOnThisPage({
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
     const lenis = (window as Window & { __lenis?: { scrollTo: (target: number | string | HTMLElement, options?: { offset?: number; immediate?: boolean; force?: boolean }) => void; stop: () => void; start: () => void } }).__lenis
     if (lenis) {
-      lenis.scrollTo(target, { offset: -120, immediate: reduceMotion, force: true })
+      // Defer past Lenis's own anchor handler. With `stopInertiaOnNavigate`,
+      // Lenis calls reset() on internal anchor clicks after React's handler,
+      // which would cancel an in-flight smooth scroll started here.
+      requestAnimationFrame(() => {
+        lenis.scrollTo(target, { offset: -120, immediate: reduceMotion, force: true })
+      })
       return
     }
     target.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" })

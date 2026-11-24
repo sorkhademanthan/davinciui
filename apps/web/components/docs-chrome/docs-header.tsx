@@ -2,9 +2,10 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { Github, Menu, Search } from "lucide-react"
+import { Menu, Search } from "lucide-react"
 
 import { CommandMenu } from "@/components/command-menu"
+import { GitHubButton } from "@/components/github-button"
 import { DavinciUILogo } from "@/components/logos/davinci-ui-logo"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { DocsMobileNav } from "./docs-mobile-nav"
@@ -59,17 +60,7 @@ export function DocsHeader() {
           </div>
 
           <div className="flex shrink-0 items-center justify-end gap-3">
-            <a
-              href="https://github.com/sorkhademanthan/davinciui"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="DavinciUI on GitHub"
-              className="hidden h-9 items-center gap-1.5 rounded-full border border-border bg-background px-3 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground sm:inline-flex"
-            >
-              <Github className="size-4" />
-              <span className="hidden sm:inline">Star</span>
-              <span className="sr-only">Star DavinciUI on GitHub</span>
-            </a>
+            <GitHubButton className="hidden sm:inline-flex" />
             <Link
               href="/docs/installation"
               className="hidden h-[34px] shrink-0 items-center whitespace-nowrap rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 sm:inline-flex"

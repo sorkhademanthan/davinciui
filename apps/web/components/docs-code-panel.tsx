@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import type { LucideIcon } from "lucide-react"
-import { Check, Copy, Sparkles } from "lucide-react"
+import { Check, Copy } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 export interface DocsCodePanelTab {
@@ -47,10 +47,6 @@ export function DocsCodePanel({
       // Clipboard access can be blocked; leave the label unchanged.
     }
   }
-  function askAI() {
-    window.dispatchEvent(new CustomEvent("dv:ask-ai", { detail: { prompt: `Explain this code:\n\n${copyCode}` } }))
-  }
-
   return (
     <div
       data-code-block
@@ -91,9 +87,6 @@ export function DocsCodePanel({
         <div className="flex items-center gap-1">
           <button type="button" className="dv-code-btn" onClick={copy} aria-label={copied ? "Copied" : "Copy code"}>
             {copied ? <Check size={16} /> : <Copy size={16} />}
-          </button>
-          <button type="button" className="dv-code-btn" onClick={askAI} aria-label="Ask AI about this code">
-            <Sparkles size={16} />
           </button>
           <span className="sr-only" aria-live="polite">{copied ? "Copied to clipboard" : ""}</span>
         </div>
