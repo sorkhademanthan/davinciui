@@ -116,6 +116,24 @@ const DEFAULT_MID = "#14151d";
 const DEFAULT_SHEEN = "#f4dfb8";
 const DEFAULT_ACCENT = "#6ed6c9";
 
+export type SilkAuroraPresetName =
+  | "default"
+  | "midnight"
+  | "aurora"
+  | "sunset"
+  | "mono";
+
+export const SILK_AURORA_PRESETS: Record<
+  SilkAuroraPresetName,
+  { baseColor: string; midColor: string; sheenColor: string; accentColor: string }
+> = {
+  default: { baseColor: DEFAULT_BASE, midColor: DEFAULT_MID, sheenColor: DEFAULT_SHEEN, accentColor: DEFAULT_ACCENT },
+  midnight: { baseColor: "#02030a", midColor: "#0a0f1f", sheenColor: "#9fb4ff", accentColor: "#5b8cff" },
+  aurora: { baseColor: "#061018", midColor: "#0f2a2a", sheenColor: "#b8f2e6", accentColor: "#6ee7b7" },
+  sunset: { baseColor: "#1a0b0b", midColor: "#3a1a1a", sheenColor: "#ffd6a5", accentColor: "#ff8fab" },
+  mono: { baseColor: "#0a0a0a", midColor: "#1f1f1f", sheenColor: "#e5e5e5", accentColor: "#a3a3a3" },
+};
+
 function sanitizeHexColor(value: string, fallback: string) {
   const trimmed = value.trim();
   if (!HEX_COLOR_REGEX.test(trimmed)) {
@@ -135,6 +153,8 @@ function hexToRgb01(hex: string, fallback: string): [number, number, number] {
 }
 
 export interface SilkAuroraProps extends React.HTMLAttributes<HTMLDivElement> {
+  /** Color preset. Explicit color props override the preset. */
+  preset?: SilkAuroraPresetName;
   title?: string;
   subtitle?: string;
   description?: string;
@@ -155,13 +175,14 @@ const HEADLINE_CLASS =
   "max-w-[820px] text-[13cqi] font-semibold leading-[0.86] tracking-normal text-white md:text-[8cqi] lg:text-[6.4cqi]";
 
 export function SilkAurora({
+  preset = "default",
   title,
   subtitle,
   description,
-  baseColor = DEFAULT_BASE,
-  midColor = DEFAULT_MID,
-  sheenColor = DEFAULT_SHEEN,
-  accentColor = DEFAULT_ACCENT,
+  baseColor: baseColorProp,
+  midColor: midColorProp,
+  sheenColor: sheenColorProp,
+  accentColor: accentColorProp,
   speed = 0.85,
   intensity = 1,
   grain = 0.85,
@@ -178,6 +199,14 @@ export function SilkAurora({
   const mouseRef = React.useRef({ x: 0.5, y: 0.5 });
   const targetMouseRef = React.useRef({ x: 0.5, y: 0.5 });
   const [hasWebGLError, setHasWebGLError] = React.useState(false);
+
+  const presetPalette =
+    SILK_AURORA_PRESETS[preset as SilkAuroraPresetName] ??
+    SILK_AURORA_PRESETS.default;
+  const baseColor = baseColorProp ?? presetPalette.baseColor;
+  const midColor = midColorProp ?? presetPalette.midColor;
+  const sheenColor = sheenColorProp ?? presetPalette.sheenColor;
+  const accentColor = accentColorProp ?? presetPalette.accentColor;
 
   const settings = React.useMemo(
     () => ({

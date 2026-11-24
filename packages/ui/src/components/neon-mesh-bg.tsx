@@ -124,8 +124,28 @@ void main() {
 }
 `;
 
+export type NeonMeshBGPresetName =
+  | "default"
+  | "midnight"
+  | "ember"
+  | "ocean"
+  | "mono";
+
+export const NEON_MESH_BG_PRESETS: Record<
+  NeonMeshBGPresetName,
+  { backgroundColor: string; primaryColor: string; secondaryColor: string; highlightColor: string }
+> = {
+  default: { backgroundColor: "#050505", primaryColor: "#40134e", secondaryColor: "#873491", highlightColor: "#eed5f2" },
+  midnight: { backgroundColor: "#020617", primaryColor: "#1e3a8a", secondaryColor: "#3b82f6", highlightColor: "#bfdbfe" },
+  ember: { backgroundColor: "#1a0a0a", primaryColor: "#7c2d12", secondaryColor: "#ea580c", highlightColor: "#fed7aa" },
+  ocean: { backgroundColor: "#020f1a", primaryColor: "#0f4c5c", secondaryColor: "#06b6d4", highlightColor: "#a5f3fc" },
+  mono: { backgroundColor: "#050505", primaryColor: "#262626", secondaryColor: "#525252", highlightColor: "#e5e5e5" },
+};
+
 export interface NeonMeshBGProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, "children"> {
+  /** Color preset. Explicit color props override the preset. */
+  preset?: NeonMeshBGPresetName;
   /** Deepest background color. */
   backgroundColor?: string;
   /** Dark violet midtone. */
@@ -192,10 +212,11 @@ function parseColor(color: string): [number, number, number] {
 }
 
 export function NeonMeshBG({
-  backgroundColor = "#050505",
-  primaryColor = "#40134e",
-  secondaryColor = "#873491",
-  highlightColor = "#eed5f2",
+  preset = "default",
+  backgroundColor: backgroundColorProp,
+  primaryColor: primaryColorProp,
+  secondaryColor: secondaryColorProp,
+  highlightColor: highlightColorProp,
   scale = 1.6,
   complexity = 4,
   warp = 1.15,
@@ -223,6 +244,14 @@ export function NeonMeshBG({
     (value: number) => value + 1,
     0,
   );
+
+  const presetPalette =
+    NEON_MESH_BG_PRESETS[preset as NeonMeshBGPresetName] ??
+    NEON_MESH_BG_PRESETS.default;
+  const backgroundColor = backgroundColorProp ?? presetPalette.backgroundColor;
+  const primaryColor = primaryColorProp ?? presetPalette.primaryColor;
+  const secondaryColor = secondaryColorProp ?? presetPalette.secondaryColor;
+  const highlightColor = highlightColorProp ?? presetPalette.highlightColor;
 
   const settings = React.useMemo(
     () => ({
