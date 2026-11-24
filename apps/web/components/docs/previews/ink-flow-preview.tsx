@@ -32,6 +32,14 @@ const DEFAULT_CONFIG: InkFlowConfig = {
   accentColor: "#F5AED9",
 };
 
+const INK_FLOW_PRESETS: Record<string, Partial<InkFlowConfig>> = {
+  default: { paperColor: "#F6EFD3", softInkColor: "#9DA5B6", deepInkColor: "#3C2FAA", accentColor: "#F5AED9" },
+  mono: { paperColor: "#f5f5f5", softInkColor: "#a3a3a3", deepInkColor: "#171717", accentColor: "#737373" },
+  ocean: { paperColor: "#eaf4f8", softInkColor: "#7fb3c8", deepInkColor: "#0b3c5d", accentColor: "#ff6f61" },
+  sunset: { paperColor: "#fff1e6", softInkColor: "#f4a261", deepInkColor: "#e76f51", accentColor: "#264653" },
+  forest: { paperColor: "#f1f8e9", softInkColor: "#81c784", deepInkColor: "#2e7d32", accentColor: "#fbc02d" },
+};
+
 const CONTROLS: CustomizeControl[] = [
   { type: "slider", key: "speed", label: "Speed", min: 0, max: 2, step: 0.01, group: "Flow" },
   { type: "slider", key: "scale", label: "Ink scale", min: 0.4, max: 3, step: 0.05, group: "Flow" },
@@ -47,10 +55,13 @@ const useInkFlowStore = create<{
   config: InkFlowConfig;
   update: (next: Partial<InkFlowConfig>) => void;
   reset: () => void;
+  applyPreset: (preset: string) => void;
 }>((set) => ({
   config: DEFAULT_CONFIG,
   update: (next) => set((state) => ({ config: { ...state.config, ...next } })),
   reset: () => set({ config: DEFAULT_CONFIG }),
+  applyPreset: (preset) =>
+    set((state) => ({ config: { ...state.config, ...(INK_FLOW_PRESETS[preset] ?? {}) } })),
 }));
 
 function generateCode(config: InkFlowConfig) {
@@ -114,6 +125,8 @@ export function InkFlowPersonalizePanel() {
       defaults={DEFAULT_CONFIG}
       onChange={bindCustomizeUpdate(update)}
       onReset={() => usePlaygroundStore.getState().resetPreview("ink-flow")}
+      presets={Object.keys(INK_FLOW_PRESETS).map((preset) => ({ label: preset.charAt(0).toUpperCase() + preset.slice(1), value: preset }))}
+      onPresetChange={(preset) => useInkFlowStore.getState().applyPreset(preset)}
     />
   );
 }

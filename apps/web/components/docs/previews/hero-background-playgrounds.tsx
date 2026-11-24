@@ -28,6 +28,7 @@ export const {
   component: SilkAuroraStage as React.ComponentType<StageProps>,
   componentName: "SilkAurora",
   defaults: {
+    preset: "default",
     baseColor: "#060505",
     midColor: "#19130f",
     sheenColor: "#ffe2a9",
@@ -39,6 +40,13 @@ export const {
     mouseInfluence: 1,
     interactive: true,
   },
+  presets: [
+    { name: "Default", config: { baseColor: "#060505", midColor: "#19130f", sheenColor: "#ffe2a9", accentColor: "#c58d5d", speed: 0.75, intensity: 0.9, grain: 0.85, vignette: 1, mouseInfluence: 1, interactive: true } },
+    { name: "Midnight", config: { baseColor: "#02030a", midColor: "#0a0f1f", sheenColor: "#9fb4ff", accentColor: "#5b8cff", speed: 0.75, intensity: 0.9, grain: 0.85, vignette: 1, mouseInfluence: 1, interactive: true } },
+    { name: "Aurora", config: { baseColor: "#061018", midColor: "#0f2a2a", sheenColor: "#b8f2e6", accentColor: "#6ee7b7", speed: 0.75, intensity: 0.9, grain: 0.85, vignette: 1, mouseInfluence: 1, interactive: true } },
+    { name: "Sunset", config: { baseColor: "#1a0b0b", midColor: "#3a1a1a", sheenColor: "#ffd6a5", accentColor: "#ff8fab", speed: 0.75, intensity: 0.9, grain: 0.85, vignette: 1, mouseInfluence: 1, interactive: true } },
+    { name: "Mono", config: { baseColor: "#0a0a0a", midColor: "#1f1f1f", sheenColor: "#e5e5e5", accentColor: "#a3a3a3", speed: 0.75, intensity: 0.9, grain: 0.85, vignette: 1, mouseInfluence: 1, interactive: true } },
+  ],
   fields: [
     { key: "baseColor", label: "Base", type: "color", section: "Palette" },
     { key: "midColor", label: "Mid Tone", type: "color", section: "Palette" },
