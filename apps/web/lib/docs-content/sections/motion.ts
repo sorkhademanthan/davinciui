@@ -257,12 +257,8 @@ export const motion: Record<string, string> = {
   switch:
     "The thumb translates horizontally and the track changes color through CSS transitions. No timing or easing props exist and prefers-reduced-motion is not detected, so the thumb movement remains under reduced motion.",
   tabs: "Triggers animate background, text, shadow, and border color through transition-all; TabsContent swaps instantly and there is no panel animation. No timing props or prefers-reduced-motion handling are present.",
-  "team-slide-reveal":
-    "The portrait image scales and the story sheet slides up over duration milliseconds (default 480) with a cubic-bezier ease. Text fades and lifts; motion-reduce:transition-none disables all transitions.",
   "text-morph":
     "The fluid morph runs on a per-word timer controlled by the interval and morphDuration props. When the visitor prefers reduced motion, the component swaps words instantly with no blur or morph transition.",
-  "text-reveal":
-    "GSAP ScrollTrigger scrubs per-unit opacity, color, and optional x, y, scale, or blur between startPosition and endPosition; revealSoftness sets stagger and scrubSmoothness sets lag. respectReducedMotion (default true) renders the final state when prefers-reduced-motion matches.",
   "text-video-mask":
     "Video playback animates, not CSS; autoplay, loop, muted, and preload props control it, with no timing or easing props. It listens to prefers-reduced-motion and either shows the solid fallback or pauses, per reducedMotion.",
   textarea:

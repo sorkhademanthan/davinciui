@@ -49,7 +49,6 @@ export const CONTENTFUL_PREVIEW_SLUGS = new Set([
   "media-text-hover",
   "random-text-reveal",
   "text-morph",
-  "text-reveal",
   "shader-text",
   "fluid-particle-text",
   "encrypted-text",
