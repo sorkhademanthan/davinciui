@@ -5,6 +5,7 @@ import { getComponent } from "@/registry";
 import { getDocsImporter, getDocsSlugs } from "@/components/docs/lazy-registry";
 import { galleryHrefForSlug } from "@/lib/component-groups";
 import { absoluteUrl, siteConfig } from "@/lib/site";
+import { isHiddenComponentSlug } from "@/lib/hidden-components";
 
 // -----------------------------------------------------------------------------
 // PERFORMANCE OPTIMIZATIONS:
@@ -32,6 +33,9 @@ export async function generateStaticParams() {
 
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
     const params = await props.params;
+    if (isHiddenComponentSlug(params.slug)) {
+        return { title: "Components — DavinciUI" };
+    }
     const component = getComponent(params.slug);
 
     if (!component) {
@@ -131,6 +135,9 @@ async function DocsContent({ slug }: { slug: string }) {
 
 export default async function ComponentPage(props: PageProps) {
     const params = await props.params;
+    if (isHiddenComponentSlug(params.slug)) {
+        redirect("/docs/components");
+    }
     const component = getComponent(params.slug);
     const importer = getDocsImporter(params.slug);
 

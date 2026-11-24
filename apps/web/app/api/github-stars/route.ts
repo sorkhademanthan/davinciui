@@ -3,11 +3,17 @@ import { NextResponse } from "next/server";
 const REPO = "sorkhademanthan/davinciui";
 
 /**
+ * The repo is currently private, so anonymous GitHub API reads return 404.
+ * Keep the last known public count so the button still shows a number until
+ * the repo is made public or a GITHUB_TOKEN is configured.
+ */
+const FALLBACK_STARS = 1;
+
+/**
  * Star count proxy. Browsers share a tiny unauthenticated GitHub quota, so
  * every visitor fetching api.github.com directly gets rate-limited and sees
  * a stale number forever. This route fetches once per hour (cached) for all
- * visitors, with an optional token for a higher quota. A private/renamed
- * repo yields { stars: null } and the header falls back to a plain button.
+ * visitors, with an optional token for a higher quota.
  */
 export async function GET() {
   try {
@@ -23,14 +29,16 @@ export async function GET() {
       next: { revalidate: 3600 },
     });
     if (!response.ok) {
-      return NextResponse.json({ stars: null });
+      return NextResponse.json({ stars: FALLBACK_STARS });
     }
     const data = (await response.json()) as { stargazers_count?: unknown };
     return NextResponse.json({
       stars:
-        typeof data.stargazers_count === "number" ? data.stargazers_count : null,
+        typeof data.stargazers_count === "number"
+          ? data.stargazers_count
+          : FALLBACK_STARS,
     });
   } catch {
-    return NextResponse.json({ stars: null });
+    return NextResponse.json({ stars: FALLBACK_STARS });
   }
 }

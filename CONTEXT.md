@@ -23,6 +23,63 @@
 
 ## Active task
 
+- **Glitch Liquid Text: remove hover hint copy (2026-11-25) — DONE / verified; uncommitted.**
+  - Goal (user): "remove this text as, move across the type — the distortion stays local to the cursor".
+  - Fix in `apps/web/components/docs/glitch-liquid-text.tsx`: deleted the `HoverHint` element (and its now-unused `MousePointer` import) from the live preview; the playground `intro` string was not rendered so it was left untouched.
+  - Verified: `npx tsc --noEmit -p apps/web` clean; ESLint clean; Playwright — 0 matches for "Move across the type" / "distortion stays local" on `/docs/components/glitch-liquid-text` and `/experience/components/glitch-liquid-text`, 0 page errors.
+  - Not committed (user hasn't asked).
+
+- **Hide selected components (2026-11-25) — DONE / uncommitted.**
+  - Goal (user): hide from everywhere and keep a track of hidden components: **Text Reveal**, **Burn Plus**, **Services Showcase**, **Vertical Image Marquee**, **Team Slide Reveal** (also asked earlier to hide `liquid-chrome`, `animated-pill-button`, `hover-transition` — now centralized).
+  - Added `apps/web/lib/hidden-components.ts` (`HIDDEN_COMPONENT_SLUGS`) as the single source of truth.
+  - Applied hiding: gallery (`components-gallery-client.tsx`), docs index (`app/docs/components/page.tsx`) + sidebar/category nav (`config/docs.ts`), experience/docs `[slug]` pages redirect/404 metadata for hidden slugs, preview/live-preview gating (`component-card-live-preview.tsx`, `lib/preview-contract.ts`, `lib/home-preview-media.ts`, `lib/text-animation-slugs.ts`), removed lazy-registry entries + cleaned stray refs, removed `text-reveal` from docs categories/motion/accessibility maps and related demo link note.
+  - Verified: `cd apps/web && npx tsc --noEmit` clean.
+  - Not committed (user hasn't asked).
+
+- **Reorder "Editorial Curtain Preloader" in the gallery (2026-11-25) — DONE / verified; uncommitted.**
+  - Goal (user): the `Preloaders` / Editorial Curtain Preloader card sat first in the grid; move it "little below, not at the top or bottom — at the middle somewhere".
+  - Fix in `apps/web/registry/index.ts`: removed `"editorial-curtain-preloader"` from index 0 of `FEATURED_SLUGS` and inserted it after `"editorial-card-arc-preloader"` (rank 45). This is the shared featured order used by the gallery (`All` + category tabs), docs index, and sidebar.
+  - Verified: `npx tsc --noEmit -p apps/web` clean; Playwright on `:3000` — `All` now leads `spiral-media-gallery, circular-gallery, focus-carousel` with curtain at index 45/73 (middle); `?tab=Preloaders` order is `pixel, fill, cinematic-panel, glitch-shred, editorial-card-arc, editorial-curtain, masked-arc, staircase, geometric, editorial-wipe` (curtain 6/10, middle); 0 page errors.
+  - Not committed (user hasn't asked).
+
+- **Hide retired categories from the gallery "All" tab (2026-11-25) — DONE / verified; uncommitted.**
+  - Goal (user): "remove the components that are removed from the website, for eg, the motion components are kept hidden, but they are visible on the all components category, same for sound category".
+  - Root cause: the experience sidebar (`config/navigation.ts` `categoryOrder`) only lists the 7 premium categories, and the gallery has no Motion/Sound top filter, but the gallery's `All` tab returns every non-Basic component — so the 5 `Sound` + 4 visible `Motion` slugs leaked into `All` (and search). `liquid-chrome-button` was already hidden by slug.
+  - Fix in `apps/web/app/experience/components/components-gallery-client.tsx`: added `HIDDEN_CATEGORIES = new Set(["Motion", "Sound"])` applied before search/`All` filtering (alongside `HIDDEN_SLUGS`); deps updated. Docs/registry/source pages stay intact, just unreachable from the gallery.
+  - Verified: `npx tsc --noEmit -p apps/web` clean; ESLint (`apps/web`, `--max-warnings 0`) clean; Playwright on `:3000` — `/experience/components` shows 0 of the 9 slugs in the grid and 0 after searching "sound", 0 page errors.
+  - Not committed (user hasn't asked).
+
+- **Navbar GitHub button redesign + star count (2026-11-24) — design DONE / verified; count shows via static fallback; uncommitted.**
+  - Goal (user): "fix the overall design it is not consistent with the other buttons, and also the stars are not being shown".
+  - Added shared `apps/web/components/github-button.tsx` (client): moved the star fetch + localStorage cache out of `site-header.tsx`; single consistent control style `h-9 rounded-xl border border-border bg-background px-2.5 sm:px-3 text-sm font-medium text-muted-foreground hover:border-foreground/20 hover:bg-muted/60 hover:text-foreground`; label `GitHub` (icon-only <sm); star chip (lucide `Star` + compact count) renders whenever a count is known (including 0), no more white pill or green-dot "Star" fallback.
+  - Wired into `apps/web/components/site-header.tsx` (removed inline `Link`/`GitHubIcon`/`GITHUB_REPO`/star state+effects/`hasStars`/`formattedStars`/`fullStars`) and `apps/web/components/docs-chrome/docs-header.tsx` (replaced lucide `Github` + static "Star" anchor with `<GitHubButton className="hidden sm:inline-flex" />`).
+  - **Stars:** `sorkhademanthan/davinciui` is private — `github.com/...` and `api.github.com/repos/...` return 404 anonymously (git works only via osxkeychain creds), so `/api/github-stars` could not read the count. The authenticated count is **1**, so `apps/web/app/api/github-stars/route.ts` now uses `FALLBACK_STARS = 1` when the live read fails; the button shows `GitHub ★ 1`. Live/auto-updating counts need (a) making the repo public, (b) adding a repo-read `GITHUB_TOKEN`, or (c) pointing at a public repo URL.
+  - Verified: `npx tsc --noEmit` (apps/web) clean; ESLint clean on all 3 files; `/api/github-stars` → `{"stars":1}`; Playwright on `:3000` — home + docs buttons both `36px` tall / `14px` radius, bg `oklch(1 0 0)` light vs `rgb(10,10,10)` dark, subtle border, text `GitHub ★ 1`; home icon-button visible at 390px, docs hidden <sm; screenshots `tmp/gh-btn-{home,docs}-{light,dark}.png`, `tmp/gh-{home,docs}-*.png`.
+  - Not committed (user hasn't asked).
+
+- **Docs QA fixes: TOC navigation, code-panel AI button, pixel-flow card, toggle geometry (2026-11-24) — DONE / verified; uncommitted.**
+  - Goal (user report): (1) "On this page" links did not scroll; (2) remove the AI/sparkles button beside Copy in Installation/Usage code blocks; (3) remove the customization card on `pixel-flow`; (4) the `Interactive` toggle in the silk-aurora Customize panel looked broken.
+  - TOC root cause: Lenis is configured with `stopInertiaOnNavigate: true`; on internal `<a href="#...">` clicks Lenis's own handler runs after React's `onClick` and calls `reset()`, cancelling the smooth `scrollTo` started by `scrollToSection` (native hash jump was prevented). Fix in `apps/web/components/docs-on-this-page.tsx`: defer `lenis.scrollTo` with `requestAnimationFrame` so it runs after Lenis's reset. Applies to docs + experience TOCs and the mobile variant.
+  - AI button: removed the Sparkles/`dv:ask-ai` button from all three code surfaces — `components/docs-code-panel.tsx` (Installation/Usage + PackageManagerCommand/LiveCodeBlock), `components/docs-snippet.tsx`, `components/mdx/interactive.tsx`. Copy remains.
+  - Pixel flow: removed `personalizeContent={<PixelFlowPersonalizePanel />}` and its import from `apps/web/components/docs/pixel-flow.tsx` (the exported panel function remains in `previews/pixel-flow-preview.tsx` but is no longer rendered).
+  - Toggle: `components/customize-panel.tsx` knob had both an implicit static `left` and `translate-x-[18px]` (double offset) → knob rendered 16px outside the 36px track. Fixed with explicit `left-[2px]` + `translate-x-[16px]`/`translate-x-0`, giving 2px insets on both ends.
+  - Verified: `npx tsc --noEmit` (apps/web) clean; ESLint clean on all 6 touched files; `pnpm validate:docs` 145 pass; `pnpm validate:registry` 169 pass. Playwright on `:3000`: docs TOC click → `scrollY 1987`, API Reference top `120`; experience TOC → `1864`/`120`; `.dv-code-btn` labels only `Copy code` on `/docs`, `/docs/installation`, `/docs/components/{button,pixel-flow,silk-aurora}`; pixel-flow customize slots/tiles `0`; toggle on track `569–605` knob `587–603`, off knob `571–587`; 0 page errors. Screenshots `tmp/qa-toggle-on.png`, `tmp/qa-toggle-off.png`, `tmp/qa-customize-after.png`.
+  - Not committed (user hasn't asked).
+
+- **Customize panel control redesign — all components (2026-11-24) — DONE / verified; uncommitted.**
+  - Goal: full visual redesign of the buttons (selects), sliders, and color pickers in the Customize panel, applied to every component (panel is shared).
+  - Single file changed: `apps/web/components/customize-panel.tsx` (all tiles are inline there — 24 direct preview importers + 46 `createComponentPlayground` playgrounds get it automatically).
+  - Design: "recessed deck" — shared `tileShellClass` (`rounded-xl border-border/70 bg-muted/30`, hover border/bg lift), labels demoted to `text-xs font-medium text-muted-foreground`, values as raised chips; extracted `tileLabelClass`/`valueChipClass` constants.
+    - **Selects**: value shown as raised pill (`bg-card` rounded-full) + chevron; label `flex-1`; dropdown options now `h-9 rounded-lg`, selected = `bg-accent font-medium` + check.
+    - **Sliders**: two-line layout — label + mono value chip on top, real track below (`h-1.5 bg-foreground/15` track, `bg-foreground` fill, `size-3` bordered thumb at percent); height `h-14`; drag/keyboard/double-click-edit logic untouched.
+    - **Colors**: hex chip raised + `size-7` swatch (hover scale); popup native input `h-12`, hex field `h-10 uppercase`.
+    - **Toggles**: `h-5 w-9` track (`bg-foreground` on / `bg-foreground/20` off), `size-4` bg-background knob with shadow.
+    - **Text/textarea + Advanced trigger**: same shell, uniform `h-14`.
+    - `normalizeLabel`: preserves short all-caps acronyms ≤4 letters (`FPS` no longer → `Fps`).
+  - All tiles now uniform **56px** (grid rows mixing sliders/colors were ragged 48/56 before).
+  - Verified: `npx tsc --noEmit` (apps/web) clean; ESLint `--max-warnings 0` clean; Playwright QA on `:3000` (`tmp/customize-qa*.cjs`) — noiser panel light+dark screenshots (`tmp/customize-qa-light3.png`, `tmp/customize-qa-dark2.png`), select change Duo→Mono, slider drag 0.72→0.75 + keyboard 0.32→0.34, color popup, toggle, Reset restores defaults, advanced accordion (pixel-flow), text/preset tiles (text-morph), menu portal shot `tmp/customize-menu-light.png`, 0 console errors, 0 h-overflow.
+  - Not committed (user hasn't asked).
+
 - **`MediaTextHover` Framer-reference fix (2026-11-24) — DONE / runtime-verified.**
   - Goal: make `/experience/components/media-text-hover` match `https://blue-help-056370.framer.app/`; the headline ("BRANDING") was not splitting open on hover.
   - Root cause: media window was either `position:absolute` (out of flex flow → text never split) or had the media rendered directly with `flexGrow` hacks (media squished / spans distorted).
