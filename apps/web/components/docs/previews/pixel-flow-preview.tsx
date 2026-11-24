@@ -1,14 +1,14 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { create } from "zustand";
+import { useDialKitController, type DialConfig, type DialValue } from "dialkit";
 import { PixelFlow } from "@workspace/ui/components/pixel-flow";
 import type { PixelFlowPresetName } from "@workspace/ui/components/pixel-flow";
 import { PIXEL_FLOW_PRESETS } from "@workspace/ui/components/pixel-flow";
 import { configEquals, usePlaygroundStore } from "@/hooks/use-playground-store";
 import {
   CustomizePanel,
-  bindCustomizeUpdate,
   type CustomizeControl,
 } from "@/components/customize-panel";
 
@@ -92,6 +92,21 @@ function configForPreset(preset: PixelFlowPresetName): PixelFlowPlaygroundConfig
 }
 
 const PIXEL_FLOW_DEFAULT_CONFIG = configForPreset("reference-purple");
+
+const PIXEL_FLOW_DIAL_NAME = "Pixel Flow";
+
+const pixelFlowDialConfig: DialConfig = {
+  preset: "reference-purple",
+  backgroundColor: "#0d0820",
+  shadowColor: "#1a1038",
+  primaryColor: "#33266b",
+  electricColor: "#6345b8",
+  secondaryColor: "#796bac",
+  highlightColor: "#9789c6",
+  animate: true,
+  pauseWhenOffscreen: true,
+  respectReducedMotion: true,
+};
 
 const CONTROLS: CustomizeControl[] = [
   { type: "slider", key: "containerWidth", label: "Width", min: 0, max: 1400, step: 10, unit: "px", group: "Content" },
@@ -261,6 +276,66 @@ export function PixelFlowPersonalizePanel() {
   const applyPreset = usePixelFlowPlaygroundStore(
     (state) => state.applyPreset,
   );
+  const { values, setValue } = useDialKitController<DialConfig>(
+    PIXEL_FLOW_DIAL_NAME,
+    pixelFlowDialConfig,
+  );
+  const lastDialSync = useRef("");
+
+  const {
+    preset: dialPreset,
+    backgroundColor: dialBackground,
+    shadowColor: dialShadow,
+    primaryColor: dialPrimary,
+    electricColor: dialElectric,
+    secondaryColor: dialSecondary,
+    highlightColor: dialHighlight,
+    animate: dialAnimate,
+    pauseWhenOffscreen: dialPauseOffscreen,
+    respectReducedMotion: dialRespectReducedMotion,
+  } = values as unknown as Record<string, string | boolean>;
+  const dialSnapshot = JSON.stringify({
+    preset: dialPreset,
+    backgroundColor: dialBackground,
+    shadowColor: dialShadow,
+    primaryColor: dialPrimary,
+    electricColor: dialElectric,
+    secondaryColor: dialSecondary,
+    highlightColor: dialHighlight,
+    animate: dialAnimate,
+    pauseWhenOffscreen: dialPauseOffscreen,
+    respectReducedMotion: dialRespectReducedMotion,
+  });
+
+  useEffect(() => {
+    if (dialSnapshot === lastDialSync.current) return;
+    lastDialSync.current = dialSnapshot;
+    updateConfig({
+      preset: dialPreset as PixelFlowPresetName,
+      backgroundColor: dialBackground as string,
+      shadowColor: dialShadow as string,
+      primaryColor: dialPrimary as string,
+      electricColor: dialElectric as string,
+      secondaryColor: dialSecondary as string,
+      highlightColor: dialHighlight as string,
+      animate: dialAnimate as boolean,
+      pauseWhenOffscreen: dialPauseOffscreen as boolean,
+      respectReducedMotion: dialRespectReducedMotion as boolean,
+    });
+  }, [
+    dialSnapshot,
+    dialPreset,
+    dialBackground,
+    dialShadow,
+    dialPrimary,
+    dialElectric,
+    dialSecondary,
+    dialHighlight,
+    dialAnimate,
+    dialPauseOffscreen,
+    dialRespectReducedMotion,
+    updateConfig,
+  ]);
 
   return (
     <CustomizePanel
@@ -268,7 +343,23 @@ export function PixelFlowPersonalizePanel() {
       controls={CONTROLS}
       values={config}
       defaults={PIXEL_FLOW_DEFAULT_CONFIG}
-      onChange={bindCustomizeUpdate(updateConfig)}
+      onChange={(key, value) => {
+        updateConfig({ [key]: value } as Partial<PixelFlowPlaygroundConfig>);
+        if (
+          key === "preset" ||
+          key === "backgroundColor" ||
+          key === "shadowColor" ||
+          key === "primaryColor" ||
+          key === "electricColor" ||
+          key === "secondaryColor" ||
+          key === "highlightColor" ||
+          key === "animate" ||
+          key === "pauseWhenOffscreen" ||
+          key === "respectReducedMotion"
+        ) {
+          setValue(key, value as DialValue);
+        }
+      }}
       onReset={() => usePlaygroundStore.getState().resetPreview("pixel-flow")}
       presets={PRESET_ORDER.map((preset) => ({
         label: PRESET_LABELS[preset],
