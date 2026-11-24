@@ -1,4 +1,5 @@
 import { components, sortByFeatured, type ComponentCategory } from "@/registry";
+import { isHiddenComponentSlug } from "@/lib/hidden-components";
 
 type NavItem = {
   title: string;
@@ -49,7 +50,9 @@ const PREFERRED_CATEGORY_ORDER = [
 /** Every registry category, preferred order first, extras alphabetically. */
 export function docsComponentCategories(): string[] {
   const present = new Set(
-    Object.values(components).flatMap((c) => [c.category, ...(c.extraCategories ?? [])]),
+    Object.values(components)
+      .filter((c) => !isHiddenComponentSlug(c.slug))
+      .flatMap((c) => [c.category, ...(c.extraCategories ?? [])]),
   );
   return [
     ...PREFERRED_CATEGORY_ORDER.filter((c) => present.has(c)),
@@ -62,7 +65,11 @@ export function docsComponentCategories(): string[] {
 function componentCategoryGroups(): NavGroup[] {
   const items = docsComponentCategories().flatMap((category) => {
     const links = sortByFeatured(
-      Object.values(components).filter((c) => c.category === category || c.extraCategories?.includes(category as ComponentCategory)),
+      Object.values(components).filter(
+        (c) =>
+          !isHiddenComponentSlug(c.slug) &&
+          (c.category === category || c.extraCategories?.includes(category as ComponentCategory)),
+      ),
     ).map((c) => ({ title: c.title, href: `/experience/components/${c.slug}` }));
     const anchor = `/docs/components#${category.toLowerCase().replace(/\s+/g, "-")}`;
     return links.length > 0 ? [{ title: category, href: anchor, items: links } satisfies NavItem] : [];
