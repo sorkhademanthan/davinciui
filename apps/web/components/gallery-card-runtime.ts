@@ -24,7 +24,7 @@ function getSharedVisibilityObserver() {
           visibilityCallbacks.get(entry.target)?.(entry.isIntersecting);
         }
       },
-      { rootMargin: "300px 0px", threshold: 0.01 },
+      { rootMargin: "100px 0px", threshold: 0.01 },
     );
   }
 
