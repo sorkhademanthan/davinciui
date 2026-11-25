@@ -15,6 +15,8 @@ export const HIDDEN_COMPONENT_SLUGS = new Set<string>([
   "services-showcase",
   "vertical-image-marquee",
   "team-slide-reveal",
+  "hover-card",
+  "liquid-reveal-button",
 ]);
 
 export function isHiddenComponentSlug(slug: string): boolean {
