@@ -77,7 +77,7 @@ export function ShaderTextPlayground() {
   }, [config, fitSize]);
 
   return (
-    <div className="flex h-full min-h-[440px] w-full items-center justify-center overflow-hidden bg-zinc-200/70 px-8 py-16 dark:bg-[#0a0a0f]">
+    <div className="flex h-full min-h-[520px] w-full items-center justify-center overflow-hidden bg-zinc-200/70 px-8 py-16 dark:bg-[#0a0a0f]">
       <ShaderTextFitPreview
         text={config.text}
         preset={config.preset}
@@ -86,7 +86,7 @@ export function ShaderTextPlayground() {
         speed={config.speed}
         scale={config.scale}
         softness={config.softness}
-        maxFontSize={132}
+        maxFontSize={160}
         onFontSizeChange={setFitSize}
       />
     </div>

@@ -50,7 +50,7 @@ export async function ShaderTextDocs() {
         {
           title: "Plasma Display",
           preview: (
-            <div className="flex h-full min-h-[440px] w-full items-center justify-center bg-zinc-200/70 px-6 py-14 dark:bg-[#0a0a0f]">
+            <div className="flex h-full min-h-[520px] w-full items-center justify-center bg-zinc-200/70 px-6 py-14 dark:bg-[#0a0a0f]">
               <ShaderTextFitPreview
                 text="DAVINCIUI"
                 preset="plasma"
@@ -65,7 +65,7 @@ export async function ShaderTextDocs() {
         {
           title: "Molten",
           preview: (
-            <div className="flex h-full min-h-[440px] w-full items-center justify-center bg-zinc-200/70 px-6 py-14 dark:bg-[#0a0a0f]">
+            <div className="flex h-full min-h-[520px] w-full items-center justify-center bg-zinc-200/70 px-6 py-14 dark:bg-[#0a0a0f]">
               <ShaderTextFitPreview
                 text="DAVINCIUI"
                 preset="lava"
