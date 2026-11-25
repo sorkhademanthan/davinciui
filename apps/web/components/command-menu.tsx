@@ -38,6 +38,9 @@ import { Kbd, KbdGroup } from "@workspace/ui/components/kbd"
 import { docsConfig } from "@/config/docs"
 import { navigation } from "@/config/navigation"
 import { docsHeadings } from "@/lib/docs-headings"
+import { getComponent } from "@/registry"
+import { getDocsSlugs } from "@/components/docs/lazy-registry"
+import { isHiddenComponentSlug } from "@/lib/hidden-components"
 
 interface CommandMenuItem {
   value: string
@@ -260,6 +263,20 @@ const commandGroups: CommandMenuGroup[] = [
         icon: <CircleDashed />,
       }),
     ),
+  },
+  {
+    value: "All Components",
+    items: getDocsSlugs()
+      .filter((slug) => !isHiddenComponentSlug(slug))
+      .map((slug) => {
+        const c = getComponent(slug)
+        return createItem("All Components", {
+          title: c?.title ?? slug,
+          subtitle: c?.category ?? "Component",
+          href: `/experience/components/${slug}`,
+          icon: <CircleDashed />,
+        })
+      }),
   },
   HEADINGS_GROUP,
   {
