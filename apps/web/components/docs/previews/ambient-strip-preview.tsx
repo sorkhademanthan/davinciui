@@ -8,7 +8,6 @@ export function AmbientStripPreview() {
     <AmbientStrip
       items={ambientStripDemoItems}
       loop
-      badge="Hover to expand · drag or scroll"
       className="h-full min-h-[520px]"
     />
   );

@@ -29,7 +29,7 @@ const items = [
   },
 ]
 
-<AmbientStrip items={items} badge="Hover to expand" />`;
+<AmbientStrip items={items} />`;
 
 const usageCode = `import { AmbientStrip, type AmbientStripItem } from "@/components/ui/ambient-strip"
 
