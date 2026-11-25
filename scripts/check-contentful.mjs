@@ -91,7 +91,7 @@ if (!space || !accessToken) {
 const params = new URLSearchParams({
   content_type: "component",
   include: "2",
-  limit: "100",
+  limit: "500",
   order: "fields.order",
 });
 const url = `https://cdn.contentful.com/spaces/${space}/environments/${environment}/entries?${params}`;

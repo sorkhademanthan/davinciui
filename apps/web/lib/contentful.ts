@@ -57,7 +57,7 @@ export async function getHomePreviewMedia(): Promise<HomePreviewOverrides> {
   const params = new URLSearchParams({
     content_type: "component",
     include: "2",
-    limit: "100",
+    limit: "500",
   });
   const url = `https://cdn.contentful.com/spaces/${space}/environments/${environment}/entries?${params}`;
 
