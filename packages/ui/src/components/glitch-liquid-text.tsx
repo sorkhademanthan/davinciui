@@ -425,7 +425,7 @@ interface EngineSettings {
 export function GlitchLiquidText({
   text = "DAVINCIUI",
   fontFamily = "Anton",
-  fontSize = 250,
+  fontSize = 160,
   fontWeight = 400,
   lineHeight = 1.2,
   letterSpacing = 0,

@@ -12,7 +12,7 @@ const usageCode = `import { GlitchLiquidText } from "@/components/ui/glitch-liqu
 <GlitchLiquidText
   text="DAVINCIUI"
   fontFamily="Anton"
-  fontSize={250}
+  fontSize={160}
   lineHeight={1.2}
   backgroundColor="#080808"
   textColor="#ffffff"
@@ -26,7 +26,7 @@ const defaultCode = `import { GlitchLiquidText } from "@/components/ui/glitch-li
 
 <GlitchLiquidText
   text="DAVINCIUI"
-  fontSize={250}
+  fontSize={160}
   lineHeight={1.2}
   distortionStrength={0.42}
   liquidStrength={1}
@@ -136,7 +136,7 @@ export async function GlitchLiquidTextDocs() {
         {
           name: "fontSize",
           type: "number",
-          default: "250",
+          default: "160",
           description:
             "Base type size in CSS px before responsive fit scaling.",
         },

@@ -7,7 +7,7 @@ import { createComponentPlayground } from "@/components/docs/previews/generic-pl
 const GLITCH_PLAYGROUND_DEFAULTS = {
   text: "DAVINCIUI",
   fontFamily: "Anton",
-  fontSize: 250,
+  fontSize: 160,
   lineHeight: 1.2,
   textColor: "#ffffff",
   backgroundColor: "#080808",
@@ -182,7 +182,7 @@ export const {
   defaults: {
     text: "DAVINCIUI",
     fontFamily: "Anton",
-    fontSize: 250,
+    fontSize: 160,
     lineHeight: 1.2,
     textColor: "#ffffff",
     backgroundColor: "#080808",
