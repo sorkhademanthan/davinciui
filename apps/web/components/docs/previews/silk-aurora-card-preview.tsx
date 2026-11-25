@@ -18,7 +18,7 @@ export function SilkAuroraCardPreview() {
         className="h-full w-full min-h-0"
       />
       <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center px-3 text-center">
-        <span className="whitespace-nowrap text-[clamp(1.7rem,11cqi,3.8rem)] font-black uppercase leading-none tracking-[-0.055em] text-white">
+        <span className="whitespace-nowrap text-[clamp(1.6rem,10cqi,3.4rem)] font-black uppercase leading-none tracking-[-0.055em] text-white">
           DAVINCIUI
         </span>
       </div>

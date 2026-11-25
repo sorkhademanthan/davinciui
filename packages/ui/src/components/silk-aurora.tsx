@@ -172,7 +172,7 @@ export interface SilkAuroraProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const HEADLINE_CLASS =
-  "max-w-[820px] text-[13cqi] font-semibold leading-[0.86] tracking-normal text-white md:text-[8cqi] lg:text-[6.4cqi]";
+  "max-w-[820px] text-[11cqi] font-semibold leading-[0.86] tracking-normal text-white md:text-[7cqi] lg:text-[5cqi]";
 
 export function SilkAurora({
   preset = "default",
