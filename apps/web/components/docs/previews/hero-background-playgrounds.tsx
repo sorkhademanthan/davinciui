@@ -9,10 +9,13 @@ type StageProps = Record<string, unknown>;
 
 function SilkAuroraStage(props: StageProps) {
   return (
-    <div className="relative h-full w-full overflow-hidden bg-[#060505]">
+    <div
+      className="relative h-full w-full overflow-hidden bg-[#060505]"
+      style={{ containerType: "inline-size" }}
+    >
       <SilkAurora className="h-full w-full min-h-0" {...props} />
       <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center px-4 text-center">
-        <span className="text-5xl font-black uppercase tracking-[-0.055em] text-white sm:text-6xl">
+          <span className="whitespace-nowrap text-[clamp(2.6rem,9cqi,9.5rem)] font-black uppercase leading-none tracking-[-0.055em] text-white">
           DAVINCIUI
         </span>
       </div>

@@ -99,13 +99,13 @@ export function InkFlowPreview() {
       <InkFlow {...config} />
 
       <div className="relative z-10 flex h-full min-h-[560px] items-center justify-center px-5 py-16 text-center">
-        <h2
-          className="whitespace-nowrap text-[clamp(1.75rem,12cqi,7rem)] font-black uppercase leading-none tracking-[-0.075em] text-[#24225f]"
-          style={{
-            WebkitTextStroke: "1px rgba(233, 225, 200, 0.36)",
-            textShadow: "0 8px 28px rgba(45, 42, 147, 0.2)",
-          }}
-        >
+         <h2
+           className="whitespace-nowrap text-[clamp(1.75rem,12cqi,7rem)] font-black uppercase leading-none tracking-[-0.075em] text-foreground"
+           style={{
+             WebkitTextStroke: "1px var(--background)",
+             textShadow: "0 8px 28px rgba(0, 0, 0, 0.18)",
+           }}
+         >
           DAVINCIUI
         </h2>
       </div>
