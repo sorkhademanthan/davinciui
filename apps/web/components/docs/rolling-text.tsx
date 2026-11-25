@@ -45,7 +45,7 @@ export async function RollingTextDocs() {
                 pattern="sequential"
                 rollDuration={1.6}
                 staggerDelay={0.06}
-                fontSize="clamp(2rem, 5vw, 3.5rem)"
+                fontSize="clamp(3rem, 8vw, 6rem)"
                 textColor="#f5f5f4"
                 backgroundColor="transparent"
               />
@@ -73,7 +73,7 @@ export async function RollingTextDocs() {
                 duplicateCount={12}
                 rollDuration={2.2}
                 blurIntensity={6}
-                fontSize="clamp(1.75rem, 4vw, 3rem)"
+                fontSize="clamp(2.5rem, 7vw, 5rem)"
                 textColor="#f5f5f4"
                 backgroundColor="transparent"
               />
@@ -151,7 +151,7 @@ export async function RollingTextDocs() {
         {
           name: "fontSize",
           type: "number | string",
-          default: "60",
+          default: "111",
           description:
             "Font size. Numbers become px; strings pass through. Roll geometry follows automatically.",
         },

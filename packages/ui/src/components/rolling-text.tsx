@@ -76,7 +76,7 @@ export const ROLLING_TEXT_DEFAULTS = {
   blurIntensity: 3,
   autoPlay: true,
   fontFamily: "Inter, sans-serif",
-  fontSize: 60,
+  fontSize: 111,
   fontWeight: 900,
   fontStyle: "normal",
   lineHeight: 1,
