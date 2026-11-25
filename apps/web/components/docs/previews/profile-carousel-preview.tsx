@@ -66,7 +66,7 @@ export const profileCarouselDemoProfiles: Profile[] = [
 
 export function ProfileCarouselPreview() {
   return (
-    <div className="flex h-full w-full items-center justify-center">
+    <div className="flex h-full min-h-[520px] w-full items-center justify-center">
       <ProfileCarousel profiles={profileCarouselDemoProfiles} initialIndex={0} />
     </div>
   );
