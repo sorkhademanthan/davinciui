@@ -76,7 +76,7 @@ export const SHADER_TEXT_DEFAULTS = {
   fontSize: 120,
   fontWeight: 800,
   fontStyle: "normal",
-  letterSpacing: 0,
+  letterSpacing: -2,
   lineHeight: 1,
   textAlign: "center",
   speed: 1,
@@ -456,6 +456,9 @@ function isFramerCanvas(): boolean {
 /* Component                                                           */
 /* ------------------------------------------------------------------ */
 
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect;
+
 export function ShaderText({
   text = SHADER_TEXT_DEFAULTS.text,
   fontFamily = SHADER_TEXT_DEFAULTS.fontFamily,
@@ -576,6 +579,34 @@ export function ShaderText({
     ],
   );
 
+  /*
+   * Keep the mask's viewBox pinned to the host's current layout box in the
+   * same commit that changes typography. `fontSize` can change asynchronously
+   * of the engine's ResizeObserver (the docs fit-preview recomputes it), so
+   * without this the mask could render for one frame using the previous
+   * normal-preview width while the glyphs already use the larger fullscreen
+   * size — clipping the leading/trailing letters until Replay remounts.
+   * Reading `clientWidth`/`clientHeight` after the DOM mutation is
+   * transform-independent, so the fullscreen scale animation cannot poison it.
+   */
+  useIsomorphicLayoutEffect(() => {
+    const host = hostRef.current;
+    if (!host) return;
+    const w = Math.max(0, Math.round(host.clientWidth));
+    const h = Math.max(0, Math.round(host.clientHeight));
+    if (w <= 0 || h <= 0) return;
+    setBox((prev) => (prev.w === w && prev.h === h ? prev : { w, h }));
+  }, [
+    lines,
+    fontFamily,
+    safeFontSize,
+    fontWeight,
+    fontStyle,
+    safeLetterSpacing,
+    safeLineHeight,
+    align,
+  ]);
+
   React.useEffect(() => {
     const host = hostRef.current;
     const canvas = canvasRef.current;
@@ -593,6 +624,8 @@ export function ShaderText({
     let onVisibility: (() => void) | null = null;
     let onLost: ((e: Event) => void) | null = null;
     let onRestored: (() => void) | null = null;
+    let syncRaf = 0;
+    let syncRaf2 = 0;
 
     const U: Record<string, WebGLUniformLocation | null> = {};
 
@@ -669,17 +702,39 @@ export function ShaderText({
       return true;
     }
 
+    /**
+     * Read the host's layout box, not its visual bounding rect.
+     *
+     * A parent can animate a CSS transform while this component's layout size
+     * has already settled (the docs fullscreen preview scales its pane from the
+     * card origin up to the viewport). `getBoundingClientRect()` would then
+     * report the mid-transition, scaled size and poison the SVG mask + WebGL
+     * backing store; the mask would be laid out for the smaller box while the
+     * element is stretched to 100% of the final box, clipping the glyphs.
+     * `clientWidth`/`clientHeight` are layout metrics and ignore transforms, so
+     * they always describe the final box the mask must cover. The host has no
+     * border and `overflow-hidden`, so the client box equals the padding box the
+     * absolutely-positioned canvas is inset into.
+     */
+    function readLayoutBox(): { width: number; height: number } {
+      if (!host) return { width: 0, height: 0 };
+      return {
+        width: Math.max(0, Math.round(host.clientWidth)),
+        height: Math.max(0, Math.round(host.clientHeight)),
+      };
+    }
+
     function resize() {
-      if (!gl || !canvas || !host) return;
-      const rect = host.getBoundingClientRect();
-      const cssW = Math.max(1, Math.round(rect.width));
-      const cssH = Math.max(1, Math.round(rect.height));
+      if (!gl || !canvas) return;
+      const { width: cssW, height: cssH } = readLayoutBox();
+      const safeW = Math.max(1, cssW);
+      const safeH = Math.max(1, cssH);
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       let eff = dpr * liveRef.current.resolution;
       eff = Math.min(Math.max(eff, 0.25), 2);
-      while (cssW * eff * (cssH * eff) > 3_500_000 && eff > 0.4) eff *= 0.9;
-      S.canvasW = Math.max(1, Math.floor(cssW * eff));
-      S.canvasH = Math.max(1, Math.floor(cssH * eff));
+      while (safeW * eff * (safeH * eff) > 3_500_000 && eff > 0.4) eff *= 0.9;
+      S.canvasW = Math.max(1, Math.floor(safeW * eff));
+      S.canvasH = Math.max(1, Math.floor(safeH * eff));
       if (canvas.width !== S.canvasW) canvas.width = S.canvasW;
       if (canvas.height !== S.canvasH) canvas.height = S.canvasH;
       gl.viewport(0, 0, S.canvasW, S.canvasH);
@@ -809,23 +864,66 @@ export function ShaderText({
     }
 
     const measure = () => {
-      const rect = host.getBoundingClientRect();
-      const w = Math.max(0, Math.round(rect.width));
-      const h = Math.max(0, Math.round(rect.height));
+      const { width: w, height: h } = readLayoutBox();
+      // Ignore a collapsed/hidden box (e.g. mid-mount) so we never build a
+      // degenerate mask that would reveal the unmasked canvas.
+      if (w <= 0 || h <= 0) return;
       setBox((prev) => (prev.w === w && prev.h === h ? prev : { w, h }));
     };
 
-    resize();
-    measure();
-    draw();
+    /**
+     * Single reinitialization pass: recalculate the host box, resize the WebGL
+     * backing store, refresh `u_resolution` and repaint. Every dependent value
+     * (mask viewBox, canvas size, DPR-aware resolution) is derived from the same
+     * `readLayoutBox()` snapshot, so they can never disagree.
+     */
+    function syncLayout(redraw = true) {
+      if (disposed) return;
+      resize();
+      measure();
+      if (!redraw) {
+        draw();
+      } else if (S.reduced || S.staticPreview) {
+        renderStatic();
+      } else {
+        kick();
+      }
+    }
+
+    /**
+     * Coalesce layout work onto animation frames. Waiting two frames lets an
+     * in-flight ancestor transition (e.g. the docs fullscreen scale animation)
+     * finish committing its layout without sampling a transient size; the
+     * layout-box measurement itself is already transform-independent.
+     */
+    function scheduleSync(redraw = true) {
+      if (disposed) return;
+      if (syncRaf) cancelAnimationFrame(syncRaf);
+      if (syncRaf2) {
+        cancelAnimationFrame(syncRaf2);
+        syncRaf2 = 0;
+      }
+      syncRaf = requestAnimationFrame(() => {
+        syncRaf = 0;
+        syncRaf2 = requestAnimationFrame(() => {
+          syncRaf2 = 0;
+          syncLayout(redraw);
+        });
+      });
+    }
+
+    syncLayout(false);
+    scheduleSync(false);
 
     if (typeof ResizeObserver !== "undefined") {
       resizeObserver = new ResizeObserver(() => {
         if (disposed) return;
-        resize();
-        measure();
-        if (S.reduced || S.staticPreview) renderStatic();
-        else kick();
+        // The layout box is already final inside a resize notification and is
+        // transform-invariant, so sync immediately (keeps the canvas/mask in
+        // lockstep with flex/pane changes) and re-check once the entry/exit
+        // transition has settled.
+        syncLayout();
+        scheduleSync();
       });
       resizeObserver.observe(host);
     }
@@ -860,8 +958,7 @@ export function ShaderText({
       destroyGL();
       if (initGL()) {
         setFailed(false);
-        resize();
-        measure();
+        syncLayout(false);
         syncLoopMode();
       } else {
         setFailed(true);
@@ -875,6 +972,8 @@ export function ShaderText({
     return () => {
       disposed = true;
       stop();
+      if (syncRaf) cancelAnimationFrame(syncRaf);
+      if (syncRaf2) cancelAnimationFrame(syncRaf2);
       document.removeEventListener("visibilitychange", onVisibility as () => void);
       if (reduceQuery && onReduceChange) {
         if (typeof reduceQuery.removeEventListener === "function") {
