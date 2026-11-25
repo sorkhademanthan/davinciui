@@ -77,7 +77,6 @@ export const {
   ],
   fixedProps: {
     items: ambientStripDemoItems,
-    badge: "Hover to expand · drag or scroll",
   },
   elementClassName: "h-full min-h-[520px]",
   stageClassName: "min-h-[520px]",
@@ -526,7 +525,7 @@ export const {
       section: "Navigation",
     },
   ],
-  stageClassName: "min-h-[420px]",
+  stageClassName: "min-h-[520px]",
   intro: "Control the profile deck's navigation and autoplay.",
 });
 
