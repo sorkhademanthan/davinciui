@@ -23,7 +23,8 @@
     "test:editorial-curtain-preloader": "node --test scripts/test-premium-preloader-path.mjs",
     "check:basic-preview": "node scripts/check-basic-preview-runtime.mjs",
     "contentful:check": "node scripts/check-contentful.mjs",
-    "contentful:migrate": "node scripts/migrate-to-contentful.cjs"
+    "contentful:migrate": "node scripts/migrate-to-contentful.cjs",
+    "test:video-preview-grid": "node scripts/verify-video-preview-grid.mjs"
   },
   "devDependencies": {
     "@workspace/eslint-config": "workspace:*",
