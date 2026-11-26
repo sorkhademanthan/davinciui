@@ -1,10 +1,6 @@
 import type React from "react";
 import type { Metadata, Viewport } from "next";
-import {
-  Geist,
-  JetBrains_Mono,
-  Instrument_Serif,
-} from "next/font/google";
+import localFont from "next/font/local";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Script from "next/script";
@@ -17,20 +13,22 @@ import { JsonLd } from "@/components/seo/json-ld";
 import { RouteScrollbarController } from "@/components/route-scrollbar-controller";
 import { siteConfig } from "@/lib/site";
 
-const fontSans = Geist({
-  subsets: ["latin"],
+const fontSans = localFont({
+  src: "../fonts/Geist-Variable.woff2",
+  weight: "100 900",
   variable: "--font-sans",
   display: "swap",
 });
 
-const fontMono = JetBrains_Mono({
-  subsets: ["latin"],
+const fontMono = localFont({
+  src: "../fonts/JetBrainsMono-Variable.woff2",
+  weight: "100 800",
   variable: "--font-mono",
   display: "swap",
 });
 
-const fontSerif = Instrument_Serif({
-  subsets: ["latin"],
+const fontSerif = localFont({
+  src: "../fonts/InstrumentSerif-Regular.woff2",
   weight: "400",
   variable: "--font-serif",
   display: "swap",

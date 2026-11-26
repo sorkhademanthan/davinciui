@@ -1,11 +1,14 @@
 "use client";
 
-import { Archivo_Narrow } from "next/font/google";
+import localFont from "next/font/local";
 import { FluidParticleText } from "@workspace/ui/components/fluid-particle-text";
 
 /* Reference fixture: Archivo Narrow 700, true viewport-filling stage.
    Fidelity is judged here — detached from the docs column layout. */
-const archivoNarrow = Archivo_Narrow({ weight: "700", subsets: ["latin"] });
+const archivoNarrow = localFont({
+  src: "../../../fonts/ArchivoNarrow-Bold.woff2",
+  weight: "700",
+});
 
 export default function FluidParticleTextDemoPage() {
   return (

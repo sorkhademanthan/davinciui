@@ -1,5 +1,5 @@
 import React from "react";
-import { Archivo_Narrow } from "next/font/google";
+import localFont from "next/font/local";
 import { FluidParticleText } from "@workspace/ui/components/fluid-particle-text";
 
 import { DocsPageLayout } from "@/components/docs-page-layout";
@@ -10,7 +10,10 @@ import {
 import { readComponentSource } from "@/lib/source-code";
 
 /* Reference typeface (confirmed from the published reference page). */
-const archivoNarrow = Archivo_Narrow({ weight: "700", subsets: ["latin"] });
+const archivoNarrow = localFont({
+  src: "../../fonts/ArchivoNarrow-Bold.woff2",
+  weight: "700",
+});
 
 const defaultCode = `import { FluidParticleText } from "@/components/ui/fluid-particle-text"
 
