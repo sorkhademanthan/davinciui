@@ -5,7 +5,6 @@ import type { DocsContentMap } from "../types";
 export const related = {
   "text-morph": {
     related: [
-      { title: "Text Reveal", href: "/docs/components/text-reveal" },
       { title: "Typography", href: "/docs/foundations/typography" },
       { title: "Motion", href: "/docs/foundations/motion" },
     ],

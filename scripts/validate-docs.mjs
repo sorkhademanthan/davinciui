@@ -79,10 +79,21 @@ const docsSlugs = fs
   .map((file) => file.replace(/\.tsx$/, ""))
   .sort();
 
+const hiddenSource = read(
+  path.join(root, "apps/web/lib/hidden-components.ts"),
+);
+const hiddenSlugs = new Set(
+  [...hiddenSource.matchAll(/"([^"]+)"/g)].map((match) => match[1]),
+);
+const visibleDocsSlugs = docsSlugs.filter((slug) => !hiddenSlugs.has(slug));
+
 const registrySlugs = objectKeys(read(registryFile)).sort();
 
 const categoriesSource = read(path.join(contentDir, "categories.ts"));
 const categorySlugs = mapKeys(categoriesSource).sort();
+const visibleCategorySlugs = categorySlugs.filter(
+  (slug) => !hiddenSlugs.has(slug),
+);
 
 const accessibilitySource = read(
   path.join(contentDir, "sections/accessibility.ts"),
@@ -102,20 +113,19 @@ const relatedSource = read(path.join(contentDir, "sections/related.ts"));
 const accessibilityKeys = mapKeys(accessibilitySource);
 const motionKeys = mapKeys(motionSource);
 
-for (const [label, slugs] of [
-  ["docs pages", docsSlugs],
-  ["registry entries", registrySlugs],
-  ["category map", categorySlugs],
+for (const [label, slugs, expected] of [
+  ["docs pages", docsSlugs, docsSlugs.length],
+  ["registry entries", registrySlugs, docsSlugs.length],
+  ["category map", visibleCategorySlugs, visibleDocsSlugs.length],
 ]) {
-  if (slugs.length !== docsSlugs.length) {
-    fail(
-      `${label}: expected ${docsSlugs.length} slugs, found ${slugs.length}.`,
-    );
+  if (slugs.length !== expected) {
+    fail(`${label}: expected ${expected} slugs, found ${slugs.length}.`);
   }
 }
 
-for (const slug of docsSlugs) {
-  if (!categorySlugs.includes(slug)) fail(`Category map is missing "${slug}".`);
+for (const slug of visibleDocsSlugs) {
+  if (!visibleCategorySlugs.includes(slug))
+    fail(`Category map is missing "${slug}".`);
   if (!registrySlugs.includes(slug)) fail(`Registry is missing "${slug}".`);
 }
 
@@ -125,7 +135,7 @@ for (const slug of [...new Set([...accessibilityKeys, ...motionKeys])]) {
   }
 }
 
-for (const slug of docsSlugs) {
+for (const slug of visibleDocsSlugs) {
   if (!accessibilityKeys.includes(slug)) {
     fail(`Missing accessibility note for "${slug}".`);
   }
