@@ -17,9 +17,7 @@ export async function BlockDisplay({ name }: { name: string }) {
   const highlightedFiles: HighlightedBlockFile[] = await Promise.all(
     item.files.map(async (file) => ({
       ...file,
-      highlightedContent: await highlightCode(file.content ?? "", "tsx", {
-        darkTheme: "dark-plus",
-      }),
+      highlightedContent: await highlightCode(file.content ?? "", "tsx"),
     })),
   );
 
