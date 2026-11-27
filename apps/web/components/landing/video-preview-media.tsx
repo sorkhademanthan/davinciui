@@ -11,7 +11,7 @@ import {
   type HomePreviewTheme,
 } from "@/lib/home-preview-media";
 
-const PREVIEW_MEDIA_VERSION = "6";
+const PREVIEW_MEDIA_VERSION = "7";
 
 type PreviewMediaContextValue = {
   overrides: HomePreviewOverrides;

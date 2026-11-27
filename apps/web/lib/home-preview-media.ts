@@ -146,25 +146,48 @@ export function contentfulPreviewSource(
   return { src: absoluteAssetUrl(url), type: "video/mp4" };
 }
 
+/**
+ * Components whose static poster should use one theme variant for both modes.
+ * `sunlight-effect` ships a single green cover, so light and dark cards share
+ * the same image instead of falling back to the (blank) dark frame.
+ */
+const POSTER_THEME_OVERRIDES: Partial<Record<string, HomePreviewTheme>> = {
+  "sunlight-effect": "light",
+};
+
+/**
+ * Single source of truth for a card poster path. The poster is always named
+ * after the component slug, so a card can never point at another component's
+ * image by accident.
+ */
+export function homePreviewPoster(
+  slug: string,
+  theme: HomePreviewTheme,
+): string {
+  const posterTheme = POSTER_THEME_OVERRIDES[slug] ?? theme;
+  return `${BASE}/${slug}/${slug}-${posterTheme}.webp`;
+}
+
 export function homePreviewMedia(
   slug: string,
   theme: HomePreviewTheme,
   overrides?: HomePreviewOverrides,
 ): HomePreviewMedia {
   const path = `${BASE}/${slug}/${slug}-${theme}`;
+  const poster = homePreviewPoster(slug, theme);
   const localWebm = { src: `${path}.webm`, type: "video/webm" } as const;
   const localMp4 = { src: `${path}.mp4`, type: "video/mp4" } as const;
   const contentful = contentfulPreviewSource(slug, theme, overrides);
 
   if (CONTENTFUL_PREVIEW_SLUGS.has(slug)) {
     return {
-      poster: `${path}.webp`,
+      poster,
       sources: contentful ? [contentful] : [],
     };
   }
 
   return {
-    poster: `${path}.webp`,
+    poster,
     sources: [localWebm, localMp4],
   };
 }
