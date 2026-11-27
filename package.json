@@ -41,6 +41,16 @@
   "engines": {
     "node": ">=20"
   },
+  "pnpm": {
+    "overrides": {
+      "handlebars": "4.7.10",
+      "tar": "7.5.24",
+      "basic-ftp": "5.3.1",
+      "source-map-js": "1.2.4",
+      "dompurify": "3.5.0",
+      "fflate": "0.8.3"
+    }
+  },
   "dependencies": {
     "contentful-management": "^12.21.0",
     "dialkit": "^2.2.1",
