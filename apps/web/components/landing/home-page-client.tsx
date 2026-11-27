@@ -50,10 +50,10 @@ const GeometricTrailCursorCardPreview = dynamic(
     ).then((m) => m.GeometricTrailCursorCardPreview),
   { ssr: false },
 );
-const PixelFlowCardPreview = dynamic(
+const NeonMeshBGCardPreview = dynamic(
   () =>
-    import("@/components/docs/previews/pixel-flow-card-preview").then(
-      (m) => m.PixelFlowCardPreview,
+    import("@/components/docs/previews/neon-mesh-bg-card-preview").then(
+      (m) => m.NeonMeshBGCardPreview,
     ),
   { ssr: false },
 );
@@ -64,11 +64,11 @@ const TextVideoMaskPlayground = dynamic(
     ),
   { ssr: false },
 );
-const PixelWipeCarouselCardPreview = dynamic(
+const GSAPTextCardPreview = dynamic(
   () =>
-    import(
-      "@/components/docs/previews/pixel-wipe-carousel-card-preview"
-    ).then((m) => m.PixelWipeCarouselCardPreview),
+    import("@/components/docs/previews/gsap-text-card-preview").then(
+      (m) => m.GSAPTextCardPreview,
+    ),
   { ssr: false },
 );
 const ScrollRevealImageAutoCardPreview = dynamic(
@@ -78,10 +78,10 @@ const ScrollRevealImageAutoCardPreview = dynamic(
     ).then((m) => m.ScrollRevealImageAutoCardPreview),
   { ssr: false },
 );
-const GSAPTextCardPreview = dynamic(
+const CurvedInlineTypeCardPreview = dynamic(
   () =>
-    import("@/components/docs/previews/gsap-text-card-preview").then(
-      (m) => m.GSAPTextCardPreview,
+    import("@/components/docs/previews/curved-inline-type-card-preview").then(
+      (m) => m.CurvedInlineTypeCardPreview,
     ),
   { ssr: false },
 );
@@ -301,30 +301,30 @@ export default function Home() {
                 className="lg:col-span-3"
               >
                 <FeatureCard
-                  href="/experience/components/pixel-wipe-carousel"
-                  slug="pixel-wipe-carousel"
-                  title="Pixel wipe carousel"
-                  blurb="Pixel-dissolve slide transition"
-                  tag="Carousel"
+                  href="/experience/components/gsap-text"
+                  slug="gsap-text"
+                  title="GSAP Text"
+                  blurb="Layered 3D kinetic typography in motion"
+                  tag="Typography"
                   previewHeightClass="h-[320px] sm:h-[380px]"
                 >
-                  <div className="pointer-events-none absolute inset-0">
-                    <PixelWipeCarouselCardPreview />
+                  <div className="absolute inset-0">
+                    <GSAPTextCardPreview fontSize={40} />
                   </div>
                 </FeatureCard>
               </motion.div>
 
               <motion.div variants={cardVariants} className="lg:col-span-3">
                 <FeatureCard
-                  href="/experience/components/sunlight-effect"
-                  slug="sunlight-effect"
-                  title="Sunlight effect"
-                  blurb="Light sweep across the surface"
-                  tag="Effect"
+                  href="/experience/components/neon-mesh-bg"
+                  slug="neon-mesh-bg"
+                  title="Neon Mesh BG"
+                  blurb="Evolving purple neon mesh backdrop"
+                  tag="Background"
                   previewHeightClass="h-[320px] sm:h-[380px]"
                 >
                   <div className="pointer-events-none absolute inset-0">
-                    <SunlightEffectCardPreview />
+                    <NeonMeshBGCardPreview />
                   </div>
                 </FeatureCard>
               </motion.div>
@@ -346,43 +346,43 @@ export default function Home() {
 
               <motion.div variants={cardVariants} className="lg:col-span-4">
                 <FeatureCard
-                  href="/experience/components/pixel-flow"
-                  slug="pixel-flow"
-                  title="Pixel flow"
-                  blurb="Generative particle typography"
-                  tag="Generative"
-                  previewHeightClass="h-[280px] sm:h-[340px]"
-                >
-                  <div className="pointer-events-none absolute inset-0">
-                    <PixelFlowCardPreview />
-                  </div>
-                </FeatureCard>
-              </motion.div>
-
-              <motion.div variants={cardVariants} className="lg:col-span-4">
-                <FeatureCard
-                  href="/experience/components/gsap-text"
-                  slug="gsap-text"
-                  title="GSAP Text"
-                  blurb="Layered 3D kinetic typography in motion"
-                  tag="Typography"
-                >
-                  <div className="absolute inset-0">
-                    <GSAPTextCardPreview fontSize={40} />
-                  </div>
-                </FeatureCard>
-              </motion.div>
-
-              <motion.div variants={cardVariants} className="lg:col-span-4">
-                <FeatureCard
                   href="/experience/components/text-video-mask"
                   slug="text-video-mask"
                   title="Text video mask"
                   blurb="Video clipped inside bold type"
                   tag="Typography"
+                  previewHeightClass="h-[280px] sm:h-[340px]"
                 >
                   <div className="pointer-events-none absolute inset-0">
                     <TextVideoMaskPlayground />
+                  </div>
+                </FeatureCard>
+              </motion.div>
+
+              <motion.div variants={cardVariants} className="lg:col-span-4">
+                <FeatureCard
+                  href="/experience/components/sunlight-effect"
+                  slug="sunlight-effect"
+                  title="Sunlight effect"
+                  blurb="Light sweep across the surface"
+                  tag="Effect"
+                >
+                  <div className="pointer-events-none absolute inset-0">
+                    <SunlightEffectCardPreview />
+                  </div>
+                </FeatureCard>
+              </motion.div>
+
+              <motion.div variants={cardVariants} className="lg:col-span-4">
+                <FeatureCard
+                  href="/experience/components/curved-inline-type"
+                  slug="curved-inline-type"
+                  title="Curved Inline Type"
+                  blurb="Headlines ride an invisible vertical drum"
+                  tag="Typography"
+                >
+                  <div className="pointer-events-none absolute inset-0">
+                    <CurvedInlineTypeCardPreview />
                   </div>
                 </FeatureCard>
               </motion.div>
