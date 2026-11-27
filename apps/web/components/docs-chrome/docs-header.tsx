@@ -2,15 +2,19 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { Menu, Search } from "lucide-react"
 
 import { CommandMenu } from "@/components/command-menu"
 import { GitHubButton } from "@/components/github-button"
 import { DavinciUILogo } from "@/components/logos/davinci-ui-logo"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { SITE_NAV_ITEMS, isSiteNavItemActive } from "@/lib/site-nav"
+import { cn } from "@/lib/utils"
 import { DocsMobileNav } from "./docs-mobile-nav"
 export function DocsHeader() {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const pathname = usePathname()
 
   return (
     <>
@@ -39,6 +43,29 @@ export function DocsHeader() {
                 DAVINCIUI
               </span>
             </Link>
+            <nav
+              aria-label="Primary"
+              className="ml-2 hidden items-center gap-0.5 text-sm min-[1120px]:flex"
+            >
+              {SITE_NAV_ITEMS.map((item) => {
+                const active = isSiteNavItemActive(pathname, item.href)
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    aria-current={active ? "page" : undefined}
+                    className={cn(
+                      "inline-flex h-9 items-center gap-1 whitespace-nowrap rounded-md px-2 transition-colors duration-200 ease-out",
+                      active
+                        ? "text-foreground"
+                        : "text-foreground/55 hover:text-foreground/80",
+                    )}
+                  >
+                    {item.label}
+                  </Link>
+                )
+              })}
+            </nav>
           </div>
 
           <div className="flex items-center justify-center gap-2">
