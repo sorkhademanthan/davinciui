@@ -25,8 +25,9 @@
     "contentful:check": "node scripts/check-contentful.mjs",
     "contentful:migrate": "node scripts/migrate-to-contentful.cjs",
     "test:video-preview-grid": "node scripts/verify-video-preview-grid.mjs",
-    "posters": "bash scripts/generate-posters.sh",
-    "prebuild": "pnpm run posters -- --only-missing || true"
+    "posters": "node scripts/generate-posters.js",
+    "prebuild": "pnpm run posters -- --only-missing || true",
+    "posters:check": "node scripts/generate-posters.js --check"
   },
   "devDependencies": {
     "@workspace/eslint-config": "workspace:*",
