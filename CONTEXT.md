@@ -16,14 +16,19 @@
 
 - Project: DavinciUI monorepo (Next.js app `apps/web`, component lib `packages/ui`, registry in `apps/web/registry/index.ts` + `apps/web/public/r/*`).
 - Branch: `main`
-- HEAD: `b8400e1` — `feat: add visual sitemap and registry verification` (2026-11-22)
-- Working tree: **has uncommitted changes** — the docs-site rebuild (see Active task) plus the earlier fluid-particle-text/scroll-media/blocks fixes and untracked `CONTEXT.md`/poster assets.
+- HEAD: `20f8f81` — `docs(context): update handoff notes for landing cards and docs nav` (2026-11-27)
+- Working tree: clean after the 2026-11-27 commit batch (8 commits: poster generator + regenerated posters + landing cards + docs nav) pushed to `origin/main`; Vercel production deploy succeeded.
 - Package manager: pnpm (`packageManager: pnpm@10.4.1`); repo also has a stale `bun.lock`.
 - Local artifacts: `tmp/` is gitignored (preview screenshots/logs); `.next/` gitignored.
 
 ## Active task
 
-- **Docs navbar: add primary nav (Docs / Components / Design System / Blocks / MCP) — 2026-11-27 — DONE / browser-verified; uncommitted.**
+- **Commit + production deploy — 2026-11-27 — DONE.**
+  - Committed the working tree as 8 logical commits (`a421b20` poster generator + scripts, `675e217` new gallery posters, `a254bae` regenerated posters, `53e8196` removed stray posters, `3e8899d` landing card refresh, `51f4207` green sunlight poster, `6d36be9` docs primary nav, `20f8f81` context notes) and pushed to `origin/main`.
+  - Pre-push checks: `pnpm validate:registry` OK (169), `pnpm validate:docs` all pass (145), `pnpm --filter web build` green (BUILD_ID written).
+  - Vercel git deploy triggered by the push → production **success** (`BZoYv87hkBA2Tn5FYcnrEUfAorny`). Verified live: `davinciui.vercel.app` `/` shows Neon Mesh BG + Curved Inline Type and no Pixel wipe carousel, references `sunlight-effect-light.webp?v=7` (200, 11,192 bytes); `/docs` shows all 5 primary nav links. `davinciui.com` redirects (308) to the same content.
+
+- **Docs navbar: add primary nav (Docs / Components / Design System / Blocks / MCP) — 2026-11-27 — DONE / browser-verified; committed + deployed.**
   - New `apps/web/lib/site-nav.ts`: `SITE_NAV_ITEMS` + `isSiteNavItemActive(pathname, href)` (same active logic as `site-header.tsx`; `/docs/theming` intentionally matches both Docs and Design System).
   - `apps/web/components/docs-chrome/docs-header.tsx`: added the 5 nav links after the logo (`nav[aria-label="Primary"]`, `hidden ... min-[1120px]:flex`; below that the docs sidebar is visible, so no overlap). Full search stays; verified nav/search gap ≥16px at 1120/1280 and no horizontal overflow.
   - `apps/web/components/docs-chrome/docs-mobile-nav.tsx`: added the same primary nav section above the sidebar (`usePathname` + shared helper) so it is reachable in the mobile drawer.
