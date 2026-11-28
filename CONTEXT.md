@@ -16,37 +16,40 @@
 
 - Project: DavinciUI monorepo (Next.js app `apps/web`, component lib `packages/ui`, registry in `apps/web/registry/index.ts` + `apps/web/public/r/*`).
 - Branch: `main`
-- HEAD: `5ef583f` — `docs(context): record security hardening and Next 16.4.6 upgrade` (2026-11-27)
-- Working tree: **dirty** with uncommitted launch-readiness Day 1 + Day 2 changes (canonical host, PostHog removal, cache/API hardening, hygiene, CI; generated per-slug routes + playground barrel split). Repo is **public**.
+- HEAD: `be92709` — `fix(sitemap): avoid RSC prefetch 404 for sitemap.xml` (2026-11-28)
+- Working tree: clean after launch-readiness Day 1–3 (18 commits `5ef583f..8d56e54` plus the sitemap fix `be92709`); production deployed and verified. Repo is **public**.
 - Package manager: pnpm (`packageManager: pnpm@10.4.1`); stale `bun.lock` was removed in Day 1.
 - Local artifacts: `tmp/` is gitignored (preview screenshots/logs); `.next/` gitignored.
 
 ## Active task
 
-- **Launch-readiness Day 3: SEO/sitemap/canonical QA — 2026-11-28 — IN PROGRESS (core checks green).**
-  - `apps/web/lib/sitemap-entries.ts` no longer imports `getDocsSlugs` from `components/docs/lazy-registry`; it now uses generated `DOCS_SLUGS` filtered through `isHiddenComponentSlug`, so hidden components are excluded from `/sitemap.xml`.
-  - `scripts/generate-component-routes.mjs` now writes `DOCS_SLUGS` from **visible** docs entries only (**135**, not 140); hidden docs are still skipped for generated routes.
+- **Launch-readiness Day 3: SEO/sitemap/canonical QA + production verification — 2026-11-28 — DONE.**
+  - `apps/web/lib/sitemap-entries.ts` no longer imports `getDocsSlugs` from `components/docs/lazy-registry`; it uses generated `DOCS_SLUGS` filtered through `isHiddenComponentSlug`, so hidden components are excluded from `/sitemap.xml`.
+  - `scripts/generate-component-routes.mjs` writes `DOCS_SLUGS` from **visible** docs entries only (**134** after the scroll-sync-gallery removal); it generates 134 docs + 134 experience routes and skips 5 hidden docs entries.
   - Added self-referencing canonicals for `/`, `/docs`, `/docs/components`, `/blocks` (sponsors/sitemap/privacy already had them; generated component pages already had them).
-  - Verified after clean `next start -p 3100` restart: `/sitemap.xml` has **169 URLs**, all `200` locally (`tmp/check-sitemap-urls.mjs`); 0 hidden slugs in sitemap; every checked page canonical is `https://www.davinciui.com...`; `typecheck` + targeted ESLint clean; `pnpm --filter web build` green (406/406).
-  - Responsive/console QA (`tmp/day3-qa.mjs`): 9 routes × 1440/390 (home, docs, docs components index, button, docs/experience spiral, blocks, sponsors, sitemap) → all `200`, `overflow=0`, `brokenImg=0`, 0 page errors; only local 404s are Vercel Analytics scripts (`/_vercel/insights|speed-insights`), expected off-Vercel.
-  - Ops smoke: `/r/*` + `/sitemap.xml` 1h SWR, `/media/*` 7d, `/api/docs-og` immutable, `/api/github-stars` 1h; CSP report-only present; no `X-Powered-By`.
-  - Remaining Day 3: commit Day 1–3 changes and deploy, then verify production.
+  - Production `/sitemap.xml`: **168 URLs**, all `200` (`tmp/check-prod-sitemap.mjs`); 0 hidden slugs; every URL on `https://www.davinciui.com`.
+  - Production deploy `8d56e54` READY, then `be92709` READY. Canonicals are `www` on home/docs/components/blocks/sponsors/sitemap/privacy/button; hidden docs routes `307` to the gallery; `robots.txt` points at the `www` sitemap.
+  - Production QA 18/18 (`tmp/day3-prod-qa.mjs`): 9 routes × 1440/390 → `200`, `overflow=0`, `brokenImg=0`, 0 console/page errors.
+  - Production JS: `/docs/components/button` **434.3 kB**; `/experience/components/spiral-media-gallery` **539.3 kB** (under the 550 kB bar); Three.js chunks are not preloaded on experience detail pages.
+  - Ops: `/r/*` + `/sitemap.xml` 1h SWR, `/media/*` 7d; CSP report-only is Umami-only; no `X-Powered-By`. Vercel normalizes `/api/docs-og` to `public, immutable` and `/api/github-stars` to `public` (local `next start` shows the full `s-maxage`); revisit only if CDN API caching matters.
+  - Found + fixed a `/sitemap` RSC prefetch 404 by using a plain `<a>` for `/sitemap.xml` (`be92709`).
+  - Remaining launch work: optional Dependabot triage (55 default-branch alerts; `pnpm audit --prod` is 0), then announcement/indexing.
 
-- **Launch-readiness Day 2: performance architecture — 2026-11-28 — DONE locally / uncommitted.**
+- **Launch-readiness Day 2: performance architecture — 2026-11-28 — DONE / committed.**
   - Goal: stop detail pages preloading every preview/chunk; reduce JS to the launch bar (~≤550 kB per component page).
   - New shared page components: `apps/web/components/docs-component-page.tsx` (`docsMetadata`, `DocsComponentPage`) and `apps/web/components/experience-component-page.tsx` (`experienceMetadata`, `ExperienceComponentPage`, `ExperienceFallbackPage`).
   - `apps/web/app/docs/components/[slug]/page.tsx` + `apps/web/app/experience/components/[slug]/page.tsx` are now **fallback-only** dynamic routes: no `getDocsImporter`/`getDocsSlugs` runtime imports; docs fallback redirects to the gallery; experience fallback renders registry-only components; `dropdown → dropdown-menu` alias preserved.
-  - `scripts/generate-component-routes.mjs` parses quoted **and** bare keys in `components/docs/lazy-registry.ts`, validates exports/files/registry, cleans stale generated dirs, and writes **135 docs + 135 experience** static route files; skips 5 hidden docs entries (140 docs map / 169 registry / 10 hidden). It also writes `apps/web/lib/docs-slugs.generated.ts` (`DOCS_SLUGS`, 135 visible slugs).
+  - `scripts/generate-component-routes.mjs` parses quoted **and** bare keys in `components/docs/lazy-registry.ts`, validates exports/files/registry, cleans stale generated dirs, and writes **134 docs + 134 experience** static route files; skips 5 hidden docs entries. It also writes `apps/web/lib/docs-slugs.generated.ts` (`DOCS_SLUGS`, 134 visible slugs).
   - Generated route files are gitignored (`.gitignore` uses escaped `\[slug\]` negations); `apps/web/lib/docs-slugs.generated.ts` is **not** ignored and should be committed.
   - `apps/web/package.json`: `generate:routes`, `predev`, `prelint`, `pretypecheck`; `build` = posters → `registry:blocks` → `generate:routes` → `next build --webpack`.
-  - `scripts/split-playground-barrels.mjs` split 7 `*-playgrounds.tsx` barrels via TS AST into **42** per-component files in `apps/web/components/docs/previews/playgrounds/<slug>.tsx`; rewrote 42 docs component imports.
+  - `scripts/split-playground-barrels.mjs` split 7 `*-playgrounds.tsx` barrels via TS AST into **41** per-component files in `apps/web/components/docs/previews/playgrounds/<slug>.tsx`; rewrote 41 docs component imports.
   - `apps/web/components/command-menu.tsx` + `apps/web/app/sitemap/page.tsx` now import generated `DOCS_SLUGS` instead of `getDocsSlugs()`; this removed the remaining page-level lazy-registry preload path.
   - Verified: `node scripts/generate-component-routes.mjs` → 135+135 (skipped 5); `pnpm --filter web typecheck` clean; ESLint clean on command menu/sitemap/generated slug file; `pnpm --filter web build` green.
   - Authoritative production `next start -p 3100` measurements after a **clean** port kill/restart (earlier lower docs numbers were from a stale server; do not reuse them): `/docs` 759.1 kB total / 392.0 kB JS / 114 resources; `/docs/components/button` 668.0 kB / 409.4 kB JS / 89; `/docs/components/spiral-media-gallery` 912.6 kB / 418.9 kB JS / 79; `/experience/components/spiral-media-gallery` 1202.1 kB / 506.6 kB JS / 143; `/experience/components/neon-mesh-bg` 958.7 kB / 503.3 kB JS / 137. The Three.js chunks (`12311578`, `192f0001`, `390f1a5f`) are **no longer preloaded** on experience detail pages. All component pages are under the 550 kB JS bar.
   - Note: `/experience` pages still make ~54 fetches and load ~239 kB of non-JS assets; `/docs/components/spiral-media-gallery` includes ~245 kB of images (5 requests). Next optimization, if needed, is image/asset policy rather than JS.
-  - `CONTEXT.md` updated (this entry); Day 1 + Day 2 still uncommitted.
+  - `CONTEXT.md` updated; Day 1 + Day 2 committed in the 18-commit launch batch.
 
-- **Launch-readiness Day 1 (5-day plan) — 2026-11-27 — DONE locally / uncommitted.**
+- **Launch-readiness Day 1 (5-day plan) — 2026-11-27 — DONE / committed.**
   - Decisions: canonical host **`https://www.davinciui.com`** (apex already 308s to www); **remove PostHog for launch**; 5-day launch-ready scope.
   - Canonical: `lib/site.ts`, `config/docs.ts`, `lib/docs-page-markdown.ts`, `page-context-menu.tsx`, `llms.txt`, `llms-full.txt`, `api/docs-markdown` now emit `www`. Registry install examples intentionally stay on apex (public registry alias). Verified live-style: canonical/og:url/robots/sitemap all `https://www.davinciui.com`.
   - PostHog removed: `posthog-js` dependency + all imports; deleted `lib/posthog-client.ts`, `instrumentation-client.ts`; `lib/analytics.ts` is now a cookieless Umami `track()` helper; landing/sponsors/copy/global-error converted; CSP + privacy policy + `.env.example` updated (no cookie banner claim).
