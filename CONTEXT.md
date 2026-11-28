@@ -16,12 +16,46 @@
 
 - Project: DavinciUI monorepo (Next.js app `apps/web`, component lib `packages/ui`, registry in `apps/web/registry/index.ts` + `apps/web/public/r/*`).
 - Branch: `main`
-- HEAD: `8f48f8e` — `chore(security): upgrade next to 16.4.6 and patch vulnerable deps` (2026-11-27)
-- Working tree: clean after the 2026-11-27 security commit (`8f48f8e`) pushed to `origin/main`; production deploy triggered by the push. Repo is now **public**.
-- Package manager: pnpm (`packageManager: pnpm@10.4.1`); repo also has a stale `bun.lock`.
+- HEAD: `5ef583f` — `docs(context): record security hardening and Next 16.4.6 upgrade` (2026-11-27)
+- Working tree: **dirty** with uncommitted launch-readiness Day 1 + Day 2 changes (canonical host, PostHog removal, cache/API hardening, hygiene, CI; generated per-slug routes + playground barrel split). Repo is **public**.
+- Package manager: pnpm (`packageManager: pnpm@10.4.1`); stale `bun.lock` was removed in Day 1.
 - Local artifacts: `tmp/` is gitignored (preview screenshots/logs); `.next/` gitignored.
 
 ## Active task
+
+- **Launch-readiness Day 3: SEO/sitemap/canonical QA — 2026-11-28 — IN PROGRESS (core checks green).**
+  - `apps/web/lib/sitemap-entries.ts` no longer imports `getDocsSlugs` from `components/docs/lazy-registry`; it now uses generated `DOCS_SLUGS` filtered through `isHiddenComponentSlug`, so hidden components are excluded from `/sitemap.xml`.
+  - `scripts/generate-component-routes.mjs` now writes `DOCS_SLUGS` from **visible** docs entries only (**135**, not 140); hidden docs are still skipped for generated routes.
+  - Added self-referencing canonicals for `/`, `/docs`, `/docs/components`, `/blocks` (sponsors/sitemap/privacy already had them; generated component pages already had them).
+  - Verified after clean `next start -p 3100` restart: `/sitemap.xml` has **169 URLs**, all `200` locally (`tmp/check-sitemap-urls.mjs`); 0 hidden slugs in sitemap; every checked page canonical is `https://www.davinciui.com...`; `typecheck` + targeted ESLint clean; `pnpm --filter web build` green (406/406).
+  - Responsive/console QA (`tmp/day3-qa.mjs`): 9 routes × 1440/390 (home, docs, docs components index, button, docs/experience spiral, blocks, sponsors, sitemap) → all `200`, `overflow=0`, `brokenImg=0`, 0 page errors; only local 404s are Vercel Analytics scripts (`/_vercel/insights|speed-insights`), expected off-Vercel.
+  - Ops smoke: `/r/*` + `/sitemap.xml` 1h SWR, `/media/*` 7d, `/api/docs-og` immutable, `/api/github-stars` 1h; CSP report-only present; no `X-Powered-By`.
+  - Remaining Day 3: commit Day 1–3 changes and deploy, then verify production.
+
+- **Launch-readiness Day 2: performance architecture — 2026-11-28 — DONE locally / uncommitted.**
+  - Goal: stop detail pages preloading every preview/chunk; reduce JS to the launch bar (~≤550 kB per component page).
+  - New shared page components: `apps/web/components/docs-component-page.tsx` (`docsMetadata`, `DocsComponentPage`) and `apps/web/components/experience-component-page.tsx` (`experienceMetadata`, `ExperienceComponentPage`, `ExperienceFallbackPage`).
+  - `apps/web/app/docs/components/[slug]/page.tsx` + `apps/web/app/experience/components/[slug]/page.tsx` are now **fallback-only** dynamic routes: no `getDocsImporter`/`getDocsSlugs` runtime imports; docs fallback redirects to the gallery; experience fallback renders registry-only components; `dropdown → dropdown-menu` alias preserved.
+  - `scripts/generate-component-routes.mjs` parses quoted **and** bare keys in `components/docs/lazy-registry.ts`, validates exports/files/registry, cleans stale generated dirs, and writes **135 docs + 135 experience** static route files; skips 5 hidden docs entries (140 docs map / 169 registry / 10 hidden). It also writes `apps/web/lib/docs-slugs.generated.ts` (`DOCS_SLUGS`, 135 visible slugs).
+  - Generated route files are gitignored (`.gitignore` uses escaped `\[slug\]` negations); `apps/web/lib/docs-slugs.generated.ts` is **not** ignored and should be committed.
+  - `apps/web/package.json`: `generate:routes`, `predev`, `prelint`, `pretypecheck`; `build` = posters → `registry:blocks` → `generate:routes` → `next build --webpack`.
+  - `scripts/split-playground-barrels.mjs` split 7 `*-playgrounds.tsx` barrels via TS AST into **42** per-component files in `apps/web/components/docs/previews/playgrounds/<slug>.tsx`; rewrote 42 docs component imports.
+  - `apps/web/components/command-menu.tsx` + `apps/web/app/sitemap/page.tsx` now import generated `DOCS_SLUGS` instead of `getDocsSlugs()`; this removed the remaining page-level lazy-registry preload path.
+  - Verified: `node scripts/generate-component-routes.mjs` → 135+135 (skipped 5); `pnpm --filter web typecheck` clean; ESLint clean on command menu/sitemap/generated slug file; `pnpm --filter web build` green.
+  - Authoritative production `next start -p 3100` measurements after a **clean** port kill/restart (earlier lower docs numbers were from a stale server; do not reuse them): `/docs` 759.1 kB total / 392.0 kB JS / 114 resources; `/docs/components/button` 668.0 kB / 409.4 kB JS / 89; `/docs/components/spiral-media-gallery` 912.6 kB / 418.9 kB JS / 79; `/experience/components/spiral-media-gallery` 1202.1 kB / 506.6 kB JS / 143; `/experience/components/neon-mesh-bg` 958.7 kB / 503.3 kB JS / 137. The Three.js chunks (`12311578`, `192f0001`, `390f1a5f`) are **no longer preloaded** on experience detail pages. All component pages are under the 550 kB JS bar.
+  - Note: `/experience` pages still make ~54 fetches and load ~239 kB of non-JS assets; `/docs/components/spiral-media-gallery` includes ~245 kB of images (5 requests). Next optimization, if needed, is image/asset policy rather than JS.
+  - `CONTEXT.md` updated (this entry); Day 1 + Day 2 still uncommitted.
+
+- **Launch-readiness Day 1 (5-day plan) — 2026-11-27 — DONE locally / uncommitted.**
+  - Decisions: canonical host **`https://www.davinciui.com`** (apex already 308s to www); **remove PostHog for launch**; 5-day launch-ready scope.
+  - Canonical: `lib/site.ts`, `config/docs.ts`, `lib/docs-page-markdown.ts`, `page-context-menu.tsx`, `llms.txt`, `llms-full.txt`, `api/docs-markdown` now emit `www`. Registry install examples intentionally stay on apex (public registry alias). Verified live-style: canonical/og:url/robots/sitemap all `https://www.davinciui.com`.
+  - PostHog removed: `posthog-js` dependency + all imports; deleted `lib/posthog-client.ts`, `instrumentation-client.ts`; `lib/analytics.ts` is now a cookieless Umami `track()` helper; landing/sponsors/copy/global-error converted; CSP + privacy policy + `.env.example` updated (no cookie banner claim).
+  - Caching/security: `/r/*` `s-maxage=3600`, `/media/*` 7d, `/llms*` + `/sitemap.xml` 1h, `/api/docs-og` immutable, `/api/github-stars` 1h; `poweredByHeader:false`; CSP report-only adds `cloud.umami.is`, `images.ctfassets.net`, `images.unsplash.com`, drops PostHog.
+  - API caps: `/api/docs/source` 512KB body + 200KB code (413), `/api/docs/feedback` 32KB (413), `/api/docs-og` title 80 / eyebrow 40.
+  - Hygiene: `docs/assets/banner.png` (README updated), deleted `home.png`, `preview_original.png`, `LastoriaBoldRegular.otf`, `framer/crumpled-paper`, `bun.lock`; `scripts/screenshot.js` writes `tmp/home.png`; new `check:assets`.
+  - CI: `.github/workflows/ci.yml` — install → typecheck → eslint `--quiet` → registry/docs validators → asset budget → prod audit → webpack build.
+  - Verified: `tsc` clean; ESLint `--quiet` clean; `validate:registry` 169 OK; `validate:docs` 145 pass; `audit --prod` 0; `check:assets` OK; `pnpm --filter web build` green 416/416 **with and without** `apps/web/.env.local`; local `next start` header/cache/API smoke passes.
+  - Next: Day 3 — SEO/sitemap/canonical QA, full QA pass, ops checks, then deploy (Day 2 performance work is complete; see entry above).
 
 - **Repo security hardening (now public) + Next 16.4.6 upgrade — 2026-11-27 — DONE / verified; committed + pushed.**
   - Confirmed `sorkhademanthan/davinciui` is **PUBLIC**. Enabled GitHub **secret scanning + push protection** and **Dependabot alerts + security updates** (0 secret-scanning alerts; 30 Dependabot alerts tracked).
