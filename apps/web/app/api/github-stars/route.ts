@@ -3,11 +3,22 @@ import { NextResponse } from "next/server";
 const REPO = "sorkhademanthan/davinciui";
 
 /**
- * The repo is currently private, so anonymous GitHub API reads return 404.
- * Keep the last known public count so the button still shows a number until
- * the repo is made public or a GITHUB_TOKEN is configured.
+ * The repo is public now, so anonymous GitHub reads work. If GitHub is
+ * unreachable or rate-limited, fall back to zero rather than a stale count.
  */
-const FALLBACK_STARS = 1;
+const FALLBACK_STARS = 0;
+
+function starsResponse(stars: number) {
+  return NextResponse.json(
+    { stars },
+    {
+      headers: {
+        "Cache-Control":
+          "public, s-maxage=3600, stale-while-revalidate=86400",
+      },
+    },
+  );
+}
 
 /**
  * Star count proxy. Browsers share a tiny unauthenticated GitHub quota, so
@@ -29,16 +40,15 @@ export async function GET() {
       next: { revalidate: 3600 },
     });
     if (!response.ok) {
-      return NextResponse.json({ stars: FALLBACK_STARS });
+      return starsResponse(FALLBACK_STARS);
     }
     const data = (await response.json()) as { stargazers_count?: unknown };
-    return NextResponse.json({
-      stars:
-        typeof data.stargazers_count === "number"
-          ? data.stargazers_count
-          : FALLBACK_STARS,
-    });
+    return starsResponse(
+      typeof data.stargazers_count === "number"
+        ? data.stargazers_count
+        : FALLBACK_STARS,
+    );
   } catch {
-    return NextResponse.json({ stars: FALLBACK_STARS });
+    return starsResponse(FALLBACK_STARS);
   }
 }

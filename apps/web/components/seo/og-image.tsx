@@ -13,7 +13,11 @@ const albertSans600 = fetch(
  * Same visual system as the component OG images: deep-blue gradient,
  * brand row, eyebrow, and headline.
  */
-export async function brandOgImage(eyebrow: string, title: string) {
+export async function brandOgImage(
+  eyebrow: string,
+  title: string,
+  headers?: HeadersInit,
+) {
   const [fontMedium, fontSemibold] = await Promise.all([
     albertSans500,
     albertSans600,
@@ -104,6 +108,7 @@ export async function brandOgImage(eyebrow: string, title: string) {
     {
       width: 1200,
       height: 630,
+      headers,
       fonts: [
         {
           name: "Albert Sans",
