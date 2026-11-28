@@ -4,7 +4,7 @@ import { absoluteUrl } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Privacy Policy — DavinciUI",
   description:
-    "How DavinciUI collects, uses, and safeguards your information, including PostHog analytics and locally stored design systems.",
+    "How DavinciUI collects, uses, and safeguards your information, including cookieless analytics and locally stored design systems.",
   alternates: {
     canonical: absoluteUrl("/privacy-policy"),
   },

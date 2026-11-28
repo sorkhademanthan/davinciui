@@ -3,7 +3,7 @@
 import { ArrowUpRight, Mail } from "lucide-react";
 import { CopyButton } from "@/components/copy-button";
 import { LandingContent } from "@/components/landing/landing-frame";
-import posthog from "posthog-js";
+import { track } from "@/lib/analytics";
 
 const emailAddress = "sorkhademanthan@gmail.com";
 const emailHref = `mailto:${emailAddress}?subject=Custom%20design%20work`;
@@ -37,7 +37,7 @@ export function CustomWorkCta() {
 
               <a
                 href={emailHref}
-                onClick={() => posthog.capture("custom_work_contact_started")}
+                onClick={() => track("custom_work_contact_started")}
                 className="group mt-8 inline-flex min-h-11 items-center justify-center gap-3 rounded-full bg-zinc-950 px-5 text-sm font-semibold text-white transition-[background-color,transform] hover:-translate-y-0.5 hover:bg-zinc-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 focus-visible:ring-offset-2 focus-visible:ring-offset-[#f7f7f6] dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200 dark:focus-visible:ring-offset-[#141414]"
               >
                 Tell me about it

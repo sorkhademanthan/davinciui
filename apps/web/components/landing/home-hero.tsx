@@ -7,7 +7,7 @@ import { ServicesShowcase } from "@workspace/ui/components/services-showcase";
 import { TextMorph } from "@workspace/ui/components/text-morph";
 import { AnimatedPillButton } from "@workspace/ui/components/animated-pill-button";
 import { LandingContent, LandingGutter } from "./landing-frame";
-import posthog from "posthog-js";
+import { track } from "@/lib/analytics";
 import styles from "./home-hero.module.css";
 
 const demos = [
@@ -53,7 +53,7 @@ export function HomeHero() {
     try {
       await navigator.clipboard.writeText(command);
       setCopyState("copied");
-      posthog.capture("component_install_command_copied");
+      track("component_install_command_copied");
     } catch {
       setCopyState("error");
     }
@@ -76,7 +76,7 @@ export function HomeHero() {
               </p>
 
               <div className={styles.actions}>
-                <Link href="/experience/components" className={styles.primaryAction} onClick={() => posthog.capture("components_browse_started")}>
+                <Link href="/experience/components" className={styles.primaryAction} onClick={() => track("components_browse_started")}>
                   Browse components
                   <ArrowUpRight size={18} aria-hidden="true" />
                 </Link>

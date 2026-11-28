@@ -4,7 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUpRight, Check, Copy, RotateCcw, SunMoon } from "lucide-react";
-import posthog from "posthog-js";
+import { track } from "@/lib/analytics";
 import { LandingContent } from "@/components/landing/landing-frame";
 import { useHydratedReducedMotion } from "@/hooks/use-hydrated-reduced-motion";
 import styles from "./component-workbench.module.css";
@@ -42,7 +42,7 @@ function CopyMini({ value, label, dark }: { value: string; label: string; dark?:
       }
     }
     try {
-      posthog.capture("design_system_specimen_copied", { kind: label });
+      track("design_system_specimen_copied", { kind: label });
     } catch {
       // noop
     }
@@ -294,7 +294,7 @@ export function DesignSystemWorkbench() {
                   aria-pressed={accent === a.value}
                   onClick={() => {
                     setAccent(a.value);
-                    posthog.capture("design_system_specimen_interaction", { control: "accent", value: a.name });
+                    track("design_system_specimen_interaction", { control: "accent", value: a.name });
                   }}
                   style={{
                     width: 24,
@@ -339,7 +339,7 @@ export function DesignSystemWorkbench() {
               onClick={() => {
                 setUserOverridden(true);
                 setDark((v) => !v);
-                posthog.capture("design_system_specimen_interaction", { control: "theme" });
+                track("design_system_specimen_interaction", { control: "theme" });
               }}
               aria-pressed={dark}
               aria-label="Toggle specimen theme"
@@ -409,7 +409,7 @@ export function DesignSystemWorkbench() {
                     aria-selected={active}
                     onClick={() => {
                       setTab(t);
-                      posthog.capture("design_system_specimen_interaction", { control: "tab", value: t });
+                      track("design_system_specimen_interaction", { control: "tab", value: t });
                     }}
                     style={{
                       position: "relative",
@@ -613,7 +613,7 @@ export function DesignSystemWorkbench() {
                             aria-pressed={active}
                             onClick={() => {
                               setRadiusDemo(r.value);
-                              posthog.capture("design_system_specimen_interaction", { control: "radius", value: r.name });
+                              track("design_system_specimen_interaction", { control: "radius", value: r.name });
                             }}
                             style={{
                               flex: "none",
@@ -709,7 +709,7 @@ export function DesignSystemWorkbench() {
                             aria-pressed={gutter === g}
                             onClick={() => {
                               setGutter(g);
-                              posthog.capture("design_system_specimen_interaction", { control: "gutter", value: g });
+                              track("design_system_specimen_interaction", { control: "gutter", value: g });
                             }}
                             style={{
                               minWidth: 30,
@@ -823,7 +823,7 @@ export function DesignSystemWorkbench() {
           </div>
           <Link
             href="/design-system"
-            onClick={() => posthog.capture("design_system_specimen_docs_opened")}
+            onClick={() => track("design_system_specimen_docs_opened")}
             className="ds-export-card"
             style={{ border: `1px solid ${dark ? "#383838" : "#e5e5e2"}`, borderRadius: 16, background: dark ? "#1d1d1f" : "#fff", padding: 18, textDecoration: "none", display: "block" }}
           >

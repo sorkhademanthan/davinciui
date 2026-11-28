@@ -3,7 +3,7 @@
 import type React from "react"
 import Link from "next/link"
 import { ArrowUpRight, Check } from "lucide-react"
-import posthog from "posthog-js"
+import { track } from "@/lib/analytics"
 
 import { Footer } from "@/components/footer"
 import {
@@ -68,7 +68,7 @@ function SponsorLink({
       target="_blank"
       rel="noreferrer"
       onClick={() =>
-        posthog.capture("sponsor_checkout_started", {
+        track("sponsor_checkout_started", {
           ...(tier ? { sponsorship_tier: tier.toLowerCase() } : {}),
         })
       }

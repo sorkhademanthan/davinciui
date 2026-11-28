@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Check, Copy } from "lucide-react"
-import posthog from "posthog-js"
+import { track } from "@/lib/analytics"
 
 interface CopyButtonProps {
   code: string
@@ -21,7 +21,7 @@ export function CopyButton({
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(code)
-    posthog.capture(eventName)
+    track(eventName)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }

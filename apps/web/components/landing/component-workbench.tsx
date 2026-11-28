@@ -5,7 +5,7 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import { ArrowUpRight, Check, Copy, RotateCcw, Repeat2, SunMoon, MousePointerClick, Timer, LayoutGrid } from "lucide-react";
 import { useTheme } from "next-themes";
-import posthog from "posthog-js";
+import { track } from "@/lib/analytics";
 import { cinematicDemoCards } from "@/components/docs/previews/cinematic-card-carousel-items";
 import { LandingContent } from "@/components/landing/landing-frame";
 import { useHydratedReducedMotion } from "@/hooks/use-hydrated-reduced-motion";
@@ -56,7 +56,7 @@ function CopyControl({ value, label }: { value: string; label: string }) {
     }
 
     try {
-      posthog.capture("component_workbench_copied", { kind: label });
+      track("component_workbench_copied", { kind: label });
     } catch {
       // Copy succeeds even when analytics is unavailable.
     }
@@ -165,7 +165,7 @@ ${usageProps}
                 aria-pressed={loop}
                 onClick={() => {
                   setLoop((current) => !current);
-                  posthog.capture("component_workbench_interaction", { control: "loop" });
+                  track("component_workbench_interaction", { control: "loop" });
                 }}
               >
                 <span className={styles.controlIcon}><Repeat2 size={18} aria-hidden="true" /></span>
@@ -177,7 +177,7 @@ ${usageProps}
                 className={styles.controlButton}
                 onClick={() => {
                   setThemeOverride(previewTheme === "dark" ? "light" : "dark");
-                  posthog.capture("component_workbench_interaction", { control: "theme" });
+                  track("component_workbench_interaction", { control: "theme" });
                 }}
               >
                 <span className={styles.controlIcon}><SunMoon size={18} aria-hidden="true" /></span>
@@ -190,7 +190,7 @@ ${usageProps}
                 onClick={() => {
                   setActiveIndex(startIndex);
                   setReplayKey((current) => current + 1);
-                  posthog.capture("component_workbench_interaction", { control: "replay" });
+                  track("component_workbench_interaction", { control: "replay" });
                 }}
               >
                 <span className={styles.controlIcon}><RotateCcw size={18} aria-hidden="true" /></span>
@@ -202,7 +202,7 @@ ${usageProps}
                 aria-pressed={showArrows}
                 onClick={() => {
                   setShowArrows((current) => !current);
-                  posthog.capture("component_workbench_interaction", { control: "arrows" });
+                  track("component_workbench_interaction", { control: "arrows" });
                 }}
               >
                 <span className={styles.controlIcon}><MousePointerClick size={18} aria-hidden="true" /></span>
@@ -221,7 +221,7 @@ ${usageProps}
                       aria-pressed={autoPlayMs === ms}
                       onClick={() => {
                         setAutoPlayMs(ms);
-                        posthog.capture("component_workbench_interaction", { control: "pace", value: ms });
+                        track("component_workbench_interaction", { control: "pace", value: ms });
                       }}
                     >
                       {ms === 1400 ? "Brisk" : ms === 2800 ? "Cine" : "Slow"}
@@ -245,7 +245,7 @@ ${usageProps}
                         setStartIndex(index);
                         setActiveIndex(index);
                         setReplayKey((current) => current + 1);
-                        posthog.capture("component_workbench_interaction", { control: "start-index", value: index });
+                        track("component_workbench_interaction", { control: "start-index", value: index });
                       }}
                     >
                       <img src={card.src} alt="" loading="lazy" aria-hidden="true" />
@@ -294,7 +294,7 @@ ${usageProps}
                       setStartIndex(index);
                       setActiveIndex(index);
                       setReplayKey((current) => current + 1);
-                      posthog.capture("component_workbench_interaction", { control: "dot-jump", value: index });
+                      track("component_workbench_interaction", { control: "dot-jump", value: index });
                     }}
                   />
                 ))}
@@ -325,7 +325,7 @@ ${usageProps}
                         aria-pressed={packageManager === pm}
                         onClick={() => {
                           setPackageManager(pm);
-                          posthog.capture("component_workbench_interaction", { control: "pm", value: pm });
+                          track("component_workbench_interaction", { control: "pm", value: pm });
                         }}
                       >
                         {pm}
@@ -364,7 +364,7 @@ ${usageProps}
             <Link
               href="/experience/components/cinematic-card-carousel"
               className={styles.docsLink}
-              onClick={() => posthog.capture("component_workbench_docs_opened")}
+              onClick={() => track("component_workbench_docs_opened")}
             >
               Explore component <ArrowUpRight size={17} aria-hidden="true" />
             </Link>
