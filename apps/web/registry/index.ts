@@ -650,14 +650,6 @@ export const components: Record<string, ComponentMetadata> = {
     slug: "stacked-scroll-gallery",
     addedAt: "2026-09-15",
   },
-  "scroll-sync-gallery": {
-    title: "Scroll Sync Gallery",
-    description:
-      "Full-width pinned image wall — vertical columns travel at different speeds and alternating directions, all driven by one scroll progress.",
-    category: "Visual Effects",
-    slug: "scroll-sync-gallery",
-    addedAt: "2026-09-16",
-  },
   "scroll-media-expand": {
     title: "Scroll Media Expand",
     description:
@@ -1240,7 +1232,6 @@ export const FEATURED_SLUGS = [
   "depth-carousel-3d",
   "lens-drift-grid",
   "cinematic-card-carousel",
-  "scroll-sync-gallery",
   "curve-wall",
   "curved-inline-type",
   "infinite-image-gallery",

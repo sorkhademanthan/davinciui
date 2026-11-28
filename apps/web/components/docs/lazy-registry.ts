@@ -302,10 +302,6 @@ const docsImportMap: Record<
     import("@/components/docs/stacked-scroll-gallery").then((m) => ({
       default: m.StackedScrollGalleryDocs,
     })),
-  "scroll-sync-gallery": () =>
-    import("@/components/docs/scroll-sync-gallery").then((m) => ({
-      default: m.ScrollSyncGalleryDocs,
-    })),
   "scroll-media-expand": () =>
     import("@/components/docs/scroll-media-expand").then((m) => ({
       default: m.ScrollMediaExpandDocs,

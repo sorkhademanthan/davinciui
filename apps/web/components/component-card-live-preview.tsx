@@ -515,14 +515,6 @@ const StackedScrollGalleryCardPreview = dynamic(
   { ssr: false },
 );
 
-const ScrollSyncGalleryCardPreview = dynamic(
-  () =>
-    import("@/components/docs/previews/scroll-sync-gallery-card-preview").then(
-      (module) => module.ScrollSyncGalleryCardPreview,
-    ),
-  { ssr: false },
-);
-
 const ScrollMediaExpandCardPreview = dynamic(
   () =>
     import("@/components/docs/previews/scroll-media-expand-card-preview").then(
@@ -765,7 +757,6 @@ type ComponentCardLivePreviewProps = {
     | "cms-media-bento"
     | "interactive-media-accordion"
     | "stacked-scroll-gallery"
-    | "scroll-sync-gallery"
     | "scroll-media-expand"
     | "scroll-timeline"
     | "fill-preloader"
@@ -998,8 +989,6 @@ export function ComponentCardLivePreview({
         <InteractiveMediaAccordionCardPreview />
       ) : slug === "stacked-scroll-gallery" ? (
         <StackedScrollGalleryCardPreview />
-      ) : slug === "scroll-sync-gallery" ? (
-        <ScrollSyncGalleryCardPreview />
       ) : slug === "scroll-media-expand" ? (
         <ScrollMediaExpandCardPreview />
       ) : slug === "scroll-timeline" ? (

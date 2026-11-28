@@ -497,10 +497,6 @@
       "type": "registry:ui"
     },
     {
-      "name": "scroll-sync-gallery",
-      "type": "registry:ui"
-    },
-    {
       "name": "scroll-timeline",
       "type": "registry:ui"
     },

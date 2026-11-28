@@ -32,7 +32,6 @@ const SLUGS = [
   "geometric-preloader",
   "editorial-wipe-preloader",
   "wavy-flow-carousel",
-  "scroll-sync-gallery",
   "scroll-timeline",
   "scroll-media-expand",
   "interactive-media-accordion",

@@ -22,7 +22,6 @@ const CONSENT_VALUE = "denied";
 
 const TARGETS = {
   "wavy-flow-carousel": { selector: 'html[data-wavy-ready="1"]' },
-  "scroll-sync-gallery": { selector: '[data-testid="scroll-sync-gallery-track"]', query: "?smoothing=0" },
   "scroll-timeline": { selector: '[data-testid="scroll-timeline-track"]' },
   "scroll-media-expand": { selector: '[data-testid="scroll-media-expand-track"]' },
   "interactive-media-accordion": { selector: '[data-slot="interactive-media-accordion"]' },

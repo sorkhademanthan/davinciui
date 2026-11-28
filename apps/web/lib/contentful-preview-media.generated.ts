@@ -193,10 +193,6 @@ export const CONTENTFUL_PREVIEW_MEDIA: HomePreviewOverrides = {
     "light": "https://videos.ctfassets.net/70s3wjhkhwgo/C6q097vG3lNhlk7tJWsWn/c336ec2de9aada8421c142df8fa05200/scroll-reveal-image-light.mp4",
     "dark": "https://videos.ctfassets.net/70s3wjhkhwgo/1f3zGJ4In8XvHsTH4cdXcu/77948ca3e77264e5607718cabbb40d87/scroll-reveal-image-dark.mp4"
   },
-  "scroll-sync-gallery": {
-    "light": "https://videos.ctfassets.net/70s3wjhkhwgo/1Ns4FLD2S4ugGhpK7aduUY/b8f8973cc3733e77af2bec8256d33a7a/Scroll_Sync_Gallery_Light_and_Dark_.mp4",
-    "dark": "https://videos.ctfassets.net/70s3wjhkhwgo/65ltFk4sNNnTDC14zO8ESe/e6b40c5a4e9c1d559187c9f60349be00/Scroll_Sync_Gallery_Light_and_Dark_.mp4"
-  },
   "scroll-timeline": {
     "light": "https://videos.ctfassets.net/70s3wjhkhwgo/2i8gI59KZKsn2Vwfl5FHEX/25e0cc399a5fb59dee19f42a08308043/Scroll_Timeline_Light_and_dark_.mp4",
     "dark": "https://videos.ctfassets.net/70s3wjhkhwgo/1UASVJZbunrYtlsSJAc764/716ef1cbec70337a18c4186316d8fa50/Scroll_Timeline_Light_and_dark_.mp4"

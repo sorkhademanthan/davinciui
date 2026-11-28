@@ -109,7 +109,6 @@ export const docsCategoryBySlug: Record<string, string> = {
   "scroll-area": "Layout",
   "scroll-media-expand": "Premium Components",
   "scroll-reveal-image": "Premium Components",
-  "scroll-sync-gallery": "Premium Components",
   "scroll-timeline": "Premium Components",
   select: "Forms",
   separator: "Data Display",
