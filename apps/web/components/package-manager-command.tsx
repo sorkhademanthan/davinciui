@@ -3,6 +3,7 @@
 import * as React from "react"
 import { Terminal } from "lucide-react"
 import { DocsCodePanel } from "@/components/docs-code-panel"
+import { CODE_BLOCK_BOX_CLASS } from "@/components/import-code-block"
 import { useSmoothCodeHeight } from "@/hooks/use-smooth-code-height"
 
 export const PACKAGE_MANAGERS = ["bun", "npm", "pnpm", "yarn"] as const
@@ -44,6 +45,7 @@ export function PackageManagerCommand({
       icon={Terminal}
       copyCode={command}
       copyEventName="component_install_command_copied"
+      className={CODE_BLOCK_BOX_CLASS}
       tabs={tabs}
       activeTab={selected}
       onTabChange={(id) => setSelected(id as PackageManager)}
@@ -51,7 +53,7 @@ export function PackageManagerCommand({
     >
       <div {...wrapperProps}>
         <div ref={contentRef}>
-          <pre className="max-h-96 overflow-x-auto overflow-y-auto whitespace-pre rounded-b-md bg-transparent p-4 font-mono text-sm leading-5 no-scrollbar">
+          <pre className="max-h-96 overflow-x-auto overflow-y-auto whitespace-pre rounded-b-md bg-transparent px-4 py-3.5 font-mono text-sm leading-5 no-scrollbar">
             <HighlightedCommand command={command} />
           </pre>
         </div>

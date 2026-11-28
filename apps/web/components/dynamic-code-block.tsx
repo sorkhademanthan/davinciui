@@ -4,6 +4,7 @@ import * as React from "react"
 import { Code2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { DocsCodePanel } from "@/components/docs-code-panel"
+import { CODE_BLOCK_BOX_CLASS } from "@/components/import-code-block"
 import { useDocStore } from "@/hooks/use-doc-store"
 import { usePlaygroundStore } from "@/hooks/use-playground-store"
 import { useSmoothCodeHeight } from "@/hooks/use-smooth-code-height"
@@ -246,7 +247,7 @@ export function DynamicCodeBlock({
       activeTab={activeTab}
       onTabChange={handleTabChange}
       tabListAriaLabel="Example variant"
-      className={className}
+      className={cn(CODE_BLOCK_BOX_CLASS, className)}
     >
       <div
         {...wrapperProps}
@@ -268,7 +269,7 @@ export function DynamicCodeBlock({
           )}
         >
           <div
-            className="[&_.shiki]:!bg-transparent [&_pre]:!bg-transparent [&_pre]:whitespace-pre-wrap [&_pre]:break-words [&_pre]:p-4"
+            className="[&_.shiki]:!bg-transparent [&_pre]:!bg-transparent [&_pre]:whitespace-pre-wrap [&_pre]:break-words [&_pre]:px-4 [&_pre]:py-3.5"
             dangerouslySetInnerHTML={{ __html: visibleHtml }}
           />
         </div>
