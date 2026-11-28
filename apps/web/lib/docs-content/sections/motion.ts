@@ -216,8 +216,6 @@ export const motion: Record<string, string> = {
     "Scroll progress drives width, height, border radius, image scale, label offsets, fades, and CTA reveal with smootherstep easing; sectionHeight and smoothing control the mapping. When prefers-reduced-motion is set, the component renders a static accessible card instead.",
   "scroll-reveal-image":
     "Scroll progress, smoothed by useSpring, drives clip-path reveals of each image; scrub sets spring mass while backgroundScale and imageScale are static transforms. useReducedMotion renders only the last image as a static section.",
-  "scroll-sync-gallery":
-    "Columns translate on the y axis from one normalized scroll progress with optional smoothing, and introZoom briefly scales the wall; presets and travel set directions and distance. A matchMedia check replaces the effect with a static grid for prefers-reduced-motion.",
   "scroll-timeline":
     "Panels collapse horizontally via clip-path and the oversized year rotates around its bottom-left anchor as scroll progress changes; scrollPerItem, easing, rotationAmount, and smoothing tune it. prefers-reduced-motion or disableAnimation renders a static accessible list.",
   select:

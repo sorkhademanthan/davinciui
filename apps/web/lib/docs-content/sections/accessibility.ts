@@ -216,8 +216,6 @@ export const accessibility: Record<string, string> = {
     "The section is labelled, but in animated mode the image is alt empty and aria-hidden while the labels, scroll hint, and CTA are hidden from assistive tech. The CTA is not focusable. Setting enabled false renders a static card with real alt text.",
   "scroll-reveal-image":
     "The section has an aria-label, but each animated reveal layer is aria-hidden, so its alt text is not announced; only the reduced-motion fallback exposes the final image alt. The effect is scroll-only with no keyboard controls.",
-  "scroll-sync-gallery":
-    "Images keep their alt text and the section is labelled, but repeated duplicate copies can expose the same alt text more than once to screen readers. The gallery is scroll-driven with no focusable controls; the disabled-animation fallback renders a static grid.",
   "scroll-timeline":
     "The section accepts ariaLabel, panels after the first are aria-hidden when inactive, and a polite live region announces the active year and title. Each panel includes sr-only full text while the oversized year is aria-hidden; there are no keyboard controls beyond native scrolling.",
   select:

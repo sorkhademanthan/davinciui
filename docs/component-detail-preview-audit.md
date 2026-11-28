@@ -206,7 +206,6 @@ component surface.
 - Text Video Mask: shell 996×606, stage 994×560, centered.
 - Pixel Preloader: 600px stage + iframe (was 150px browser default).
 - Horizontal Scroll Gallery: shell 996×686, stage/iframe 994×640.
-- Scroll Sync Gallery: shell 996×646, stage/iframe 994×600.
 - Silk Aurora: shell 996×480, stage/canvas 994×434.
 - Mobile 390×844: no document-level horizontal overflow on any measured page.
 - Hover Cards follow-up: `size` query + `min-height` zeroed block-axis units in

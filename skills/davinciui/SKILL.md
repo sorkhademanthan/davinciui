@@ -44,7 +44,7 @@ Verify these; fix before adding components, not after:
 
 - **Text Animations:** fluid-particle-text, text-morph, encrypted-text, gsap-text, glitch-liquid-text, media-text-hover, shader-text, text-video-mask, random-text-reveal, text-reveal, shake-text, rolling-text
 - **Hero Backgrounds:** silk-aurora, ink-flow, soft-fluid-gradient, neon-mesh-bg, spectra-noise, sunlight-effect, liquid-chrome, character-field, pixel-flow
-- **Premium Components:** hover-transition, lens-drift-grid, interactive-media-accordion, scroll-reveal-image, stacked-scroll-gallery, scroll-sync-gallery, scroll-media-expand, scroll-timeline, orbit-spiral-gallery, arc-carousel, ambient-strip, tilt-flip-polaroid
+- **Premium Components:** hover-transition, lens-drift-grid, interactive-media-accordion, scroll-reveal-image, stacked-scroll-gallery, scroll-media-expand, scroll-timeline, orbit-spiral-gallery, arc-carousel, ambient-strip, tilt-flip-polaroid
 - **Visual Effects:** pixel-wipe-carousel, burn-plus, cinematic-card-carousel, vertical-image-marquee, hover-cards, profile-carousel, services-showcase
 - **Cursor Effects:** circle-cursor, chromatic-cursor, magic-cursor-pro, electric-vijdi-cursor, elastic-blob-cursor, tubes-cursor, geometric-trail-cursor
 - **Preloaders:** fill-preloader, staircase-preloader, pixel-preloader, editorial-wipe-preloader, geometric-preloader, cinematic-panel-preloader
