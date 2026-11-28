@@ -9,6 +9,7 @@
     "registry:blocks": "node scripts/build-blocks-registry.js",
     "validate:docs": "node scripts/validate-docs.mjs",
     "validate:registry": "node scripts/validate-registry.js",
+    "check:assets": "node scripts/check-asset-size.mjs",
     "verify:registry": "node scripts/verify-registry-urls.mjs",
     "generate:og": "node scripts/generate-og-image.mjs",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",

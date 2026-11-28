@@ -5,11 +5,15 @@
   "private": true,
   "scripts": {
     "dev": "next dev --webpack",
-    "build": "node ../../scripts/generate-posters.js --only-missing || true; pnpm --workspace-root registry:blocks && next build --webpack",
+    "predev": "pnpm generate:routes",
+    "build": "node ../../scripts/generate-posters.js --only-missing || true; pnpm --workspace-root registry:blocks && pnpm generate:routes && next build --webpack",
     "start": "next start",
+    "prelint": "pnpm generate:routes",
     "lint": "eslint . --max-warnings 0",
     "lint:fix": "eslint . --fix",
+    "pretypecheck": "pnpm generate:routes",
     "typecheck": "tsc --noEmit",
+    "generate:routes": "node ../../scripts/generate-component-routes.mjs",
     "test:focus": "node ../../scripts/run-design-system-tests.mjs"
   },
   "dependencies": {
@@ -28,7 +32,6 @@
     "next": "16.4.6",
     "next-mdx-remote": "^6.0.0",
     "next-themes": "^0.4.6",
-    "posthog-js": "^1.407.2",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
     "react-window": "^2.5.4",
