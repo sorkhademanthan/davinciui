@@ -39,7 +39,7 @@ import { docsConfig } from "@/config/docs"
 import { navigation } from "@/config/navigation"
 import { docsHeadings } from "@/lib/docs-headings"
 import { getComponent } from "@/registry"
-import { getDocsSlugs } from "@/components/docs/lazy-registry"
+import { DOCS_SLUGS } from "@/lib/docs-slugs.generated"
 import { isHiddenComponentSlug } from "@/lib/hidden-components"
 
 interface CommandMenuItem {
@@ -266,7 +266,7 @@ const commandGroups: CommandMenuGroup[] = [
   },
   {
     value: "All Components",
-    items: getDocsSlugs()
+    items: DOCS_SLUGS
       .filter((slug) => !isHiddenComponentSlug(slug))
       .map((slug) => {
         const c = getComponent(slug)

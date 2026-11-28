@@ -1,7 +1,8 @@
 import { components } from "@/registry";
 import { docsConfig } from "@/config/docs";
-import { getDocsSlugs } from "@/components/docs/lazy-registry";
+import { DOCS_SLUGS } from "@/lib/docs-slugs.generated";
 import { getDocSlugs } from "@/lib/docs-mdx";
+import { isHiddenComponentSlug } from "@/lib/hidden-components";
 import { absoluteUrl } from "@/lib/site";
 
 export type SitemapEntry = {
@@ -67,7 +68,7 @@ export function getSitemapEntries(): SitemapEntry[] {
 
   // Only slugs with dedicated docs pages are indexed — the rest redirect
   // to the live gallery, so they must never appear as thin indexed pages.
-  const documented = new Set(getDocsSlugs());
+  const documented = new Set<string>(DOCS_SLUGS.filter((slug) => !isHiddenComponentSlug(slug)));
   const componentSitemap: SitemapEntry[] = Object.keys(components)
     .filter((slug) => documented.has(slug))
     .map((slug) => ({

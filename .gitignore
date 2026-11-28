@@ -47,3 +47,9 @@ scripts/upload-single-preview.py
 
 # Local preview recordings
 tmp/
+
+# Generated per-slug component routes (scripts/generate-component-routes.mjs)
+apps/web/app/docs/components/*/page.tsx
+!apps/web/app/docs/components/\[slug\]/page.tsx
+apps/web/app/experience/components/*/page.tsx
+!apps/web/app/experience/components/\[slug\]/page.tsx

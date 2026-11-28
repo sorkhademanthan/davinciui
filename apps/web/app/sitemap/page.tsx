@@ -4,7 +4,7 @@ import { ChevronRight } from "lucide-react";
 
 import { Footer } from "@/components/footer";
 import { SiteHeader } from "@/components/site-header";
-import { getDocsSlugs } from "@/components/docs/lazy-registry";
+import { DOCS_SLUGS } from "@/lib/docs-slugs.generated";
 import { components } from "@/registry";
 import { docsCategoryBySlug } from "@/lib/docs-content/categories";
 import { absoluteUrl } from "@/lib/site";
@@ -109,7 +109,7 @@ function categoryRank(category: string) {
 }
 
 export default function SitemapPage() {
-  const documented = getDocsSlugs();
+  const documented = DOCS_SLUGS;
 
   const grouped = new Map<string, { slug: string; title: string }[]>();
   for (const slug of documented) {
