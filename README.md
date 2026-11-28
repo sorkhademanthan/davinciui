@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="apps/web/public/banner.png" alt="DavinciUI Banner" width="100%" />
+  <img src="docs/assets/banner.png" alt="DavinciUI Banner" width="100%" />
 </div>
 
 
