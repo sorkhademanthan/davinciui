@@ -31,11 +31,15 @@ const SCROLL_SLUGS = new Set([
   "scroll-media-expand",
   "interactive-media-accordion",
   "stacked-scroll-gallery",
-  "scroll-sync-gallery",
   "scroll-reveal-image",
   "scroll-timeline",
   "wavy-flow-carousel",
 ]);
+
+// Cards whose grid preview is a still image only: the live component is never
+// mounted here, no video/timer/RAF runs, and the preview area ignores pointer
+// events. The card itself still links to the component page.
+const STATIC_CARD_SLUGS = new Set(["cms-media-bento", "pixel-wipe-carousel"]);
 
 // Fixed design-frame previews that must keep a 16:9 surface so the whole
 // composition (label, strip, counter, bar) is visible at every card width.
@@ -111,7 +115,19 @@ function GalleryCardMedia({
     setPosterFailed(false);
   }, [poster]);
 
-  if (hasVideo) {
+  if (STATIC_CARD_SLUGS.has(slug)) {
+    // Static still: no live component, no video request, no timers/RAF.
+    media = (
+      <img
+        src={`/preview-stills/${slug}-${theme}.webp`}
+        alt=""
+        aria-hidden="true"
+        className="absolute inset-0 size-full object-cover"
+        loading="lazy"
+        decoding="async"
+      />
+    );
+  } else if (hasVideo) {
     // Poster-first: the video is not requested until the card is hovered,
     // focused, or tapped, so idle cards cost a poster instead of a video.
     media = (
@@ -194,7 +210,14 @@ function GalleryCardMedia({
   }
 
   return (
-    <div ref={ref} className={cn(className, "overflow-hidden")}>
+    <div
+      ref={ref}
+      className={cn(
+        className,
+        "overflow-hidden",
+        STATIC_CARD_SLUGS.has(slug) && "pointer-events-none select-none",
+      )}
+    >
       {media}
     </div>
   );
@@ -260,7 +283,6 @@ function hasLiveCardPreview(
   | "cms-media-bento"
   | "interactive-media-accordion"
   | "stacked-scroll-gallery"
-  | "scroll-sync-gallery"
   | "scroll-media-expand"
   | "scroll-timeline"
   | "fill-preloader"
@@ -346,7 +368,6 @@ function hasLiveCardPreview(
     slug === "cms-media-bento" ||
     slug === "interactive-media-accordion" ||
     slug === "stacked-scroll-gallery" ||
-    slug === "scroll-sync-gallery" ||
     slug === "scroll-media-expand" ||
     slug === "scroll-timeline" ||
     slug === "fill-preloader" ||
@@ -566,7 +587,9 @@ function ComponentsGallery() {
                     onActivate={() => setActiveSlug(c.slug)}
                     className="absolute inset-0 h-full w-full object-cover"
                   />
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+                  {!STATIC_CARD_SLUGS.has(c.slug) && (
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+                  )}
                   {c.slug !== "ambient-audio-toggle" && (
                     <span className="absolute bottom-2 right-2 text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/90 dark:bg-black/50 border border-border backdrop-blur">
                       {c.category || "component"}
