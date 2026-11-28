@@ -2,7 +2,7 @@ import {GlassSceneDock} from "@workspace/ui/components/glass-scene-dock";
 import {DocsPageLayout} from "@/components/docs-page-layout";
 
 import {readComponentSource} from "@/lib/source-code";
-import {GlassSceneDockPlayground, GlassSceneDockPersonalizePanel} from "@/components/docs/previews/interaction-playgrounds";
+import { GlassSceneDockPlayground, GlassSceneDockPersonalizePanel } from "@/components/docs/previews/playgrounds/glass-scene-dock";
 
 const usageCode = `import { GlassSceneDock } from "@/components/ui/glass-scene-dock"
 

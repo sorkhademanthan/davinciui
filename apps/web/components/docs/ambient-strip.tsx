@@ -3,7 +3,7 @@ import {ambientStripDemoItems} from "@/components/docs/previews/ambient-strip-it
 import {DocsPageLayout} from "@/components/docs-page-layout";
 
 import {readComponentSource} from "@/lib/source-code";
-import {AmbientStripPlayground, AmbientStripPersonalizePanel} from "@/components/docs/previews/visual-effects-playgrounds";
+import { AmbientStripPlayground, AmbientStripPersonalizePanel } from "@/components/docs/previews/playgrounds/ambient-strip";
 
 const defaultCode = `import { AmbientStrip } from "@/components/ui/ambient-strip"
 

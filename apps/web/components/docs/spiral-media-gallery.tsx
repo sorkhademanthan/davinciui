@@ -1,6 +1,6 @@
 import {DocsPageLayout} from "@/components/docs-page-layout";
 import {readComponentSource} from "@/lib/source-code";
-import {SpiralMediaGalleryPlayground, SpiralMediaGalleryPersonalizePanel} from "@/components/docs/previews/premium-playgrounds";
+import { SpiralMediaGalleryPlayground, SpiralMediaGalleryPersonalizePanel } from "@/components/docs/previews/playgrounds/spiral-media-gallery";
 
 
 const defaultCode = `import { SpiralMediaGallery } from "@/components/ui/spiral-media-gallery"

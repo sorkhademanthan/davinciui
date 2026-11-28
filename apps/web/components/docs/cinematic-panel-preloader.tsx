@@ -1,6 +1,6 @@
 import {Section} from "@/components/component-layout";
 import {PreloaderPro} from "@workspace/ui/components/cinematic-panel-preloader";
-import {PreloaderProPlayground, PreloaderProPersonalizePanel} from "@/components/docs/previews/preloader-playgrounds";
+import { PreloaderProPlayground, PreloaderProPersonalizePanel } from "@/components/docs/previews/playgrounds/cinematic-panel-preloader";
 
 import {DocsPageLayout} from "@/components/docs-page-layout";
 

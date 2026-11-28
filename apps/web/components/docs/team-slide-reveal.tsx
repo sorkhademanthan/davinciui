@@ -3,7 +3,7 @@ import {TeamSlideReveal} from "@workspace/ui/components/team-slide-reveal";
 import {DocsPageLayout} from "@/components/docs-page-layout";
 
 import {readComponentSource} from "@/lib/source-code";
-import {TeamSlideRevealPlayground, TeamSlideRevealPersonalizePanel} from "@/components/docs/previews/interaction-playgrounds";
+import { TeamSlideRevealPlayground, TeamSlideRevealPersonalizePanel } from "@/components/docs/previews/playgrounds/team-slide-reveal";
 
 const usageCode = `"use client";
 

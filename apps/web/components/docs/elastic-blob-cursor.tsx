@@ -1,6 +1,6 @@
 import {DocsPageLayout} from "@/components/docs-page-layout";
 
-import {ElasticBlobCursorPlayground, ElasticBlobCursorPersonalizePanel} from "@/components/docs/previews/cursor-playgrounds";
+import { ElasticBlobCursorPlayground, ElasticBlobCursorPersonalizePanel } from "@/components/docs/previews/playgrounds/elastic-blob-cursor";
 import {ElasticBlobCursorExampleStage} from "@/components/docs/previews/elastic-blob-cursor-preview";
 import {readComponentSource} from "@/lib/source-code";
 

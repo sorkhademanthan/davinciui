@@ -1,7 +1,7 @@
 import {DocsPageLayout} from "@/components/docs-page-layout";
 
 import {readComponentSource} from "@/lib/source-code";
-import {CurvedInlineTypePlayground, CurvedInlineTypePersonalizePanel} from "@/components/docs/previews/iframe-playgrounds";
+import { CurvedInlineTypePlayground, CurvedInlineTypePersonalizePanel } from "@/components/docs/previews/playgrounds/curved-inline-type";
 
 const defaultCode = `import { CurvedInlineType } from "@/components/ui/curved-inline-type"
 

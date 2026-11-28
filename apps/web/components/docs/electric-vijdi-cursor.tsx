@@ -1,6 +1,6 @@
 import {DocsPageLayout} from "@/components/docs-page-layout";
 
-import {ElectricVijdiCursorPlayground, ElectricVijdiCursorPersonalizePanel} from "@/components/docs/previews/cursor-playgrounds";
+import { ElectricVijdiCursorPlayground, ElectricVijdiCursorPersonalizePanel } from "@/components/docs/previews/playgrounds/electric-vijdi-cursor";
 import {ElectricVijdiCursorExampleStage} from "@/components/docs/previews/electric-vijdi-cursor-preview";
 import {readComponentSource} from "@/lib/source-code";
 

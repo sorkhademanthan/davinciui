@@ -3,7 +3,7 @@ import {VerticalImageMarquee} from "@workspace/ui/components/vertical-image-marq
 import {DocsPageLayout} from "@/components/docs-page-layout";
 
 import {readComponentSource} from "@/lib/source-code";
-import {VerticalImageMarqueePlayground, VerticalImageMarqueePersonalizePanel} from "@/components/docs/previews/visual-effects-playgrounds";
+import { VerticalImageMarqueePlayground, VerticalImageMarqueePersonalizePanel } from "@/components/docs/previews/playgrounds/vertical-image-marquee";
 
 const usageCode = `import { VerticalImageMarquee } from "@/components/ui/vertical-image-marquee"
 

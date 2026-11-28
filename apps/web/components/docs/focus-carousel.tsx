@@ -1,7 +1,7 @@
 import {DocsPageLayout} from "@/components/docs-page-layout";
 
 import {readComponentSource} from "@/lib/source-code";
-import {FocusCarouselPlayground, FocusCarouselPersonalizePanel} from "@/components/docs/previews/visual-effects-playgrounds";
+import { FocusCarouselPlayground, FocusCarouselPersonalizePanel } from "@/components/docs/previews/playgrounds/focus-carousel";
 
 const defaultCode = `import { FocusCarousel } from "@/components/ui/focus-carousel"
 

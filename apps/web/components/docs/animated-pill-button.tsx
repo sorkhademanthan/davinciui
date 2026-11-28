@@ -3,7 +3,7 @@ import {AnimatedPillButton} from "@workspace/ui/components/animated-pill-button"
 import {DocsPageLayout} from "@/components/docs-page-layout";
 
 import {readComponentSource} from "@/lib/source-code";
-import {AnimatedPillButtonPlayground, AnimatedPillButtonPersonalizePanel} from "@/components/docs/previews/interaction-playgrounds";
+import { AnimatedPillButtonPlayground, AnimatedPillButtonPersonalizePanel } from "@/components/docs/previews/playgrounds/animated-pill-button";
 
 const usageCode = `import { AnimatedPillButton } from "@/components/ui/animated-pill-button"
 

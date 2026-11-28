@@ -1,6 +1,6 @@
 import {DocsPageLayout} from "@/components/docs-page-layout";
 
-import {ChromaticCursorPlayground, ChromaticCursorPersonalizePanel} from "@/components/docs/previews/cursor-playgrounds";
+import { ChromaticCursorPlayground, ChromaticCursorPersonalizePanel } from "@/components/docs/previews/playgrounds/chromatic-cursor";
 import {ChromaticCursorExampleStage} from "@/components/docs/previews/chromatic-cursor-preview";
 import {readComponentSource} from "@/lib/source-code";
 

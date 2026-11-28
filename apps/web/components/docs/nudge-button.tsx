@@ -3,7 +3,7 @@ import {NudgeButton} from "@workspace/ui/components/nudge-button";
 import {DocsPageLayout} from "@/components/docs-page-layout";
 
 import {readComponentSource} from "@/lib/source-code";
-import {NudgeButtonPlayground, NudgeButtonPersonalizePanel} from "@/components/docs/previews/interaction-playgrounds";
+import { NudgeButtonPlayground, NudgeButtonPersonalizePanel } from "@/components/docs/previews/playgrounds/nudge-button";
 
 const usageCode = `import { NudgeButton } from "@/components/ui/nudge-button"
 

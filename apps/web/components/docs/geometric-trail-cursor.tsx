@@ -2,7 +2,7 @@ import {DocsPageLayout} from "@/components/docs-page-layout";
 
 import {GeometricTrailCursorExampleStage} from "@/components/docs/previews/geometric-trail-cursor-preview";
 import {readComponentSource} from "@/lib/source-code";
-import {GeometricTrailCursorPlayground, GeometricTrailCursorPersonalizePanel} from "@/components/docs/previews/cursor-playgrounds";
+import { GeometricTrailCursorPlayground, GeometricTrailCursorPersonalizePanel } from "@/components/docs/previews/playgrounds/geometric-trail-cursor";
 
 const usageCode = `import { GeometricTrailCursor } from "@/components/ui/geometric-trail-cursor"
 

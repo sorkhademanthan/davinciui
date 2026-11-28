@@ -3,7 +3,7 @@ import {DemoFrame} from "@/components/docs/previews/demo-frame";
 import {DocsPageLayout} from "@/components/docs-page-layout";
 
 import {readComponentSource} from "@/lib/source-code";
-import {FillPreloaderPlayground, FillPreloaderPersonalizePanel} from "@/components/docs/previews/preloader-playgrounds";
+import { FillPreloaderPlayground, FillPreloaderPersonalizePanel } from "@/components/docs/previews/playgrounds/fill-preloader";
 
 const defaultCode = `import { FillPreloader } from "@/components/ui/fill-preloader"
 

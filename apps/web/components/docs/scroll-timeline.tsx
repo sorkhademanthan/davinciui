@@ -2,7 +2,7 @@ import React from "react";
 import {DemoFrame} from "@/components/docs/previews/demo-frame";
 import {DocsPageLayout} from "@/components/docs-page-layout";
 import {readComponentSource} from "@/lib/source-code";
-import {ScrollTimelinePlayground, ScrollTimelinePersonalizePanel} from "@/components/docs/previews/iframe-playgrounds";
+import { ScrollTimelinePlayground, ScrollTimelinePersonalizePanel } from "@/components/docs/previews/playgrounds/scroll-timeline";
 
 
 const defaultCode = `import { ScrollTimeline } from "@/components/ui/scroll-timeline"

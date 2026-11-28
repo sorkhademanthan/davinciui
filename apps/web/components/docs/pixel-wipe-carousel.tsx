@@ -3,7 +3,7 @@ import {PixelWipeCarousel} from "@workspace/ui/components/pixel-wipe-carousel";
 import {DocsPageLayout} from "@/components/docs-page-layout";
 
 import {readComponentSource} from "@/lib/source-code";
-import {PixelWipeCarouselPlayground, PixelWipeCarouselPersonalizePanel} from "@/components/docs/previews/visual-effects-playgrounds";
+import { PixelWipeCarouselPlayground, PixelWipeCarouselPersonalizePanel } from "@/components/docs/previews/playgrounds/pixel-wipe-carousel";
 
 const defaultCode = `import { PixelWipeCarousel } from "@/components/ui/pixel-wipe-carousel"
 

@@ -1,9 +1,6 @@
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import { readComponentSource } from "@/lib/source-code";
-import {
-  OrbitSpiralGalleryPlayground,
-  OrbitSpiralGalleryPersonalizePanel,
-} from "@/components/docs/previews/premium-playgrounds";
+import { OrbitSpiralGalleryPlayground, OrbitSpiralGalleryPersonalizePanel } from "@/components/docs/previews/playgrounds/orbit-spiral-gallery";
 
 const defaultCode = `import { OrbitSpiralGallery } from "@/components/ui/orbit-spiral-gallery"
 

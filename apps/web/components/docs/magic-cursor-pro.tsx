@@ -1,6 +1,6 @@
 import {DocsPageLayout} from "@/components/docs-page-layout";
 
-import {MagicCursorProPlayground, MagicCursorProPersonalizePanel} from "@/components/docs/previews/cursor-playgrounds";
+import { MagicCursorProPlayground, MagicCursorProPersonalizePanel } from "@/components/docs/previews/playgrounds/magic-cursor-pro";
 import {MagicCursorProExampleStage} from "@/components/docs/previews/magic-cursor-pro-preview";
 import {readComponentSource} from "@/lib/source-code";
 

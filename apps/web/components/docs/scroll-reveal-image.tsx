@@ -1,7 +1,7 @@
 import {DemoFrame} from "@/components/docs/previews/demo-frame";
 import {DocsPageLayout} from "@/components/docs-page-layout";
 import {readComponentSource} from "@/lib/source-code";
-import {ScrollRevealImagePlayground, ScrollRevealImagePersonalizePanel} from "@/components/docs/previews/iframe-playgrounds";
+import { ScrollRevealImagePlayground, ScrollRevealImagePersonalizePanel } from "@/components/docs/previews/playgrounds/scroll-reveal-image";
 
 
 const defaultCode = `import { ScrollRevealImage } from "@/components/ui/scroll-reveal-image"

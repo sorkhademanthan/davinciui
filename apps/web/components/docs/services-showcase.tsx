@@ -3,7 +3,7 @@ import {ServicesShowcase} from "@workspace/ui/components/services-showcase";
 import {DocsPageLayout} from "@/components/docs-page-layout";
 
 import {readComponentSource} from "@/lib/source-code";
-import {ServicesShowcasePlayground, ServicesShowcasePersonalizePanel} from "@/components/docs/previews/visual-effects-playgrounds";
+import { ServicesShowcasePlayground, ServicesShowcasePersonalizePanel } from "@/components/docs/previews/playgrounds/services-showcase";
 
 const usageCode = `import { ServicesShowcase } from "@/components/ui/services-showcase"
 

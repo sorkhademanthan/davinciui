@@ -1,9 +1,6 @@
 import { Noiser } from "@workspace/ui/components/noiser";
 import { DocsPageLayout } from "@/components/docs-page-layout";
-import {
-  NoiserPlayground,
-  NoiserPersonalizePanel,
-} from "@/components/docs/previews/hero-background-playgrounds";
+import { NoiserPlayground, NoiserPersonalizePanel } from "@/components/docs/previews/playgrounds/noiser";
 import { readComponentSource } from "@/lib/source-code";
 
 const usageCode = `import Noiser from "@/components/ui/noiser"

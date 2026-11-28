@@ -3,7 +3,7 @@ import { LENS_DRIFT_ITEMS } from "@workspace/ui/components/lens-drift-grid";
 import { LensDriftGrid } from "@workspace/ui/components/lens-drift-grid";
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import { readComponentSource } from "@/lib/source-code";
-import { LensDriftGridPlayground, LensDriftGridPersonalizePanel } from "@/components/docs/previews/visual-effects-playgrounds";
+import { LensDriftGridPlayground, LensDriftGridPersonalizePanel } from "@/components/docs/previews/playgrounds/lens-drift-grid";
 
 const defaultCode = `import { LensDriftGrid } from "@/components/ui/lens-drift-grid"
 

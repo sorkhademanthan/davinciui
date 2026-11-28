@@ -2,7 +2,7 @@ import { ArcCarousel } from "@workspace/ui/components/arc-carousel";
 
 import { DocsPageLayout } from "@/components/docs-page-layout";
 import { readComponentSource } from "@/lib/source-code";
-import { ArcCarouselPlayground, ArcCarouselPersonalizePanel } from "@/components/docs/previews/premium-playgrounds";
+import { ArcCarouselPlayground, ArcCarouselPersonalizePanel } from "@/components/docs/previews/playgrounds/arc-carousel";
 
 const defaultCode = `import { ArcCarousel, type ArcCarouselItem } from "@/components/ui/arc-carousel"
 

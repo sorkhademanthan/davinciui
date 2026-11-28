@@ -3,7 +3,7 @@ import {LiquidRevealButton} from "@workspace/ui/components/liquid-reveal-button"
 import {DocsPageLayout} from "@/components/docs-page-layout";
 
 import {readComponentSource} from "@/lib/source-code";
-import {LiquidRevealButtonPlayground, LiquidRevealButtonPersonalizePanel} from "@/components/docs/previews/interaction-playgrounds";
+import { LiquidRevealButtonPlayground, LiquidRevealButtonPersonalizePanel } from "@/components/docs/previews/playgrounds/liquid-reveal-button";
 
 const usageCode = `import { LiquidRevealButton } from "@/components/ui/liquid-reveal-button"
 

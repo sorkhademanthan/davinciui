@@ -3,7 +3,7 @@ import {ProfileCarousel, type Profile} from "@workspace/ui/components/profile-ca
 import {DocsPageLayout} from "@/components/docs-page-layout";
 
 import {readComponentSource} from "@/lib/source-code";
-import {ProfileCarouselPlayground, ProfileCarouselPersonalizePanel} from "@/components/docs/previews/visual-effects-playgrounds";
+import { ProfileCarouselPlayground, ProfileCarouselPersonalizePanel } from "@/components/docs/previews/playgrounds/profile-carousel";
 
 const usageCode = `import { ProfileCarousel, type Profile } from "@/components/ui/profile-carousel"
 

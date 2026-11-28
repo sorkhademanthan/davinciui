@@ -3,7 +3,7 @@ import {AnimatedMetric} from "@workspace/ui/components/animated-metric";
 import {DocsPageLayout} from "@/components/docs-page-layout";
 
 import {readComponentSource} from "@/lib/source-code";
-import {AnimatedMetricPlayground, AnimatedMetricPersonalizePanel} from "@/components/docs/previews/interaction-playgrounds";
+import { AnimatedMetricPlayground, AnimatedMetricPersonalizePanel } from "@/components/docs/previews/playgrounds/animated-metric";
 
 const usageCode = `import { AnimatedMetric } from "@/components/ui/animated-metric"
 

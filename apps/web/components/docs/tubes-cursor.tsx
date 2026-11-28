@@ -2,7 +2,7 @@ import {DocsPageLayout} from "@/components/docs-page-layout";
 
 import {TubesCursorExampleStage} from "@/components/docs/previews/tubes-cursor-preview";
 import {readComponentSource} from "@/lib/source-code";
-import {TubesCursorPlayground, TubesCursorPersonalizePanel} from "@/components/docs/previews/cursor-playgrounds";
+import { TubesCursorPlayground, TubesCursorPersonalizePanel } from "@/components/docs/previews/playgrounds/tubes-cursor";
 
 const usageCode = `import { TubesCursor } from "@/components/ui/tubes-cursor"
 

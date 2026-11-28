@@ -4,7 +4,7 @@ import {DocsPageLayout} from "@/components/docs-page-layout";
 import {hoverCardsDemoItems} from "@/components/docs/previews/hover-cards-items";
 
 import {readComponentSource} from "@/lib/source-code";
-import {HoverCardsPlayground, HoverCardsPersonalizePanel} from "@/components/docs/previews/visual-effects-playgrounds";
+import { HoverCardsPlayground, HoverCardsPersonalizePanel } from "@/components/docs/previews/playgrounds/hover-cards";
 
 const usageCode = `import { HoverCards, type HoverCardsItem } from "@/components/ui/hover-cards"
 

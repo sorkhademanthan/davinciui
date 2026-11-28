@@ -3,7 +3,7 @@ import {cinematicDemoCards} from "@/components/docs/previews/cinematic-card-caro
 import {DocsPageLayout} from "@/components/docs-page-layout";
 
 import {readComponentSource} from "@/lib/source-code";
-import {CinematicCardCarouselPlayground, CinematicCardCarouselPersonalizePanel} from "@/components/docs/previews/visual-effects-playgrounds";
+import { CinematicCardCarouselPlayground, CinematicCardCarouselPersonalizePanel } from "@/components/docs/previews/playgrounds/cinematic-card-carousel";
 
 const defaultCode = `import { CinematicCardCarousel } from "@/components/ui/cinematic-card-carousel"
 

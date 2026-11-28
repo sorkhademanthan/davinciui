@@ -1,6 +1,6 @@
 import {Section} from "@/components/component-layout";
 import {EditorialWipePreloader} from "@workspace/ui/components/editorial-wipe-preloader";
-import {EditorialWipePreloaderPlayground, EditorialWipePreloaderPersonalizePanel} from "@/components/docs/previews/preloader-playgrounds";
+import { EditorialWipePreloaderPlayground, EditorialWipePreloaderPersonalizePanel } from "@/components/docs/previews/playgrounds/editorial-wipe-preloader";
 
 import {DocsPageLayout} from "@/components/docs-page-layout";
 

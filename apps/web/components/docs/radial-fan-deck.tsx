@@ -2,7 +2,7 @@ import {RadialFanDeck} from "@workspace/ui/components/radial-fan-deck";
 import {DocsPageLayout} from "@/components/docs-page-layout";
 
 import {readComponentSource} from "@/lib/source-code";
-import {RadialFanDeckPlayground, RadialFanDeckPersonalizePanel} from "@/components/docs/previews/interaction-playgrounds";
+import { RadialFanDeckPlayground, RadialFanDeckPersonalizePanel } from "@/components/docs/previews/playgrounds/radial-fan-deck";
 
 const defaultCode = `import { useState } from "react"
 import { RadialFanDeck } from "@/components/ui/radial-fan-deck"

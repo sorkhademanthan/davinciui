@@ -1,10 +1,7 @@
 import React from "react";
 import { SilkAurora } from "@workspace/ui/components/silk-aurora";
 import { DocsPageLayout } from "@/components/docs-page-layout";
-import {
-  SilkAuroraPlayground,
-  SilkAuroraPersonalizePanel,
-} from "@/components/docs/previews/hero-background-playgrounds";
+import { SilkAuroraPlayground, SilkAuroraPersonalizePanel } from "@/components/docs/previews/playgrounds/silk-aurora";
 import { readComponentSource } from "@/lib/source-code";
 
 const basicUsageCode = `import { SilkAurora } from "@/components/ui/silk-aurora"

@@ -1,6 +1,6 @@
 import {DocsPageLayout} from "@/components/docs-page-layout";
 
-import {CircleCursorPlayground, CircleCursorPersonalizePanel} from "@/components/docs/previews/cursor-playgrounds";
+import { CircleCursorPlayground, CircleCursorPersonalizePanel } from "@/components/docs/previews/playgrounds/circle-cursor";
 import {CircleCursorExampleStage} from "@/components/docs/previews/circle-cursor-preview";
 import {readComponentSource} from "@/lib/source-code";
 

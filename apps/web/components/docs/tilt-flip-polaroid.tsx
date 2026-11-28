@@ -3,7 +3,7 @@ import type { CSSProperties, ReactNode } from "react";
 import { readComponentSource } from "@/lib/source-code";
 import { caveatFont } from "@/lib/caveat-font";
 import { TiltFlipPolaroid } from "@workspace/ui/components/tilt-flip-polaroid";
-import { TiltFlipPolaroidPlayground, TiltFlipPolaroidPersonalizePanel } from "@/components/docs/previews/premium-playgrounds";
+import { TiltFlipPolaroidPlayground, TiltFlipPolaroidPersonalizePanel } from "@/components/docs/previews/playgrounds/tilt-flip-polaroid";
 
 const demoImage = {
   src: "https://images.unsplash.com/photo-1610846202780-b4d9837371ea?w=900&q=85&auto=format&fit=crop",
