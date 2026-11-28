@@ -1,8 +1,16 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { components, type ComponentCategory } from "@/registry";
 import { DocsSnippet } from "@/components/docs-snippet";
 import { Section, InfoBox } from "@/components/component-layout";
+import { absoluteUrl } from "@/lib/site";
+
+export const metadata: Metadata = {
+  alternates: {
+    canonical: absoluteUrl("/docs"),
+  },
+};
 
 const CATEGORIES = [
   {

@@ -5,10 +5,14 @@ import { docsComponentCategories } from "@/config/docs"
 import { DocsSnippet } from "@/components/docs-snippet"
 import { Section } from "@/components/component-layout"
 import { isHiddenComponentSlug } from "@/lib/hidden-components"
+import { absoluteUrl } from "@/lib/site"
 
 export const metadata: Metadata = {
   title: "Components — DavinciUI",
   description: "Browse all DavinciUI components — text animations, premium interactions, hero backgrounds and visual effects.",
+  alternates: {
+    canonical: absoluteUrl("/docs/components"),
+  },
 }
 
 const categoryOrder = docsComponentCategories()

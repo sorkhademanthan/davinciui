@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { LayoutTemplate } from "lucide-react";
+import { absoluteUrl } from "@/lib/site";
 
 export const dynamic = "force-static";
 
@@ -7,6 +8,9 @@ export const metadata: Metadata = {
   title: "Blocks | DavinciUI",
   description:
     "A focused library of polished, production-ready blocks is coming soon to DavinciUI.",
+  alternates: {
+    canonical: absoluteUrl("/blocks"),
+  },
 };
 
 export default function BlocksPage() {
