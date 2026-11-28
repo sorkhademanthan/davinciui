@@ -167,12 +167,12 @@ export default function SitemapPage() {
                 Machine-readable
               </dt>
               <dd className="mt-1 text-sm">
-                <Link
+                <a
                   href="/sitemap.xml"
                   className="underline decoration-border underline-offset-4 transition-colors hover:text-foreground"
                 >
                   sitemap.xml
-                </Link>
+                </a>
               </dd>
             </div>
           </dl>
