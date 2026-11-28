@@ -31,7 +31,7 @@ export function GET() {
       `npx shadcn@latest add @davinciui/${slug}`,
       "```",
       "",
-      `Documentation: https://davinciui.com/docs/components/${slug}`,
+      `Documentation: https://www.davinciui.com/docs/components/${slug}`,
     ].join("\n"),
   )
 

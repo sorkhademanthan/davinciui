@@ -129,7 +129,7 @@ const navGroups: NavGroup[] = [
 ];
 
 export function getLlmsText(): string {
-  const baseUrl = "https://davinciui.com";
+  const baseUrl = "https://www.davinciui.com";
   let text = `# DavinciUI
 
 > DavinciUI — Beautiful animated components for React. Copy, paste, customize. Tailwind CSS + Framer Motion. Open code.

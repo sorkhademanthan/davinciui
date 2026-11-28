@@ -18,14 +18,14 @@ export function GET() {
     "",
     ...docs.map(
       (doc) =>
-        `- [${doc.frontmatter.title}](https://davinciui.com/docs/${doc.slug.join("/")}): ${doc.frontmatter.description ?? ""}`,
+        `- [${doc.frontmatter.title}](https://www.davinciui.com/docs/${doc.slug.join("/")}): ${doc.frontmatter.description ?? ""}`,
     ),
     "",
     "## Components",
     "",
     ...componentList.map(
       ([slug, component]) =>
-        `- [${component.title}](https://davinciui.com/docs/components/${slug}): ${component.description}`,
+        `- [${component.title}](https://www.davinciui.com/docs/components/${slug}): ${component.description}`,
     ),
     "",
   ]

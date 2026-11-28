@@ -44,7 +44,7 @@ export async function GET(
       `npx shadcn@latest add @davinciui/${componentSlug}`,
       "```",
       "",
-      `[Read the full documentation](https://davinciui.com/docs/components/${componentSlug})`,
+      `[Read the full documentation](https://www.davinciui.com/docs/components/${componentSlug})`,
       "",
     ].join("\n")
 
@@ -72,7 +72,7 @@ export async function GET(
     const body = [
       `# ${page.title}`,
       "",
-      `Read the full documentation at https://davinciui.com${path}.`,
+      `Read the full documentation at https://www.davinciui.com${path}.`,
       "",
     ].join("\n")
     return new Response(body, { headers })
