@@ -19,12 +19,16 @@ const securityHeaders = [
     key: "Content-Security-Policy-Report-Only",
     value: [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com https://us-assets.i.posthog.com",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com https://cloud.umami.is",
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: blob:",
+      "img-src 'self' data: blob: https://images.ctfassets.net https://images.unsplash.com",
       "font-src 'self' data:",
-      "connect-src 'self' https://*.posthog.com https://*.vercel-insights.com https://vitals.vercel-insights.com",
+      "connect-src 'self' https://cloud.umami.is https://*.vercel-insights.com https://vitals.vercel-insights.com",
       "media-src 'self' blob: https://videos.ctfassets.net",
+      "frame-src 'self'",
+      "worker-src 'self' blob:",
+      "manifest-src 'self'",
+      "object-src 'none'",
       "base-uri 'self'",
       "form-action 'self'",
     ].join("; "),
@@ -39,6 +43,7 @@ const nextConfig = {
   // Hides the floating "N" dev badge (bottom-left). Dev-only setting —
   // production builds never render it. Needs a dev-server restart.
   devIndicators: false,
+  poweredByHeader: false,
   outputFileTracingIncludes: {
     "/docs/[...slug]": ["./content/docs/**/*.mdx"],
     "/llms.txt": ["./content/docs/**/*.mdx"],
@@ -70,6 +75,59 @@ const nextConfig = {
       {
         source: "/audio/:path*",
         headers: [{ key: "Cache-Control", value: mediaCache }],
+      },
+      {
+        source: "/media/:path*",
+        headers: [{ key: "Cache-Control", value: mediaCache }],
+      },
+      {
+        source: "/r/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value:
+              "public, max-age=0, s-maxage=3600, stale-while-revalidate=86400",
+          },
+        ],
+      },
+      {
+        source: "/manifest.json",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=86400, stale-while-revalidate=604800",
+          },
+        ],
+      },
+      {
+        source: "/llms.txt",
+        headers: [
+          {
+            key: "Cache-Control",
+            value:
+              "public, max-age=0, s-maxage=3600, stale-while-revalidate=86400",
+          },
+        ],
+      },
+      {
+        source: "/llms-full.txt",
+        headers: [
+          {
+            key: "Cache-Control",
+            value:
+              "public, max-age=0, s-maxage=3600, stale-while-revalidate=86400",
+          },
+        ],
+      },
+      {
+        source: "/sitemap.xml",
+        headers: [
+          {
+            key: "Cache-Control",
+            value:
+              "public, max-age=0, s-maxage=3600, stale-while-revalidate=86400",
+          },
+        ],
       },
     ]
   },
